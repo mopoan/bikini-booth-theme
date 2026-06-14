@@ -1,0 +1,199 @@
+{%- comment -%}
+  Snippet: bb-product-auto-connect.liquid
+  Purpose: Auto-connects related products by name convention.
+
+  Naming convention (required):
+    [Style] Top - [Color]     e.g. "Kata Bikini Top - Orange"
+    [Style] Bottom - [Color]  e.g. "Kata Bikini Bottom - Orange"
+    [Style] - [Color]         e.g. "Sarong - Sand" (no piece toggle)
+
+  Swatch images:
+    Upload to Shopify Files as: swatch-[color-lowercase].png
+    e.g. swatch-orange.png, swatch-leopard.png, swatch-floral.png
+    If a swatch image exists it is always used. Hex is the fallback only.
+
+  Color hex fallbacks:
+    Add entries to colorMap below. Keys must match the color segment of
+    the product title exactly (case-insensitive). Used only when no
+    swatch image is found for that color.
+
+  Output:
+    Fires window.BB.productData and custom event 'bb:productDataReady'.
+    Consumed by bb-product-form.liquid and bb-product-complete-the-look.liquid.
+{%- endcomment -%}
+
+{%- assign shop_url = shop.permanent_domain -%}
+
+<script>
+(function () {
+  'use strict';
+
+  var PRODUCT_TITLE   = {{ product.title | json }};
+  var PRODUCT_HANDLE  = {{ product.handle | json }};
+  var PRODUCT_URL     = {{ product.url | json }};
+  var SHOP_CDN        = 'https://cdn.shopify.com/s/files/1/';
+
+  var colorMap = {
+    'orange':    '#e8892a',
+    'turquoise': '#49c6be',
+    'fuchsia':   '#e855b0',
+    'pink':      '#f4a0b8',
+    'white':     '#ffffff',
+    'black':     '#2a2520',
+    'navy':      '#1e3a5f',
+    'red':       '#e03030',
+    'green':     '#4caf7d',
+    'yellow':    '#f5c842',
+    'blue':      '#4a90d9',
+    'sand':      '#d4c4a0',
+    'coral':     '#f07060',
+    'lilac':     '#c8a8e0',
+    'gold':      '#d4a832',
+    'silver':    '#c0c0c0',
+    'brown':     '#8b6340',
+    'grey':      '#a0a0a0',
+    'gray':      '#a0a0a0',
+    'leopard':   '#c8902a',
+    'zebra':     '#2a2520',
+    'floral':    '#e87090'
+  };
+
+  var PIECES = ['Top', 'Bottom'];
+
+  function parseTitle(title) {
+    var parts    = title.split(' - ');
+    var color    = parts.length > 1 ? parts[parts.length - 1].trim() : null;
+    var baseName = parts[0].trim();
+    var piece    = null;
+    var style    = baseName;
+
+    for (var i = 0; i < PIECES.length; i++) {
+      var p = PIECES[i];
+      if (baseName.slice(-p.length - 1) === ' ' + p) {
+        piece = p;
+        style = baseName.slice(0, baseName.length - p.length - 1).trim();
+        break;
+      }
+    }
+
+    return { baseName: baseName, style: style, piece: piece, color: color };
+  }
+
+  function swatchImageUrl(colorName) {
+    var slug = colorName.toLowerCase().replace(/\s+/g, '-');
+    return '/files/swatch-' + slug + '.png';
+  }
+
+  function swatchImageExists(url, callback) {
+    var img = new Image();
+    img.onload  = function () { callback(true); };
+    img.onerror = function () { callback(false); };
+    img.src = url;
+  }
+
+  function fetchAllProducts(page, allProducts, callback) {
+    page        = page || 1;
+    allProducts = allProducts || [];
+    fetch('/products.json?limit=250&page=' + page)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var products = data.products || [];
+        allProducts  = allProducts.concat(products);
+        if (products.length === 250) {
+          fetchAllProducts(page + 1, allProducts, callback);
+        } else {
+          callback(allProducts);
+        }
+      })
+      .catch(function (err) {
+        console.warn('[BB Auto-Connect] Fetch failed:', err);
+        callback(allProducts);
+      });
+  }
+
+  function buildData(allProducts) {
+    var current          = parseTitle(PRODUCT_TITLE);
+    var colorSwatchData  = [];
+    var pieceLinks       = {};
+
+    allProducts.forEach(function (p) {
+      if (!p.title || !p.handle) return;
+      var parsed = parseTitle(p.title);
+
+      var isSamePiece = (
+        parsed.style === current.style &&
+        parsed.piece  === current.piece
+      );
+
+      var isOpposite = (
+        current.piece !== null &&
+        parsed.style  === current.style &&
+        parsed.piece  !== null &&
+        parsed.piece  !== current.piece &&
+        parsed.color  === current.color
+      );
+
+      if (isSamePiece && parsed.color) {
+        colorSwatchData.push({
+          color:     parsed.color,
+          hex:       colorMap[parsed.color.toLowerCase()] || '#c8c0b8',
+          imageUrl:  swatchImageUrl(parsed.color),
+          url:       '/products/' + p.handle,
+          active:    p.handle === PRODUCT_HANDLE,
+          available: p.available !== false
+        });
+      }
+
+      if (isOpposite) {
+        pieceLinks[parsed.piece] = {
+          url:   '/products/' + p.handle,
+          title: p.title,
+          price: p.variants && p.variants[0] ? p.variants[0].price : null
+        };
+      }
+    });
+
+    colorSwatchData.sort(function (a, b) {
+      return a.color.localeCompare(b.color);
+    });
+
+    var pending = colorSwatchData.length;
+
+    if (pending === 0) {
+      emit(current, colorSwatchData, pieceLinks);
+      return;
+    }
+
+    colorSwatchData.forEach(function (swatch) {
+      swatchImageExists(swatch.imageUrl, function (exists) {
+        swatch.useImage = exists;
+        pending--;
+        if (pending === 0) {
+          emit(current, colorSwatchData, pieceLinks);
+        }
+      });
+    });
+  }
+
+  function emit(current, colorSwatches, pieceLinks) {
+    window.BB              = window.BB || {};
+    window.BB.productData  = {
+      title:          PRODUCT_TITLE,
+      handle:         PRODUCT_HANDLE,
+      url:            PRODUCT_URL,
+      style:          current.style,
+      piece:          current.piece,
+      color:          current.color,
+      hasPieceToggle: current.piece !== null,
+      colorSwatches:  colorSwatches,
+      pieceLinks:     pieceLinks
+    };
+
+    document.dispatchEvent(
+      new CustomEvent('bb:productDataReady', { detail: window.BB.productData })
+    );
+  }
+
+  fetchAllProducts(1, [], buildData);
+})();
+</script>
