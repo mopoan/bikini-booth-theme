@@ -1,0 +1,64 @@
+{%- if cart != empty -%}
+  {%- for item in cart.items -%}
+    <div id="cart-notification-product-{{ item.key }}" class="cart-item">
+      {%- if item.image -%}
+      {%- capture image_html -%}
+      <img
+           src="{{ item.image | image_url: width: 280 }}"
+           width="{{ item.image.width }}"
+           height="{{ item.image.height }}"
+           alt="{{ item.image.alt | escape }}"
+           loading="lazy"
+           >
+      {%- endcapture -%}
+      <div class="cart-notification-product__image">
+        {{ image_html }}
+      </div>
+      {%- endif -%}
+      <div class="cart-notification-product__details body3 mt--first-child-0">
+        {%- if settings.show_vendor -%}
+        <p>
+          <a class="mt0 product-card-small__meta link link__base-to_accent-color text-uppercase a--no-hover-color native-hover"
+             href="{{ routes.collections_url }}/all?filter.p.vendor={{ item.product.vendor | escape }}">{{ item.product.vendor }}</a>
+        </p>
+        {%- endif -%}
+        
+        <h6 class="mt10 mb0">{{ item.product.title | escape }}</h6>
+        <div class="mt10">{{ item.original_price | money }}</div>
+        {%- capture options -%}
+        {%- unless item.product.has_only_default_variant -%}
+        {%- for option in item.options_with_values -%}
+        <div class="product-option">
+          <dt>{{ option.name }}: </dt>
+          <dd>{{ option.value }}</dd>
+        </div>
+        {%- endfor -%}
+        {%- endunless -%}
+        {%- for property in item.properties -%}
+        {%- assign property_first_char = property.first | slice: 0 -%}
+        {%- if property.last != blank and property_first_char != '_' -%}
+        <div class="product-option">
+          <dt>{{ property.first }}: </dt>
+          <dd>
+            {%- if property.last contains '/uploads/' -%}
+            <a href="{{ property.last }}" class="link" target="_blank">
+              {{ property.last | split: '/' | last }}
+            </a>
+            {%- else -%}
+            {{ property.last }}
+            {%- endif -%}
+          </dd>
+        </div>
+        {%- endif -%}
+        {%- endfor -%}
+        {%- endcapture -%}
+        {%- if options != blank -%}
+        <dl class="mt3">{{ options }}</dl>
+        {%- endif -%}
+        {%- if item.selling_plan_allocation != nil -%}
+          <p class="mt10 product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endfor -%}
+{%- endif -%}

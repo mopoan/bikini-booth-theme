@@ -1,0 +1,223 @@
+/**
+ * Bikini Booth — About page (Tropic of C–inspired editorial layout)
+ * Section: bb-about-tropic
+ */
+
+.bb-about-tropic {
+  --bb-about-ink: #0a2e2e;
+  --bb-about-muted: rgba(10, 46, 46, 0.62);
+  --bb-about-line: rgba(10, 46, 46, 0.12);
+  --bb-col-brand: #4ac6be;
+  background: #fff;
+  color: var(--bb-about-ink);
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+}
+
+.bb-about-tropic .rte p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--bb-about-muted);
+  margin: 0 0 1rem;
+  text-transform: lowercase;
+}
+
+.bb-about-tropic .rte p:last-child {
+  margin-bottom: 0;
+}
+
+.bb-about-tropic__inner {
+  max-width: min(920px, calc(100vw - 2.5rem));
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(3.5rem, 9vw, 6rem);
+}
+
+/* Anchor nav — Tropic-style pills */
+.bb-about-tropic__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--bb-about-line);
+}
+
+.bb-about-tropic__nav a {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--bb-about-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.bb-about-tropic__nav a:hover,
+.bb-about-tropic__nav a:focus-visible {
+  color: var(--bb-about-ink);
+}
+
+/* Hero */
+.bb-about-tropic__hero {
+  text-align: center;
+  margin-bottom: clamp(2.75rem, 6vw, 4rem);
+}
+
+.bb-about-tropic__kicker {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bb-about-muted);
+  margin-bottom: 1rem;
+}
+
+.bb-about-tropic__title {
+  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: lowercase;
+  margin: 0 0 1.25rem;
+  color: var(--bb-about-ink);
+}
+
+.bb-about-tropic__lead {
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--bb-about-muted);
+  max-width: 38rem;
+  margin: 0 auto;
+  text-transform: lowercase;
+}
+
+/* Sections */
+.bb-about-tropic__section {
+  margin-bottom: clamp(2.5rem, 5vw, 3.75rem);
+  scroll-margin-top: 6rem;
+}
+
+.bb-about-tropic__section:last-child {
+  margin-bottom: 0;
+}
+
+.bb-about-tropic__section h2 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  margin: 0 0 1rem;
+  color: var(--bb-about-ink);
+}
+
+.bb-about-tropic__section p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--bb-about-muted);
+  margin: 0 0 1rem;
+  text-transform: lowercase;
+}
+
+.bb-about-tropic__section p:last-child {
+  margin-bottom: 0;
+}
+
+/* Why grid */
+.bb-about-tropic__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 639px) {
+  .bb-about-tropic__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bb-about-tropic__grid-item h3 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 0.35rem;
+  color: var(--bb-about-ink);
+}
+
+.bb-about-tropic__grid-item p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Wholesale CTA strip */
+.bb-about-tropic__cta {
+  padding: 1.75rem 1.5rem;
+  border: 1px solid var(--bb-about-line);
+  border-radius: 2px;
+  text-align: center;
+  background: #fafcfc;
+}
+
+.bb-about-tropic__cta h2 {
+  margin-bottom: 0.75rem;
+}
+
+.bb-about-tropic__cta p {
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bb-about-tropic__cta a {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bb-col-brand, #4ac6be);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+
+.bb-about-tropic__cta a:hover {
+  opacity: 0.85;
+}
+
+/* Stores */
+.bb-about-tropic__stores {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 899px) {
+  .bb-about-tropic__stores {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bb-about-tropic__store h3 {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+  color: var(--bb-about-ink);
+}
+
+.bb-about-tropic__store p {
+  font-size: 14px;
+  margin: 0 0 0.35rem;
+}
+
+.bb-about-tropic__store a {
+  font-size: 13px;
+  color: var(--bb-col-brand, #4ac6be);
+  text-decoration: none;
+}
+
+.bb-about-tropic__store a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

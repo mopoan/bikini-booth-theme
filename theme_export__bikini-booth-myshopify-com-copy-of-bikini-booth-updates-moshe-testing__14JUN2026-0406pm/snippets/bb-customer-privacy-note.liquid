@@ -1,0 +1,13 @@
+{%- comment -%}
+  Bikini Booth contact on auth pages. Store Privacy policy body is edited in Admin → Settings → Policies;
+  this snippet ensures the correct email appears on theme-rendered customer pages.
+{%- endcomment -%}
+<div class="bb-customer-privacy-note body3 mt40 text-center">
+  <p class="mt0 mb0">
+    {%- if shop.privacy_policy != blank -%}
+      {{ 'customer.login_page.privacy_contact_html' | t: privacy_url: shop.privacy_policy.url }}
+    {%- else -%}
+      {{ 'customer.login_page.privacy_contact_email_only_html' | t }}
+    {%- endif -%}
+  </p>
+</div>

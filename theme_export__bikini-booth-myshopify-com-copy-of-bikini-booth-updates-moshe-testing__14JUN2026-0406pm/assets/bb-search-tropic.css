@@ -1,0 +1,144 @@
+/**
+ * Search results — spacing + editorial product cards (body.bb-collection-tropic).
+ */
+
+body.bb-collection-tropic [data-section-name="main-search"] .bb-search-page__intro {
+  padding-top: clamp(1.25rem, 5vw, 2.25rem);
+}
+
+/* Mirror collection editorial card rules not covered by shared single-line selectors */
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-form__container__card.product-form__container__card--image
+  > .product-form__item,
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  > .product-form__item {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  .product-form__item:nth-child(n + 6) {
+  display: none !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .visual-display__color__card {
+  border-radius: 50% !important;
+  width: 1.35rem !important;
+  height: 1.35rem !important;
+  min-width: 1.35rem;
+  box-sizing: border-box;
+  padding: 0 !important;
+  border: 1px solid rgba(10, 46, 46, 0.12);
+}
+
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  fieldset.product-form__input:has(.btn--variant-smallcard) {
+  display: none !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  card-variant-selects {
+  display: block;
+  width: 100%;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-form__container__card {
+  justify-content: center;
+  margin-top: 0.5rem !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches.text-center
+  .product-form__container__card,
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches.text-center
+  .price__container,
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-card__content__main {
+  text-align: center !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .price__container {
+  width: 100%;
+}
+
+.bb-collection-tropic [data-section-name="main-search"] .product-card__rating,
+.bb-collection-tropic [data-section-name="main-search"] .spr-badge,
+.bb-collection-tropic [data-section-name="main-search"] compare-button,
+.bb-collection-tropic [data-section-name="main-search"] quickview-button {
+  display: none !important;
+}
+
+/* Mobile search cards: match collection editorial layout */
+@media (max-width: 1024px) {
+  .bb-collection-tropic
+    [data-section-name="main-search"]
+    .product-card--bb-card-swatches
+    .product-card__interface--hide-mobile
+    card-variant-selects,
+  .bb-collection-tropic
+    [data-section-name="main-search"]
+    .product-card--bb-card-swatches
+    card-variant-selects {
+    display: block !important;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .bb-collection-tropic
+    [data-section-name="main-search"]
+    .product-card--bb-card-swatches
+    .product-card__image__container
+    > productcard-buttons,
+  .bb-collection-tropic
+    [data-section-name="main-search"]
+    .product-card--bb-card-swatches
+    .product-card__image__container
+    wishlist-button,
+  .bb-collection-tropic
+    [data-section-name="main-search"]
+    .product-card--bb-card-swatches
+    .product-card__content__main
+    > .body3,
+  .bb-collection-tropic
+    [data-section-name="main-search"]
+    .product-card--bb-card-swatches
+    .product-card__interface__icons
+    .product-card__media-buttons {
+    display: none !important;
+  }
+
+  .bb-collection-tropic
+    [data-section-name="main-search"]
+    .product-card--bb-card-swatches
+    .product-form__container__card {
+    display: flex !important;
+  }
+}

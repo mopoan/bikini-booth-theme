@@ -1,0 +1,72 @@
+{
+  "description": "When 'Use Bikini Booth category navigation' is on, the header Menu (Online Store > Navigation) drives nav labels and URLs. Child links should point to collections so mega menu product images load. Collection handles below must exist in Shopify.",
+  "collection_handles": {
+    "new-arrivals": "NEW ARRIVALS",
+    "best-seller": "BEST SELLER",
+    "swimwear": "SWIMWEAR",
+    "resort-wear": "RESORT WEAR",
+    "accessories": "ACCESSORIES",
+    "swimwear-tops": "TOPS",
+    "swimwear-bottoms": "BOTTOMS",
+    "one-pieces": "ONE PIECES",
+    "swimwear-collections": "COLLECTIONS",
+    "resort-shirts": "SHIRTS",
+    "pants-shorts": "PANTS & SHORTS",
+    "skirts": "SKIRTS",
+    "dresses": "DRESSES",
+    "cover-ups": "COVER-UPS",
+    "sarongs": "SARONGS",
+    "men-kids": "MEN & KIDS",
+    "hats": "HATS",
+    "bags": "BAGS",
+    "jewelry": "JEWELRY",
+    "accessories-others": "OTHERS"
+  },
+  "dropdowns": [
+    {
+      "label": "BEST SELLER",
+      "handle": "best-seller",
+      "children": [
+        { "label": "SWIMWEAR", "handle": "swimwear" },
+        { "label": "RESORT WEAR", "handle": "resort-wear" },
+        { "label": "ACCESSORIES", "handle": "accessories" }
+      ]
+    },
+    {
+      "label": "SWIMWEAR",
+      "handle": "swimwear",
+      "children": [
+        { "label": "ALL SWIMWEAR", "handle": "swimwear" },
+        { "label": "TOPS", "handle": "swimwear-tops" },
+        { "label": "BOTTOMS", "handle": "swimwear-bottoms" },
+        { "label": "ONE PIECES", "handle": "one-pieces" },
+        { "label": "COLLECTIONS", "handle": "swimwear-collections" }
+      ]
+    },
+    {
+      "label": "RESORT WEAR",
+      "handle": "resort-wear",
+      "children": [
+        { "label": "ALL RESORT WEAR", "handle": "resort-wear" },
+        { "label": "SHIRTS", "handle": "resort-shirts" },
+        { "label": "PANTS & SHORTS", "handle": "pants-shorts" },
+        { "label": "SKIRTS", "handle": "skirts" },
+        { "label": "DRESSES", "handle": "dresses" },
+        { "label": "COVER-UPS", "handle": "cover-ups" },
+        { "label": "SARONGS", "handle": "sarongs" },
+        { "label": "MEN & KIDS", "handle": "men-kids" }
+      ]
+    },
+    {
+      "label": "ACCESSORIES",
+      "handle": "accessories",
+      "children": [
+        { "label": "ALL ACCESSORIES", "handle": "accessories" },
+        { "label": "HATS", "handle": "hats" },
+        { "label": "BAGS", "handle": "bags" },
+        { "label": "JEWELRY", "handle": "jewelry" },
+        { "label": "OTHERS", "handle": "accessories-others" }
+      ]
+    }
+  ]
+}

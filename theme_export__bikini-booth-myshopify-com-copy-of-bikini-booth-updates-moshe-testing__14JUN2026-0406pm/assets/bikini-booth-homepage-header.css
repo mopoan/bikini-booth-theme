@@ -1,0 +1,356 @@
+/* Homepage header — Bikini Booth reference (overlay on hero). Requires fixed header on index. */
+
+/* Optional theme lines — we draw rules on the nav row only (see below). */
+.fixed-header-group:not(:has(.sticky-activated)) .header__line {
+  background: #ffffff;
+  opacity: 0.95;
+}
+
+/* --- Homepage header: white + sticky like collection/product --- */
+@media (min-width: 1025px) {
+  /* Match bb-header-final-fix: fixed wrapper + main offset so first paint matches body hotfixes (no flash/CLS). */
+  body.template-index fixed-headergroup.fixed-header-group,
+  body.template-index .fixed-header-group {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 10020 !important;
+  }
+  body.template-index .section-header {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    z-index: 10020 !important;
+  }
+  body.template-index #MainContent {
+    padding-top: 92px !important;
+  }
+
+  body.template-index .section-header,
+  body.template-index .section-header .header__desktop__shadow,
+  body.template-index .section-header .header__main,
+  body.template-index .section-header .header__main .header,
+  body.template-index .section-header .header__section-background__boxed {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.template-index .section-header .header__desktop__shadow:before {
+    box-shadow: none !important;
+  }
+
+  body.template-index .section-header .bikini-booth-nav-menu .list-menu__item span,
+  body.template-index .section-header nav.desktop-main-menu .list-menu__item span,
+  body.template-index .section-header nav.desktop-main-menu .list-menu__item,
+  body.template-index .section-header .header__desktop .header__main .list-menu__item span {
+    font-size: 16px !important;
+    letter-spacing: 0.06em !important;
+    line-height: 1.3 !important;
+    color: #0a5c56 !important;
+  }
+
+  body.template-index .section-header .header__button,
+  body.template-index .section-header .header__icons .header__button,
+  body.template-index .section-header .header__button__bubble__text {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+    --color-text-icons-block: #0a5c56 !important;
+    --color-text-link-block: #0a5c56 !important;
+  }
+
+  body.template-index .section-header [data-section-name="announcement-bar-header"] .announcement-bar-header__block_text p {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
+
+  body.template-index .section-header .header__desktop .header__main .header {
+    padding-top: 0.45rem !important;
+    padding-bottom: 0.45rem !important;
+    min-height: 56px;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  body.template-index .section-header .header__desktop .header__main nav.desktop-main-menu {
+    min-height: 0;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.template-index .section-header .header__desktop .header__main nav.desktop-main-menu > ul {
+    min-height: 0;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0.8rem !important;
+  }
+
+  /* Keep homepage mega menu above hero/media sections */
+  body.template-index .section-header .submenu-design__simple,
+  body.template-index .section-header .submenu-design__megamenu {
+    z-index: 10060 !important;
+  }
+}
+
+/* Tropic of C–style nav: light weight, wide tracking, minimal chrome */
+.fixed-header-group .bikini-booth-nav-menu .list-menu__item span {
+  letter-spacing: 0.2em;
+  font-weight: 400;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+}
+
+@media (min-width: 1025px) {
+  /* Single hairline under nav (editorial, not double-boxed) */
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main .bikini-booth-nav-menu {
+    border-top: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main nav.bikini-booth-nav-menu > ul {
+    margin-bottom: 0;
+  }
+  /* Pipes-only row on hero (dropdown chevrons hidden visually; menus still work) */
+  .fixed-header-group:not(:has(.sticky-activated)) .bikini-booth-nav-menu .list-menu__item span svg.theme-icon {
+    display: none;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .bikini-booth-nav-menu .list-menu--inline > li:not(:first-child)::before {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  /* Bell + copy as one centered cluster (icon sits next to the text) */
+  .fixed-header-group [data-section-name="announcement-bar-header"] .announcement-bar-header__block {
+    position: relative;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 0.5rem;
+    width: 100%;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    box-sizing: border-box;
+  }
+  .fixed-header-group [data-section-name="announcement-bar-header"] .announcement-bar-header__block__icon {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+    color: #ffffff;
+  }
+  .fixed-header-group [data-section-name="announcement-bar-header"] .announcement-bar-header__block__icon svg {
+    color: inherit;
+  }
+  .fixed-header-group [data-section-name="announcement-bar-header"] .announcement-bar-header__block_text {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    flex: 0 1 auto;
+    max-width: min(78vw, 42rem);
+    margin-inline: 0;
+    justify-content: center !important;
+  }
+  .fixed-header-group [data-section-name="announcement-bar-header"] .announcement-bar-header__block_text p {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .fixed-header-group {
+    position: relative;
+  }
+  /* Viewport-fixed so icons sit on the black bar (absolute was relative to .header__main, i.e. below the announcement row) */
+  .fixed-header-group:not(:has(.sticky-activated)) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    z-index: 3;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    flex-direction: row;
+    align-items: center !important;
+    align-content: center;
+    justify-content: flex-end;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    margin-left: auto;
+    pointer-events: auto;
+  }
+  /* Kill baseline / line-box drift so icons sit in the vertical middle of the black bar */
+  .fixed-header-group:not(:has(.sticky-activated)) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons .header__icons__customer__icons {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    transform: none;
+  }
+  .fixed-header-group:has(.sticky-activated) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons .header__icons__customer__icons {
+    transform: none;
+  }
+  /* Slightly smaller glyphs so they breathe inside the bar (theme default is 20×20) */
+  .fixed-header-group:not(:has(.sticky-activated)) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    flex-shrink: 0;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons .header__button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center;
+    line-height: 1;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons .header__button.move-icon-up svg {
+    transform: none;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons .search-container {
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons .header__button:after {
+    height: 32px;
+    width: max(100%, 28px);
+  }
+  .fixed-header-group .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons > * { pointer-events: auto; }
+
+  .fixed-header-group:has(.sticky-activated) .section-header:has([data-section-name="header-layout-classic"]) .header__desktop .header__main .header__icons {
+    position: relative;
+    top: auto;
+    right: auto;
+    min-height: unset;
+    height: auto;
+    max-height: none;
+    pointer-events: auto;
+  }
+
+  /* Reference order: wishlist · search · account · compare · cart */
+  .fixed-header-group .header__icons__customer__icons {
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+  .fixed-header-group .header__icons__customer__icons > a[href*="wishlist"] {
+    order: 1;
+  }
+  .fixed-header-group .header__icons__customer__icons .search-container {
+    order: 2;
+  }
+  .fixed-header-group .header__icons__customer__icons > a.header__button[href*="account"] {
+    order: 3;
+  }
+  .fixed-header-group .header__icons__customer__icons > .header-customer-accounts {
+    order: 3;
+  }
+  .fixed-header-group .header__icons__customer__icons > a[href*="compare"] {
+    order: 4;
+  }
+  .fixed-header-group .header__icons__customer__icons > a#cart-icon-bubble,
+  .fixed-header-group .header__icons__customer__icons > a#cart-icon-bubble-short {
+    order: 5;
+  }
+}
+
+/* --- Scroll / sticky: dark bar (no solid white flash) on homepage --- */
+@media (min-width: 1025px) {
+  body.template-index .section-header .sticky-activated ~ header .section-background:not(.header__mobile),
+  body.template-index .section-header .sticky-activated ~ * .header__main:not(:has(.section-background)),
+  body.template-index .section-header .vertical-sticky.sticky-active-works {
+    background: rgba(8, 28, 28, 0.92) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__desktop__shadow,
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main {
+    background: rgba(8, 28, 28, 0.92) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__desktop__shadow:before {
+    box-shadow: none !important;
+  }
+
+  /* Nav + icons read on the dark strip (replaces default teal-on-white sticky) */
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main .list-menu .list-menu__item {
+    --color-menu-block: rgba(255, 255, 255, 0.92) !important;
+  }
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main .header__button,
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main .header__icons .header__button {
+    --color-text-link-block: rgba(255, 255, 255, 0.92) !important;
+    --color-text-icons-block: rgba(255, 255, 255, 0.92) !important;
+    --color-bubble-bg: #4ac6be !important;
+    --color-bubble-text: #0a2e2e !important;
+  }
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main .bikini-booth-nav-menu {
+    border-top: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35) !important;
+    margin-top: 0;
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+  }
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main .bikini-booth-nav-menu .list-menu--inline > li:not(:first-child)::before {
+    color: rgba(255, 255, 255, 0.55) !important;
+  }
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main .header__heading {
+    --color-heading-block: rgba(255, 255, 255, 0.96) !important;
+  }
+
+  /* Reduce “flash” of empty white header chrome while sticky state attaches */
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__desktop__shadow,
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__main {
+    transition: background-color 0.12s ease !important;
+  }
+
+  /* Remove accent “hairline” between announcement and header (often reads as teal on dark bar) */
+  body.template-index .fixed-header-group .header__line {
+    display: none !important;
+  }
+
+  body.template-index [data-section-name="announcement-bar-header"] .background__horizontal-line,
+  body.template-index [data-section-name="announcement-bar-header"] [id$="-line"].background__horizontal-line {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+  }
+
+  /*
+   * With logo in the hero, leave enough space so nav clears the wordmark, but keep the
+   * strip compact so logo + nav sit higher and don’t cover the hero subject’s face.
+   */
+  body.template-index:has(.bb-subframe-hero--centered-nav) .section-header .header__desktop .header__main .header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 56px;
+    box-sizing: border-box;
+  }
+
+  body.template-index:has(.bb-subframe-hero--centered-nav) .section-header .header__desktop .header__main .header nav.desktop-main-menu {
+    width: 100%;
+    justify-content: center;
+  }
+}

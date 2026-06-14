@@ -1,0 +1,582 @@
+{% doc %}
+  @prompt
+    Create a custom Instagram Reels gallery section for a Shopify theme. Each reel block has a URL text input that accepts a full Instagram reel or post link (e.g. https://www.instagram.com/reel/abc123/), an image picker for a portrait thumbnail (9:16 ratio), and an optional text label. The section setting controls how many reels are visible. Display the reels in a horizontal scrollable row. When the section becomes visible in the viewport (using IntersectionObserver), each reel should autoplay using Instagram's oEmbed embed or by embedding the reel as an iframe using the Instagram embed URL format. If autoplay via iframe is not possible due to Instagram restrictions, show the thumbnail with a play button overlay that opens the Instagram link in a new tab on click. The section must be mobile responsive.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-instagram-reels-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 0;
+  }
+
+  .ai-instagram-reels-container-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-instagram-reels-scroll-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.gap }}px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: {{ block.settings.scrollbar_color }} transparent;
+    padding: 0 {{ block.settings.horizontal_padding }}px;
+  }
+
+  .ai-instagram-reels-scroll-{{ ai_gen_id }}::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .ai-instagram-reels-scroll-{{ ai_gen_id }}::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .ai-instagram-reels-scroll-{{ ai_gen_id }}::-webkit-scrollbar-thumb {
+    background-color: {{ block.settings.scrollbar_color }};
+    border-radius: 4px;
+  }
+
+  .ai-instagram-reel-item-{{ ai_gen_id }} {
+    flex: 0 0 auto;
+    width: {{ block.settings.reel_width }}px;
+    position: relative;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    background-color: {{ block.settings.placeholder_bg }};
+  }
+
+  .ai-instagram-reel-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 177.78%;
+    background-color: {{ block.settings.placeholder_bg }};
+  }
+
+  .ai-instagram-reel-content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-instagram-reel-thumbnail-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-instagram-reel-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.placeholder_bg }};
+  }
+
+  .ai-instagram-reel-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.3;
+  }
+
+  .ai-instagram-reel-iframe-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: none;
+  }
+
+  .ai-instagram-reel-iframe-{{ ai_gen_id }}.loaded {
+    display: block;
+  }
+
+  .ai-instagram-reel-play-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .ai-instagram-reel-play-overlay-{{ ai_gen_id }}:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .ai-instagram-reel-play-button-{{ ai_gen_id }} {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: {{ block.settings.play_button_bg }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-instagram-reel-play-overlay-{{ ai_gen_id }}:hover .ai-instagram-reel-play-button-{{ ai_gen_id }} {
+    transform: scale(1.1);
+  }
+
+  .ai-instagram-reel-play-button-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+    fill: {{ block.settings.play_button_icon }};
+    margin-left: 4px;
+  }
+
+  .ai-instagram-reel-label-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: #ffffff;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .ai-instagram-reel-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-instagram-reels-{{ ai_gen_id }} {
+      padding: 30px 0;
+    }
+
+    .ai-instagram-reel-item-{{ ai_gen_id }} {
+      width: {{ block.settings.reel_width_mobile }}px;
+    }
+
+    .ai-instagram-reels-scroll-{{ ai_gen_id }} {
+      gap: {{ block.settings.gap_mobile }}px;
+      padding: 0 {{ block.settings.horizontal_padding_mobile }}px;
+    }
+
+    .ai-instagram-reel-play-button-{{ ai_gen_id }} {
+      width: 50px;
+      height: 50px;
+    }
+
+    .ai-instagram-reel-play-button-{{ ai_gen_id }} svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+{% endstyle %}
+
+<instagram-reels-{{ ai_gen_id }}
+  class="ai-instagram-reels-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-instagram-reels-container-{{ ai_gen_id }}">
+    <div class="ai-instagram-reels-scroll-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign reel_url_key = 'reel_url_' | append: i
+          assign thumbnail_key = 'thumbnail_' | append: i
+          assign label_key = 'label_' | append: i
+
+          assign reel_url = block.settings[reel_url_key]
+          assign thumbnail = block.settings[thumbnail_key]
+          assign label = block.settings[label_key]
+        %}
+
+        <div
+          class="ai-instagram-reel-item-{{ ai_gen_id }}"
+          data-reel-index="{{ i }}"
+          data-reel-url="{{ reel_url }}"
+        >
+          <div class="ai-instagram-reel-wrapper-{{ ai_gen_id }}">
+            <div class="ai-instagram-reel-content-{{ ai_gen_id }}">
+              {% if thumbnail %}
+                <img
+                  src="{{ thumbnail | image_url: width: 600 }}"
+                  alt="{{ label | escape }}"
+                  class="ai-instagram-reel-thumbnail-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="600"
+                  height="1067"
+                >
+              {% else %}
+                <div class="ai-instagram-reel-placeholder-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                  {% if reel_url == blank and thumbnail == blank %}
+                    <div class="ai-instagram-reel-empty-state-{{ ai_gen_id }}">
+                      Add reel URL and thumbnail
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              <iframe
+                class="ai-instagram-reel-iframe-{{ ai_gen_id }}"
+                data-src=""
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+
+              {% if reel_url != blank %}
+                <a
+                  href="{{ reel_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ai-instagram-reel-play-overlay-{{ ai_gen_id }}"
+                  aria-label="Play Instagram reel"
+                >
+                  <div class="ai-instagram-reel-play-button-{{ ai_gen_id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </div>
+                </a>
+              {% endif %}
+
+              {% if label != blank %}
+                <div class="ai-instagram-reel-label-{{ ai_gen_id }}">
+                  {{ label }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</instagram-reels-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class InstagramReels{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.observer = null;
+        this.hasLoaded = false;
+      }
+
+      connectedCallback() {
+        this.setupIntersectionObserver();
+      }
+
+      disconnectedCallback() {
+        if (this.observer) {
+          this.observer.disconnect();
+        }
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '50px',
+          threshold: 0.1
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !this.hasLoaded) {
+              this.hasLoaded = true;
+              this.loadReels();
+            }
+          });
+        }, options);
+
+        this.observer.observe(this);
+      }
+
+      extractInstagramId(url) {
+        if (!url) return null;
+        const patterns = [
+          /instagram\.com\/reel\/([A-Za-z0-9_-]+)/,
+          /instagram\.com\/p\/([A-Za-z0-9_-]+)/,
+          /instagram\.com\/tv\/([A-Za-z0-9_-]+)/
+        ];
+
+        for (const pattern of patterns) {
+          const match = url.match(pattern);
+          if (match) return match[1];
+        }
+        return null;
+      }
+
+      loadReels() {
+        const reelItems = this.querySelectorAll('.ai-instagram-reel-item-{{ ai_gen_id }}');
+
+        reelItems.forEach((item) => {
+          const reelUrl = item.getAttribute('data-reel-url');
+          if (!reelUrl) return;
+
+          const instagramId = this.extractInstagramId(reelUrl);
+          if (!instagramId) return;
+
+          const overlay = item.querySelector('.ai-instagram-reel-play-overlay-{{ ai_gen_id }}');
+
+          if (overlay) {
+            overlay.addEventListener('click', (e) => {
+              e.preventDefault();
+              window.open(reelUrl, '_blank', 'noopener,noreferrer');
+            });
+          }
+        });
+      }
+    }
+
+    customElements.define('instagram-reels-{{ ai_gen_id }}', InstagramReels{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Instagram reels gallery",
+  "tag": null,
+  "class": "instagram-reels-block",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Reel 1"
+    },
+    {
+      "type": "text",
+      "id": "reel_url_1",
+      "label": "Instagram URL",
+      "info": "Paste full Instagram reel or post link"
+    },
+    {
+      "type": "image_picker",
+      "id": "thumbnail_1",
+      "label": "Thumbnail",
+      "info": "Use 9:16 portrait ratio"
+    },
+    {
+      "type": "text",
+      "id": "label_1",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 2"
+    },
+    {
+      "type": "text",
+      "id": "reel_url_2",
+      "label": "Instagram URL",
+      "info": "Paste full Instagram reel or post link"
+    },
+    {
+      "type": "image_picker",
+      "id": "thumbnail_2",
+      "label": "Thumbnail",
+      "info": "Use 9:16 portrait ratio"
+    },
+    {
+      "type": "text",
+      "id": "label_2",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 3"
+    },
+    {
+      "type": "text",
+      "id": "reel_url_3",
+      "label": "Instagram URL",
+      "info": "Paste full Instagram reel or post link"
+    },
+    {
+      "type": "image_picker",
+      "id": "thumbnail_3",
+      "label": "Thumbnail",
+      "info": "Use 9:16 portrait ratio"
+    },
+    {
+      "type": "text",
+      "id": "label_3",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 4"
+    },
+    {
+      "type": "text",
+      "id": "reel_url_4",
+      "label": "Instagram URL",
+      "info": "Paste full Instagram reel or post link"
+    },
+    {
+      "type": "image_picker",
+      "id": "thumbnail_4",
+      "label": "Thumbnail",
+      "info": "Use 9:16 portrait ratio"
+    },
+    {
+      "type": "text",
+      "id": "label_4",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 5"
+    },
+    {
+      "type": "text",
+      "id": "reel_url_5",
+      "label": "Instagram URL",
+      "info": "Paste full Instagram reel or post link"
+    },
+    {
+      "type": "image_picker",
+      "id": "thumbnail_5",
+      "label": "Thumbnail",
+      "info": "Use 9:16 portrait ratio"
+    },
+    {
+      "type": "text",
+      "id": "label_5",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "reel_width",
+      "label": "Reel width on desktop",
+      "min": 200,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "reel_width_mobile",
+      "label": "Reel width on mobile",
+      "min": 150,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap on desktop",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Gap on mobile",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "label": "Horizontal padding on desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding_mobile",
+      "label": "Horizontal padding on mobile",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg",
+      "label": "Placeholder background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "scrollbar_color",
+      "label": "Scrollbar",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Play button"
+    },
+    {
+      "type": "color",
+      "id": "play_button_bg",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "play_button_icon",
+      "label": "Icon",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram reels gallery"
+    }
+  ]
+}
+{% endschema %}

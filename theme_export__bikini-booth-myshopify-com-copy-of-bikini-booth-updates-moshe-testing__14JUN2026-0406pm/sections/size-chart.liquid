@@ -1,0 +1,618 @@
+{%- comment -%}
+  Section: size-chart.liquid
+  Purpose: Standalone size guide page section for Bikini Booth.
+  Also drives the size-chart-modal snippet when rendered on product pages.
+  All content is editable in the Shopify theme editor.
+{%- endcomment -%}
+
+{%- liquid
+  assign tab_blocks = section.blocks | where: 'type', 'tab'
+  assign row_blocks  = section.blocks | where: 'type', 'size_row'
+-%}
+
+<section
+  class="sc-section"
+  id="size-chart-{{ section.id }}"
+  aria-label="Size Guide"
+>
+  <div class="sc-container">
+
+    {%- comment -%} Section heading {%- endcomment -%}
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <header class="sc-section-header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="sc-section-heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="sc-section-subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="sc-card">
+
+      {%- comment -%} Unit toggle {%- endcomment -%}
+      <div class="sc-top-bar">
+        <div class="sc-unit-toggle" role="group" aria-label="Unit of measurement">
+          <button type="button" class="sc-unit-btn is-active" data-unit="in" aria-pressed="true">in</button>
+          <button type="button" class="sc-unit-btn" data-unit="cm" aria-pressed="false">cm</button>
+        </div>
+      </div>
+
+      {%- comment -%} Tabs nav {%- endcomment -%}
+      {%- if tab_blocks.size > 0 -%}
+        <div class="sc-tabs" role="tablist" aria-label="Size categories">
+          {%- for block in tab_blocks -%}
+            <button
+              type="button"
+              class="sc-tab{%- if forloop.first %} is-active{%- endif -%}"
+              role="tab"
+              aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
+              aria-controls="sc-panel-{{ section.id }}-{{ block.id }}"
+              id="sc-tab-{{ section.id }}-{{ block.id }}"
+              data-tab="{{ block.id }}"
+              {{ block.shopify_attributes }}
+            >
+              {{- block.settings.tab_label | default: 'Tops' -}}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Tab panels {%- endcomment -%}
+      <div class="sc-panels">
+        {%- for block in tab_blocks -%}
+          {%- assign panel_rows = row_blocks | where: 'settings.tab_id', block.id -%}
+
+          <div
+            id="sc-panel-{{ section.id }}-{{ block.id }}"
+            class="sc-panel{%- if forloop.first %} is-active{%- endif -%}"
+            role="tabpanel"
+            aria-labelledby="sc-tab-{{ section.id }}-{{ block.id }}"
+            {%- unless forloop.first %} hidden{%- endunless -%}
+            {{ block.shopify_attributes }}
+          >
+
+            {%- comment -%} Measurement table {%- endcomment -%}
+            {%- if panel_rows.size > 0 -%}
+              <div class="sc-table-wrap">
+                <table class="sc-table" aria-label="{{ block.settings.tab_label }} size chart">
+                  <thead>
+                    <tr>
+                      <th scope="col">Size</th>
+                      <th scope="col">
+                        <span class="unit-in">Bust (in)</span>
+                        <span class="unit-cm" hidden>Bust (cm)</span>
+                      </th>
+                      <th scope="col">
+                        <span class="unit-in">Waist (in)</span>
+                        <span class="unit-cm" hidden>Waist (cm)</span>
+                      </th>
+                      <th scope="col">
+                        <span class="unit-in">Hips (in)</span>
+                        <span class="unit-cm" hidden>Hips (cm)</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {%- for row in panel_rows -%}
+                      <tr {{ row.shopify_attributes }}>
+                        <td class="sc-size-label">{{ row.settings.size_label | default: 'XS' }}</td>
+                        <td>
+                          <span class="unit-in">{{ row.settings.bust_in | default: '—' }}</span>
+                          <span class="unit-cm" hidden>{{ row.settings.bust_cm | default: '—' }}</span>
+                        </td>
+                        <td>
+                          <span class="unit-in">{{ row.settings.waist_in | default: '—' }}</span>
+                          <span class="unit-cm" hidden>{{ row.settings.waist_cm | default: '—' }}</span>
+                        </td>
+                        <td>
+                          <span class="unit-in">{{ row.settings.hips_in | default: '—' }}</span>
+                          <span class="unit-cm" hidden>{{ row.settings.hips_cm | default: '—' }}</span>
+                        </td>
+                      </tr>
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div>
+            {%- else -%}
+              <p class="sc-empty">No sizing data added yet for this category.</p>
+            {%- endif -%}
+
+            {%- comment -%} Fit notes {%- endcomment -%}
+            {%- if block.settings.fit_notes != blank -%}
+              <div class="sc-fit-notes">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
+                  <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div class="sc-fit-notes__text">{{ block.settings.fit_notes }}</div>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Between sizes tip {%- endcomment -%}
+            {%- if block.settings.between_sizes != blank -%}
+              <div class="sc-between-sizes">
+                <strong>Between sizes?</strong>
+                {{ block.settings.between_sizes }}
+              </div>
+            {%- endif -%}
+
+          </div>
+        {%- endfor -%}
+
+        {%- comment -%} Fallback if no tab blocks added {%- endcomment -%}
+        {%- if tab_blocks.size == 0 -%}
+          <p class="sc-empty">Add size chart tabs and rows in the theme editor to get started.</p>
+        {%- endif -%}
+      </div>
+
+    </div>{%- comment -%} /.sc-card {%- endcomment -%}
+
+    {%- comment -%} How to measure guide link {%- endcomment -%}
+    {%- if section.settings.measure_link_label != blank and section.settings.measure_link_url != blank -%}
+      <p class="sc-measure-link">
+        <a href="{{ section.settings.measure_link_url }}">{{ section.settings.measure_link_label }}</a>
+      </p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+
+<style>
+  /* ── Size Chart Section ─────────────────────────────── */
+  #size-chart-{{ section.id }} {
+    padding: {{ section.settings.padding_top | default: 48 }}px 20px {{ section.settings.padding_bottom | default: 48 }}px;
+  }
+
+  .sc-container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* Section header */
+  .sc-section-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .sc-section-heading {
+    font-size: 1.625rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+  }
+  @media (min-width: 768px) {
+    .sc-section-heading { font-size: 2rem; }
+  }
+  .sc-section-subheading {
+    font-size: 0.9375rem;
+    color: #777;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Card wrapper */
+  .sc-card {
+    background: #ffffff;
+    border: 1px solid #ebebeb;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  /* Top bar (unit toggle) */
+  .sc-top-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px 20px 0;
+  }
+
+  /* Unit toggle */
+  .sc-unit-toggle {
+    display: flex;
+    background: #f3f3f3;
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .sc-unit-btn {
+    background: none;
+    border: none;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 0.75rem;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    color: #888;
+    transition: background 0.2s ease, color 0.2s ease;
+    letter-spacing: 0.03em;
+  }
+  .sc-unit-btn.is-active {
+    background: #49c6be;
+    color: #ffffff;
+  }
+
+  /* Tabs */
+  .sc-tabs {
+    display: flex;
+    border-bottom: 1px solid #ebebeb;
+    padding: 0 8px;
+    margin-top: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .sc-tabs::-webkit-scrollbar { display: none; }
+
+  .sc-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 12px 16px;
+    font-size: 0.8125rem;
+    font-family: inherit;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #888;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-bottom: -1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    text-transform: uppercase;
+  }
+  .sc-tab.is-active {
+    color: #1a1a1a;
+    border-bottom-color: #49c6be;
+  }
+  .sc-tab:hover:not(.is-active) { color: #1a1a1a; }
+
+  /* Panels */
+  .sc-panels { padding: 24px 20px; }
+  @media (min-width: 768px) {
+    .sc-panels { padding: 28px 28px; }
+  }
+
+  /* Table */
+  .sc-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #ebebeb;
+  }
+  .sc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    color: #1a1a1a;
+    min-width: 340px;
+  }
+  .sc-table thead tr { background: #f0faf9; }
+  .sc-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+    color: #49c6be;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .sc-table td {
+    padding: 12px 16px;
+    border-top: 1px solid #f3f3f3;
+    white-space: nowrap;
+  }
+  .sc-table tbody tr:hover td { background: #fafafa; }
+  .sc-size-label { font-weight: 600; }
+
+  /* Fit notes */
+  .sc-fit-notes {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #f0faf9;
+    border-left: 3px solid #49c6be;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+  .sc-fit-notes svg { flex-shrink: 0; margin-top: 3px; }
+  .sc-fit-notes__text p { margin: 0; }
+
+  /* Between sizes */
+  .sc-between-sizes {
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.6;
+    padding: 14px 16px;
+    background: #fafafa;
+    border-radius: 8px;
+  }
+  .sc-between-sizes strong {
+    color: #1a1a1a;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    font-size: 0.875rem;
+  }
+  .sc-between-sizes p { margin: 0; }
+
+  /* Measure link */
+  .sc-measure-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.8125rem;
+  }
+  .sc-measure-link a {
+    color: #49c6be;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s ease;
+  }
+  .sc-measure-link a:hover { opacity: 0.75; }
+
+  .sc-empty {
+    font-size: 0.875rem;
+    color: #aaa;
+    padding: 32px 0;
+    text-align: center;
+    margin: 0;
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var section = document.getElementById('size-chart-{{ section.id }}');
+  if (!section) return;
+
+  // ── Unit toggle ───────────────────────────────────────────────
+  var unitBtns = section.querySelectorAll('.sc-unit-btn');
+  unitBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var unit = btn.dataset.unit;
+      unitBtns.forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.unit === unit);
+        b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
+      });
+      section.querySelectorAll('.unit-in').forEach(function (el) {
+        el.hidden = unit !== 'in';
+      });
+      section.querySelectorAll('.unit-cm').forEach(function (el) {
+        el.hidden = unit !== 'cm';
+      });
+    });
+  });
+
+  // ── Tabs ──────────────────────────────────────────────────────
+  var tabs   = section.querySelectorAll('.sc-tab');
+  var panels = section.querySelectorAll('.sc-panel');
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var targetId = 'sc-panel-{{ section.id }}-' + tab.dataset.tab;
+      tabs.forEach(function (t) {
+        var active = t === tab;
+        t.classList.toggle('is-active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      panels.forEach(function (panel) {
+        var active = panel.id === targetId;
+        panel.classList.toggle('is-active', active);
+        panel.hidden = !active;
+      });
+    });
+  });
+
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Size Chart",
+  "tag": "section",
+  "class": "size-chart-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Size Guide"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Find your perfect fit."
+    },
+    {
+      "type": "header",
+      "content": "Modal Trigger (used by size-chart-modal snippet)"
+    },
+    {
+      "type": "text",
+      "id": "modal_heading",
+      "label": "Modal heading",
+      "default": "Size Guide"
+    },
+    {
+      "type": "text",
+      "id": "trigger_label",
+      "label": "Trigger link label",
+      "default": "Size Guide"
+    },
+    {
+      "type": "header",
+      "content": "How to Measure"
+    },
+    {
+      "type": "text",
+      "id": "measure_link_label",
+      "label": "Link label",
+      "default": "How to measure yourself →"
+    },
+    {
+      "type": "url",
+      "id": "measure_link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Size Category Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_label",
+          "label": "Tab label",
+          "default": "Bikini Tops"
+        },
+        {
+          "type": "richtext",
+          "id": "fit_notes",
+          "label": "Fit notes",
+          "info": "Displayed below the size table as a highlighted tip.",
+          "default": "<p>Our tops run true to size. For extra coverage, size up one.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "between_sizes",
+          "label": "Between sizes tip",
+          "default": "<p>If you're between sizes, we recommend sizing up for a more relaxed fit, or sizing down for a snugger hold.</p>"
+        }
+      ]
+    },
+    {
+      "type": "size_row",
+      "name": "Size Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_id",
+          "label": "Tab ID",
+          "info": "Copy the block ID of the Tab this row belongs to. Find it in the URL bar when you click a Tab block in the theme editor."
+        },
+        {
+          "type": "text",
+          "id": "size_label",
+          "label": "Size",
+          "default": "XS"
+        },
+        {
+          "type": "text",
+          "id": "bust_in",
+          "label": "Bust (inches)",
+          "default": "32–33\""
+        },
+        {
+          "type": "text",
+          "id": "bust_cm",
+          "label": "Bust (cm)",
+          "default": "81–84"
+        },
+        {
+          "type": "text",
+          "id": "waist_in",
+          "label": "Waist (inches)",
+          "default": "24–25\""
+        },
+        {
+          "type": "text",
+          "id": "waist_cm",
+          "label": "Waist (cm)",
+          "default": "61–64"
+        },
+        {
+          "type": "text",
+          "id": "hips_in",
+          "label": "Hips (inches)",
+          "default": "34–35\""
+        },
+        {
+          "type": "text",
+          "id": "hips_cm",
+          "label": "Hips (cm)",
+          "default": "86–89"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size Chart",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Bikini Tops",
+            "fit_notes": "<p>Our tops run true to size. Triangle and bandeau styles have tie adjustability — when in doubt, size up.</p>",
+            "between_sizes": "<p>We recommend sizing up for extra coverage and support, or sizing down for a more secure fit.</p>"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Bikini Bottoms",
+            "fit_notes": "<p>Bottoms are cut to sit at the hip. If you prefer a higher waist, size up one.</p>",
+            "between_sizes": "<p>Go up a size for more coverage, or down for a cheekier look.</p>"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_label": "One-Pieces",
+            "fit_notes": "<p>One-pieces are sized by bust. If your bust and hip differ by more than one size, we recommend sizing by hip and adjusting straps.</p>",
+            "between_sizes": "<p>When between sizes, consider your height — taller frames may prefer sizing up to ensure torso length comfort.</p>"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "tab_label": "Cover-Ups",
+            "fit_notes": "<p>Cover-ups are designed with an oversized, relaxed fit. Most styles suit XS–M in one size.</p>",
+            "between_sizes": "<p>If you prefer a more fitted look, size down. For a flowy drape effect, stick with your usual size.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

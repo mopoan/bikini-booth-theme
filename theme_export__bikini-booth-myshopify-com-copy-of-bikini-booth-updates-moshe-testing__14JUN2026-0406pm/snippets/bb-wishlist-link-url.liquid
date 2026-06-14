@@ -1,0 +1,9 @@
+{% comment %}
+  Wishlist header/footer URL: Theme settings → Wishlist page only.
+  That setting must point to the Shopify page that uses the "wishlist" template (main-wishlist section).
+  Do not guess /pages/wishlist or pages.wishlist — the page handle can be anything.
+  Use: href="{% render 'bb-wishlist-link-url' %}"
+{% endcomment %}
+{%- if settings.page_wishlist != blank and settings.page_wishlist.url != blank -%}
+  {{- settings.page_wishlist.url -}}
+{%- endif -%}

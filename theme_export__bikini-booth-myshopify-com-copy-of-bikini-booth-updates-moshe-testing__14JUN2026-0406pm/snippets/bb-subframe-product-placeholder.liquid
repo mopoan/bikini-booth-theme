@@ -1,0 +1,28 @@
+{% comment %}
+  Placeholder tile when collection is empty. Args: section, index (1-based), link_url
+{% endcomment %}
+{%- liquid
+  assign ix = index | minus: 1
+-%}
+{%- capture stock_src -%}{%- render 'bb-subframe-stock-url', index: ix -%}{%- endcapture -%}
+<article class="bb-subframe-ptile bb-subframe-ptile--placeholder">
+  <div class="bb-subframe-ptile__media">
+    <img src="{{ stock_src | strip }}" alt="" width="400" height="533" loading="lazy">
+    {%- if section.settings.badge_text != blank -%}
+      <span class="bb-subframe-ptile__badge">{{ section.settings.badge_text }}</span>
+    {%- endif -%}
+  </div>
+  <div class="bb-subframe-ptile__info">
+    {%- assign cap = section.settings.placeholder_caption | default: 'shop the collection' -%}
+    {%- if link_url != blank -%}
+      <a href="{{ link_url }}">
+        <h3 class="bb-subframe-ptile__title">{{ cap | downcase }}</h3>
+      </a>
+    {%- else -%}
+      <h3 class="bb-subframe-ptile__title">{{ cap | downcase }}</h3>
+    {%- endif -%}
+    {%- if section.settings.placeholder_price_hint != blank -%}
+      <div class="bb-subframe-ptile__price"><span class="body3">{{ section.settings.placeholder_price_hint }}</span></div>
+    {%- endif -%}
+  </div>
+</article>

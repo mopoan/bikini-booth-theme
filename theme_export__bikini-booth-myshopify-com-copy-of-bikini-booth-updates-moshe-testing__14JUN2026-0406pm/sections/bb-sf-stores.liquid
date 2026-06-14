@@ -1,0 +1,180 @@
+<section class="bb-subframe bb-subframe-stores" id="bb-subframe-stores-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="bb-subframe-stores__inner">
+    <div class="bb-subframe-section-head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="bb-subframe-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="bb-subframe-title" style="font-family: Georgia, 'Times New Roman', serif;">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="bb-subframe-stores__grid">
+      {%- assign has_store_blocks = false -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'store' -%}
+          {%- assign has_store_blocks = true -%}
+          <div class="bb-subframe-store" {{ block.shopify_attributes }}>
+            {%- liquid
+              assign bb_store_img_link = block.settings.image_link
+              if bb_store_img_link == blank and block.settings.directions_url != blank
+                assign bb_store_img_link = block.settings.directions_url
+              endif
+            -%}
+            <div class="bb-subframe-store__img">
+              {%- if bb_store_img_link != blank -%}
+                <a href="{{ bb_store_img_link }}" class="bb-subframe-store__img-link" rel="noopener" target="_blank">
+              {%- endif -%}
+              {%- if block.settings.image != blank -%}
+                {%- assign store_img_alt = block.settings.city | escape -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  alt="{{ store_img_alt }}"
+                  loading="lazy"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                >
+              {%- elsif block.settings.image_url != blank -%}
+                <img src="{{ block.settings.image_url }}" alt="" width="600" height="400" loading="lazy">
+              {%- else -%}
+                {%- capture st_stock -%}{%- render 'bb-subframe-stock-url', index: forloop.index0 -%}{%- endcapture -%}
+                <img src="{{ st_stock | strip }}" alt="{{ block.settings.city | escape }}" width="600" height="400" loading="lazy">
+              {%- endif -%}
+              {%- if bb_store_img_link != blank -%}
+                </a>
+              {%- endif -%}
+            </div>
+            <div>
+              {%- if block.settings.city != blank -%}
+                <div class="bb-subframe-store__city">{{ block.settings.city | escape }}</div>
+              {%- endif -%}
+              {%- if block.settings.address != blank -%}
+                <p class="bb-subframe-store__addr">{{ block.settings.address | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.hours != blank -%}
+                <p class="bb-subframe-store__hours">{{ block.settings.hours | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.directions_url != blank -%}
+                <a class="bb-subframe-store__dir" href="{{ block.settings.directions_url }}" rel="noopener" target="_blank">Get Directions →</a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if request.design_mode and has_store_blocks == false -%}
+        <div class="bb-subframe-store bb-subframe-store--editor-empty">
+          <div class="bb-subframe-store__img"></div>
+          <div>
+            <div class="bb-subframe-store__city">Add store blocks</div>
+            <p class="bb-subframe-store__addr">This section is empty in the editor. Add at least one Store block.</p>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "BB - Stores",
+  "tag": "section",
+  "class": "bb-subframe-stores-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Visit us"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Stores"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "store",
+      "name": "Store",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "image_link",
+          "label": "Store image link",
+          "info": "Makes the store photo clickable (e.g. Google Maps). If empty, the Directions link is used for the image."
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Image URL (fallback)",
+          "info": "Used only when no image is uploaded above."
+        },
+        {
+          "type": "text",
+          "id": "city",
+          "label": "City",
+          "default": "Bali"
+        },
+        {
+          "type": "textarea",
+          "id": "address",
+          "label": "Address",
+          "default": "Jl. Kayu Aya No. 18, Seminyak"
+        },
+        {
+          "type": "text",
+          "id": "hours",
+          "label": "Hours",
+          "default": "Mon – Sat · 10am – 7pm"
+        },
+        {
+          "type": "url",
+          "id": "directions_url",
+          "label": "Get Directions link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB - Stores",
+      "blocks": [
+        {
+          "type": "store",
+          "settings": {
+            "city": "Bali",
+            "address": "Jl. Kayu Aya No. 18, Seminyak",
+            "hours": "Mon – Sat · 10am – 7pm",
+            "image_url": "https://images.unsplash.com/photo-1528698827591-e19cef791f48?w=600&q=80&auto=format&fit=crop"
+          }
+        },
+        {
+          "type": "store",
+          "settings": {
+            "city": "London",
+            "address": "42 King's Road, Chelsea, SW3",
+            "hours": "Mon – Sat · 10am – 6pm",
+            "image_url": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&q=80&auto=format&fit=crop"
+          }
+        },
+        {
+          "type": "store",
+          "settings": {
+            "city": "Dubai",
+            "address": "City Walk, Al Safa Street",
+            "hours": "Sun – Thu · 10am – 10pm",
+            "image_url": "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&q=80&auto=format&fit=crop"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

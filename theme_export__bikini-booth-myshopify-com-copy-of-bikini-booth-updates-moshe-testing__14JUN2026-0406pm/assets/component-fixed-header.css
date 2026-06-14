@@ -1,0 +1,147 @@
+body:has(.fixed-header-group){
+  position:relative;
+}
+.fixed-header-group{
+  display:block;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:20;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.fixed-header-group>*{
+  pointer-events: all;
+}
+.fixed-header-group:has(.sticky-activated) .header__heading>*:last-child:not(:only-child){
+  display: none;
+}
+.fixed-header-group:not(:has(.sticky-activated)) .header__heading>*:first-child:not(:only-child){
+  display: none;
+}
+@media (min-width:1025px){
+  .fixed-header-group .header__desktop__shadow,
+  .fixed-header-group .header__main{
+    transition: background-image var(--duration-medium) var(--animation-bezier),
+                background-color var(--duration-medium) var(--animation-bezier);
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__desktop__shadow,
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main{
+    background: transparent!important;
+  }
+  /*
+   * Bikini Booth (bb-root index): keep solid white desktop chrome. This file loads after head stylesheets,
+   * so the transparent rule above would otherwise win and the hero/body shows through side gutters + seams.
+   */
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .section-header .header__desktop__shadow,
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .section-header .header__main,
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .section-header .header__main .header,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .section-header .header__desktop__shadow,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .section-header .header__main,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .section-header .header__main .header {
+    background: #ffffff !important;
+  }
+  /* Same file later re-applies static-header (light) menu tokens for “over hero”; restore Tropic ink on solid white. */
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .header__main .list-menu .list-menu__item,
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .header__main .bikini-booth-nav-menu .list-menu__item span,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .header__main .list-menu .list-menu__item,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .header__main .bikini-booth-nav-menu .list-menu__item span {
+    --color-menu-block: #0a5c56 !important;
+    --color-menu-block-hover: #0a2e2e !important;
+    color: #0a5c56 !important;
+  }
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__button,
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__icons .header__button,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__button,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__icons .header__button {
+    --color-text-link-block: #0a5c56 !important;
+    --color-text-icons-block: #0a5c56 !important;
+  }
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__icons svg path,
+  body.bb-root.template-index .fixed-header-group:not(:has(.sticky-activated)) .header__main .search-container svg path,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__icons svg path,
+  body.bb-root.template--index .fixed-header-group:not(:has(.sticky-activated)) .header__main .search-container svg path {
+    fill: #0a5c56 !important;
+  }
+  /* Sticky scroll: matte/transparent sticky layers would otherwise bring back side gutters. */
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .section-header .header__desktop__shadow,
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .section-header .header__main,
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .section-header .header__main .header,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .section-header .header__desktop__shadow,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .section-header .header__main,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .section-header .header__main .header {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .header__main .list-menu .list-menu__item,
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .header__main .bikini-booth-nav-menu .list-menu__item span,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .header__main .list-menu .list-menu__item,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .header__main .bikini-booth-nav-menu .list-menu__item span {
+    --color-menu-block: #0a5c56 !important;
+    --color-menu-block-hover: #0a2e2e !important;
+    color: #0a5c56 !important;
+  }
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .header__main .header__button,
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .header__main .header__icons .header__button,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .header__main .header__button,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .header__main .header__icons .header__button {
+    --color-text-link-block: #0a5c56 !important;
+    --color-text-icons-block: #0a5c56 !important;
+  }
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .header__main .header__icons svg path,
+  body.bb-root.template-index .fixed-header-group:has(.sticky-activated) .header__main .search-container svg path,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .header__main .header__icons svg path,
+  body.bb-root.template--index .fixed-header-group:has(.sticky-activated) .header__main .search-container svg path {
+    fill: #0a5c56 !important;
+  }
+  .fixed-header-group .header__desktop__shadow:before{
+    transition: box-shadow var(--duration-medium) var(--animation-bezier);
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__desktop__shadow:before{
+    box-shadow:unset!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__heading{
+    --color-heading-block: var(--static-header-color)!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main .list-menu .list-menu__item{
+    --color-menu-block: var(--static-header-color)!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main .header-phone-number__desktop{
+    color: var(--static-header-color)!important;
+    --color-text-icons-block: var(--static-header-color)!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main .header-phone-number__desktop+svg{
+    --color-text-icons-block: var(--static-header-color)!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main .header-phone-number__desktop>*{
+    color: var(--static-header-color)!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__main .header__button{
+    --color-text-link-block: var(--static-header-color)!important;
+    --color-text-icons-block: var(--static-header-color)!important;
+  }
+}
+@media (max-width:1024px){
+  .fixed-header-group .header__mobile{
+    transition: background-color var(--duration-medium) var(--animation-bezier);
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__mobile{
+    background: transparent!important;
+  }
+  .fixed-header-group .header__mobile:has(.header__mobile__shadow):before{
+    transition: box-shadow var(--duration-medium) var(--animation-bezier);
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__mobile:has(.header__mobile__shadow):before{
+    box-shadow:unset!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__mobile .header__heading{
+    --color-heading-block: var(--static-header-color)!important;
+  }
+  .fixed-header-group:not(:has(.sticky-activated)) .header__mobile .menu-drawer__button,
+  .fixed-header-group:not(:has(.sticky-activated)) .header__mobile .header__icons .header__button{
+    --color-text-link-block: var(--static-header-color)!important;
+    --color-text-icons-block: var(--static-header-color)!important;
+  }
+}

@@ -1,0 +1,732 @@
+/* ============================================================
+   Bikini Booth — Homepage v3 (below-the-fold)
+   Editorial layout + brand teal #4ac6be as accent only (micro-labels,
+   hovers, key CTAs). Does NOT override BB Hero or header assets.
+   ============================================================ */
+
+
+/* ==========  SCROLL REVEAL (no opacity hide — theme/JS race left sections invisible) ========== */
+.bb-reveal {
+  opacity: 1;
+  transform: translateY(28px);
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bb-reveal.is-visible {
+  transform: translateY(0);
+}
+
+
+/* ==========  GLOBAL TYPOGRAPHY — thin, monochrome  ========== */
+.content-for-layout .section-heading__heading {
+  font-weight: 200 !important;
+  letter-spacing: -0.03em;
+  color: #000 !important;
+}
+.content-for-layout .section-heading__subheading {
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #999 !important;
+}
+.content-for-layout .section-heading__desc {
+  max-width: 520px;
+  margin-inline: auto;
+  line-height: 1.8;
+  color: #888;
+  font-weight: 300;
+  font-size: 0.9rem;
+}
+
+
+/* ==========  GLOBAL BUTTON — thin border, no fill  ========== */
+/* Exclude card variant pickers (size / SET·TOP·BOTTOM) — they use --border / btn--variant-smallcard */
+.content-for-layout .btn:not(.btn--variant-smallcard) {
+  background: transparent !important;
+  border: 1px solid #000 !important;
+  color: #000 !important;
+  border-radius: 0 !important;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  padding: 14px 36px;
+  transition: background-color 0.4s ease,
+              color 0.4s ease,
+              border-color 0.4s ease,
+              transform 0.3s ease;
+}
+.content-for-layout .btn:not(.btn--variant-smallcard) .btn__top-text,
+.content-for-layout .btn:not(.btn--variant-smallcard) .btn__bottom-text {
+  color: #000 !important;
+}
+.content-for-layout .btn:not(.btn--variant-smallcard):hover {
+  background: #4ac6be !important;
+  color: #fff !important;
+  border-color: #4ac6be !important;
+}
+.content-for-layout .btn:not(.btn--variant-smallcard):hover .btn__top-text,
+.content-for-layout .btn:not(.btn--variant-smallcard):hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ==========  SWIPER CONTROLS — minimal  ========== */
+.content-for-layout .custom-swiper-button-prev,
+.content-for-layout .custom-swiper-button-next {
+  transition: opacity 0.3s ease;
+}
+.content-for-layout .custom-swiper-button-prev:hover,
+.content-for-layout .custom-swiper-button-next:hover {
+  opacity: 0.6;
+}
+
+
+/* ============================================================
+   TICKER STRIP — black + subtle brand top stripe
+   ============================================================ */
+[data-section-name="ticker-text"] {
+  margin-top: 0 !important;
+  background-color: #000 !important;
+  box-shadow: inset 0 3px 0 0 #4ac6be;
+}
+[data-section-name="ticker-text"] .section-background {
+  background-color: #000 !important;
+  background: #000 !important;
+}
+[data-section-name="ticker-text"] .ticker-text__text h2 {
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   CATEGORY BANNERS — minimal, thin text, subtle
+   ============================================================ */
+[data-section-name="banners"].top-spacing-none {
+  margin-top: 0;
+  padding-top: 0;
+}
+[data-section-name="banners"] .banner__block-item {
+  overflow: hidden;
+  border-radius: 0;
+}
+[data-section-name="banners"] .banner__block-item .image-hover-box__container img {
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-section-name="banners"] .banner__block-item:hover .image-hover-box__container img {
+  transform: scale(1.03);
+}
+[data-section-name="banners"] .banner__block-item__heading {
+  font-weight: 200 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+[data-section-name="banners"] .banner__block-item .banner__block-item__desc p {
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+[data-section-name="banners"] .banner__block-item .btn {
+  background: transparent !important;
+  border: 1px solid #fff !important;
+  color: #fff !important;
+  backdrop-filter: none;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  padding: 12px 32px;
+  border-radius: 0 !important;
+}
+[data-section-name="banners"] .banner__block-item .btn .btn__top-text,
+[data-section-name="banners"] .banner__block-item .btn .btn__bottom-text {
+  color: #fff !important;
+}
+[data-section-name="banners"] .banner__block-item .btn:hover {
+  background: rgba(74, 198, 190, 0.12) !important;
+  color: #fff !important;
+  border-color: #4ac6be !important;
+}
+[data-section-name="banners"] .banner__block-item .btn:hover .btn__top-text,
+[data-section-name="banners"] .banner__block-item .btn:hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   FEATURED COLLECTION + SHOP THE FEED — reference-aligned product rows
+   Base theme sets --color-* on #theme-section-*; #MainContent [data-section-name]
+   has higher specificity than #theme-section-id alone, so overrides apply.
+   ============================================================ */
+/* Editorial layout + Bikini Booth brand teal on product type & accents (not full monochrome) */
+#MainContent [data-section-name="featured-collection"],
+#MainContent [data-section-name="shop-the-feed"] {
+  --color-product-name-block: #4ac6be !important;
+  --color-product-name-block-hover: #369e96 !important;
+  --color-price-main-block: #4ac6be !important;
+  --color-old-price-main-block: #999 !important;
+  --color-meta-products-block: #666 !important;
+  --color-accent-section: #4ac6be !important;
+  --color-visual-display-border-block: #4ac6be !important;
+  --color-button-border_cardswatches-block: #c9c9c9 !important;
+  --color-button-border-hover_cardswatches-block: #4ac6be !important;
+  --color-button-text_cardswatches-block: #111 !important;
+  --color-button-text-hover_cardswatches-block: #111 !important;
+  --color-button-hover_cardswatches-block: transparent !important;
+  --radius-image: 0 !important;
+}
+
+#MainContent [data-section-name="featured-collection"] {
+  background: #fff;
+}
+#MainContent [data-section-name="featured-collection"] .section-heading__heading {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 200 !important;
+  letter-spacing: -0.03em;
+  color: #000;
+}
+#MainContent [data-section-name="featured-collection"] .section-heading__subheading,
+#MainContent [data-section-name="shop-the-feed"] .section-heading__subheading {
+  color: #4ac6be !important;
+}
+
+/* Product card — square crops; titles & prices in brand teal */
+#MainContent [data-section-name="featured-collection"] .product-card,
+#MainContent [data-section-name="shop-the-feed"] .product-card {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent;
+  overflow: visible;
+  transition: none;
+}
+#MainContent [data-section-name="featured-collection"] .product-card:hover,
+#MainContent [data-section-name="shop-the-feed"] .product-card:hover {
+  transform: none;
+  box-shadow: none !important;
+}
+#MainContent [data-section-name="featured-collection"] .product-card .image-hover-box,
+#MainContent [data-section-name="shop-the-feed"] .product-card .image-hover-box {
+  border-radius: 0;
+  overflow: hidden;
+}
+#MainContent [data-section-name="featured-collection"] .product-card .image-hover-box img,
+#MainContent [data-section-name="shop-the-feed"] .product-card .image-hover-box img {
+  transition: opacity 0.5s ease;
+}
+#MainContent [data-section-name="featured-collection"] .product-card:hover .image-hover-box img,
+#MainContent [data-section-name="shop-the-feed"] .product-card:hover .image-hover-box img {
+  opacity: 0.92;
+}
+/* shop-the-feed uses .product-card-small (no .product-card wrapper) */
+#MainContent [data-section-name="shop-the-feed"] .product-card-small .image-hover-box {
+  border-radius: 0;
+  overflow: hidden;
+}
+#MainContent [data-section-name="shop-the-feed"] .product-card-small .image-hover-box img {
+  transition: opacity 0.5s ease;
+}
+#MainContent [data-section-name="shop-the-feed"] .product-card-small:hover .image-hover-box img {
+  opacity: 0.92;
+}
+#MainContent [data-section-name="featured-collection"] .product-card__content,
+#MainContent [data-section-name="shop-the-feed"] .product-card__content {
+  padding: 12px 0 18px;
+}
+#MainContent [data-section-name="shop-the-feed"] .product-card-small__content {
+  padding: 12px 0 18px;
+}
+/* Theme uses .product-card-small__heading (not .product-card__title) */
+#MainContent [data-section-name="featured-collection"] .product-card-small__heading,
+#MainContent [data-section-name="shop-the-feed"] .product-card-small__heading {
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.02em !important;
+  color: #4ac6be !important;
+  text-transform: none !important;
+}
+/* Price snippet uses .price__main / .price__sale (not .money) */
+#MainContent [data-section-name="featured-collection"] .price__main,
+#MainContent [data-section-name="featured-collection"] .price__sale,
+#MainContent [data-section-name="shop-the-feed"] .price__main,
+#MainContent [data-section-name="shop-the-feed"] .price__sale {
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  color: #4ac6be !important;
+}
+
+/* Hide clutter; keep variant picker + SET/TOP/BOTTOM swatches; hide ATC to match reference */
+#MainContent [data-section-name="featured-collection"] .product-card__vendor,
+#MainContent [data-section-name="featured-collection"] .product-card__type,
+#MainContent [data-section-name="featured-collection"] .product-card__desc,
+#MainContent [data-section-name="featured-collection"] .product-card__description,
+#MainContent [data-section-name="featured-collection"] .product-card__badge,
+#MainContent [data-section-name="featured-collection"] .product-card__badges,
+#MainContent [data-section-name="featured-collection"] .product-badge,
+#MainContent [data-section-name="featured-collection"] .product-card__countdown,
+#MainContent [data-section-name="featured-collection"] .product-card__rating,
+#MainContent [data-section-name="featured-collection"] .review-stars,
+#MainContent [data-section-name="featured-collection"] .product-card__wishlist,
+#MainContent [data-section-name="featured-collection"] .product-card__compare,
+#MainContent [data-section-name="featured-collection"] .product-card__quick-view,
+#MainContent [data-section-name="featured-collection"] .product-card__buttons,
+#MainContent [data-section-name="featured-collection"] .product-card__button,
+#MainContent [data-section-name="featured-collection"] .product-card__add-to-cart,
+#MainContent [data-section-name="featured-collection"] .product-card__swatches,
+#MainContent [data-section-name="featured-collection"] .product-card__meta-wrap,
+#MainContent [data-section-name="featured-collection"] .product-card__old-price,
+#MainContent [data-section-name="featured-collection"] .product-card__save-price,
+#MainContent [data-section-name="featured-collection"] .product-card__save-badge,
+#MainContent [data-section-name="featured-collection"] .product-card .wishlist-btn,
+#MainContent [data-section-name="featured-collection"] .product-card .compare-btn,
+#MainContent [data-section-name="featured-collection"] .product-card .quick-view-btn,
+#MainContent [data-section-name="featured-collection"] .product-card .quick-add__submit,
+#MainContent [data-section-name="featured-collection"] .product-card .product-card__quantity {
+  display: none !important;
+}
+
+/* "Shop All" link — thin underline style */
+#MainContent [data-section-name="featured-collection"] .secondary-btn__container .btn,
+#MainContent [data-section-name="featured-collection"] .section-footer .btn {
+  background: transparent !important;
+  border: none !important;
+  color: #000 !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  padding: 8px 0;
+}
+#MainContent [data-section-name="featured-collection"] .secondary-btn__container .btn:hover,
+#MainContent [data-section-name="featured-collection"] .section-footer .btn:hover {
+  background: transparent !important;
+  color: #4ac6be !important;
+  text-decoration: underline;
+  text-decoration-color: #4ac6be;
+}
+#MainContent [data-section-name="featured-collection"] .secondary-btn__container .btn .btn__top-text,
+#MainContent [data-section-name="featured-collection"] .section-footer .btn .btn__top-text,
+#MainContent [data-section-name="featured-collection"] .secondary-btn__container .btn .btn__bottom-text,
+#MainContent [data-section-name="featured-collection"] .section-footer .btn .btn__bottom-text {
+  color: inherit !important;
+}
+
+
+/* ============================================================
+   ABOUT US (media-with-text) — airy editorial
+   ============================================================ */
+[data-section-name="media-with-text"] .media-with-text__image {
+  overflow: hidden;
+  border-radius: 0 !important;
+}
+[data-section-name="media-with-text"] .media-with-text__image img {
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-section-name="media-with-text"]:hover .media-with-text__image img {
+  transform: scale(1.03);
+}
+[data-section-name="media-with-text"] .media-with-text__content {
+  padding: 56px 64px !important;
+}
+[data-section-name="media-with-text"] .section-heading__subheading {
+  color: #4ac6be !important;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  font-size: 0.65rem;
+  margin-bottom: 16px;
+}
+[data-section-name="media-with-text"] .section-heading__heading {
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  line-height: 1.1;
+  color: #000 !important;
+  font-weight: 200 !important;
+  letter-spacing: -0.03em;
+}
+[data-section-name="media-with-text"] .richtext p {
+  color: #777;
+  font-size: 0.9rem;
+  line-height: 1.85;
+  font-weight: 300;
+}
+[data-section-name="media-with-text"] .btn {
+  background: transparent !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+  border-radius: 0 !important;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  padding: 14px 36px;
+  margin-top: 16px;
+}
+[data-section-name="media-with-text"] .btn .btn__top-text,
+[data-section-name="media-with-text"] .btn .btn__bottom-text {
+  color: #000 !important;
+}
+[data-section-name="media-with-text"] .btn:hover {
+  background: #4ac6be !important;
+  color: #fff !important;
+  border-color: #4ac6be !important;
+}
+[data-section-name="media-with-text"] .btn:hover .btn__top-text,
+[data-section-name="media-with-text"] .btn:hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   OUR MISSION (text section) — dark, elegant, thin
+   ============================================================ */
+[data-section-name="text"],
+[data-section-name="media-with-text-vertical"] {
+  position: relative;
+}
+[data-section-name="text"] .section-background,
+[data-section-name="media-with-text-vertical"] .section-background {
+  background: #111 !important;
+}
+.content-for-layout [data-section-name="text"] .section-heading__heading,
+.content-for-layout [data-section-name="media-with-text-vertical"] .section-heading__heading {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  letter-spacing: -0.04em;
+  line-height: 1.06;
+  color: #fff !important;
+  font-weight: 200 !important;
+}
+[data-section-name="text"] .section-heading__subheading,
+[data-section-name="media-with-text-vertical"] .section-heading__subheading {
+  color: #4ac6be !important;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+}
+[data-section-name="text"] .section-text-block__heading,
+[data-section-name="media-with-text-vertical"] .section-text-block__heading {
+  color: #fff !important;
+}
+[data-section-name="text"] h5.accent-color,
+[data-section-name="media-with-text-vertical"] h5.accent-color {
+  color: rgba(255,255,255,0.5) !important;
+}
+[data-section-name="text"] .richtext,
+[data-section-name="text"] .richtext p,
+[data-section-name="media-with-text-vertical"] .richtext,
+[data-section-name="media-with-text-vertical"] .richtext p {
+  color: rgba(255,255,255,0.6) !important;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  font-weight: 300;
+}
+[data-section-name="text"] .btn,
+[data-section-name="media-with-text-vertical"] .btn {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.4) !important;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  padding: 14px 40px;
+  border-radius: 0 !important;
+}
+[data-section-name="text"] .btn .btn__top-text,
+[data-section-name="text"] .btn .btn__bottom-text,
+[data-section-name="media-with-text-vertical"] .btn .btn__top-text,
+[data-section-name="media-with-text-vertical"] .btn .btn__bottom-text {
+  color: #fff !important;
+}
+[data-section-name="text"] .btn:hover,
+[data-section-name="media-with-text-vertical"] .btn:hover {
+  background: #4ac6be !important;
+  color: #fff !important;
+  border-color: #4ac6be !important;
+}
+[data-section-name="text"] .btn:hover .btn__top-text,
+[data-section-name="text"] .btn:hover .btn__bottom-text,
+[data-section-name="media-with-text-vertical"] .btn:hover .btn__top-text,
+[data-section-name="media-with-text-vertical"] .btn:hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   FAQ / ACCORDION — clean, minimal
+   ============================================================ */
+[data-section-name="accordion"] {
+  background: #fff;
+}
+[data-section-name="accordion"] details {
+  border-color: rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease;
+}
+[data-section-name="accordion"] details[open] {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+[data-section-name="accordion"] summary {
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  transition: color 0.3s ease;
+}
+[data-section-name="accordion"] summary:hover {
+  color: #4ac6be;
+}
+[data-section-name="accordion"] details[open] > summary {
+  color: #4ac6be;
+}
+[data-section-name="accordion"] .section-heading__subheading {
+  color: #4ac6be !important;
+}
+[data-section-name="accordion"] details .accordion__content {
+  line-height: 1.85;
+  color: #777;
+  font-weight: 300;
+}
+[data-section-name="accordion"] .section-heading__heading {
+  color: #000;
+  font-weight: 200 !important;
+}
+
+
+/* ============================================================
+   GOOGLE REVIEWS (_blocks) — monochrome, minimal
+   ============================================================ */
+[class*="ai-google-reviews-container"] {
+  padding: 0 40px;
+}
+[class*="ai-google-reviews-title"] {
+  font-weight: 200 !important;
+  letter-spacing: -0.03em !important;
+  color: #000 !important;
+}
+[class*="ai-google-reviews-subtitle"] {
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  font-size: 0.65rem !important;
+  font-weight: 500 !important;
+  color: #4ac6be !important;
+}
+[class*="ai-google-reviews-card"] {
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  box-shadow: none !important;
+  transition: border-color 0.4s ease !important;
+}
+[class*="ai-google-reviews-card"]:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: rgba(74, 198, 190, 0.45) !important;
+}
+[class*="ai-google-reviews-author-name"] {
+  font-weight: 400 !important;
+  color: #000 !important;
+}
+[class*="ai-google-reviews-text"] {
+  color: #777 !important;
+  font-weight: 300 !important;
+}
+[class*="ai-google-reviews-date"] {
+  color: #bbb !important;
+}
+[class*="ai-google-reviews-nav-button"] {
+  background: transparent !important;
+  border: 1px solid rgba(0,0,0,0.15) !important;
+  color: #000 !important;
+}
+[class*="ai-google-reviews-nav-button"]:hover {
+  background: #4ac6be !important;
+  color: #fff !important;
+  border-color: #4ac6be !important;
+}
+[class*="ai-google-reviews-dot"] {
+  background: #ddd !important;
+}
+[class*="ai-google-reviews-dot"].active,
+[class*="ai-google-reviews-dot"][class*="active"] {
+  background: #4ac6be !important;
+}
+[class*="ai-google-reviews-avatar"] {
+  background: #4ac6be !important;
+}
+
+
+/* ============================================================
+   DISTRIBUTOR CTA (media-with-text_2) — dark neutral
+   ============================================================ */
+[data-section-name="media-with-text_2"] {
+  background: #0a0a0a !important;
+}
+[data-section-name="media-with-text_2"] .section-background {
+  background: #0a0a0a !important;
+}
+[data-section-name="media-with-text_2"] .media-with-text__image {
+  overflow: hidden;
+}
+[data-section-name="media-with-text_2"] .media-with-text__image img {
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-section-name="media-with-text_2"]:hover .media-with-text__image img {
+  transform: scale(1.03);
+}
+[data-section-name="media-with-text_2"] .section-heading__heading {
+  font-size: clamp(2rem, 3.5vw, 2.75rem) !important;
+  line-height: 1.1;
+  font-weight: 200 !important;
+  letter-spacing: -0.03em;
+  color: #fff !important;
+}
+[data-section-name="media-with-text_2"] .section-heading__subheading {
+  color: #4ac6be !important;
+}
+[data-section-name="media-with-text_2"] .richtext p {
+  font-size: 0.9rem;
+  line-height: 1.85;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7) !important;
+}
+[data-section-name="media-with-text_2"] .btn {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.4) !important;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  padding: 14px 36px;
+  border-radius: 0 !important;
+}
+[data-section-name="media-with-text_2"] .btn .btn__top-text,
+[data-section-name="media-with-text_2"] .btn .btn__bottom-text {
+  color: #fff !important;
+}
+[data-section-name="media-with-text_2"] .btn:hover {
+  background: #4ac6be !important;
+  color: #fff !important;
+  border-color: #4ac6be !important;
+}
+[data-section-name="media-with-text_2"] .btn:hover .btn__top-text,
+[data-section-name="media-with-text_2"] .btn:hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   INSTAGRAM FOLLOW BUTTON — fix text truncation only
+   ============================================================ */
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  /* Drop theme box-shadow so only :before border reads (no black “double” frame) */
+  box-shadow: none !important;
+}
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn .btn__top-text,
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn .btn__bottom-text {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  overflow: visible;
+}
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn svg {
+  flex-shrink: 0;
+}
+[data-section-name="shop-the-feed"] .btn-wide {
+  max-width: none !important;
+}
+
+
+/* ============================================================
+   STORE LOCATIONS BAR — centered, minimal
+   ============================================================ */
+[data-section-name="text-columns-with-icons-type-2"] {
+  text-align: center;
+}
+[data-section-name="text-columns-with-icons-type-2"] .page-grid-3 {
+  justify-content: center;
+  align-items: center;
+}
+[data-section-name="text-columns-with-icons-type-2"] .page-grid-3 > * {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+[data-section-name="text-columns-with-icons-type-2"] .text-with-icons__heading {
+  text-align: center;
+  width: 100%;
+  font-weight: 400 !important;
+  color: #4ac6be !important;
+}
+[data-section-name="text-columns-with-icons-type-2"] .text-with-icons__content {
+  text-align: center;
+  align-items: center;
+}
+
+
+/* ============================================================
+   SECTION SPACING + FLOW — Tropic-like cool white + editorial rhythm
+   ============================================================ */
+.content-for-layout {
+  background: #fff;
+}
+#MainContent [data-section-name="featured-collection"],
+[data-section-name="accordion"] {
+  background: #fff;
+}
+[data-section-name="_blocks"] {
+  background: #fafafa;
+}
+
+/* Vertical rhythm below BB Hero (TOC-style breathing room).
+   data-section-name lives on inner #theme-section-* divs, not .shopify-section */
+#MainContent .shopify-section.bb-hero-section ~ .shopify-section:has([data-section-name="featured-collection"]),
+#MainContent .shopify-section.bb-hero-section ~ .shopify-section:has([data-section-name="media-with-text"]),
+#MainContent .shopify-section.bb-hero-section ~ .shopify-section:has([data-section-name="accordion"]),
+#MainContent .shopify-section.bb-hero-section ~ .shopify-section:has([data-section-name="shop-the-feed"]) {
+  padding-top: clamp(2.5rem, 6vw, 5rem);
+  padding-bottom: clamp(2.5rem, 6vw, 5rem);
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .bb-reveal {
+    transform: translateY(24px);
+  }
+  [data-section-name="banners"] .banner__block-item__heading {
+    font-size: 1.2rem !important;
+  }
+  [data-section-name="media-with-text"] .media-with-text__content {
+    padding: 28px 24px !important;
+  }
+  [data-section-name="shop-the-feed"] .secondary-btn__container .btn {
+    font-size: 0.65rem;
+    padding: 12px 24px;
+    letter-spacing: 0.06em;
+  }
+  [class*="ai-google-reviews-container"] {
+    padding: 0 16px;
+  }
+  [data-section-name="media-with-text_2"] .section-heading__heading {
+    font-size: 1.5rem !important;
+  }
+  #MainContent [data-section-name="featured-collection"] .product-card__content,
+  #MainContent [data-section-name="shop-the-feed"] .product-card__content {
+    padding: 8px 0 12px;
+  }
+  #MainContent [data-section-name="featured-collection"] .product-card-small__heading,
+  #MainContent [data-section-name="shop-the-feed"] .product-card-small__heading {
+    font-size: 0.8rem !important;
+  }
+}

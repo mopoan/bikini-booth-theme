@@ -1,0 +1,161 @@
+{%- liquid
+  assign media_type = section.settings.media_type | default: 'image'
+  assign btn_place = section.settings.button_placement | default: 'overlap'
+  assign show_btn = false
+  if section.settings.button_label != blank and section.settings.button_link != blank
+    assign show_btn = true
+  endif
+-%}
+
+<section
+  class="bb-subframe bb-media-feature bb-media-feature--{{ section.settings.style_variant }} bb-media-feature--btn-{{ section.settings.button_placement | default: 'overlap' }}{% if media_type == 'video' %} bb-media-feature--cinema{% endif %}{% if section.settings.style_variant == 'fullbleed' %} bb-media-feature--breakout{% endif %}"
+  id="bb-media-feature-{{ section.id }}"
+  style="
+    --bb-media-min-h: {{ section.settings.min_height | default: 520 }}px;
+    --bb-media-bg: {{ section.settings.background_color | default: '#f4f2ec' }};
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="bb-media-feature__inner">
+    <div class="bb-media-feature__media">
+      {%- if media_type == 'video' and section.settings.video_url != blank -%}
+        <video
+          class="bb-media-feature__video"
+          autoplay
+          muted
+          loop
+          playsinline
+          webkit-playsinline
+          preload="metadata"
+          disablePictureInPicture
+          controlslist="nodownload noplaybackrate"
+        >
+          <source src="{{ section.settings.video_url }}" type="video/mp4">
+        </video>
+      {%- elsif section.settings.image != blank -%}
+        <img
+          class="bb-media-feature__img"
+          src="{{ section.settings.image | image_url: width: 2400 }}"
+          alt="{{ section.settings.image.alt | default: shop.name | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="lazy"
+          sizes="100vw"
+          srcset="{{ section.settings.image | image_url: width: 1200 }} 1200w, {{ section.settings.image | image_url: width: 1800 }} 1800w, {{ section.settings.image | image_url: width: 2400 }} 2400w, {{ section.settings.image | image_url: width: 3000 }} 3000w"
+        >
+      {%- elsif section.settings.image_url != blank -%}
+        <img class="bb-media-feature__img" src="{{ section.settings.image_url }}" alt="" width="1920" height="1080" loading="lazy">
+      {%- endif -%}
+
+      {%- if show_btn and btn_place == 'triptych' -%}
+        <a class="bb-media-feature__btn bb-media-feature__btn--{{ section.settings.button_style }} bb-media-feature__btn--triptych-inner" href="{{ section.settings.button_link }}">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if show_btn and btn_place == 'overlap' -%}
+      <a class="bb-media-feature__btn bb-media-feature__btn--overlap-outside bb-subframe-cta-cohesive" href="{{ section.settings.button_link }}">
+        {{ section.settings.button_label | escape }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "BB - Media feature",
+  "tag": "section",
+  "class": "bb-media-feature-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "default": "image",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "style_variant",
+      "label": "Style",
+      "default": "editorial",
+      "options": [
+        { "value": "editorial", "label": "Editorial frame" },
+        { "value": "fullbleed", "label": "Full bleed strip" }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL (fallback)"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (MP4)"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "min": 280,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "label": "Minimum height",
+      "default": 520
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f4f2ec"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "dark",
+      "options": [
+        { "value": "dark", "label": "Dark" },
+        { "value": "light", "label": "Light" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_placement",
+      "label": "Button placement",
+      "default": "overlap",
+      "info": "Overlap matches Tropic editorial CTAs that sit on the bottom edge. Triptych center sits in the lower middle of the artwork (use with 3-panel images).",
+      "options": [
+        { "value": "overlap", "label": "Overlap bottom edge" },
+        { "value": "triptych", "label": "Triptych (center panel, inset)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB - Media feature"
+    }
+  ]
+}
+{% endschema %}

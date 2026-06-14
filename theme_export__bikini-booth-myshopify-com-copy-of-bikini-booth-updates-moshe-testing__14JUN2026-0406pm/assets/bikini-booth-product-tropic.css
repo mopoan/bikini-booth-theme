@@ -1,0 +1,314 @@
+/* ============================================================
+   Bikini Booth — Product page (Tropic of C–inspired)
+   Loaded only on template: product. End of body = wins cascade
+   vs #theme-section-* inline blocks.
+   Reference: https://tropicofc.com/en-gb/products/solanas-top-in-ocelot
+   ============================================================ */
+
+:root {
+  --bb-pdp-accent: #4ac6be;
+  --bb-pdp-bg: #faf9f7;
+  --bb-pdp-text: #111;
+  --bb-pdp-muted: #545454;
+}
+
+.content-for-layout {
+  background: var(--bb-pdp-bg);
+}
+
+/* Breadcrumb — quiet, editorial */
+.breadcrumb .breadcrumb__container {
+  letter-spacing: 0.06em;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--bb-pdp-muted);
+}
+.breadcrumb .breadcrumb__container a,
+.breadcrumb .breadcrumb__container span {
+  color: inherit;
+}
+.breadcrumb .breadcrumb__container a:hover {
+  color: var(--bb-pdp-text);
+}
+
+/* Section root: beat #theme-section-* on variables */
+#MainContent [data-section-name="main-product"] {
+  --color-accent-section: var(--bb-pdp-accent) !important;
+  --color-base-section: var(--bb-pdp-text) !important;
+  --color-lines: rgba(0, 0, 0, 0.12) !important;
+  --color-visual-display-border-block: var(--bb-pdp-accent) !important;
+  --color-button_swatches: transparent !important;
+  --color-button-text_swatches: var(--bb-pdp-text) !important;
+  --color-button-border_swatches: #c8c8c8 !important;
+  --color-button-hover_swatches: transparent !important;
+  --color-button-text-hover_swatches: var(--bb-pdp-text) !important;
+  --color-button-border-hover_swatches: var(--bb-pdp-accent) !important;
+  --border-button-width_swatches: 1px !important;
+  --border-button-width-hover_swatches: 1px !important;
+  --radius-button-swatches: 0 !important;
+}
+
+/* Title — single H1, lighter than old display size */
+#MainContent [data-section-name="main-product"] .product__title h1 {
+  font-weight: 200 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.25 !important;
+  color: var(--bb-pdp-text) !important;
+  font-size: clamp(1.125rem, 2.4vw, 1.25rem) !important;
+}
+
+/* Vendor / meta row — subtitle feel (like “toc x victoria’s secret”) */
+#MainContent [data-section-name="main-product"] .product__information {
+  margin-bottom: 0 !important;
+}
+#MainContent [data-section-name="main-product"] .product__information ul {
+  letter-spacing: 0.08em;
+  text-transform: none;
+  font-size: 0.65rem !important;
+  font-weight: 500;
+  color: var(--bb-pdp-muted) !important;
+}
+#MainContent [data-section-name="main-product"] .product__information ul span.mt0 {
+  text-transform: none;
+  letter-spacing: 0.08em;
+}
+#MainContent [data-section-name="main-product"] .product__information a {
+  color: var(--bb-pdp-muted) !important;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+#MainContent [data-section-name="main-product"] .product__information a:hover {
+  color: var(--bb-pdp-text) !important;
+}
+
+/* Price — clear primary number */
+#MainContent [data-section-name="main-product"] .product__price-container .price__main,
+#MainContent [data-section-name="main-product"] .product__price-container .price__sale {
+  font-weight: 400 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--bb-pdp-text) !important;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem) !important;
+}
+#MainContent [data-section-name="main-product"] .product__price-container .price__regular {
+  color: var(--bb-pdp-muted) !important;
+  font-size: 0.85rem !important;
+}
+
+/* Option labels — “signature colors:” / “size:” */
+#MainContent [data-section-name="main-product"] .variants-label {
+  font-size: 0.65rem !important;
+  letter-spacing: 0.06em !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  color: var(--bb-pdp-muted) !important;
+}
+#MainContent [data-section-name="main-product"] .variants-label__value {
+  color: var(--bb-pdp-text) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+}
+
+/*
+ * Text / image variant buttons (not size circles — those are styled in bb-product-pdp-tropic.css).
+ * Scope away from .bb-pdp-opt--size so circular size pills stay round (no horizontal padding / min-height stretch).
+ */
+#MainContent [data-section-name="main-product"]
+  fieldset.product-form__input:not(.bb-pdp-opt--size):not(.bb-pdp-opt--top-bottom-set)
+  .btn--variant {
+  min-height: 44px !important;
+  padding: 0 14px !important;
+  border-radius: 0 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Browse-only PDP: no buy row (avoids disabled / “faded” ATC from theme) */
+body.template-product #MainContent [data-section-name="main-product"].bb-product--tropic .product-form__buttons {
+  display: none !important;
+}
+
+body.template-product #MainContent sticky-cart-modal.sticky-cart-modal {
+  display: none !important;
+}
+
+/* Size guide / help icon next to option labels */
+#MainContent [data-section-name="main-product"] .variants-modal__button__item {
+  opacity: 1 !important;
+}
+#MainContent [data-section-name="main-product"] .variants-modal__button__item svg path {
+  fill: var(--bb-pdp-text) !important;
+}
+
+/* Inventory */
+#MainContent [data-section-name="main-product"] .inventory-block,
+#MainContent [data-section-name="main-product"] .inventory-block__hot,
+#MainContent [data-section-name="main-product"] .inventory-block__normal {
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+  color: var(--bb-pdp-muted) !important;
+}
+
+/* Quantity — minimal */
+#MainContent [data-section-name="main-product"] .product-form__buttons .quantity {
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  border-radius: 0 !important;
+}
+#MainContent [data-section-name="main-product"] .product-form__buttons .field__input {
+  font-weight: 400 !important;
+}
+
+/* Primary CTA — full-width, matte black bar */
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page {
+  background: var(--bb-pdp-text) !important;
+  color: #fff !important;
+  border: 1px solid var(--bb-pdp-text) !important;
+  border-radius: 0 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  font-size: 0.72rem !important;
+  font-weight: 500 !important;
+  min-height: 52px !important;
+  transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease !important;
+}
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page:hover:not([disabled]) {
+  background: #fff !important;
+  color: var(--bb-pdp-text) !important;
+  border-color: var(--bb-pdp-text) !important;
+}
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page:hover:not([disabled]) .btn__texts__item,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page:hover:not([disabled]) .btn__top-text,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page:hover:not([disabled]) .btn__bottom-text {
+  color: var(--bb-pdp-text) !important;
+}
+@media (min-width: 1025px) {
+  #MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page:hover:not([disabled]):before,
+  #MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page:hover:not([disabled]):after {
+    display: none !important;
+    opacity: 0 !important;
+  }
+}
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[disabled],
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[disabled]:hover,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[aria-disabled="true"],
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[aria-disabled="true"]:hover {
+  background: rgba(17, 17, 17, 0.4) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[disabled] .btn__texts__item,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[aria-disabled="true"] .btn__texts__item {
+  color: #fff !important;
+}
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[disabled]:before,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[disabled]:after,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[aria-disabled="true"]:before,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page[aria-disabled="true"]:after {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* Remove layered backplate/border behind product-page Add to Cart button. */
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page::before,
+#MainContent [data-section-name="main-product"] .product-form__submit.btn--addtocart-page::after {
+  display: none !important;
+}
+
+/* Secondary actions — compare outline; wishlist teal chip (icon readable on white) */
+#MainContent [data-section-name="main-product"] .btn--compare-productpage {
+  border-radius: 0 !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  background: transparent !important;
+}
+
+.bb-product--tropic .btn--wishlist-productpage,
+.bb-product--tropic wishlist-button.btn--wishlist-productpage {
+  border-radius: 0 !important;
+  border: 1px solid rgba(74, 198, 190, 0.65) !important;
+  background: rgba(74, 198, 190, 0.14) !important;
+  --icon: #0a5c56 !important;
+  --icon-hover: #067a72 !important;
+}
+
+.bb-product--tropic wishlist-button.btn--wishlist-productpage svg path {
+  fill: #0a5c56 !important;
+}
+
+.bb-product--tropic wishlist-button.btn--wishlist-productpage.active svg path {
+  fill: #4ac6be !important;
+}
+
+.bb-product--tropic wishlist-button.btn--wishlist-productpage:hover svg path {
+  fill: #067a72 !important;
+}
+
+/* Accordions (details / shipping / care) */
+#MainContent [data-section-name="main-product"] product-tab {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+#MainContent [data-section-name="main-product"] product-tab .product-tab__heading {
+  padding: 18px 0 !important;
+}
+#MainContent [data-section-name="main-product"] product-tab .product-tab__heading__text h2,
+#MainContent [data-section-name="main-product"] product-tab .product-tab__heading__text h3,
+#MainContent [data-section-name="main-product"] product-tab .product-tab__heading__text h4,
+#MainContent [data-section-name="main-product"] product-tab .product-tab__heading__text h5,
+#MainContent [data-section-name="main-product"] product-tab .product-tab__heading__text h6 {
+  font-weight: 400 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  font-size: 0.7rem !important;
+  color: var(--bb-pdp-text) !important;
+}
+#MainContent [data-section-name="main-product"] product-tab .product-tab__content {
+  color: var(--bb-pdp-muted) !important;
+  line-height: 1.75 !important;
+  font-weight: 300 !important;
+  font-size: 0.9rem !important;
+}
+#MainContent [data-section-name="main-product"] product-tab.opened .product-tab__heading__text > * {
+  color: var(--bb-pdp-accent) !important;
+}
+
+/* Horizontal tabs section (description / policies) */
+#MainContent [data-section-name="main-product-horizontal-tabs"] {
+  --color-accent-section: var(--bb-pdp-accent) !important;
+}
+#MainContent [data-section-name="main-product-horizontal-tabs"] .featured-tabs__item.btn--tabs {
+  border-radius: 0 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  font-size: 0.65rem !important;
+  font-weight: 500 !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+#MainContent [data-section-name="main-product-horizontal-tabs"] .featured-tab-products .body2 {
+  color: var(--bb-pdp-muted) !important;
+  line-height: 1.8 !important;
+  font-weight: 300 !important;
+}
+
+/* Product recommendations — align with homepage cards tone */
+#MainContent [data-section-name="product-recommendations"] {
+  --color-product-name-block: var(--bb-pdp-text) !important;
+  --color-price-main-block: var(--bb-pdp-text) !important;
+  --color-accent-section: var(--bb-pdp-accent) !important;
+}
+#MainContent [data-section-name="product-recommendations"] .section-heading__heading {
+  font-weight: 200 !important;
+  letter-spacing: -0.03em !important;
+}
+
+#MainContent [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic {
+  --color-product-name-block: var(--bb-pdp-text) !important;
+  --color-price-main-block: var(--bb-pdp-text) !important;
+  --color-accent-section: var(--bb-pdp-accent) !important;
+}
+

@@ -1,0 +1,910 @@
+/**
+ * Bikini Booth — collection pages (Tropic-of-C–inspired).
+ * Scoped with body.bb-collection-tropic
+ */
+.bb-collection-tropic {
+  --bb-col-brand: #4ac6be;
+  --bb-col-ink: #0a2e2e;
+  --bb-col-muted: rgba(10, 46, 46, 0.62);
+  --bb-col-line: rgba(10, 46, 46, 0.1);
+  --bb-col-surface: #ffffff;
+  --bb-col-promo: #b07d56;
+  --bb-col-promo-strip: #ebe4dc;
+}
+
+/* Page canvas */
+.bb-collection-tropic #MainContent {
+  background: var(--bb-col-surface);
+}
+
+/* --- Unified toolbar: filters (left) + sort | grid + Showing n (right) --- */
+.bb-collection-tropic .bb-collection-toolbar__main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-bottom: 1rem;
+  margin-bottom: 0.25rem;
+  border-bottom: none;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__left {
+  flex: 1 1 auto;
+  min-width: min(100%, 12rem);
+}
+
+.bb-collection-tropic .bb-collection-toolbar__left facet-filters-form.facets__horizontal {
+  border-bottom: none !important;
+  padding: 0 !important;
+}
+
+/* Horizontal filters: "filters:" label aligned with facet triggers (Tropic) */
+.bb-collection-tropic .bb-collection-toolbar__left .facets__horizontal .facets__wrapper {
+  align-items: center !important;
+  gap: 1.25rem 1.75rem !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__left .facets__horizontal .facets__wrapper > p.mt0.h6 {
+  margin: 0 !important;
+  padding: 0 !important;
+  align-self: center;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: lowercase !important;
+  color: #111 !important;
+  line-height: 1.2 !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__left .facet__heading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: lowercase !important;
+  line-height: 1.2 !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__left .facet__heading span {
+  font-family: inherit !important;
+  font-size: inherit !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__actions {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem 1rem;
+  min-width: 0;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem 1rem;
+  flex: 1 1 auto;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__vd {
+  display: inline-block;
+  width: 1px;
+  height: 1.15rem;
+  background: rgba(10, 46, 46, 0.18);
+  flex-shrink: 0;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__sort {
+  width: auto !important;
+  max-width: none !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__sort .field {
+  width: auto !important;
+  max-width: none !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__sort .sorting--tropic-inline {
+  width: auto;
+  min-width: 7.5rem;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__sort .field__input {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 12px !important;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: #111 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 1rem !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* No theme lavender/purple focus ring on sort (component-inputs outline) */
+.bb-collection-tropic .bb-collection-toolbar__sort .field:hover .field__input,
+.bb-collection-tropic .bb-collection-toolbar__sort .field .field__input:focus,
+.bb-collection-tropic .bb-collection-toolbar__sort .field .field__input:hover {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__sort .field {
+  margin-bottom: 0 !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__sort .field__icon--select {
+  right: 0;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector {
+  justify-self: unset !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid {
+  gap: 10px !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.45);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn:hover {
+  color: #111;
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-d {
+  color: #111 !important;
+  border-color: #111 !important;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #111;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-t {
+  color: #111 !important;
+  border-color: #111 !important;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #111;
+}
+
+/* Wide desktop: only desktop density (active-d) looks selected; tablet choice may differ. */
+@media (min-width: 1025px) {
+  .bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-t:not(.active-d) {
+    color: rgba(0, 0, 0, 0.45);
+    border-color: rgba(0, 0, 0, 0.18);
+    box-shadow: none;
+  }
+}
+
+/* Tablet: only tablet density (active-t) looks selected. */
+@media (min-width: 577px) and (max-width: 1024px) {
+  .bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-d:not(.active-t) {
+    color: rgba(0, 0, 0, 0.45);
+    border-color: rgba(0, 0, 0, 0.18);
+    box-shadow: none;
+  }
+}
+
+/*
+ * Desktop: explicit 2 / 4 / 6 columns (toolbar switches .page-grid-* on .collection__container).
+ * Do not force a single column count — that broke the collection-grid density control.
+ */
+@media (min-width: 1025px) {
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-2,
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-4,
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-6,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-2,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-4,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-6 {
+    display: grid !important;
+    flex-wrap: unset !important;
+    align-content: start !important;
+  }
+
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-2,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-2 {
+    --page-grid-value: 2 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-4,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-4 {
+    --page-grid-value: 4 !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-6,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-6 {
+    --page-grid-value: 6 !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-2 > .product-card,
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-4 > .product-card,
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-6 > .product-card,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-2 > .product-card,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-4 > .product-card,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-6 > .product-card {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: none !important;
+  }
+}
+
+.bb-collection-tropic .bb-collection-toolbar__count {
+  margin: 0 !important;
+  text-align: right !important;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.02em !important;
+  color: #111 !important;
+  text-transform: lowercase !important;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Sort chevron: ensure SVG renders (avoid empty “square” placeholders) */
+.bb-collection-tropic .bb-collection-toolbar__sort .field__icon--select svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item svg.theme-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Sort chevron + grid icons (Tropic: black accent, inactive tiles light grey) */
+.bb-collection-tropic .bb-collection-toolbar__sort .field__icon--select svg path {
+  fill: #111 !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item .theme-icon path,
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item svg path {
+  fill: rgba(0, 0, 0, 0.22) !important;
+}
+
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item.active-d .theme-icon path,
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item.active-d svg path,
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item.active-t .theme-icon path,
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item.active-t svg path,
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item.active-m .theme-icon path,
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .collection-grid__item.active-m svg path {
+  fill: #111 !important;
+}
+
+@media (max-width: 1024px) {
+  .bb-collection-tropic .bb-collection-toolbar__main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bb-collection-tropic .bb-collection-toolbar__actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .bb-collection-tropic .bb-collection-toolbar__actions-row {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .bb-collection-tropic .bb-collection-toolbar__count {
+    text-align: center !important;
+    width: 100%;
+  }
+}
+
+/* --- Collection heading --- */
+.bb-collection-tropic [data-section-name="main-collection-banner"] .main-collection-banner__top-center {
+  justify-content: center !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-banner"] .main-collection-banner__content {
+  max-width: 100% !important;
+  margin-inline: auto !important;
+  width: 100%;
+  text-align: center !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-banner"] h1 {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--bb-col-ink);
+  text-align: center !important;
+}
+
+/* Collection description: plain text under title (no promo strip background). */
+.bb-collection-tropic [data-section-name="main-collection-banner"] .section__richtext__editor {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--bb-col-ink);
+  margin-top: 0.75rem !important;
+  padding: 0;
+  background: transparent;
+  text-align: center;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  width: 100%;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-banner"] .section__richtext__editor p {
+  margin: 0;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-banner"] .section__richtext__editor p + p {
+  margin-top: 0.5rem;
+}
+
+/* --- Toolbar: count + sort (+ grid when enabled) --- */
+@media (min-width: 1025px) {
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    padding-bottom: 1rem !important;
+    margin-bottom: 0 !important;
+    border-bottom: none !important;
+  }
+
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar .mobile-facets , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar .mobile-facets {
+    flex: 0 0 auto;
+  }
+
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar .products_count , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar .products_count {
+    margin-left: auto;
+    justify-self: unset !important;
+    text-align: right !important;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: lowercase !important;
+    color: var(--bb-col-muted) !important;
+  }
+
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar .sorting , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar .sorting {
+    flex: 0 0 auto;
+    max-width: none;
+    width: auto;
+  }
+
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar .sorting .field , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar .sorting .field {
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar .sorting .field__input , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar .sorting .field__input {
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar .grid-selector , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar .grid-selector {
+    flex: 0 0 auto;
+  }
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .sorting .field__label , .bb-collection-tropic [data-section-name="main-search"] .sorting .field__label {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--bb-col-muted);
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .sorting .field__input , .bb-collection-tropic [data-section-name="main-search"] .sorting .field__input {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  border-color: rgba(10, 46, 46, 0.2);
+  color: var(--bb-col-ink);
+  padding-right: 1.05rem !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .sorting .field:hover .field__input,, .bb-collection-tropic [data-section-name="main-search"] .sorting .field:hover .field__input,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .sorting .field .field__input:focus,, .bb-collection-tropic [data-section-name="main-search"] .sorting .field .field__input:focus,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .sorting .field .field__input:hover , .bb-collection-tropic [data-section-name="main-search"] .sorting .field .field__input:hover {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar .sorting .field__icon--select , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar .sorting .field__icon--select {
+  right: 0;
+}
+
+/*
+ * Horizontal facet row (“filters:” + availability / price, etc.)
+ * Theme + section inline hide `.facets__horizontal` ≤1024px; this file had `display: block` unscoped,
+ * which beat that rule and re-showed redundant filters under “Filter and sort” on phones.
+ */
+@media (min-width: 1025px) {
+  .bb-collection-tropic facet-filters-form.facets__horizontal {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 0 1.25rem;
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .bb-collection-tropic facet-filters-form.facets__horizontal {
+    display: none !important;
+  }
+}
+
+.bb-collection-tropic .facets__horizontal .facets__wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem 1.5rem;
+}
+
+.bb-collection-tropic .facets__horizontal .facets__wrapper > .mt0.h6 {
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+  text-align: left;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: lowercase !important;
+  color: #111 !important;
+}
+
+.bb-collection-tropic .facets__horizontal .facet__heading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: lowercase !important;
+  color: var(--bb-col-ink) !important;
+}
+
+.bb-collection-tropic .facets__horizontal .facet__heading span {
+  font-family: inherit !important;
+}
+
+/* Active filter chips */
+.bb-collection-tropic .active-facets-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin: 1rem 0 0 !important;
+}
+
+.bb-collection-tropic .active-facets__button.btn--reset-facet {
+  border: 1px solid var(--bb-col-ink);
+  border-radius: 2px;
+  background: #fff;
+  min-height: 2rem;
+  padding: 0 0.65rem;
+}
+
+.bb-collection-tropic .active-facets__button.btn--reset-facet .btn__top-text {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+
+/* Product grid */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container,
+.bb-collection-tropic [data-section-name="main-search"] .collection__container {
+  gap: clamp(2rem, 4vw, 3rem) clamp(1rem, 2vw, 1.5rem) !important;
+}
+
+/*
+ * Mobile grid density: theme flex + `width:100%` on children often reads as one column even when
+ * `page-grid-sp-2` sets --page-grid-value. Mirror desktop fix with an explicit 2- (and 3-) column grid.
+ */
+@media (max-width: 576px) {
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-sp-2,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-sp-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    flex-wrap: unset !important;
+    align-content: start;
+  }
+
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-sp-2 > .product-card,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-sp-2 > .product-card {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: none !important;
+  }
+
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-sp-3,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-sp-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    flex-wrap: unset !important;
+    align-content: start;
+  }
+
+  body.bb-collection-tropic [data-section-name="main-collection-product-grid"] .collection__container.page-grid-sp-3 > .product-card,
+  body.bb-collection-tropic [data-section-name="main-search"] .collection__container.page-grid-sp-3 > .product-card {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: none !important;
+  }
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card , .bb-collection-tropic [data-section-name="main-search"] .product-card {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .image-hover-box , .bb-collection-tropic [data-section-name="main-search"] .product-card .image-hover-box {
+  border-radius: 2px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Editorial cards: no image-overlay wishlist — use bottom row only */
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-card__image__container
+  > productcard-buttons,
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-card__image__container
+  > productcard-buttons {
+  display: none !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-card__interface__icons,
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-card__interface__icons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding-top: 0.35rem;
+  min-height: 1.75rem;
+}
+
+/* Editorial cards: hide vendor/type rows — keep title, optional promo line, price, swatches */
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-card__content__main
+  > .body3,
+.bb-collection-tropic
+  [data-section-name="main-search"]
+  .product-card--bb-card-swatches
+  .product-card__content__main
+  > .body3 {
+  display: none !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card-small__heading , .bb-collection-tropic [data-section-name="main-search"] .product-card-small__heading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: none !important;
+  color: var(--bb-col-ink) !important;
+  line-height: 1.35 !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card-small__meta , .bb-collection-tropic [data-section-name="main-search"] .product-card-small__meta {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.12em !important;
+  text-transform: none !important;
+  color: var(--bb-col-muted) !important;
+}
+
+/* Price: slightly larger than title, cool blue-grey (Tropic reference) */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .price__main, .bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .price__main,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .price__sale , .bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .price__sale {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  color: #3d4f4f !important;
+  font-weight: 500 !important;
+  font-size: clamp(1rem, 1.15vw, 1.2rem) !important;
+  line-height: 1.2 !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card__description , .bb-collection-tropic [data-section-name="main-search"] .product-card__description {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  color: var(--bb-col-promo) !important;
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Swatches: circular row, centered under title + price */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .product-form__container__card , .bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .product-form__container__card {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem !important;
+  max-width: 100%;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+/*
+ * Theme `component-visual-display-card.css` forces image-mode swatches to
+ * `flex: 0 0 calc((100% - 5px * 4) / 5)` — each pill takes ~20% row width (huge gaps).
+ * Reset so only the circle size matters + tight gap above.
+ */
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-form__container__card.product-form__container__card--image
+  > .product-form__item,
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  > .product-form__item {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  .product-form__item:nth-child(n + 6) {
+  display: none !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .visual-display__color__card {
+  border-radius: 50% !important;
+  width: 1.35rem !important;
+  height: 1.35rem !important;
+  min-width: 1.35rem;
+  box-sizing: border-box;
+  padding: 0 !important;
+  border: 1px solid rgba(10, 46, 46, 0.12);
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-form__item__input:checked
+  + .visual-display
+  .visual-display__color__card {
+  box-shadow: 0 0 0 1px var(--bb-col-ink);
+  border-color: transparent;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .visual-display-swatch__image__circle,
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .image-hover-box--circle {
+  border-radius: 50% !important;
+}
+
+/*
+ * Collection cards: only price + color — hide size pills & SET / TOP / STYLE buttons.
+ * Hidden fieldsets stay in the DOM so card-variant-selects can still resolve variants.
+ */
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  fieldset.product-form__input:has(.btn--variant-smallcard) {
+  display: none !important;
+}
+
+/* One visible swatch row: centered, no stray offset from hidden rows */
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  card-variant-selects {
+  display: block;
+  width: 100%;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-form__container__card {
+  justify-content: center;
+  margin-top: 0.5rem !important;
+}
+
+/* Cards with .text-center: keep swatches + price aligned with centered heading */
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches.text-center
+  .product-form__container__card {
+  justify-content: center !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches.text-center
+  .price__container {
+  text-align: center !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .product-card__content__main {
+  text-align: center !important;
+  align-items: center;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .price__container {
+  width: 100%;
+  text-align: center !important;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .price {
+  justify-content: center;
+}
+
+/* Selected colour: keep inner media circular (avoid “rounded square in a ring”) */
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .visual-display__color__card
+  .visual-display__image__card,
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card--bb-card-swatches
+  .visual-display__color__card img {
+  border-radius: 50% !important;
+  object-fit: cover;
+}
+
+/*
+ * Collection card media: fit full image inside tile (no top/bottom crop).
+ * Height follows column width only (aspect-ratio) — grid density changes card size,
+ * not a separate vw-based max-height that made tiles feel like different “resolutions”.
+ */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .image-hover-box__container , .bb-collection-tropic [data-section-name="main-search"] .product-card .image-hover-box__container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card
+  .image-hover-box__container
+  > .image-hover-box,
+.bb-collection-tropic
+  [data-section-name="main-collection-product-grid"]
+  .product-card
+  .image-hover-box__container
+  .bg-preloader {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .image-hover-box__container img , .bb-collection-tropic [data-section-name="main-search"] .product-card .image-hover-box__container img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center;
+}
+
+/* Pagination / load more */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .pagination,, .bb-collection-tropic [data-section-name="main-search"] .pagination,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .load-more , .bb-collection-tropic [data-section-name="main-search"] .load-more {
+  margin-top: 2.5rem;
+}
+
+@media (max-width: 1024px) {
+  .bb-collection-tropic [data-section-name="main-collection-product-grid"] .facets-toolbar , .bb-collection-tropic [data-section-name="main-search"] .facets-toolbar {
+    border-bottom: none !important;
+  }
+}
+
+/* Collection grid: centre product title + price under the image */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__content__main , .bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__content__main {
+  text-align: center;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__heading,, .bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__heading,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__heading a , .bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__heading a {
+  text-align: center;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] , .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] .price__container,, .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] .price__container,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] .price , .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] .price {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] .price__main, .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] .price__main,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] .price__sale,, .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] .price__sale,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] .price__regular , .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] .price__regular {
+  text-align: center;
+}

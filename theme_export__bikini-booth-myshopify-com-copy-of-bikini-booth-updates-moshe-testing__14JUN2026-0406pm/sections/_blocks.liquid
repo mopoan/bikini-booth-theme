@@ -1,0 +1,17 @@
+{%- comment -%}
+  Wrapper for theme blocks (e.g. AI-generated footer columns) used in section groups such as `footer-group.json`.
+  Without this file, `{% sections 'footer-group' %}` can omit `_blocks` content on some storefronts.
+  See: https://shopify.dev/docs/storefronts/themes/architecture/blocks/ai-generated-theme-blocks
+{%- endcomment -%}
+<div class="bb-footer-blocks bb-footer-blocks--theme-blocks section-{{ section.id }}">
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "Blocks",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [],
+  "presets": [{ "name": "Blocks" }]
+}
+{% endschema %}

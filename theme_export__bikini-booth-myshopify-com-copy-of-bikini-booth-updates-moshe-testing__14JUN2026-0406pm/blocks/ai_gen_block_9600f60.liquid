@@ -1,0 +1,798 @@
+{% doc %}
+  @prompt
+    Create a custom Instagram Reels gallery section for a Shopify theme. The section should allow the merchant to add multiple reel items, each with a link URL (to the Instagram reel) and a vertical thumbnail image (portrait/9:16 ratio like a reel). The merchant should be able to configure how many reels to display via a section setting. Each reel thumbnail should be clickable and open the link in a new tab. Display the reels in a horizontal scrollable row with a play button icon overlay on each thumbnail, and an optional title/label below. The section should be fully mobile responsive.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-reels-gallery-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding }}px 0;
+  }
+
+  .ai-reels-gallery-container-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ai-reels-gallery-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.title_alignment }};
+    margin-bottom: {{ block.settings.title_spacing }}px;
+  }
+
+  .ai-reels-gallery-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0;
+  }
+
+  .ai-reels-gallery-scroll-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-reels-gallery-scroll-container-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.reel_spacing }}px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 10px 0;
+  }
+
+  .ai-reels-gallery-scroll-container-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-reels-gallery-item-{{ ai_gen_id }} {
+    flex: 0 0 auto;
+    width: {{ block.settings.reel_width }}px;
+    position: relative;
+  }
+
+  .ai-reels-gallery-link-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-reels-gallery-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    background-color: {{ block.settings.placeholder_bg_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-reels-gallery-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-reels-gallery-link-{{ ai_gen_id }}:hover .ai-reels-gallery-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-reels-gallery-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.placeholder_bg_color }};
+  }
+
+  .ai-reels-gallery-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-reels-gallery-play-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: {{ block.settings.play_icon_size }}px;
+    height: {{ block.settings.play_icon_size }}px;
+    background-color: {{ block.settings.play_icon_bg_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .ai-reels-gallery-link-{{ ai_gen_id }}:hover .ai-reels-gallery-play-overlay-{{ ai_gen_id }} {
+    transform: translate(-50%, -50%) scale(1.1);
+    background-color: {{ block.settings.play_icon_bg_hover_color }};
+  }
+
+  .ai-reels-gallery-play-icon-{{ ai_gen_id }} {
+    width: 50%;
+    height: 50%;
+    color: {{ block.settings.play_icon_color }};
+    margin-left: 4px;
+  }
+
+  .ai-reels-gallery-label-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.label_spacing }}px;
+    text-align: center;
+  }
+
+  .ai-reels-gallery-label-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_size }}px;
+    color: {{ block.settings.label_color }};
+    text-decoration: none;
+    display: block;
+  }
+
+  .ai-reels-gallery-link-{{ ai_gen_id }}:hover .ai-reels-gallery-label-text-{{ ai_gen_id }} {
+    color: {{ block.settings.label_hover_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-reels-gallery-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_mobile }}px 0;
+    }
+
+    .ai-reels-gallery-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size_mobile }}px;
+    }
+
+    .ai-reels-gallery-item-{{ ai_gen_id }} {
+      width: {{ block.settings.reel_width_mobile }}px;
+    }
+
+    .ai-reels-gallery-scroll-container-{{ ai_gen_id }} {
+      gap: {{ block.settings.reel_spacing_mobile }}px;
+    }
+
+    .ai-reels-gallery-play-overlay-{{ ai_gen_id }} {
+      width: {{ block.settings.play_icon_size_mobile }}px;
+      height: {{ block.settings.play_icon_size_mobile }}px;
+    }
+
+    .ai-reels-gallery-label-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.label_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<instagram-reels-gallery-{{ ai_gen_id }} class="ai-reels-gallery-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-reels-gallery-container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank %}
+      <div class="ai-reels-gallery-header-{{ ai_gen_id }}">
+        <h2 class="ai-reels-gallery-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+      </div>
+    {% endif %}
+
+    <div class="ai-reels-gallery-scroll-wrapper-{{ ai_gen_id }}">
+      <div class="ai-reels-gallery-scroll-container-{{ ai_gen_id }}">
+        {% for i in (1..block.settings.reels_count) %}
+          {% liquid
+            assign reel_url_key = 'reel_' | append: i | append: '_url'
+            assign reel_image_key = 'reel_' | append: i | append: '_image'
+            assign reel_label_key = 'reel_' | append: i | append: '_label'
+            
+            assign reel_url = block.settings[reel_url_key]
+            assign reel_image = block.settings[reel_image_key]
+            assign reel_label = block.settings[reel_label_key]
+          %}
+
+          <div class="ai-reels-gallery-item-{{ ai_gen_id }}">
+            {% if reel_url != blank %}
+              <a 
+                href="{{ reel_url }}" 
+                class="ai-reels-gallery-link-{{ ai_gen_id }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="{% if reel_label != blank %}{{ reel_label }}{% else %}View Instagram Reel {{ i }}{% endif %}"
+              >
+            {% else %}
+              <div class="ai-reels-gallery-link-{{ ai_gen_id }}">
+            {% endif %}
+
+              <div class="ai-reels-gallery-image-wrapper-{{ ai_gen_id }}">
+                {% if reel_image %}
+                  <img
+                    src="{{ reel_image | image_url: width: 600 }}"
+                    alt="{% if reel_label != blank %}{{ reel_label }}{% else %}Instagram Reel {{ i }}{% endif %}"
+                    loading="lazy"
+                    width="600"
+                    height="1067"
+                    class="ai-reels-gallery-image-{{ ai_gen_id }}"
+                  >
+                {% else %}
+                  <div class="ai-reels-gallery-placeholder-{{ ai_gen_id }}">
+                    {{ 'image' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                <div class="ai-reels-gallery-play-overlay-{{ ai_gen_id }}">
+                  <svg 
+                    class="ai-reels-gallery-play-icon-{{ ai_gen_id }}"
+                    viewBox="0 0 24 24" 
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              </div>
+
+              {% if reel_label != blank and block.settings.show_labels %}
+                <div class="ai-reels-gallery-label-{{ ai_gen_id }}">
+                  <span class="ai-reels-gallery-label-text-{{ ai_gen_id }}">{{ reel_label }}</span>
+                </div>
+              {% endif %}
+
+            {% if reel_url != blank %}
+              </a>
+            {% else %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</instagram-reels-gallery-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class InstagramReelsGallery{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.scrollContainer = this.querySelector('.ai-reels-gallery-scroll-container-{{ ai_gen_id }}');
+        this.setupTouchScroll();
+      }
+
+      setupTouchScroll() {
+        if (!this.scrollContainer) return;
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        this.scrollContainer.addEventListener('mousedown', (e) => {
+          isDown = true;
+          this.scrollContainer.style.cursor = 'grabbing';
+          startX = e.pageX - this.scrollContainer.offsetLeft;
+          scrollLeft = this.scrollContainer.scrollLeft;
+        });
+
+        this.scrollContainer.addEventListener('mouseleave', () => {
+          isDown = false;
+          this.scrollContainer.style.cursor = 'grab';
+        });
+
+        this.scrollContainer.addEventListener('mouseup', () => {
+          isDown = false;
+          this.scrollContainer.style.cursor = 'grab';
+        });
+
+        this.scrollContainer.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - this.scrollContainer.offsetLeft;
+          const walk = (x - startX) * 2;
+          this.scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+
+        this.scrollContainer.style.cursor = 'grab';
+      }
+    }
+
+    customElements.define('instagram-reels-gallery-{{ ai_gen_id }}', InstagramReelsGallery{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Instagram Reels gallery",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Follow us on Instagram"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "reels_count",
+      "label": "Number of reels",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "label": "Section padding mobile",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Title style"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size mobile",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Title spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Reel items"
+    },
+    {
+      "type": "range",
+      "id": "reel_width",
+      "label": "Reel width",
+      "min": 150,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 250
+    },
+    {
+      "type": "range",
+      "id": "reel_width_mobile",
+      "label": "Reel width mobile",
+      "min": 120,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "reel_spacing",
+      "label": "Spacing between reels",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "reel_spacing_mobile",
+      "label": "Spacing mobile",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg_color",
+      "label": "Placeholder background",
+      "default": "#F5F5F5"
+    },
+    {
+      "type": "header",
+      "content": "Play icon"
+    },
+    {
+      "type": "range",
+      "id": "play_icon_size",
+      "label": "Icon size",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "play_icon_size_mobile",
+      "label": "Icon size mobile",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "play_icon_bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "play_icon_bg_hover_color",
+      "label": "Background hover color",
+      "default": "#304FFE"
+    },
+    {
+      "type": "color",
+      "id": "play_icon_color",
+      "label": "Icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "Show labels",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "label_spacing",
+      "label": "Label spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "label_size_mobile",
+      "label": "Label size mobile",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "label_hover_color",
+      "label": "Label hover color",
+      "default": "#304FFE"
+    },
+    {
+      "type": "header",
+      "content": "Reel 1"
+    },
+    {
+      "type": "url",
+      "id": "reel_1_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_1_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_1_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 2"
+    },
+    {
+      "type": "url",
+      "id": "reel_2_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_2_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_2_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 3"
+    },
+    {
+      "type": "url",
+      "id": "reel_3_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_3_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_3_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 4"
+    },
+    {
+      "type": "url",
+      "id": "reel_4_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_4_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_4_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 5"
+    },
+    {
+      "type": "url",
+      "id": "reel_5_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_5_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_5_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 6"
+    },
+    {
+      "type": "url",
+      "id": "reel_6_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_6_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_6_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 7"
+    },
+    {
+      "type": "url",
+      "id": "reel_7_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_7_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_7_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 8"
+    },
+    {
+      "type": "url",
+      "id": "reel_8_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_8_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_8_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 9"
+    },
+    {
+      "type": "url",
+      "id": "reel_9_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_9_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_9_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 10"
+    },
+    {
+      "type": "url",
+      "id": "reel_10_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_10_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_10_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 11"
+    },
+    {
+      "type": "url",
+      "id": "reel_11_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_11_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_11_label",
+      "label": "Label"
+    },
+    {
+      "type": "header",
+      "content": "Reel 12"
+    },
+    {
+      "type": "url",
+      "id": "reel_12_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "reel_12_image",
+      "label": "Thumbnail image"
+    },
+    {
+      "type": "text",
+      "id": "reel_12_label",
+      "label": "Label"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Reels gallery"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,124 @@
+/**
+ * Bikini Booth — replace stray Wokiee / Theme Editor blues with brand teal.
+ * Loads at end of <body> (unlayered) so it wins over header inline <style> and @layer bb rules.
+ * First-paint: duplicate tokens live in layout/theme.liquid (#bb-brand-accent-first-paint, after bb-theme.css).
+ * When adding tokens, `.global__tooltip__content`, or customer-page `.btn` rules here, mirror `#bb-brand-accent-first-paint` in theme.liquid.
+ */
+body.bb-root {
+  --bb-brand-solid: var(--bb-brand, #4ac6be);
+  --bb-brand-hover-solid: var(--bb-brand-hover, #6dc9c3);
+  --color-accent: var(--bb-brand-solid);
+  --color-price-main: var(--bb-brand-solid);
+  /* Tooltip tokens (sections/blocks can still set --color-tooltip-* on wrappers — see rule below). */
+  --color-tooltip: var(--bb-brand-solid);
+  --color-tooltip-main: var(--bb-brand-solid);
+  --color-tooltip-block: var(--bb-brand-solid);
+}
+
+/*
+ * All `global-tooltip` bubbles: Theme Editor + block settings often inject blue --color-tooltip-block
+ * on ancestors; inherit loses. Force Bikini Booth teal + readable text site-wide.
+ */
+body.bb-root .global__tooltip__content {
+  background: var(--bb-brand-solid, #4ac6be) !important;
+  color: #ffffff !important;
+}
+
+/*
+ * base.css: `*:focus-visible { outline: 4px solid #0909FF }` — looks like a harsh “box”
+ * (e.g. header search icon). Win with !important + keep keyboard users on brand teal.
+ */
+body.bb-root *:focus-visible:not(textarea):not(input):not(select) {
+  outline: 2px solid var(--bb-brand-solid, #4ac6be) !important;
+  outline-offset: 2px !important;
+}
+
+/* WebKit tap flash can read as a solid rectangle around the search trigger */
+body.bb-root .section-header .header__icons modal-opener,
+body.bb-root .section-header .header__icons .header__button,
+body.bb-root .section-header .header__icons a.header__button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Extra specificity for closed search (modal-opener + link) in case order/specificity fights base.css */
+body.bb-root .section-header .search-container modal-opener:focus-visible,
+body.bb-root .section-header .search-container .header__button:focus-visible {
+  outline: 2px solid var(--bb-brand-solid, #4ac6be) !important;
+  outline-offset: 2px !important;
+}
+
+body.bb-root menu-drawer,
+body.bb-root menumodal-dialog,
+body.bb-root cart-drawer {
+  --color-accent-section: var(--bb-brand-solid);
+  --color-price-main-block: var(--bb-brand-solid);
+}
+
+body.bb-root .header-customer-accounts__modal {
+  --color-accent-section: var(--bb-brand-solid);
+  --color-price-main-block: var(--bb-brand-solid);
+}
+
+/* Filled “Sign in options” only — avoids theming the Shop web component like a theme .btn */
+body.bb-root .header-customer-accounts__modal .account-actions__sign-ins > a.btn {
+  --color-button-block: var(--bb-brand-solid);
+  --color-button-hover-block: var(--bb-brand-hover-solid);
+  --color-button-text_main: #ffffff;
+  --color-button-text-hover_main: #ffffff;
+  --color-button-icon_main: #ffffff;
+  --color-button-icon-hover_main: #ffffff;
+  --color-button-border_main: transparent;
+  --color-button-border-hover_main: transparent;
+}
+
+/* Sign in with Shop — white field, teal border, dark label (shadow styles via ::part when exposed) */
+body.bb-root .account-actions__shop-login shop-login-button::part(button) {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+  border: 2px solid var(--bb-brand-solid, #4ac6be) !important;
+  box-shadow: none !important;
+}
+
+body.bb-root .account-actions__shop-login shop-login-button::part(button):hover {
+  background-color: #f5f5f5 !important;
+  border-color: var(--bb-brand-hover-solid, #6dc9c3) !important;
+  color: #0a0a0a !important;
+}
+
+body.bb-root .btn--checkout {
+  --background: var(--bb-brand-solid);
+  --background-hover: var(--bb-brand-hover-solid);
+  --color: #ffffff;
+  --color-hover: #ffffff;
+  --border: var(--bb-brand-solid);
+  --border-hover: var(--bb-brand-hover-solid);
+  --icon: #ffffff;
+  --icon-hover: #ffffff;
+}
+
+/* Customer templates (login, register, addresses, etc.) — teal filled + teal-outline buttons */
+body.bb-root.bb-customer-pages #MainContent .btn:not(.link):not(.btn--border) {
+  --background: var(--bb-brand-solid);
+  --background-hover: var(--bb-brand-hover-solid);
+  --color: #ffffff;
+  --color-hover: #ffffff;
+  --border: var(--bb-brand-solid);
+  --border-hover: var(--bb-brand-hover-solid);
+  --icon: #ffffff;
+  --icon-hover: #ffffff;
+}
+
+body.bb-root.bb-customer-pages #MainContent .btn.btn--border {
+  --background: #ffffff;
+  --background-hover: #f5f5f5;
+  --color: #1a1a1a;
+  --color-hover: #0a0a0a;
+  --border: var(--bb-brand-solid);
+  --border-hover: var(--bb-brand-hover-solid);
+  --icon: var(--bb-brand-solid);
+  --icon-hover: var(--bb-brand-hover-solid);
+}
+
+body.bb-root.bb-customer-pages .bb-customer-privacy-note a {
+  color: var(--bb-brand-solid, #4ac6be);
+}

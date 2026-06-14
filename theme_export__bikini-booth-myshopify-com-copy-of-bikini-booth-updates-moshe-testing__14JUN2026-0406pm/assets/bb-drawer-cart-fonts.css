@@ -1,0 +1,61 @@
+/**
+ * Mobile menu drawer + cart drawer: match Bikini Booth header typography (Futura stack).
+ * Theme menu CSS uses --font-mainmenu-family / heading vars that can differ from desktop nav.
+ */
+body.bb-root .menu-drawer {
+  --font-mainmenu-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+  --font-heading-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+}
+
+body.bb-root .menu-drawer .menu-drawer__menu-item__main,
+body.bb-root .menu-drawer .menu-drawer__menu-item__link,
+body.bb-root .menu-drawer summary,
+body.bb-root .menu-drawer .menu-drawer__menu-item,
+body.bb-root .menu-drawer .account-actions__sign-in-text,
+body.bb-root .menu-drawer .account-actions__fallback-text,
+body.bb-root .menu-drawer .disclosure-selector,
+body.bb-root .menu-drawer .localization-selector,
+body.bb-root .menu-drawer .header-social-icons .social-icons__text {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+}
+
+body.bb-root cart-drawer,
+body.bb-root cart-drawer .cart-drawer,
+body.bb-root cart-drawer .popup-modal__content,
+body.bb-root cart-drawer .popup-modal__content__data {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+}
+
+body.bb-root cart-drawer .cart-item__name,
+body.bb-root cart-drawer .product-option,
+body.bb-root cart-drawer .price,
+body.bb-root cart-drawer .totals,
+body.bb-root cart-drawer .tax-note,
+body.bb-root cart-drawer .field__label,
+body.bb-root cart-drawer .field__input,
+body.bb-root cart-drawer .btn,
+body.bb-root cart-drawer .subheading,
+body.bb-root cart-drawer .caption,
+body.bb-root cart-drawer .cart-drawer__empty-content,
+body.bb-root cart-drawer .cart__footer__information {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+}
+
+/* Mobile drawer: match body/nav scale (theme main menu used ~24px here). */
+@media (max-width: 1024px) {
+  body.bb-root .menu-drawer .menu-drawer__menu-item__main,
+  body.bb-root .menu-drawer .menu-drawer__menu-item__link,
+  body.bb-root .menu-drawer summary,
+  body.bb-root .menu-drawer .menu-drawer__menu-item,
+  body.bb-root .menu-drawer .menu-drawer__back-button,
+  body.bb-root .menu-drawer .header-phone-number__desktop,
+  body.bb-root .menu-drawer .header-phone-number__item > *:not(.header-social-icons),
+  body.bb-root .menu-drawer .account-actions__sign-in-text,
+  body.bb-root .menu-drawer .account-actions__fallback-text,
+  body.bb-root .menu-drawer .disclosure-selector,
+  body.bb-root .menu-drawer .localization-selector,
+  body.bb-root .menu-drawer .header-social-icons .social-icons__text {
+    font-size: 16px !important;
+  }
+}

@@ -1,0 +1,69 @@
+/**
+ * Futura LT Pro — Book (400) + Medium (500)
+ * Font files: assets/futura-lt-pro/*.otf
+ * Site UI: body, headings, buttons, nav, and variant “sizes” inherit this stack.
+ */
+@font-face {
+  font-family: "Futura LT Pro";
+  src: url("futura-lt-pro/FuturaLTProBook.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Futura LT Pro";
+  src: url("futura-lt-pro/FuturaLTProMedium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bb-font-futura: "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif;
+  --font-body-family: var(--bb-font-futura);
+  --font-heading-family: var(--bb-font-futura);
+  --font-h4h5h6-family: var(--bb-font-futura);
+}
+
+.bb-root {
+  --bb-font-futura: "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif;
+  --bb-pdp-accent-tan: #c07c4c;
+  --font-body-family: var(--bb-font-futura);
+  --font-heading-family: var(--bb-font-futura);
+  --font-h4h5h6-family: var(--bb-font-futura);
+  --font-body-weight: 400;
+  --font-heading-weight: 500;
+  --font-body-style: normal;
+  --font-heading-style: normal;
+  font-family: var(--bb-font-futura);
+}
+
+.bb-root h1,
+.bb-root h2,
+.bb-root h3,
+.bb-root h4,
+.bb-root h5,
+.bb-root h6,
+.bb-root .h1,
+.bb-root .h2,
+.bb-root .h3,
+.bb-root .h4,
+.bb-root .h5,
+.bb-root .h6 {
+  font-family: var(--bb-font-futura);
+  font-weight: 500;
+}
+
+.bb-root strong,
+.bb-root b,
+.bb-root .strong {
+  font-weight: 500;
+}
+
+.bb-root button,
+.bb-root input,
+.bb-root textarea,
+.bb-root select {
+  font-family: inherit;
+}

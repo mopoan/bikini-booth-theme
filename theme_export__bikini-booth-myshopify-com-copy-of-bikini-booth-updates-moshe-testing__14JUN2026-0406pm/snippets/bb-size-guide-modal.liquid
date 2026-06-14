@@ -1,0 +1,220 @@
+{%- comment -%}
+  Bikini Booth — PDP size guide modal (Subframe-aligned layout from page 26e7dcfa-071f-4375-b252-640f796e12b2).
+  Opened via modal-opener data-modal="#PopupModal-bb-size-guide-{{ section.id }}".
+{%- endcomment -%}
+{%- assign bb_sg = section.id -%}
+<modal-dialog id="PopupModal-bb-size-guide-{{ bb_sg }}" class="popup-modal popup-modal__center bb-size-guide-modal">
+  <div class="popup-modal__overlay" onclick="this.closest('.popup-modal').close()"></div>
+  <div class="popup-modal__content">
+    <button class="popup-modal__toggle modal-close-animation" type="button" onclick="this.closest('.popup-modal').close()" aria-label="{{ 'accessibility.close' | t }}">
+      {{- 'icon-close' | append: settings.system_icon_thickness | inline_asset_content -}}
+    </button>
+    <div class="popup-modal__content__data custom__scrollbar" role="dialog" aria-modal="true" aria-labelledby="bb-sg-title-{{ bb_sg }}" tabindex="-1">
+      <div class="bb-sg__header">
+        <h2 id="bb-sg-title-{{ bb_sg }}" class="bb-sg__title">{{ 'products.product.size_guide_title' | t }}</h2>
+      </div>
+
+      <div class="bb-sg__tablist" data-bb-sg-tablist role="tablist" aria-label="{{ 'products.product.size_guide_title' | t }}">
+        <button type="button" class="bb-sg-tab bb-sg-tab--active" role="tab" data-bb-sg-tab="tops" aria-selected="true" id="bb-sg-tab-tops-{{ bb_sg }}">{{ 'products.product.size_guide_tab_tops' | t }}</button>
+        <button type="button" class="bb-sg-tab" role="tab" data-bb-sg-tab="bottoms" aria-selected="false" id="bb-sg-tab-bottoms-{{ bb_sg }}">{{ 'products.product.size_guide_tab_bottoms' | t }}</button>
+        <button type="button" class="bb-sg-tab" role="tab" data-bb-sg-tab="one-pieces" aria-selected="false" id="bb-sg-tab-one-{{ bb_sg }}">{{ 'products.product.size_guide_tab_one_pieces' | t }}</button>
+        <button type="button" class="bb-sg-tab" role="tab" data-bb-sg-tab="mens" aria-selected="false" id="bb-sg-tab-mens-{{ bb_sg }}">{{ 'products.product.size_guide_tab_mens' | t }}</button>
+      </div>
+
+      <div class="bb-sg__sub">
+        <span class="bb-sg__sub-inner">{{ 'products.product.size_chart_label' | t }}</span>
+      </div>
+      <hr class="bb-sg__rule">
+
+      <div class="bb-sg__table-wrap" data-bb-sg-panel="tops" id="bb-sg-panel-tops-{{ bb_sg }}" role="tabpanel" aria-labelledby="bb-sg-tab-tops-{{ bb_sg }}">
+        {%- comment -%} General vs underwire: same bust row; cup row differs (underwire = single letters per chart). {%- endcomment -%}
+        <div class="bb-sg__tops-type" data-bb-sg-tops-type="general">
+          <table class="bb-sg-table">
+            <thead>
+              <tr>
+                <th scope="col">{{ 'products.product.size_guide_row_size' | t }}</th>
+                <th scope="col">XS</th>
+                <th scope="col">S</th>
+                <th scope="col">M</th>
+                <th scope="col">L</th>
+                <th scope="col">C+</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bb-sg-row--tint">
+                <td>{{ 'products.product.size_guide_row_bust' | t }}</td>
+                <td data-bb-in="30 - 32">30 - 32</td>
+                <td data-bb-in="32 - 34">32 - 34</td>
+                <td data-bb-in="34 - 36">34 - 36</td>
+                <td data-bb-in="36 - 38">36 - 38</td>
+                <td data-bb-in="38 - 40">38 - 40</td>
+              </tr>
+              <tr>
+                <td>{{ 'products.product.size_guide_row_cup' | t }}</td>
+                <td>A</td>
+                <td>B - C</td>
+                <td>B - C</td>
+                <td>C - D</td>
+                <td>D</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="bb-sg__tops-type" data-bb-sg-tops-type="underwire" hidden>
+          <table class="bb-sg-table">
+            <thead>
+              <tr>
+                <th scope="col">{{ 'products.product.size_guide_row_size' | t }}</th>
+                <th scope="col">XS</th>
+                <th scope="col">S</th>
+                <th scope="col">M</th>
+                <th scope="col">L</th>
+                <th scope="col">C+</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bb-sg-row--tint">
+                <td>{{ 'products.product.size_guide_row_bust' | t }}</td>
+                <td data-bb-in="30 - 32">30 - 32</td>
+                <td data-bb-in="32 - 34">32 - 34</td>
+                <td data-bb-in="34 - 36">34 - 36</td>
+                <td data-bb-in="36 - 38">36 - 38</td>
+                <td data-bb-in="38 - 40">38 - 40</td>
+              </tr>
+              <tr>
+                <td>{{ 'products.product.size_guide_row_cup' | t }}</td>
+                <td>A</td>
+                <td>B</td>
+                <td>C</td>
+                <td>D</td>
+                <td>D</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bb-sg__table-wrap" data-bb-sg-panel="bottoms" id="bb-sg-panel-bottoms-{{ bb_sg }}" role="tabpanel" aria-labelledby="bb-sg-tab-bottoms-{{ bb_sg }}" hidden>
+        <table class="bb-sg-table">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'products.product.size_guide_row_size' | t }}</th>
+              <th scope="col">XS</th>
+              <th scope="col">S</th>
+              <th scope="col">M</th>
+              <th scope="col">L</th>
+              <th scope="col">C+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bb-sg-row--tint">
+              <td>{{ 'products.product.size_guide_row_waist' | t }}</td>
+              <td data-bb-in="24 - 25">24 - 25</td>
+              <td data-bb-in="25 - 26">25 - 26</td>
+              <td data-bb-in="27 - 28">27 - 28</td>
+              <td data-bb-in="29 - 30">29 - 30</td>
+              <td data-bb-in="31 - 33">31 - 33</td>
+            </tr>
+            <tr>
+              <td>{{ 'products.product.size_guide_row_hip' | t }}</td>
+              <td data-bb-in="33.5 - 36">33.5 - 36</td>
+              <td data-bb-in="36 - 38">36 - 38</td>
+              <td data-bb-in="38 - 39">38 - 39</td>
+              <td data-bb-in="39 - 40">39 - 40</td>
+              <td data-bb-in="40 - 41">40 - 41</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bb-sg__table-wrap" data-bb-sg-panel="one-pieces" id="bb-sg-panel-one-{{ bb_sg }}" role="tabpanel" aria-labelledby="bb-sg-tab-one-{{ bb_sg }}" hidden>
+        <table class="bb-sg-table">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'products.product.size_guide_row_size' | t }}</th>
+              <th scope="col">XS</th>
+              <th scope="col">S</th>
+              <th scope="col">M</th>
+              <th scope="col">L</th>
+              <th scope="col">C+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bb-sg-row--tint">
+              <td>{{ 'products.product.size_guide_row_bust' | t }}</td>
+              <td data-bb-in="30 - 32">30 - 32</td>
+              <td data-bb-in="32 - 34">32 - 34</td>
+              <td data-bb-in="34 - 36">34 - 36</td>
+              <td data-bb-in="36 - 38">36 - 38</td>
+              <td data-bb-in="38 - 40">38 - 40</td>
+            </tr>
+            <tr>
+              <td>{{ 'products.product.size_guide_row_cup' | t }}</td>
+              <td>A</td>
+              <td>B - C</td>
+              <td>B - C</td>
+              <td>C - D</td>
+              <td>D</td>
+            </tr>
+            <tr class="bb-sg-row--tint">
+              <td>{{ 'products.product.size_guide_row_waist' | t }}</td>
+              <td data-bb-in="24 - 25">24 - 25</td>
+              <td data-bb-in="25 - 26">25 - 26</td>
+              <td data-bb-in="27 - 28">27 - 28</td>
+              <td data-bb-in="29 - 30">29 - 30</td>
+              <td data-bb-in="31 - 33">31 - 33</td>
+            </tr>
+            <tr>
+              <td>{{ 'products.product.size_guide_row_hip' | t }}</td>
+              <td data-bb-in="33.5 - 36">33.5 - 36</td>
+              <td data-bb-in="36 - 38">36 - 38</td>
+              <td data-bb-in="38 - 39">38 - 39</td>
+              <td data-bb-in="39 - 40">39 - 40</td>
+              <td data-bb-in="40 - 41">40 - 41</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bb-sg__table-wrap" data-bb-sg-panel="mens" id="bb-sg-panel-mens-{{ bb_sg }}" role="tabpanel" aria-labelledby="bb-sg-tab-mens-{{ bb_sg }}" hidden>
+        <table class="bb-sg-table bb-sg-table--mens">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'products.product.size_guide_row_size' | t }}</th>
+              <th scope="col">XS</th>
+              <th scope="col">S</th>
+              <th scope="col">M</th>
+              <th scope="col">L</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bb-sg-row--tint">
+              <td>{{ 'products.product.size_guide_row_waist' | t }}</td>
+              <td data-bb-in="28 - 30">28 - 30</td>
+              <td data-bb-in="30 - 32">30 - 32</td>
+              <td data-bb-in="32 - 33">32 - 33</td>
+              <td data-bb-in="33 - 34">33 - 34</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bb-sg__footer">
+        <label class="bb-sg-field">
+          <span>{{ 'products.product.size_guide_type' | t }}</span>
+          <select class="bb-sg-select bb-sg-select--type" name="bb-size-guide-type-{{ bb_sg }}" aria-label="{{ 'products.product.size_guide_type' | t }}">
+            <option value="general">{{ 'products.product.size_guide_general' | t }}</option>
+            <option value="underwire">{{ 'products.product.size_guide_underwire' | t }}</option>
+          </select>
+        </label>
+        <label class="bb-sg-field">
+          <span>{{ 'products.product.size_guide_measure' | t }}</span>
+          <select class="bb-sg-select bb-sg-select--measure" name="bb-size-guide-measure-{{ bb_sg }}" aria-label="{{ 'products.product.size_guide_measure' | t }}">
+            <option value="inch">{{ 'products.product.size_guide_inch' | t }}</option>
+            <option value="cm">{{ 'products.product.size_guide_cm' | t }}</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </div>
+</modal-dialog>

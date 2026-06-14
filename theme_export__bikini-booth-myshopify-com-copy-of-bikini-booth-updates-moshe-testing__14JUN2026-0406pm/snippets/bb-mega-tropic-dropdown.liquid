@@ -1,0 +1,107 @@
+{% comment %}
+  Tropic-style mega dropdown: left links + right 3 product images (per hovered collection).
+  Accepts: parent_link {Object} Shopify menu link with child links (required).
+{% endcomment %}
+{%- unless parent_link != blank and parent_link.links != blank -%}
+  {%- comment -%} No children — nothing to render {%- endcomment -%}
+{%- else -%}
+  {%- assign first_key = '' -%}
+  {%- for childlink in parent_link.links -%}
+    {%- if first_key == blank -%}
+      {%- capture _child_handle -%}{%- render 'bb-nav-link-collection-handle', link: childlink -%}{%- endcapture -%}
+      {%- assign _child_handle = _child_handle | strip -%}
+      {%- if _child_handle != blank -%}
+        {%- assign first_key = _child_handle -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if first_key == blank -%}
+    {%- capture _parent_handle -%}{%- render 'bb-nav-link-collection-handle', link: parent_link -%}{%- endcapture -%}
+    {%- assign first_key = _parent_handle | strip -%}
+  {%- endif -%}
+  {%- assign first_coll = collections[first_key] -%}
+  {%- assign shot_n = 0 -%}
+  <div
+    class="submenu-design__simple bb-mega-tropic"
+    data-bb-mega-root
+    data-bb-mega-variant="{{ parent_link.handle | escape }}"
+  >
+    <script type="application/json" class="bb-mega-json">
+      {
+      {%- assign json_started = false -%}
+      {%- for childlink in parent_link.links -%}
+        {%- capture child_handle -%}{%- render 'bb-nav-link-collection-handle', link: childlink -%}{%- endcapture -%}
+        {%- assign child_handle = child_handle | strip -%}
+        {%- if child_handle != blank -%}
+          {%- if json_started -%},{%- endif -%}
+          "{{ child_handle | escape }}":{% render 'bb-mega-collection-images-json', handle: child_handle %}
+          {%- assign json_started = true -%}
+        {%- endif -%}
+      {%- endfor -%}
+      }
+    </script>
+
+    <div class="bb-mega-tropic__inner">
+      <div class="bb-mega-tropic__layout">
+        <ul class="bb-mega-tropic__list unstyle-ul">
+          {%- for childlink in parent_link.links -%}
+            {%- capture child_handle -%}{%- render 'bb-nav-link-collection-handle', link: childlink -%}{%- endcapture -%}
+            {%- assign child_handle = child_handle | strip -%}
+            <li>
+              <a
+                href="{{ childlink.url }}"
+                class="submenu__item body2 bb-mega-tropic__link{% if childlink.current %} list-menu__item--active{% endif %}"
+                {%- if child_handle != blank -%}
+                  data-bb-collection="{{ child_handle | escape }}"
+                {%- endif -%}
+              ><span class="bb-mega-tropic__link-text">{{ childlink.title | escape }}</span></a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="bb-mega-tropic__shots" data-bb-mega-shots>
+          {%- if first_coll != empty -%}
+            {%- for product in first_coll.products limit: 36 -%}
+              {%- if shot_n >= 3 -%}{%- break -%}{%- endif -%}
+              {%- if product.featured_media != blank -%}
+                <a href="{{ product.url }}" class="bb-mega-tropic__shot">
+                  <span class="bb-mega-tropic__shot-inner">
+                    <img
+                      src="{{ product.featured_media | image_url: width: 900 }}"
+                      alt="{{ product.title | escape }}"
+                      loading="lazy"
+                      width="600"
+                      height="800"
+                    >
+                  </span>
+                </a>
+                {%- assign shot_n = shot_n | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if shot_n == 0 and first_coll.featured_image != blank -%}
+              <a href="{{ first_coll.url }}" class="bb-mega-tropic__shot">
+                <span class="bb-mega-tropic__shot-inner">
+                  <img
+                    src="{{ first_coll.featured_image | image_url: width: 900 }}"
+                    alt="{{ first_coll.title | escape }}"
+                    loading="lazy"
+                    width="600"
+                    height="800"
+                  >
+                </span>
+              </a>
+              {%- assign shot_n = 1 -%}
+            {%- endif -%}
+          {%- endif -%}
+          {%- if shot_n == 0 -%}
+            {%- for i in (1..3) -%}
+              <span class="bb-mega-tropic__shot bb-mega-tropic__shot--placeholder" aria-hidden="true">
+                <span class="bb-mega-tropic__shot-inner"></span>
+              </span>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endunless -%}

@@ -1,0 +1,14 @@
+﻿/**
+ * Bikini Booth — product template fork layer
+ */
+@layer bb;
+
+@layer bb {
+  .bb-root.template-product section.bb-product {
+    --bb-pdp-accent: var(--bb-brand, #4ac6be);
+  }
+
+  .bb-root.template-product section.bb-product .product__column__content {
+    scroll-margin-top: 1rem;
+  }
+}

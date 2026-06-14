@@ -1,0 +1,161 @@
+/**
+ * Bikini Booth — Tropic of C–style mega menu (collection links + 3 dynamic product shots).
+ * Pairs with snippets/bb-mega-tropic-dropdown.liquid + bb-mega-menu-tropic.js
+ */
+
+@media (min-width: 1024px) {
+  .section-header .header__main {
+    overflow: visible;
+  }
+
+  .bikini-booth-nav-menu .submenu-container.bb-mega-tropic-wrap {
+    position: relative;
+  }
+
+  /*
+   * Full-bleed panel: position fixed to the viewport so every mega menu shares the same
+   * horizontal placement (links left, images right). The old left:50% / -50vw breakout
+   * was relative to each <li>, which shifted the panel per top-level item.
+   */
+  .list-menu--secondary .submenu--to-left > .bb-mega-tropic.submenu-design__simple,
+  .list-menu--classic .submenu--to-left:not(.submenu--megamenu) > .bb-mega-tropic.submenu-design__simple,
+  .list-menu--classic .submenu--to-left:first-child:not(.submenu--megamenu) > .bb-mega-tropic.submenu-design__simple,
+  .bikini-booth-nav-menu .submenu-container.bb-mega-tropic-wrap > .bb-mega-tropic.submenu-design__simple {
+    position: fixed !important;
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+    translate: none !important;
+    /* Beat theme rules that anchor dropdowns to each <li> (submenu--to-left uses negative left) */
+    transition: opacity var(--duration-medium, 0.2s) ease, visibility var(--duration-medium, 0.2s) ease !important;
+    padding: 2.5rem 0 2.5rem;
+    border-radius: 0;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.07);
+    background: #ffffff;
+    z-index: 120;
+    top: var(--bb-mega-top, 6rem) !important;
+  }
+
+  /* Hover bridge above panel (theme already adds ::after on [class*=submenu-design__]) */
+  .bikini-booth-nav-menu .bb-mega-tropic.submenu-design__simple::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    height: 14px;
+    background: transparent;
+  }
+
+  .bb-mega-tropic__inner {
+    max-width: min(1320px, calc(100vw - 3rem));
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .bb-mega-tropic__layout {
+    display: grid;
+    /* Keep both columns stable so sparse variants don't collapse/clump */
+    grid-template-columns: minmax(14rem, 18rem) minmax(34rem, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .bb-mega-tropic__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .bb-mega-tropic__list > li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .bb-mega-tropic__list .bb-mega-tropic__link {
+    display: block;
+    padding: 0.35rem 0;
+    text-decoration: none;
+    color: #111;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    border: 0;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .bb-mega-tropic__list .bb-mega-tropic__link:hover,
+  .bb-mega-tropic__list .bb-mega-tropic__link:focus-visible,
+  .bb-mega-tropic__link.is-bb-mega-active {
+    color: var(--bb-col-brand, #4ac6be);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .bb-mega-tropic__shots {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(10.5rem, 1fr));
+    gap: 0.75rem;
+    align-items: stretch;
+    min-height: 12rem;
+    justify-items: stretch;
+  }
+
+  .bb-mega-tropic__shot {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+  }
+
+  .bb-mega-tropic__shot-inner {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: #f4f4f4;
+  }
+
+  .bb-mega-tropic__shot-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  .bb-mega-tropic__shot:hover .bb-mega-tropic__shot-inner img {
+    transform: scale(1.03);
+  }
+
+  .bb-mega-tropic__shot--placeholder .bb-mega-tropic__shot-inner {
+    background: linear-gradient(135deg, #f0f0f0, #fafafa);
+  }
+
+  /* Hide default narrow dropdown width / padding overrides */
+  .bikini-booth-nav-menu .bb-mega-tropic.submenu-design__simple .submenu__item {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  /* Mobile keeps theme drawer — mega markup may exist but is not shown in split desktop nav */
+  .bb-mega-tropic[data-bb-mega-root] {
+    display: none !important;
+  }
+}

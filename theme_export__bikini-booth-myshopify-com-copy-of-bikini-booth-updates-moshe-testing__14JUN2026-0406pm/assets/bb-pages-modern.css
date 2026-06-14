@@ -1,0 +1,139 @@
+/**
+ * Bikini Booth — modern marketing pages (suffix: about-us, contact).
+ * Editorial canvas + spacing aligned with homepage Subframe sections.
+ */
+.bb-root.bb-page-modern.template-page #MainContent {
+  background: #ffffff !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bb-root.bb-page-modern.template-page #MainContent .content-for-layout {
+  background: #ffffff !important;
+}
+
+/* Contact + modern: page canvas matches form band (overrides white above) */
+.bb-root.bb-page-modern.bb-contact-tropic.template-page #MainContent,
+.bb-root.bb-page-modern.bb-contact-tropic.template-page #MainContent .content-for-layout {
+  background: #fdfaf5 !important;
+}
+
+/* Contain full-bleed sections to the same readable width as index */
+.bb-root.bb-page-modern.template-page #MainContent .page-wide,
+.bb-root.bb-page-modern.template-page #MainContent .page-width {
+  max-width: min(1320px, calc(100vw - 3rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Breathing room between stacked Shopify section wrappers */
+.bb-root.bb-page-modern.template-page #MainContent > .shopify-section + .shopify-section {
+  margin-top: 0;
+}
+
+/* Contact form heading (split layout or single column) */
+.bb-root.bb-page-modern [data-section-name="contact-form"] .contact-form-desktop-heading h2,
+.bb-root.bb-page-modern [data-section-name="contact-form"] .contact-form-mobile-heading h2,
+.bb-root.bb-page-modern [data-section-name="contact-form"] .section-heading-text {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: #0a2e2e;
+}
+
+/* --- About: “What we believe” (bb-about-beliefs) --- */
+.bb-about-beliefs {
+  --bb-belief-ink: #0a2e2e;
+  --bb-belief-muted: rgba(10, 46, 46, 0.68);
+  --bb-belief-accent: #4ac6be;
+  --bb-belief-surface: #fef9ee;
+  background: var(--bb-belief-surface);
+  color: var(--bb-belief-ink);
+}
+
+.bb-about-beliefs__inner {
+  max-width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: clamp(2.75rem, 6vw, 4.25rem) 1.25rem clamp(3rem, 6vw, 4.5rem);
+  box-sizing: border-box;
+}
+
+.bb-about-beliefs__header {
+  text-align: center;
+  max-width: 40rem;
+  margin: 0 auto clamp(2rem, 4vw, 2.75rem);
+}
+
+.bb-about-beliefs__eyebrow {
+  margin: 0 0 0.65rem;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bb-belief-accent);
+}
+
+.bb-about-beliefs__title {
+  margin: 0;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-size: clamp(1.65rem, 3.2vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--bb-belief-ink);
+}
+
+.bb-about-beliefs__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 4vw, 2.75rem);
+}
+
+@media (min-width: 768px) {
+  .bb-about-beliefs__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+
+.bb-about-beliefs__card {
+  text-align: center;
+  max-width: 22rem;
+  margin: 0 auto;
+}
+
+.bb-about-beliefs__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: 0 auto 1.1rem;
+  border-radius: 9999px;
+  background: rgba(74, 198, 190, 0.14);
+  color: var(--bb-belief-accent);
+}
+
+.bb-about-beliefs__icon svg {
+  display: block;
+}
+
+.bb-about-beliefs__card-title {
+  margin: 0 0 0.65rem;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--bb-belief-ink);
+}
+
+.bb-about-beliefs__card-text {
+  margin: 0;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--bb-belief-muted);
+}

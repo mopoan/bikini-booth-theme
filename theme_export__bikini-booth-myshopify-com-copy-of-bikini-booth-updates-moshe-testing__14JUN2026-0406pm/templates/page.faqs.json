@@ -1,0 +1,133 @@
+{
+  "sections": {
+    "faq_hero": {
+      "type": "bb-hero",
+      "name": "FAQ hero",
+      "settings": {
+        "image": "shopify://shop_images/bb_phuket_polished.png",
+        "fallback_asset": "bb-hero-main.jpg",
+        "eyebrow": "FAQ's",
+        "heading": "Let's answer some questions",
+        "subheading": "<p>Find answers about our collection, sizing, shipping, returns, and customer care.</p>",
+        "button_label": "",
+        "button_link": "",
+        "content_horizontal": "center",
+        "content_vertical": "center",
+        "overlay_opacity": 55,
+        "desktop_min_height": 480,
+        "mobile_min_height": 360,
+        "eyebrow_font_size": 11,
+        "heading_font_size": 44,
+        "heading_font_size_mobile": 30,
+        "subheading_font_size": 16,
+        "eyebrow_color": "#4ac6be",
+        "heading_color": "#ffffff",
+        "subheading_color": "#ffffff"
+      }
+    },
+    "accordion_faq": {
+      "type": "accordion",
+      "blocks": {
+        "text_BdHH4c": {
+          "type": "text",
+          "settings": {
+            "heading_text": "Frequently asked question",
+            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
+            "button_name": "Button",
+            "url": ""
+          }
+        },
+        "text_8MfzQW": {
+          "type": "text",
+          "settings": {
+            "heading_text": "Frequently asked question",
+            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
+            "button_name": "Button",
+            "url": ""
+          }
+        },
+        "text_gbhApD": {
+          "type": "text",
+          "settings": {
+            "heading_text": "Frequently asked question",
+            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
+            "button_name": "Button",
+            "url": ""
+          }
+        },
+        "text_XDmkJ9": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "heading_text": "Frequently asked question",
+            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
+            "button_name": "Button",
+            "url": ""
+          }
+        },
+        "text_jmRzyU": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "heading_text": "Frequently asked question",
+            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
+            "button_name": "Button",
+            "url": ""
+          }
+        }
+      },
+      "block_order": ["text_BdHH4c", "text_8MfzQW", "text_gbhApD", "text_XDmkJ9", "text_jmRzyU"],
+      "name": "t:names.accordion",
+      "settings": {
+        "show_all_text_in_admin": false,
+        "open_first_item_by_default": true,
+        "main_subheading": "",
+        "main_heading": "",
+        "main_desc": "",
+        "heading_aligment": "text-center",
+        "top_spacing": "medium",
+        "width": "default",
+        "show_image": "hide",
+        "image_hover": "default",
+        "image_ratio": "auto",
+        "align_content": "center",
+        "row_reverse": false,
+        "text_content_width": 50,
+        "text_content_padding": 40,
+        "disable_accordion": false,
+        "show_lines": false,
+        "lines_width": "fullwidth",
+        "background": "hide",
+        "color_background": "rgba(0,0,0,0)",
+        "gradient": "",
+        "image_overlay_opacity": 0,
+        "image_overlay_color": "rgba(0,0,0,0)",
+        "image_overlay_opacity_mobile": 0,
+        "image_overlay_color_mobile": "rgba(0,0,0,0)",
+        "show_parallax": false,
+        "imagealign": "center",
+        "imagesize": "cover",
+        "background_width": "fullwidth",
+        "background_spacing": "normal",
+        "remove_bottom_spacing": false,
+        "color_base": "rgba(0,0,0,0)",
+        "color_accent": "#4ac6be",
+        "color_lines": "rgba(10, 46, 46, 0.12)",
+        "show_button_bg": false,
+        "color_button": "rgba(0,0,0,0)",
+        "color_button_gradient": "",
+        "color_button_border": "rgba(0,0,0,0)",
+        "color_button_text": "rgba(0,0,0,0)",
+        "show_button_bg_hover": false,
+        "color_button_hover": "rgba(0,0,0,0)",
+        "color_button_gradient_hover": "",
+        "color_button_border_hover": "rgba(0,0,0,0)",
+        "color_button_text_hover": "rgba(0,0,0,0)",
+        "show_shadow_button": false,
+        "color_shadow_button": "rgba(0,0,0,0)",
+        "color_shadow_hover_button": "rgba(0,0,0,0)"
+      }
+    }
+  },
+  "order": ["faq_hero", "accordion_faq"]
+}

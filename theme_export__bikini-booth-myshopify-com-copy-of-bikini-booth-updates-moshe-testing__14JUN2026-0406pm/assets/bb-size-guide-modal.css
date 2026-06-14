@@ -1,0 +1,198 @@
+/* Bikini Booth — “find my size” modal (Subframe-aligned: Clean Minimal Footer page, MCP 26e7dcfa…) */
+
+.bb-size-guide-modal.popup-modal {
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.bb-size-guide-modal .popup-modal__content {
+  width: min(576px, 100%);
+  max-height: min(90vh, 720px);
+  padding: 0;
+  border-radius: 8px;
+  background: #fdfbf4;
+  box-shadow: 0 18px 50px rgba(10, 46, 46, 0.12);
+}
+
+.bb-size-guide-modal .popup-modal__toggle {
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+}
+
+.bb-size-guide-modal .popup-modal__content__data {
+  padding: 0.75rem 0 0;
+  overflow: auto;
+}
+
+.bb-sg__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  /* Extra top + right: title was tight to modal edge and close control */
+  padding: 3.25rem 2.75rem 0.75rem 1.5rem;
+}
+
+.bb-sg__title {
+  margin: 0;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #171717;
+  text-transform: lowercase;
+}
+
+.bb-sg__tablist {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  padding: 1rem 1.5rem;
+}
+
+.bb-sg-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid #d4d4d4;
+  background: transparent;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: #404040;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.bb-sg-tab:hover {
+  background: #f5f5f5;
+}
+
+.bb-sg-tab--active {
+  border-color: #171717;
+  background: #171717;
+  color: #fff;
+}
+
+.bb-sg__sub {
+  display: flex;
+  justify-content: center;
+  padding: 0 1.5rem 0.25rem;
+}
+
+.bb-sg__sub-inner {
+  display: inline-block;
+  padding: 0 1rem 0.65rem;
+  border-bottom: 2px solid #d4a843;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 0.875rem;
+  color: #171717;
+  text-transform: lowercase;
+}
+
+.bb-sg__rule {
+  height: 1px;
+  margin: 0;
+  border: none;
+  background: #e5e5e5;
+}
+
+.bb-sg__table-wrap {
+  padding: 1.25rem 1rem 0.5rem;
+}
+
+.bb-sg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 0.8125rem;
+}
+
+.bb-sg-table th,
+.bb-sg-table td {
+  padding: 0.65rem 0.4rem;
+  text-align: center;
+  color: #171717;
+  font-weight: 400;
+}
+
+.bb-sg-table th:first-child,
+.bb-sg-table td:first-child {
+  text-align: left;
+  padding-left: 0.35rem;
+  color: #525252;
+  text-transform: lowercase;
+  font-weight: 400;
+}
+
+.bb-sg-table thead th {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: #171717;
+}
+
+.bb-sg-table thead th:first-child {
+  text-transform: lowercase;
+  font-weight: 500;
+}
+
+.bb-sg-table tbody tr.bb-sg-row--tint {
+  background: #faf7f0;
+}
+
+.bb-sg__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem 2rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.bb-sg-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bb-sg-field span {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 0.875rem;
+  color: #404040;
+  text-transform: lowercase;
+}
+
+.bb-sg-select {
+  min-width: 5.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #d4d4d4;
+  background: #fff;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 0.8125rem;
+  color: #171717;
+}
+
+@media (max-width: 576px) {
+  .bb-sg__tablist {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .bb-sg-table {
+    font-size: 0.75rem;
+  }
+
+  .bb-sg-table th,
+  .bb-sg-table td {
+    padding: 0.5rem 0.2rem;
+  }
+}

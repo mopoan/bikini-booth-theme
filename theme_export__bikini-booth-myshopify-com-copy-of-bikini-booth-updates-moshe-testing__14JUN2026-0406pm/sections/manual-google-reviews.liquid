@@ -1,0 +1,121 @@
+<section class="mgr page-width">
+
+<h2>{{ section.settings.heading }}</h2>
+
+<div class="mgr-slider">
+
+{% for block in section.blocks %}
+<div class="mgr-card">
+
+<a href="{{ block.settings.review_link }}" target="_blank">
+
+<div class="mgr-head">
+<img src="{{ block.settings.avatar | img_url: '100x100' }}">
+<div>
+<strong>{{ block.settings.name }}</strong>
+<small>{{ block.settings.level }}</small>
+</div>
+</div>
+
+<div class="mgr-stars">
+{{ block.settings.stars }} ★
+</div>
+
+<p>{{ block.settings.text }}</p>
+
+{% if block.settings.photo %}
+<img class="mgr-photo" src="{{ block.settings.photo | img_url: '300x300' }}">
+{% endif %}
+
+</a>
+
+</div>
+{% endfor %}
+
+</div>
+
+</section>
+
+<style>
+
+.mgr-slider {
+display:flex;
+overflow-x:auto;
+gap:20px;
+scroll-snap-type:x mandatory;
+}
+
+.mgr-card {
+min-width:320px;
+background:#fff;
+padding:20px;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+scroll-snap-align:start;
+}
+
+.mgr-card a {
+color:inherit;
+text-decoration:none;
+}
+
+.mgr-head {
+display:flex;
+gap:12px;
+align-items:center;
+margin-bottom:10px;
+}
+
+.mgr-head img {
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.mgr-stars {
+color:#f59e0b;
+margin-bottom:8px;
+}
+
+.mgr-photo {
+margin-top:10px;
+width:100%;
+border-radius:12px;
+}
+
+small {
+color:#777;
+}
+
+</style>
+
+{% schema %}
+{
+"name":"Manual Google Reviews",
+"settings":[
+{
+"type":"text",
+"id":"heading",
+"default":"Customer Reviews",
+"label":"Heading"
+}
+],
+"blocks":[
+{
+"type":"review",
+"name":"Review",
+"settings":[
+{"type":"image_picker","id":"avatar","label":"Reviewer avatar"},
+{"type":"text","id":"name","label":"Name"},
+{"type":"text","id":"level","label":"Level (Local Guide etc)"},
+{"type":"range","id":"stars","label":"Stars","min":1,"max":5,"step":1,"default":5},
+{"type":"textarea","id":"text","label":"Review text"},
+{"type":"image_picker","id":"photo","label":"Review photo (optional)"},
+{"type":"url","id":"review_link","label":"Google review link"}
+]
+}
+],
+"presets":[{"name":"Manual Google Reviews"}]
+}
+{% endschema %}

@@ -1,0 +1,1832 @@
+/**
+ * Bikini Booth - Subframe-inspired homepage (scoped).
+ */
+.bb-root {
+  --bb-brand: #4ac6be;
+}
+
+.bb-subframe {
+  --sf-ink: #0a2e2e;
+  --sf-accent: var(--bb-brand);
+  --sf-muted: #3d5a5a;
+  --sf-surface: #fef9ee;
+  --sf-line: rgba(255, 255, 255, 0.3);
+  --sf-badge-bg: #0a2e2e;
+  --sf-card-bg: #f5f5f5;
+  --sf-story-bg: var(--sf-surface);
+  /* Shared CTA sizing (marquee, promos, triptych, overlap) */
+  --bb-cta-min-h: 48px;
+  --bb-cta-pad-x: 1.75rem;
+  --bb-cta-font: 11px;
+  --bb-cta-track: 0.22em;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+}
+
+/* No teal band under the promo (wrapper + inner section) */
+.template-index #MainContent .shopify-section.bb-subframe-hero-section,
+.template-index #MainContent .shopify-section.bb-subframe-hero-section > section.bb-subframe {
+  background-color: transparent;
+}
+
+/*
+ * Hero “logo + nav in hero” duplicates the theme header’s main row.
+ * - bottom-menu-to-center + logo-to-center: nav + logo are NOT inside <menuwith-logo> (only top-menu-to-center uses that).
+ * - top-menu-to-center: hide the whole <menuwith-logo> block.
+ * Scoped with :has(.bb-subframe-hero--centered-nav) so other pages / hero-off are unaffected.
+ */
+/*
+ * Keep the real theme header logo/menu visible so branding lives in the sticky header.
+ * (Previously we hid this to rely on the hero logo row.)
+ */
+body.template-index:has(.bb-subframe-hero--centered-nav) .header__desktop .header__main .header .header__heading {
+  display: flex !important;
+}
+body.template-index:has(.bb-subframe-hero--centered-nav) .header__desktop menuwith-logo.menu-center__logo-center__container {
+  display: grid !important;
+}
+
+body.template-index:has(.bb-subframe-hero--centered-nav) .bb-subframe-hero__nav-wrap {
+  display: none !important;
+}
+
+/* Remove the hairline directly under the hidden hero nav row */
+body.template-index:has(.bb-subframe-hero--centered-nav) .bb-subframe-hero__nav-wrap + .bb-subframe-hero__rule {
+  display: none !important;
+}
+
+/* Move logo into header: hide the standalone hero logo row. */
+body.template-index:has(.bb-subframe-hero--centered-nav) .bb-subframe-hero__logo-row {
+  display: none !important;
+}
+
+.bb-subframe a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Hero already uses the fixed theme header: hide duplicate promo strip if re-enabled in the editor */
+body.template-index:has(.bb-subframe-hero--centered-nav) .bb-subframe > .bb-subframe-promo {
+  display: none !important;
+}
+
+/*
+ * Promo + hero fill the viewport: flex lives on the inner <section> (wrapper may only be .shopify-section).
+ */
+.shopify-section.bb-subframe-hero-section > section.bb-subframe {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Promo bar --- */
+.bb-subframe-promo {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #0a2e2e;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+/* Equal flex “wings” so the message stays optically centered with the logo/nav below */
+.bb-subframe-promo__left {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-promo__left {
+    display: none;
+  }
+}
+
+.bb-subframe-promo__center {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  justify-content: center;
+  min-width: 0;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-promo__center {
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .bb-subframe-promo__actions {
+    flex: 0 0 auto;
+    gap: 0.5rem;
+  }
+}
+
+.bb-subframe-promo__center svg {
+  flex: none;
+  color: var(--bb-brand, #4ac6be);
+}
+
+.bb-subframe-promo__text {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bb-brand, #4ac6be);
+  text-align: center;
+}
+
+.bb-subframe-promo__actions {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.bb-subframe-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.bb-subframe-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.bb-subframe-icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bb-subframe-cart-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bb-subframe-cart-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--bb-brand, #4ac6be);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+/* --- Hero --- */
+.bb-subframe-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-hero {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}
+
+.bb-subframe-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* --bb-hero-img-x / --bb-hero-img-y: align focal; slightly lower Y pulls subject down in frame under a tighter header */
+  object-position: var(--bb-hero-img-x, 50%) var(--bb-hero-img-y, 88%);
+}
+
+.bb-subframe-hero__gradient {
+  position: absolute;
+  inset: 0;
+  /* Stronger scrim under logo/nav only; mid/lower hero stays clean */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.52) 0%,
+    rgba(0, 0, 0, 0.22) 22%,
+    rgba(0, 0, 0, 0.06) 48%,
+    transparent 62%
+  );
+  pointer-events: none;
+}
+
+.bb-subframe-hero__logo-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Tighter to announcement bar — pair with homepage header padding so nav still clears the wordmark */
+  padding-top: clamp(3.1rem, 7.5vh, 5.25rem);
+  padding-bottom: 0.65rem;
+}
+
+.bb-subframe-hero__logo-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-hero__logo-row {
+    padding-top: clamp(2.85rem, 7vh, 4.75rem);
+    padding-bottom: 0.4rem;
+  }
+}
+
+.bb-subframe-hero__logo {
+  height: 4.2rem;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-hero__logo {
+    height: 2.7rem;
+  }
+}
+
+.bb-subframe-hero__nav-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 3rem;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-hero__nav-wrap {
+    padding: 0 1rem;
+  }
+}
+
+/* Hairlines around nav - keep 1px (reference screens often look thicker than production) */
+.bb-subframe-hero__rule {
+  width: 100%;
+  height: 1px;
+  max-height: 1px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.38);
+  box-shadow: none;
+  border: 0;
+}
+
+/* Grows so the photo fills the viewport; image crop (object-position) keeps the face below the nav */
+section.bb-subframe-hero--centered-nav .bb-subframe-hero__spacer {
+  min-height: 0;
+}
+
+@media (max-width: 749px) {
+  section.bb-subframe-hero--centered-nav .bb-subframe-hero__spacer {
+    min-height: 0;
+  }
+}
+
+.bb-subframe-hero__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 0;
+  padding: 0.65rem 0 0.85rem;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-hero__nav {
+    padding: 0.55rem 0 0.65rem;
+  }
+}
+
+.bb-subframe-hero__nav a {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.bb-subframe-hero__nav a:hover {
+  color: var(--bb-brand, #4ac6be);
+  opacity: 1;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-hero__nav a {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 17px;
+    padding: 0 0.5rem;
+  }
+}
+
+.bb-subframe-hero__sep {
+  width: 1px;
+  height: 1rem;
+  background: rgba(255, 255, 255, 0.4);
+  flex: none;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-hero__sep {
+    display: none;
+  }
+}
+
+.bb-subframe-hero__spacer {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+/* --- Category grid --- */
+.bb-subframe-cat-section {
+  width: 100%;
+  padding: 5rem 3rem;
+  background: var(--sf-surface);
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-cat-section {
+    padding: 3rem 1rem;
+  }
+}
+
+.bb-subframe-cat-inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.bb-subframe-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-cat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+.bb-subframe-cat-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.bb-subframe-cat-card__media {
+  position: relative;
+  height: 28rem;
+  overflow: hidden;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-cat-card__media {
+    height: 18rem;
+  }
+}
+
+.bb-subframe-cat-card__media img,
+.bb-subframe-cat-card__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.bb-subframe-cat-card__placeholder {
+  display: block;
+  background: linear-gradient(135deg, #fef9ee 0%, #f6efdf 100%);
+}
+
+.bb-subframe-cat-card:hover .bb-subframe-cat-card__media img {
+  transform: scale(1.05);
+}
+
+.bb-subframe-cat-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent, transparent);
+  pointer-events: none;
+}
+
+.bb-subframe-cat-card__label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+.bb-subframe-cat-card__label span {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.bb-subframe-cat-card__rule {
+  width: 2rem;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* --- Section headings --- */
+.bb-subframe-section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.bb-subframe-eyebrow {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sf-accent);
+}
+
+.bb-subframe-title {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 44px;
+  letter-spacing: 0.04em;
+  color: var(--sf-ink);
+  margin: 0;
+}
+
+/* Reviews block only: keep editorial serif on the main headline (body UI stays Futura) */
+.bb-subframe-reviews .bb-subframe-title {
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-title {
+    font-size: 28px;
+    line-height: 36px;
+    letter-spacing: normal;
+  }
+}
+
+.bb-subframe-sub {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--sf-accent);
+  margin: 0;
+}
+
+/* --- Product scroller --- */
+.bb-subframe-products {
+  width: 100%;
+  padding: 5rem 3rem;
+  background: var(--sf-surface);
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-products {
+    padding: 3rem 1rem;
+  }
+}
+
+.bb-subframe-products__inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.bb-subframe-products .bb-subframe-title {
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+}
+
+.bb-subframe-products__track-wrap {
+  position: relative;
+}
+
+.bb-subframe-products__track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  padding-bottom: 0.5rem;
+  padding-right: 3rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bb-subframe-products__track::-webkit-scrollbar {
+  display: none;
+}
+
+.bb-subframe-ptile {
+  flex: 0 0 min(224px, 75vw);
+  min-width: min(224px, 75vw);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.bb-subframe-products__arrow {
+  position: absolute;
+  right: 0;
+  top: calc(50% - 1.25rem);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--sf-ink);
+  cursor: pointer;
+  z-index: 2;
+  padding: 0;
+}
+
+.bb-subframe-products__arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bb-subframe-products__arrow:hover {
+  color: var(--bb-brand, #4ac6be);
+}
+
+.bb-subframe-ptile__media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--sf-card-bg);
+}
+
+.bb-subframe-ptile__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s ease;
+}
+
+.bb-subframe-ptile:hover .bb-subframe-ptile__media img {
+  transform: scale(1.05);
+}
+
+.bb-subframe-ptile__badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1;
+  padding: 0.25rem 0.625rem;
+  background: var(--sf-badge-bg);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 12px;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+}
+
+.bb-subframe-ptile__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.bb-subframe-ptile__title {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--sf-ink);
+  text-transform: lowercase;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.bb-subframe-ptile__price {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+}
+
+.bb-subframe-ptile__price .price {
+  margin-top: 2px;
+}
+
+.bb-subframe-ptile__price .price__main,
+.bb-subframe-ptile__price .price__sale {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+  color: var(--sf-ink, #0a2e2e);
+  -webkit-font-smoothing: antialiased;
+}
+
+.bb-subframe-ptile__price .price__sale {
+  font-weight: 500;
+}
+
+.bb-subframe-ptile__price .price__regular {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--sf-muted, #3d5a5a);
+}
+
+.bb-subframe-ptile__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  padding-top: 2px;
+}
+
+.bb-subframe-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  flex: none;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.bb-subframe-ptile__more-colors {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 14px;
+  color: var(--sf-accent);
+  text-decoration: none;
+}
+
+.bb-subframe-ptile__more-colors:hover {
+  text-decoration: underline;
+}
+
+.bb-subframe-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 2.5rem;
+  border: 1px solid var(--sf-ink);
+  background: transparent;
+  color: var(--sf-ink);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.bb-subframe-btn-outline:hover {
+  background: var(--sf-ink);
+  color: #fff;
+}
+
+/*
+ * Banner-style ghost CTA: thin border + wide tracking, but solid light backing
+ * so text never competes with photo seams (e.g. triptych center line).
+ */
+.bb-subframe-cta-cohesive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--bb-cta-min-h, 48px);
+  min-width: 11.5rem;
+  padding: 0 var(--bb-cta-pad-x, 1.75rem);
+  border: 1px solid var(--bb-brand, #4ac6be);
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--sf-ink, #0a2e2e);
+  font-size: var(--bb-cta-font, 11px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: var(--bb-cta-track, 0.22em);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 16px rgba(74, 198, 190, 0.12);
+  box-sizing: border-box;
+}
+
+.bb-subframe-cta-cohesive:hover {
+  background: var(--bb-brand, #4ac6be);
+  color: #fff;
+  border-color: var(--bb-brand, #4ac6be);
+  box-shadow: 0 4px 22px rgba(74, 198, 190, 0.35);
+}
+
+.bb-subframe-products__cta {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+/* Break out of page grid so diptych artwork is truly edge-to-edge */
+.template-index #MainContent .shopify-section.bb-subframe-promo-full-section {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* --- Fullwidth promo (scrapbook-style artwork + CTA) --- */
+.bb-subframe-promo-full {
+  position: relative;
+  display: flex;
+  min-height: 640px;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--sf-surface);
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-promo-full {
+    min-height: 420px;
+  }
+}
+
+.bb-subframe-promo-full__bg-wrap {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.bb-subframe-promo-full__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  image-rendering: auto;
+}
+
+.bb-subframe-promo-full__content {
+  position: absolute;
+  left: 50%;
+  bottom: 2.25rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0 1rem;
+  text-align: center;
+  max-width: min(100%, 42rem);
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-promo-full__content {
+    bottom: 1.5rem;
+  }
+}
+
+.bb-subframe-promo-full__eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.bb-subframe-promo-full__title {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 56px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  margin: 0;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-promo-full__title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}
+
+.bb-subframe-promo-full__btn {
+  /* Prefer .bb-subframe-cta-cohesive on the element for theme-consistent CTAs */
+  margin-top: 0.25rem;
+}
+
+/* --- Media feature (Tropic-style editorial video + triptych banners) --- */
+.bb-media-feature {
+  width: 100%;
+  padding: clamp(1.75rem, 4vw, 3rem) 0 clamp(3.25rem, 6vw, 5rem);
+  background: var(--bb-media-bg, var(--sf-surface));
+}
+
+/*
+ * Full-bleed triptych: same breakout as .bb-subframe-promo-full-section (schema tag is <section>, classes merge).
+ */
+.template-index #MainContent section.bb-media-feature--breakout {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.bb-media-feature--fullbleed,
+.bb-media-feature--cinema {
+  padding: 0 0 clamp(2.25rem, 4vw, 3.5rem);
+}
+
+/* Triptych strip: match promo banner edge (no extra band below the 640px frame) */
+.bb-media-feature--fullbleed.bb-media-feature--btn-triptych {
+  padding-bottom: 0;
+}
+
+/*
+ * Soft fade into the page: gradient sits behind opaque artwork; only the bottom band + padding
+ * (where the photo does not cover) shows the transition to white — no overlay on top of the CTA.
+ */
+.bb-media-feature--fullbleed {
+  position: relative;
+  background: var(--bb-media-bg, var(--sf-surface));
+}
+
+.bb-media-feature__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(1320px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2.75rem);
+}
+
+.bb-media-feature--fullbleed .bb-media-feature__inner,
+.bb-media-feature--cinema .bb-media-feature__inner {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+/* Video: full-bleed strip, minimal chrome */
+.bb-media-feature--cinema.bb-media-feature--editorial .bb-media-feature__media {
+  border: none;
+  box-shadow: none;
+  background: #050505;
+}
+
+/* Editorial frame (still images); video shares layout but cinema removes frame */
+.bb-media-feature--editorial .bb-media-feature__media {
+  position: relative;
+  width: 100%;
+  min-height: var(--bb-media-min-h, 680px);
+  overflow: hidden;
+  background: #0c0c0c;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.09);
+}
+
+.bb-media-feature--editorial .bb-media-feature__video,
+.bb-media-feature--editorial .bb-media-feature__img {
+  width: 100%;
+  height: 100%;
+  min-height: var(--bb-media-min-h, 680px);
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Full bleed: triptych / wide artwork — natural height, anchor tops (no cropped heads) */
+.bb-media-feature--fullbleed .bb-media-feature__media {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bb-media-bg, var(--sf-surface));
+  z-index: 0;
+}
+
+/* Triptych + CTA: same band height + fill as .bb-subframe-promo-full (SHOP ECO SETS) */
+.bb-media-feature--fullbleed.bb-media-feature--btn-triptych .bb-media-feature__media {
+  position: relative;
+  width: 100%;
+  min-height: var(--bb-media-min-h, 640px);
+  height: var(--bb-media-min-h, 640px);
+  overflow: hidden;
+}
+
+@media (max-width: 749px) {
+  .bb-media-feature--fullbleed.bb-media-feature--btn-triptych .bb-media-feature__media {
+    min-height: 420px;
+    height: 420px;
+  }
+}
+
+/* Hairline blend at bottom of artwork into section color (above the section ::after fade) */
+.bb-media-feature--fullbleed .bb-media-feature__media::after {
+  content: none;
+}
+
+.bb-media-feature--fullbleed .bb-media-feature__img {
+  display: block;
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  margin-inline: auto;
+  object-fit: contain;
+  object-position: top center;
+}
+
+.bb-media-feature--fullbleed.bb-media-feature--btn-triptych .bb-media-feature__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.bb-media-feature__btn {
+  position: absolute;
+  left: 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border-radius: 0;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Overlap: CTA is a sibling of __media so it is never clipped */
+.bb-media-feature--btn-overlap .bb-media-feature__btn--overlap-outside {
+  position: relative;
+  left: auto;
+  transform: none;
+  margin-top: -2.15rem;
+  z-index: 3;
+}
+
+.bb-media-feature--btn-overlap.bb-media-feature--cinema .bb-media-feature__inner {
+  padding-left: clamp(0.75rem, 3vw, 2rem);
+  padding-right: clamp(0.75rem, 3vw, 2rem);
+}
+
+.bb-media-feature--btn-overlap.bb-media-feature--fullbleed .bb-media-feature__inner {
+  padding-left: clamp(0.75rem, 3vw, 2rem);
+  padding-right: clamp(0.75rem, 3vw, 2rem);
+}
+
+/* Triptych: CTA inset matches .bb-subframe-promo-full__content (bottom: 2.25rem), not % of box */
+.bb-media-feature--btn-triptych .bb-media-feature__btn--triptych-inner {
+  bottom: 2.25rem;
+  transform: translateX(-50%);
+  min-height: var(--bb-cta-min-h, 48px);
+  min-width: 11.5rem;
+  padding: 0 var(--bb-cta-pad-x, 1.75rem);
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+  font-size: var(--bb-cta-font, 11px);
+  font-weight: 600;
+  letter-spacing: var(--bb-cta-track, 0.22em);
+  text-transform: uppercase;
+  color: var(--sf-ink, #0a2e2e);
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid var(--bb-brand, #4ac6be);
+  box-shadow: 0 2px 16px rgba(74, 198, 190, 0.14);
+  box-sizing: border-box;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bb-media-feature--btn-triptych .bb-media-feature__btn--triptych-inner:hover {
+  background: var(--bb-brand, #4ac6be);
+  color: #fff;
+  border-color: var(--bb-brand, #4ac6be);
+  box-shadow: 0 4px 22px rgba(74, 198, 190, 0.35);
+}
+
+.bb-media-feature--btn-triptych .bb-media-feature__btn--light {
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--sf-ink, #0a2e2e);
+}
+
+.bb-media-feature--btn-triptych .bb-media-feature__btn--dark {
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--sf-ink, #0a2e2e);
+  border-color: var(--bb-brand, #4ac6be);
+  box-shadow: 0 2px 16px rgba(74, 198, 190, 0.14);
+}
+
+.bb-media-feature__video::-webkit-media-controls {
+  display: none !important;
+}
+
+.bb-media-feature__video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+@media (max-width: 749px) {
+  .bb-media-feature {
+    padding: 1rem 0 2.5rem;
+  }
+
+  .bb-media-feature__inner {
+    padding: 0 0.75rem;
+  }
+
+  .bb-media-feature--fullbleed .bb-media-feature__inner,
+  .bb-media-feature--cinema .bb-media-feature__inner {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .bb-media-feature--btn-overlap.bb-media-feature--cinema .bb-media-feature__inner,
+  .bb-media-feature--btn-overlap.bb-media-feature--fullbleed .bb-media-feature__inner {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .bb-media-feature--editorial .bb-media-feature__media {
+    min-height: min(72vh, 520px);
+  }
+
+  .bb-media-feature--editorial .bb-media-feature__video,
+  .bb-media-feature--editorial .bb-media-feature__img {
+    min-height: min(72vh, 520px);
+  }
+
+  .bb-media-feature--btn-triptych .bb-media-feature__btn--triptych-inner {
+    bottom: 1.5rem;
+  }
+}
+
+/* --- Story split (editorial — image column matches text column height) --- */
+.bb-subframe-story--editorial {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  align-items: stretch;
+  width: 100%;
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 5.5rem) clamp(1rem, 4vw, 3rem);
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  box-sizing: border-box;
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-story--editorial {
+    grid-template-columns: 1fr;
+    padding: 2.5rem 1rem 3.5rem;
+    gap: 0;
+  }
+}
+
+.bb-subframe-story__media {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  align-self: stretch;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #e8ecec;
+  box-shadow: 0 24px 60px rgba(10, 46, 46, 0.08);
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-story__media {
+    min-height: 220px;
+    max-height: 56vh;
+    border-radius: 2px 2px 0 0;
+  }
+}
+
+.bb-subframe-story__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.bb-subframe-story__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem);
+  background: var(--sf-surface);
+  border-radius: 2px;
+  border: 1px solid rgba(10, 46, 46, 0.06);
+}
+
+@media (min-width: 990px) {
+  .bb-subframe-story__text {
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-story__text {
+    border-radius: 0 0 2px 2px;
+    border-top: none;
+    padding: 2rem 1.35rem 2.75rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .bb-subframe-story__text > div {
+    text-align: center;
+    width: 100%;
+  }
+
+  .bb-subframe-story__text .bb-subframe-eyebrow {
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+.bb-subframe-story__text .bb-subframe-title,
+.bb-subframe-story__text .bb-subframe-story__heading {
+  font-size: clamp(2rem, 3.6vw, 2.85rem);
+  line-height: 1.12;
+  letter-spacing: 0.02em;
+  max-width: 22ch;
+  font-weight: 400;
+  color: var(--sf-ink);
+}
+
+.bb-subframe-story__text .bb-subframe-story__heading {
+  margin-top: 1rem;
+}
+
+@media (min-width: 990px) {
+  .bb-subframe-story__text .bb-subframe-title,
+  .bb-subframe-story__text .bb-subframe-story__heading {
+    text-align: left;
+  }
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-story__text .bb-subframe-title,
+  .bb-subframe-story__text .bb-subframe-story__heading {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 18ch;
+  }
+}
+
+.bb-subframe-story__body {
+  font-size: clamp(1rem, 1.35vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(10, 46, 46, 0.72);
+  margin: 0;
+  max-width: 42ch;
+}
+
+.bb-subframe-story__body p + p {
+  margin-top: 1rem;
+}
+
+.bb-subframe-story__body p {
+  margin: 0;
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-story__text .bb-subframe-story__body {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    max-width: 36ch;
+  }
+}
+
+.bb-subframe-story__cta.bb-subframe-cta-cohesive {
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 990px) {
+  .bb-subframe-story__cta.bb-subframe-cta-cohesive {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-story__cta.bb-subframe-cta-cohesive {
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* --- Reviews --- */
+.bb-subframe-reviews {
+  width: 100%;
+  padding: 5rem 3rem;
+  background: var(--sf-surface);
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-reviews {
+    padding: 3rem 1rem;
+  }
+}
+
+.bb-subframe-reviews__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.bb-subframe-reviews__rating-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.bb-subframe-star {
+  width: 18px;
+  height: 18px;
+  color: #f59e0b;
+}
+
+.bb-subframe-reviews__track {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0 1rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bb-subframe-reviews__track::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+.bb-subframe-review-card {
+  flex: 0 0 min(288px, 85vw);
+  min-width: min(288px, 85vw);
+  border: 1px solid #e5e5e5;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bb-subframe-review-card__stars {
+  display: flex;
+  gap: 2px;
+}
+
+.bb-subframe-review-card__quote {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--sf-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+.bb-subframe-review-card__author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.bb-subframe-review-card__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.bb-subframe-review-card__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sf-ink);
+}
+
+.bb-subframe-review-card__meta {
+  font-size: 11px;
+  color: var(--sf-muted);
+}
+
+/* --- Stores --- */
+.bb-subframe-stores {
+  width: 100%;
+  padding: 5rem 3rem;
+  background: var(--sf-story-bg);
+}
+
+/* Theme editor safety: keep stores section visible while settings/blocks re-render */
+.shopify-design-mode .bb-subframe-stores-section,
+.shopify-design-mode .bb-subframe-stores {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.shopify-design-mode .bb-subframe-stores__grid {
+  min-height: 1px;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-stores {
+    padding: 3rem 1rem;
+  }
+}
+
+.bb-subframe-stores__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.bb-subframe-stores__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 989px) {
+  .bb-subframe-stores__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bb-subframe-store {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.bb-subframe-store--editor-empty {
+  border: 1px dashed rgba(10, 46, 46, 0.28);
+  padding: 1rem;
+}
+
+.bb-subframe-story-section {
+  background: var(--sf-surface);
+}
+
+.bb-subframe-store__img {
+  width: 100%;
+  height: 16rem;
+  overflow: hidden;
+}
+
+.bb-subframe-store__img-link {
+  display: block;
+  height: 100%;
+}
+
+.bb-subframe-store__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bb-subframe-store__city {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sf-ink);
+}
+
+.bb-subframe-store__addr {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--sf-muted);
+  max-width: 280px;
+}
+
+.bb-subframe-store__hours {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--sf-muted);
+}
+
+.bb-subframe-store__dir {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sf-accent);
+  padding-top: 0.25rem;
+}
+
+.bb-subframe-store__dir:hover {
+  text-decoration: underline;
+}
+
+/* --- Feed section accent (shop-the-feed on index) --- */
+.bb-root.template-index #MainContent .shop-the-feed .section-heading .main_subheading {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sf-accent, var(--bb-brand, #4ac6be));
+}
+
+.bb-root.template-index #MainContent .shop-the-feed .section-heading .main_heading {
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--sf-ink, #0a2e2e);
+}
+
+/*
+ * Follow CTA: theme .btn uses :before for the teal border + box-shadow that reads as a second (black) frame.
+ */
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .secondary-btn__container .btn {
+  box-shadow: none !important;
+}
+
+/* --- Marquee strip (Tropic-style infinite scroll) --- */
+.bb-subframe-marquee {
+  width: 100%;
+  padding: 4.5rem 0 3rem;
+  background: var(--bb-marquee-bg, #f0f7f7);
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-marquee {
+    padding: 3rem 0 2.25rem;
+  }
+}
+
+.bb-subframe-marquee__inner {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.bb-subframe-marquee__head {
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 750px) {
+  .bb-subframe-marquee__head {
+    padding: 0 3rem;
+  }
+}
+
+.bb-subframe-title--marquee {
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: clamp(1.25rem, 3.5vw, 2rem);
+  line-height: 1.2;
+  color: var(--bb-brand);
+}
+
+.bb-subframe-marquee__frame {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.bb-subframe-marquee__rule {
+  height: 1px;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: var(--bb-marquee-line, #0a2e2e);
+}
+
+/* Hairline flush under the sliding strip (not through the button) */
+.bb-subframe-marquee__rule--strip-bottom {
+  flex-shrink: 0;
+}
+
+.bb-subframe-marquee__viewport {
+  overflow: hidden;
+  background: var(--bb-marquee-strip-bg, #fff);
+}
+
+.bb-subframe-marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: bb-marquee-scroll var(--bb-marquee-duration, 28s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bb-subframe-marquee__track {
+    animation: none;
+  }
+}
+
+.bb-subframe-marquee__viewport:hover .bb-subframe-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes bb-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.bb-subframe-marquee__group {
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+}
+
+.bb-subframe-marquee__slide {
+  flex: none;
+  width: var(--bb-marquee-slide-w, 260px);
+  height: var(--bb-marquee-slide-h, 440px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.bb-subframe-marquee__slide img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: var(--bb-marquee-slide-h, 440px);
+  object-fit: contain;
+  object-position: bottom center;
+}
+
+.bb-subframe-marquee__empty {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--sf-muted, #3d5a5a);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* CTA sits slightly on top of the strip; hairline is directly under images */
+.bb-subframe-marquee__cta {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  margin-top: calc(-0.5 * var(--bb-cta-min-h, 48px));
+  padding-bottom: 0.35rem;
+  background: transparent;
+}
+
+@media (max-width: 749px) {
+  .bb-subframe-marquee__cta {
+    margin-top: calc(-0.45 * var(--bb-cta-min-h, 48px));
+  }
+}
+
+.bb-subframe-marquee__btn {
+  flex: none;
+}
+
+.bb-subframe-marquee__btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Shop the feed: match BB surface so the seam into reviews is not white vs grey --- */
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] {
+  background-color: var(--sf-surface, #fef9ee);
+}
+
+/* --- Reviews: soften top edge when the row above reads as white (Wokiee main column) --- */
+.bb-root.template-index #MainContent .bb-subframe-reviews {
+  background: linear-gradient(
+      to bottom,
+      var(--sf-surface, #fef9ee) 0%,
+      var(--sf-surface, #fef9ee) clamp(2.5rem, 6vw, 4.5rem),
+      var(--sf-surface, #fef9ee) 100%
+    );
+}
+
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .banner__block-item__content {
+  display: none !important;
+}
+
+/* --- Footer: solid background (gradient fade removed) --- */
+.bb-root .footer__content footer.footer.section-background {
+  background: #ffffff !important;
+}
+
+.bb-root .footer__content .footer__block-item .section__richtext__editor.body3 {
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(10, 46, 46, 0.88);
+}
+
+.bb-root .footer__content .footer__block-item .section__richtext__editor.body3 a {
+  color: var(--sf-ink, #0a2e2e);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.bb-root .footer__content .footer__block-item .section__richtext__editor.body3 a:hover {
+  color: var(--sf-accent, var(--bb-brand, #4ac6be));
+}
+
+/* --- Homepage: minimalist newsletter (below Find us) --- */
+.bb-subframe-newsletter {
+  padding: clamp(2.5rem, 6vw, 4rem) 1.25rem 3.5rem;
+  background: var(--sf-surface, #fef9ee);
+}
+
+.bb-subframe-newsletter__inner {
+  max-width: min(36rem, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bb-subframe-newsletter__heading {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.125rem, 2.5vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sf-ink, #0a2e2e);
+}
+
+.bb-subframe-newsletter__sub {
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--sf-muted, #3d5a5a);
+}
+
+.bb-subframe-newsletter__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.65rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.bb-subframe-newsletter__input {
+  flex: 1 1 12rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(10, 46, 46, 0.18);
+  border-radius: 2px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  color: var(--sf-ink, #0a2e2e);
+}
+
+.bb-subframe-newsletter__input::placeholder {
+  color: rgba(10, 46, 46, 0.45);
+}
+
+.bb-subframe-newsletter__submit {
+  flex: 0 0 auto;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.75rem;
+  border: 1px solid var(--sf-accent, var(--bb-brand, #4ac6be));
+  border-radius: 0;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  font-family: inherit;
+  font-size: 0;
+  line-height: 0;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.bb-subframe-newsletter__submit-text {
+  display: inline-block;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bb-subframe-newsletter__submit:hover {
+  background: rgba(74, 198, 190, 0.06);
+  border-color: var(--sf-accent, var(--bb-brand, #4ac6be));
+  color: #111;
+}
+
+.bb-subframe-newsletter__submit:hover .bb-subframe-newsletter__submit-text {
+  color: #111;
+}
+
+.bb-subframe-newsletter__errors {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: #b42318;
+  text-align: left;
+}
+
+.bb-subframe-newsletter__status {
+  margin: 1rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--sf-muted, #3d5a5a);
+}

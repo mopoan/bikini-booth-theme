@@ -1,0 +1,1851 @@
+/**
+ * Bikini Booth — product PDP (Tropic-style): variants, complete the look, recommendations.
+ * Fonts: global Futura via bb-futura-fonts.css
+ */
+
+:root {
+  --bb-pdp-accent-tan: #c07c4c;
+  --bb-pdp-ink: #0a0a0a;
+  --bb-pdp-brand: #4ac6be;
+}
+
+/* --- Complete the look --- */
+.bb-complete-set--look {
+  --bb-pdp-brand: #4ac6be;
+  --bb-pdp-ink: #0a0a0a;
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.bb-complete-set__title-look {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--bb-pdp-accent-tan);
+  text-align: center;
+  margin: 0 0 1.25rem;
+}
+
+.bb-complete-set--look .bb-complete-set__blurb {
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(10, 10, 10, 0.65);
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.bb-complete-set__bundle-visual {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.bb-complete-set__bundle-slot {
+  flex: 0 0 auto;
+  width: min(28vw, 140px);
+  max-width: 180px;
+  background: #fff;
+}
+
+.bb-complete-set__bundle-slot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+.bb-complete-set__bundle-link {
+  display: block;
+}
+
+.bb-complete-set__plus {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--bb-pdp-ink);
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+
+.bb-complete-set__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.bb-complete-set__row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.75rem 1rem;
+}
+
+.bb-complete-set__row-check {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 2px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.bb-complete-set__row-check input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.bb-complete-set__fake-check {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--bb-pdp-brand);
+  background: #fff;
+  position: relative;
+}
+
+.bb-complete-set__row-check--static .bb-complete-set__fake-check {
+  background: var(--bb-pdp-brand);
+}
+
+.bb-complete-set__fake-check--input {
+  border-color: var(--bb-pdp-brand);
+}
+
+.bb-complete-set__row-check input:checked + .bb-complete-set__fake-check--input {
+  background: var(--bb-pdp-brand);
+}
+
+.bb-complete-set__row-check input:checked + .bb-complete-set__fake-check--input::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.bb-complete-set__line-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-transform: lowercase;
+  color: var(--bb-pdp-ink);
+}
+
+.bb-complete-set__line-title strong {
+  font-weight: 500;
+}
+
+.bb-complete-set__this-label {
+  font-weight: 500;
+}
+
+.bb-complete-set__pair-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-transform: lowercase;
+  color: var(--bb-pdp-ink);
+  text-decoration: none;
+}
+
+.bb-complete-set__pair-name:hover {
+  color: var(--bb-pdp-brand);
+}
+
+.bb-complete-set__line-price {
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 0.2rem;
+  color: var(--bb-pdp-ink);
+}
+
+.bb-complete-set__row-aside {
+  min-width: 4.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bb-complete-set__row-aside--main {
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-width: 6.5rem;
+}
+
+.bb-complete-set__pair-selects {
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.bb-complete-set__select-wrap {
+  position: relative;
+  min-width: 4.75rem;
+}
+
+.bb-complete-set__select {
+  appearance: none;
+  width: 100%;
+  margin: 0;
+  padding: 0.35rem 1.75rem 0.35rem 0.5rem;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #000;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.bb-complete-set__select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1.5rem;
+  border-left: 1px solid #000;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23000' d='M0 0h10L5 6z'/%3E%3C/svg%3E")
+    no-repeat center;
+}
+
+.bb-complete-set__size-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  border: 1px solid #000;
+  color: #000;
+  background: #fff;
+}
+
+.bb-complete-set__note {
+  text-align: center;
+  margin-top: 0.75rem;
+  color: #545454;
+}
+
+.bb-complete-set__note--piece {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bb-complete-set--empty {
+  padding: 1rem;
+  border: 1px dashed rgba(10, 46, 46, 0.2);
+  border-radius: 2px;
+}
+
+/* --- Product title / price --- */
+.bb-product--tropic .product__title h1,
+.bb-product--tropic .product__title .featured-product-heading,
+.bb-product--tropic .bb-pdp__title-mobile--tropic h1,
+.bb-product--tropic .bb-pdp__title-mobile--tropic h2 {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+/* One semantic page title: calm H1 size (theme heading utilities were ~24px+). */
+.bb-product--tropic .product__title h1.bb-pdp-product-title,
+.bb-product--tropic .product__title h1.featured-product-heading,
+.bb-product--tropic .bb-pdp__title-mobile--tropic h1.bb-pdp-product-title,
+.bb-product--tropic .bb-pdp__title-mobile--tropic h1.featured-product-heading {
+  font-size: clamp(1.125rem, 2.4vw, 1.25rem);
+  line-height: 1.25;
+}
+
+/* Vendor / type values: preserve catalogue casing (labels stay small-caps in bikini-booth-product-tropic.css). */
+.bb-product--tropic .product__information a.bb-pdp-info-value {
+  text-transform: none;
+}
+
+/* Tropic PDP: subtle text triggers instead of full-width bordered buttons (Ask a question, etc.). */
+.bb-product--tropic .bb-pdp-modal-opener--subtle {
+  display: block;
+  width: 100%;
+  margin: 0.35rem 0 0;
+}
+
+.bb-product--tropic .bb-pdp-subtle-link-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem 1.5rem;
+}
+
+.bb-product--tropic .bb-pdp-subtle-link-row .bb-pdp-modal-opener--subtle {
+  display: inline-block;
+  width: auto;
+  margin: 0.35rem 0 0;
+}
+
+.bb-product--tropic .bb-pdp-subtle-modal-trigger--size-guide svg,
+.bb-product--tropic .bb-pdp-subtle-modal-trigger--size-guide .bb-pdp-size-guide-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bb-product--tropic .bb-pdp-modal-opener--size-guide-inline {
+  display: inline-block;
+  width: auto;
+  margin: 0.65rem 0 0;
+}
+
+.bb-product--tropic .bb-pdp-size-guide-icon {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.bb-product--tropic button.bb-pdp-size-guide {
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.bb-product--tropic .bb-pdp-subtle-modal-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  color: rgba(10, 10, 10, 0.45);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.bb-product--tropic .bb-pdp-subtle-modal-trigger:hover {
+  color: var(--bb-pdp-brand, #4ac6be);
+}
+
+.bb-product--tropic .bb-pdp-subtle-modal-trigger svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  opacity: 0.85;
+}
+
+.bb-product--tropic .bb-pdp-subtle-modal-trigger svg path {
+  fill: currentColor;
+}
+
+.bb-main-product--tropic .product__price-container [class*="price"] {
+  letter-spacing: 0.03em;
+  font-weight: 500;
+}
+
+.bb-main-product--tropic .product__column__content .body3,
+.bb-main-product--tropic .product__information {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #545454;
+}
+
+/* --- Variant: color / pattern swatches (halo ring) --- */
+.bb-product--tropic .bb-pdp-opt--color .product-form__container,
+.bb-product--tropic .bb-pdp-opt--colour .product-form__container {
+  --grid-desktop: 12 !important;
+}
+
+.bb-product--tropic .bb-pdp-opt--color .visual-display__color,
+.bb-product--tropic .bb-pdp-opt--colour .visual-display__color {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  background-clip: padding-box;
+}
+
+.bb-product--tropic .bb-pdp-opt--color .visual-display__color:before,
+.bb-product--tropic .bb-pdp-opt--colour .visual-display__color:before {
+  top: 3px;
+  left: 3px;
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
+  border-radius: 50%;
+}
+
+.bb-product--tropic .bb-pdp-opt--color input:checked + .visual-display .visual-display__color,
+.bb-product--tropic .bb-pdp-opt--colour input:checked + .visual-display .visual-display__color {
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+.bb-product--tropic .bb-pdp-opt--color input:checked + .visual-display .visual-display__color:before,
+.bb-product--tropic .bb-pdp-opt--colour input:checked + .visual-display .visual-display__color:before {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.bb-product--tropic .bb-pdp-opt--color .color__swatch--image .visual-display-swatch__image__circle,
+.bb-product--tropic .bb-pdp-opt--colour .color__swatch--image .visual-display-swatch__image__circle,
+.bb-product--tropic .bb-pdp-opt--color .image-hover-box--circle,
+.bb-product--tropic .bb-pdp-opt--colour .image-hover-box--circle {
+  border-radius: 50%;
+}
+
+.bb-product--tropic .bb-pdp-opt--color .color__swatch--image .visual-display-swatch__image,
+.bb-product--tropic .bb-pdp-opt--colour .color__swatch--image .visual-display-swatch__image {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  border-radius: 50%;
+}
+
+.bb-product--tropic .bb-pdp-opt--color input:checked + .visual-display .color__swatch--image .visual-display-swatch__image,
+.bb-product--tropic .bb-pdp-opt--colour input:checked + .visual-display .color__swatch--image .visual-display-swatch__image {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+/* --- Size: circular text pills --- */
+.bb-product--tropic .bb-pdp-opt--size .product-form__container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.bb-product--tropic .bb-pdp-opt--size .product-form__item .btn--variant {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  aspect-ratio: 1 / 1;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  --background: transparent;
+  --color: #000;
+  --border: #000;
+  --border-width: 1px;
+  --radius-button: 50%;
+  --background-hover: transparent;
+  --color-hover: #000;
+  --border-hover: #000;
+}
+
+.bb-product--tropic .bb-pdp-opt--size .product-form__item input:checked + label.btn--variant {
+  --background: var(--bb-pdp-brand, #4ac6be);
+  --background-hover: var(--bb-pdp-brand, #4ac6be);
+  --color: #fff;
+  --color-hover: #fff;
+  --border: var(--bb-pdp-brand, #4ac6be);
+  --border-hover: var(--bb-pdp-brand, #4ac6be);
+  --border-width: 2px;
+  box-shadow: none;
+}
+
+.bb-product--tropic .bb-pdp-opt--size .variant__btn__text,
+.bb-product--tropic .bb-pdp-opt--size .btn__texts > * {
+  padding: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.bb-product--tropic .bb-pdp-legend--tropic .bb-pdp-legend-name {
+  text-transform: none;
+  font-weight: 400;
+}
+
+.bb-product--tropic .product__information--bb-inline .bb-pdp-info-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  margin: 0;
+  color: #545454;
+}
+
+.bb-product--tropic .bb-pdp-info-label {
+  margin-right: 0.35rem;
+  color: #545454;
+}
+
+.bb-product--tropic .bb-pdp-info-sep {
+  margin: 0 0.5rem;
+  color: #545454;
+}
+
+.bb-product--tropic .product__media--autoplay-video {
+  overflow: hidden;
+  background: #000;
+}
+
+.bb-product--tropic .product__media--autoplay-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bb-product--tropic .deferred-media video,
+.bb-product--tropic product-model video {
+  pointer-events: none;
+}
+
+.bb-product--tropic .deferred-media video::-webkit-media-controls,
+.bb-product--tropic product-model video::-webkit-media-controls {
+  display: none !important;
+}
+
+.bb-product--tropic .bb-pdp-size-guide {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  color: rgba(10, 10, 10, 0.45);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bb-product--tropic .bb-pdp-size-guide svg,
+.bb-product--tropic .bb-pdp-size-guide .bb-pdp-size-guide-icon svg {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  opacity: 0.85;
+}
+
+/* Theme measuring tape (filled paths); legacy stroke-only ruler used stroke here. */
+.bb-product--tropic .bb-pdp-size-guide svg path {
+  fill: currentColor;
+  stroke: none;
+}
+
+.bb-product--tropic .bb-pdp-opt--size .variants-modal__button {
+  display: none;
+}
+
+/* TOP / BOTTOM / SET — equal-width rectangles (reference), not size circles */
+.bb-product--tropic .bb-pdp-opt--top-bottom-set .product-form__container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+  max-width: 22rem;
+  grid-template-columns: unset;
+}
+
+.bb-product--tropic .bb-pdp-opt--top-bottom-set .product-form__item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.bb-product--tropic .bb-pdp-opt--top-bottom-set .product-form__item .btn--variant {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 44px !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  padding: 0 0.35rem !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  --radius-button: 0;
+  --background: #fff;
+  --color: #111;
+  --border: rgba(0, 0, 0, 0.18);
+  --border-width: 1px;
+  --background-hover: #fff;
+  --color-hover: #111;
+  --border-hover: rgba(0, 0, 0, 0.35);
+}
+
+.bb-product--tropic .bb-pdp-opt--top-bottom-set .product-form__item input:checked + label.btn--variant {
+  --background: var(--bb-pdp-brand, #4ac6be);
+  --background-hover: var(--bb-pdp-brand, #4ac6be);
+  --color: #fff;
+  --color-hover: #fff;
+  --border: var(--bb-pdp-brand, #4ac6be);
+  --border-hover: var(--bb-pdp-brand, #4ac6be);
+  --border-width: 2px;
+  box-shadow: none;
+}
+
+.bb-product--tropic .bb-pdp-opt--top-bottom-set .variant__btn__text,
+.bb-product--tropic .bb-pdp-opt--top-bottom-set .btn__texts > * {
+  padding: 0 !important;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.bb-product--tropic .bb-pdp-legend-name--tbs {
+  text-transform: none;
+  letter-spacing: 0.06em;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--bb-pdp-muted, #545454);
+}
+
+@media (min-width: 990px) {
+  .bb-main-product--tropic .main-product__container {
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  /* Tropic-like balance: slightly smaller media area, denser right column. */
+  .bb-main-product--tropic .main-product__container .product--thumbnail_slider {
+    flex: 0 0 52% !important;
+    width: 52% !important;
+    max-width: 52% !important;
+    position: relative !important;
+    /* Stretch with the taller buy-box column so position:sticky can pin the gallery while details scroll */
+    align-self: stretch !important;
+    min-height: 0;
+  }
+
+  .bb-main-product--tropic .main-product__container .product__column {
+    flex: 0 0 48% !important;
+    width: 48% !important;
+    max-width: 48% !important;
+  }
+
+  /* Let the gallery use the full media column width (narrow max-width caused white “gutters”). */
+  .bb-main-product--tropic .main-product__container .product--thumbnail_slider .swiper-slider__product-page__radius {
+    max-width: 100% !important;
+    width: 100%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .bb-main-product--tropic .product__right-column-sticky {
+    position: static !important;
+    top: auto !important;
+  }
+
+  /*
+   * Sticky gallery (rail + main): keep the first inner wrap stuck while the right column
+   * (details / care / shipping) scrolls. Applies even when the theme disables “sticky info”
+   * (no .product__media-sticky class). Ancestors must not clip position:sticky.
+   */
+  .template-product #MainContent [data-section-name="main-product"].bb-main-product--tropic,
+  .template-product #MainContent [data-section-name="main-product"].bb-main-product--tropic .main-product__container {
+    overflow: visible !important;
+  }
+
+  /* Same breakpoint as sticky rules: overflow must not clip sticky before 1025px desktop rail tweaks */
+  .template-product #MainContent [data-section-name="main-product"].bb-main-product--tropic .main-product__container .product--thumbnail_slider,
+  .template-product #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider > div:first-of-type,
+  .template-product #MainContent [data-section-name="main-product"].bb-main-product--tropic .product__media-sticky {
+    overflow: visible !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider > div:first-of-type,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product__media-sticky {
+    position: sticky !important;
+    top: 88px !important;
+    align-self: flex-start !important;
+    z-index: 4 !important;
+    max-width: 100%;
+  }
+}
+
+/* Left gallery/thumbs: remove white card-like backgrounds. */
+.bb-main-product--tropic .product--thumbnail_slider,
+.bb-main-product--tropic .swiper-slider__container,
+.bb-main-product--tropic .swiper-slider__container .swiper,
+.bb-main-product--tropic .swiper-slider__container .swiper-slide,
+.bb-main-product--tropic .product-media__item,
+.bb-main-product--tropic .product__media__thumb .image-hover-box,
+.bb-main-product--tropic .swiper-thumb__container--vertical,
+.bb-main-product--tropic .swiper-thumb__container--horizontal {
+  background: transparent !important;
+}
+
+/* Thumb rail: no stray chrome — do NOT use overflow:hidden on the rail (clips / hides thumbs). */
+.template-product [data-section-name="main-product"] .product--thumbnail_slider .swiper-thumb__container--vertical,
+.template-product [data-section-name="main-product"] .product--thumbnail_slider .swiper-thumb__container--horizontal {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.template-product [data-section-name="main-product"] .product--thumbnail_slider .product__media__thumb,
+.template-product [data-section-name="main-product"] .product--thumbnail_slider .product__media__thumb .image-hover-box,
+.template-product [data-section-name="main-product"] .product--thumbnail_slider .product__media__thumb .image-hover-box__container {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.template-product [data-section-name="main-product"] .product--thumbnail_slider .product__media__thumb::before {
+  display: none !important;
+  border: 0 !important;
+  opacity: 0 !important;
+}
+
+/* Product-page guardrail: keep ONLY media column sticky. */
+@media (min-width: 990px) {
+  .template-product [data-section-name="main-product"].bb-main-product--tropic .main-product__container {
+    align-items: stretch !important;
+  }
+
+  .template-product [data-section-name="main-product"]:not(.bb-main-product--tropic) .main-product__container {
+    align-items: flex-start !important;
+  }
+
+  .template-product [data-section-name="main-product"] .product__column__content.product__right-column-sticky {
+    position: static !important;
+    top: auto !important;
+  }
+
+  /* Gallery stays position:relative (bb-main-product--tropic). Sticky belongs on .product__media-sticky only —
+     sticky on the outer .product--thumbnail_slider overlapped the footer and fought thumb stacking. */
+
+  /* Natural slide height; avoid forced viewport-tall box + contain (white letterboxing). */
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .swiper-slider__container .swiper-slide,
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .product-media__item {
+    height: auto !important;
+  }
+
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider [style*="--aspect-ratio"] {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .product-media__item img,
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider [style*="--aspect-ratio"] img,
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .deferred-media__poster img,
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .image-hover-box > [style*="--aspect-ratio"] img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  /* Theme paints slide media with body background — remove white “card” behind the image. */
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .swiper.swiper-slide__with-bg .swiper-slide .product__media {
+    background: transparent !important;
+  }
+
+  /* PDP video: match image frame (same aspect box as deferred-media). */
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .deferred-media,
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .deferred-media iframe,
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .deferred-media video {
+    max-height: 100% !important;
+    width: 100% !important;
+  }
+
+  .template-product [data-section-name="main-product"] .product--thumbnail_slider .deferred-media iframe {
+    height: 100% !important;
+  }
+}
+
+/* After video loads, poster stays in DOM (visibility:hidden) — ensure it never blocks Swiper/thumb gestures. */
+#MainContent [data-section-name="main-product"] .deferred-media[loaded] > .deferred-media__poster {
+  pointer-events: none !important;
+}
+
+#MainContent [data-section-name="main-product"] .deferred-media[loaded] video,
+#MainContent [data-section-name="main-product"] .deferred-media[loaded] iframe {
+  z-index: 2 !important;
+}
+
+/* Tropic PDP: main Swiper only — cap media height so image/video fits in view; transparent letterboxing (no white card). */
+@media (min-width: 990px) {
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    .product-media__item,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    [style*="--aspect-ratio"] {
+    max-height: var(--bb-gallery-match-h, min(70dvh, calc(100dvh - 140px))) !important;
+    background: transparent !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    .product-media__item
+    img,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    [style*="--aspect-ratio"]
+    img,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    .deferred-media__poster
+    img {
+    max-height: var(--bb-gallery-match-h, min(70dvh, calc(100dvh - 140px))) !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    .deferred-media,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    .deferred-media
+    video {
+    max-height: var(--bb-gallery-match-h, min(70dvh, calc(100dvh - 140px))) !important;
+    width: 100% !important;
+    background: transparent !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider
+    swiper-slider-container
+    > swiper-slider.swiper
+    .swiper-slide
+    .deferred-media
+    iframe {
+    max-height: var(--bb-gallery-match-h, min(70dvh, calc(100dvh - 140px))) !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+  }
+}
+
+/*
+ * Desktop (1025+): vertical thumb rail beside main Swiper (in-flow), overriding the theme’s absolute rail.
+ * Scoped to Tropic PDP (.bb-main-product--tropic) so the 52% / 48% split and rail layout stay aligned.
+ */
+@media (min-width: 1025px) {
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .main-product__container .product--thumbnail_slider {
+    position: relative !important;
+    overflow: visible !important;
+    z-index: 2 !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product__media-sticky,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider > div:first-of-type {
+    overflow: visible !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider .swiper-slider__container,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider swiper-slider-container.swiper-slider__container:not(.swiper-thumb__horizontal) {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    overflow: visible !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider .swiper-thumb__container--vertical {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    width: 85px !important;
+    min-width: 72px !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    align-self: flex-start !important;
+    height: auto !important;
+    max-height: var(--bb-gallery-match-h, min(70dvh, calc(100dvh - 140px))) !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0.45rem !important;
+    order: 0 !important;
+    z-index: 80 !important;
+    isolation: isolate !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider .swiper-thumb__container--vertical .swiper-thumb {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider .swiper-thumb__container--vertical + .swiper,
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider .swiper-thumb__container--vertical + swiper-slider {
+    position: relative !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    width: auto !important;
+    max-height: var(--bb-gallery-match-h, min(70dvh, calc(100dvh - 140px))) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    order: 1 !important;
+    z-index: 0 !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .main-product__container.flip-product-content .product--thumbnail_slider .swiper-slider__container:not(.swiper-thumb__horizontal),
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .main-product__container.flip-product-content .product--thumbnail_slider swiper-slider-container.swiper-slider__container:not(.swiper-thumb__horizontal) {
+    flex-direction: row-reverse !important;
+  }
+
+  #MainContent [data-section-name="main-product"].bb-main-product--tropic .product--thumbnail_slider swiper-slider-container.swiper-slider__container:not(.swiper-thumb__horizontal) swiper-slider.swiper .swiper-slide {
+    z-index: auto !important;
+  }
+}
+
+/* Tablet: theme rotates vertical rail into a horizontal strip; ensure it keeps height and stays visible. */
+@media (min-width: 577px) and (max-width: 1024px) {
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider .swiper-thumb__container--vertical {
+    min-height: 88px !important;
+    max-height: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* Theme sets aspect box z-index -2 on tablet; pulls main media behind thumbs. */
+@media (max-width: 1024px) {
+  #MainContent [data-section-name="main-product"] swiper-slider-container [style*="--aspect-ratio"] {
+    z-index: auto !important;
+  }
+}
+
+/* Kill white “cards” from deferred-media + swiper (body white) on main + mobile galleries. */
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider .deferred-media,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider deferred-media.deferred-media,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider .product-media__item,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider .swiper-slide .image-hover-box,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider .swiper.swiper-slide__with-bg .swiper-slide {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider .deferred-media__poster,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider .deferred-media iframe {
+  background-color: transparent !important;
+}
+
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .deferred-media,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile deferred-media.deferred-media,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .product-media__item,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper-slide .image-hover-box,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper.swiper-slide__with-bg .swiper-slide {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .deferred-media__poster,
+#MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .deferred-media iframe {
+  background-color: transparent !important;
+}
+
+/*
+ * Mobile PDP (≤576px): horizontal thumb “rail” under the swiper.
+ * Theme flex + autoheight can leave thumb width at 0 on first paint; media-gallery.js retries --thumb-width.
+ * These rules stop the strip from flex-shrinking to zero / being clipped off-screen.
+ */
+@media (max-width: 576px) {
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile,
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile swiper-slider-container.swiper-thumb__horizontal {
+    overflow: visible;
+    width: 100%;
+  }
+
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile swiper-slider-container.swiper-thumb__horizontal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 0;
+  }
+
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper-thumb__container__padding {
+    flex-shrink: 0;
+    width: 100%;
+    min-height: 4.5rem;
+    box-sizing: border-box;
+  }
+
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper-thumb__container--horizontal {
+    min-height: 3.75rem;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /*
+   * Dot row under main image (all mobile layouts with 2+ images). Theme hides PDP arrows ≤1024px,
+   * so bullets must read clearly on white and stay on-screen above the thumb rail when both show.
+   */
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper-control-container {
+    width: 100%;
+    flex-shrink: 0;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper-control-container .swiper-pagination {
+    position: relative;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper-control-container .swiper-pagination-bullet {
+    opacity: 1 !important;
+    background: rgba(10, 10, 10, 0.2) !important;
+    box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.08);
+  }
+
+  #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile .swiper-control-container .swiper-pagination-bullet-active {
+    background: var(--bb-brand, #4ac6be) !important;
+    box-shadow: 0 0 0 1px rgba(10, 92, 86, 0.25);
+  }
+}
+
+/* Mobile gallery uses __mobile; same slide background override as desktop. */
+.template-product [data-section-name="main-product"] .swiper.swiper-slide__with-bg .swiper-slide .product__media {
+  background: transparent !important;
+}
+
+/* --- Product recommendations (carousel) --- */
+.template-product .bb-recs-tropic .subheading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--bb-pdp-accent-tan);
+}
+
+.template-product .bb-recs-tropic .section-heading-text {
+  display: none;
+}
+
+.template-product .bb-recs-tropic .product-card .product-card__vendor,
+.template-product .bb-recs-tropic .product-card-small__vendor {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.template-product .bb-recs-tropic .product-card .product-card__title,
+.template-product .bb-recs-tropic .product-card-small__heading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  font-weight: 400 !important;
+  text-transform: lowercase !important;
+  letter-spacing: 0.02em !important;
+}
+
+.template-product .bb-recs-tropic .product-card .price,
+.template-product .bb-recs-tropic .product-card .price__main {
+  font-weight: 500 !important;
+}
+
+.template-product .bb-recs-tropic .product-card__description,
+.template-product .bb-recs-tropic .card__text {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-transform: lowercase;
+  color: var(--bb-pdp-accent-tan);
+  margin-top: 0.35rem;
+}
+
+.template-product .bb-recs-tropic .swiper-control-container {
+  margin-top: 1rem;
+}
+
+/* “You may also like”: nav matches wishlist / quick-view chips (bb-product-card-brand.css). */
+.template-product .bb-recs-tropic .custom-swiper-button-prev,
+.template-product .bb-recs-tropic .custom-swiper-button-next,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next {
+  opacity: 1 !important;
+}
+
+.template-product .bb-recs-tropic [class*="custom-swiper-button"]:before,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"]:before {
+  background: rgba(74, 198, 190, 0.14) !important;
+  background-color: rgba(74, 198, 190, 0.14) !important;
+  box-shadow: 0 0 0 1px rgba(74, 198, 190, 0.9), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  opacity: 1 !important;
+}
+
+.template-product .bb-recs-tropic [class*="custom-swiper-button"] svg path,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"] svg path {
+  fill: #0a5c56 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .template-product .bb-recs-tropic [class*="custom-swiper-button"]:hover:before,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"]:hover:before {
+    background: rgba(74, 198, 190, 0.28) !important;
+    background-color: rgba(74, 198, 190, 0.28) !important;
+    box-shadow: 0 0 0 1px #4ac6be, 0 2px 10px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .template-product .bb-recs-tropic [class*="custom-swiper-button"]:hover svg path,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"]:hover svg path {
+    fill: #063d3a !important;
+  }
+}
+
+/* Per-card image swiper arrows — same chip language as media buttons */
+.template-product .bb-recs-tropic .product-card .internal-swiper-button-prev,
+.template-product .bb-recs-tropic .product-card .internal-swiper-button-next,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-prev,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-next {
+  background: rgba(74, 198, 190, 0.14) !important;
+  background-color: rgba(74, 198, 190, 0.14) !important;
+  border: 1px solid rgba(74, 198, 190, 0.9) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  color: #0a5c56 !important;
+  opacity: 1 !important;
+  z-index: 6 !important;
+  isolation: isolate !important;
+}
+
+.template-product .bb-recs-tropic .product-card .internal-swiper-button-prev svg.theme-icon path,
+.template-product .bb-recs-tropic .product-card .internal-swiper-button-next svg.theme-icon path,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-prev svg.theme-icon path,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-next svg.theme-icon path,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-prev svg path,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-next svg path {
+  fill: #0a5c56 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .template-product .bb-recs-tropic .product-card .internal-swiper-button-prev:hover,
+  .template-product .bb-recs-tropic .product-card .internal-swiper-button-next:hover,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-prev:hover,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-next:hover {
+    background: rgba(74, 198, 190, 0.28) !important;
+    background-color: rgba(74, 198, 190, 0.28) !important;
+    border-color: #4ac6be !important;
+    color: #063d3a !important;
+  }
+
+  .template-product .bb-recs-tropic .product-card .internal-swiper-button-prev:hover svg.theme-icon path,
+  .template-product .bb-recs-tropic .product-card .internal-swiper-button-next:hover svg.theme-icon path,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-prev:hover svg path,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic .product-card .internal-swiper-button-next:hover svg path {
+    fill: #063d3a !important;
+  }
+}
+
+.template-product .bb-recs-tropic .swiper-pagination {
+  position: relative !important;
+  height: 2px !important;
+  background: rgba(0, 0, 0, 0.08) !important;
+  border-radius: 0 !important;
+}
+
+.template-product .bb-recs-tropic .swiper-pagination-bullet {
+  height: 2px !important;
+  border-radius: 0 !important;
+}
+
+/* You may like: match collection cards (no ATC / size row; color swatches only) */
+.template-product .bb-recs-tropic .quick-add__submit {
+  display: none !important;
+}
+
+.template-product .bb-recs-tropic .product-card--bb-card-swatches fieldset.product-form__input:has(.btn--variant-smallcard),
+.template-product [data-section-name="product-recommendations"] fieldset.product-form__input:has(.btn--variant-smallcard),
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic fieldset.product-form__input:has(.btn--variant-smallcard) {
+  display: none !important;
+}
+
+/* Dropdown option rows (when theme falls back to select) */
+.template-product .bb-recs-tropic .product-form__input__small-top {
+  display: none !important;
+}
+
+.template-product .bb-recs-tropic .product-card--bb-card-swatches .product-form__container__card {
+  gap: 0.35rem;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+/* Same as collection: undo theme 20%-width flex basis on image swatch rows */
+.template-product
+  .bb-recs-tropic
+  .product-card--bb-card-swatches
+  .product-form__container__card.product-form__container__card--image
+  > .product-form__item,
+.template-product
+  .bb-recs-tropic
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  > .product-form__item {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+.template-product
+  .bb-recs-tropic
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  .product-form__item:nth-child(n + 6) {
+  display: none !important;
+}
+
+.template-product .bb-recs-tropic .product-card .image-hover-box__container {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+
+.template-product .bb-recs-tropic .product-card .image-hover-box__container > .image-hover-box,
+.template-product .bb-recs-tropic .product-card .image-hover-box__container .bg-preloader {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.template-product .bb-recs-tropic .product-card .image-hover-box__container img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center;
+}
+
+.template-product .bb-recs-tropic .product-card--bb-card-swatches .product-card__content__main {
+  text-align: left !important;
+  align-items: flex-start;
+}
+
+/* --- Recently viewed (product template): same editorial strip as recommendations --- */
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .subheading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--bb-pdp-accent-tan);
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .section-heading-text {
+  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.65rem, 3.5vw, 2.1rem);
+  letter-spacing: -0.02em;
+  color: var(--bb-pdp-ink, #0a0a0a);
+  text-transform: lowercase;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .section-heading-desc-text {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  text-transform: lowercase;
+  color: rgba(10, 10, 10, 0.55);
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .product-card__vendor,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card-small__vendor {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .product-card__title,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card-small__heading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
+  font-weight: 400 !important;
+  text-transform: lowercase !important;
+  letter-spacing: 0.02em !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .price,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .price__main {
+  font-weight: 500 !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .swiper-control-container {
+  margin-top: 1rem;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .custom-swiper-button-prev,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .custom-swiper-button-next {
+  opacity: 1 !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic [class*="custom-swiper-button"]:before {
+  background: rgba(74, 198, 190, 0.14) !important;
+  background-color: rgba(74, 198, 190, 0.14) !important;
+  box-shadow: 0 0 0 1px rgba(74, 198, 190, 0.9), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  opacity: 1 !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic [class*="custom-swiper-button"] svg path {
+  fill: #0a5c56 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic [class*="custom-swiper-button"]:hover:before {
+    background: rgba(74, 198, 190, 0.28) !important;
+    background-color: rgba(74, 198, 190, 0.28) !important;
+    box-shadow: 0 0 0 1px #4ac6be, 0 2px 10px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic [class*="custom-swiper-button"]:hover svg path {
+    fill: #063d3a !important;
+  }
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-prev,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-next {
+  background: rgba(74, 198, 190, 0.14) !important;
+  background-color: rgba(74, 198, 190, 0.14) !important;
+  border: 1px solid rgba(74, 198, 190, 0.9) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  color: #0a5c56 !important;
+  opacity: 1 !important;
+  z-index: 6 !important;
+  isolation: isolate !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-prev svg.theme-icon path,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-next svg.theme-icon path,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-prev svg path,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-next svg path {
+  fill: #0a5c56 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-prev:hover,
+  .template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-next:hover {
+    background: rgba(74, 198, 190, 0.28) !important;
+    background-color: rgba(74, 198, 190, 0.28) !important;
+    border-color: #4ac6be !important;
+    color: #063d3a !important;
+  }
+
+  .template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-prev:hover svg path,
+  .template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .internal-swiper-button-next:hover svg path {
+    fill: #063d3a !important;
+  }
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .swiper-pagination {
+  position: relative !important;
+  height: 2px !important;
+  background: rgba(0, 0, 0, 0.08) !important;
+  border-radius: 0 !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .swiper-pagination-bullet {
+  height: 2px !important;
+  border-radius: 0 !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .quick-add__submit {
+  display: none !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-form__input__small-top {
+  display: none !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card--bb-card-swatches .product-form__container__card {
+  gap: 0.35rem;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.template-product
+  [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic
+  .product-card--bb-card-swatches
+  .product-form__container__card.product-form__container__card--image
+  > .product-form__item,
+.template-product
+  [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  > .product-form__item {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+.template-product
+  [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic
+  .product-card--bb-card-swatches
+  .product-form__container__card
+  .product-form__item:nth-child(n + 6) {
+  display: none !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .image-hover-box__container {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .image-hover-box__container > .image-hover-box,
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .image-hover-box__container .bg-preloader {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card .image-hover-box__container img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center;
+}
+
+.template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .product-card--bb-card-swatches .product-card__content__main {
+  text-align: left !important;
+  align-items: flex-start;
+}
+
+/* --- Complete the look: editorial column (align with Tropic PDP) --- */
+.bb-product--tropic .bb-complete-set__title-look {
+  text-align: left;
+  width: 100%;
+}
+
+.bb-product--tropic .bb-complete-set--look .bb-complete-set__blurb {
+  text-align: left;
+}
+
+.bb-product--tropic .bb-complete-set__bundle-visual {
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 0.5rem 0.75rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Bundle thumbs: use column width, not viewport vw, so two tiles stay side-by-side in narrow sidebars */
+.bb-product--tropic .bb-complete-set__bundle-slot {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  max-width: min(46%, 150px);
+}
+
+.bb-product--tropic .bb-complete-set__bundle-slot img {
+  max-height: min(38vw, 200px);
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.bb-product--tropic .bb-complete-set__plus {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+@media (max-width: 749px) {
+  .bb-product--tropic .bb-complete-set__bundle-visual {
+    justify-content: center;
+    max-width: 22rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bb-product--tropic .bb-complete-set__bundle-slot {
+    max-width: min(42%, 130px);
+  }
+
+  .bb-product--tropic .bb-complete-set__bundle-slot img {
+    max-height: min(32vw, 168px);
+  }
+}
+
+.bb-product--tropic .bb-complete-set__rows {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: none;
+}
+
+/* Primary + wishlist: stable row on small screens */
+.bb-product--tropic .product-form__buttons__content__media {
+  align-items: stretch;
+  width: 100%;
+}
+
+.bb-product--tropic .product-form__buttons__content__media .product-form__submit.btn--addtocart-page {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bb-product--tropic .product-form__buttons__content__media wishlist-button.btn--wishlist-productpage,
+.bb-product--tropic .product-form__buttons__content__media .btn--wishlist-productpage {
+  flex: 0 0 52px;
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Right-column accordions (details / shipping / care) — hairline stack --- */
+.bb-main-product--tropic product-tab.product-tab-secondary.product-tab--accordion {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 0 !important;
+}
+
+.bb-main-product--tropic product-tab.product-tab-secondary .product-tab__heading {
+  padding: 0.85rem 0;
+}
+
+.bb-main-product--tropic product-tab.product-tab-secondary .product-tab__heading .h6,
+.bb-main-product--tropic product-tab.product-tab-secondary .product-tab__heading h5,
+.bb-main-product--tropic product-tab.product-tab-secondary .product-tab__heading h6 {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--bb-pdp-ink, #0a0a0a);
+}
+
+.bb-main-product--tropic product-tab.product-tab-secondary .product-tab__content {
+  padding-bottom: 1rem;
+}
+
+/* --- Tropic: mobile title above gallery (markup in main-product.liquid); desktop keeps sidebar title only. --- */
+.bb-main-product--tropic .bb-pdp__title-mobile--tropic {
+  display: none;
+}
+
+@media (max-width: 576px) {
+  /* First-paint + desktop flex rules must not leave gallery + buy box side-by-side on mobile. */
+  body.template-product #MainContent [data-section-name="main-product"] .main-product__container,
+  .bb-main-product--tropic .main-product__container {
+    flex-direction: column !important;
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden;
+  }
+
+  body.template-product #MainContent [data-section-name="main-product"] .product--thumbnail_slider,
+  .bb-main-product--tropic .product--thumbnail_slider {
+    display: none !important;
+  }
+
+  body.template-product #MainContent [data-section-name="main-product"] .bb-pdp__title-mobile--tropic,
+  body.template-product #MainContent [data-section-name="main-product"] .product--thumbnail_slider__mobile,
+  body.template-product #MainContent [data-section-name="main-product"] .product__column,
+  .bb-main-product--tropic .bb-pdp__title-mobile--tropic,
+  .bb-main-product--tropic .product--thumbnail_slider__mobile,
+  .bb-main-product--tropic .product__column {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .bb-main-product--tropic .bb-pdp__title-mobile--tropic {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    /* Extra space below fixed header / announcement — title was visually tight to the bar */
+    padding-top: clamp(1.125rem, 4.5vw, 1.75rem);
+    margin: 0 auto 0.35rem;
+    text-align: center;
+  }
+
+  .bb-main-product--tropic .bb-pdp__title-mobile--tropic h1,
+  .bb-main-product--tropic .bb-pdp__title-mobile--tropic h2 {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Hide duplicate title from sidebar blocks (visible title is .bb-pdp__title-mobile). */
+  .bb-main-product--tropic .product__column .product__title {
+    display: none !important;
+  }
+
+  /* Mobile: center price, vendor/type, badges, stock */
+  .bb-main-product--tropic .product__column .product__price-container {
+    align-items: center;
+    text-align: center;
+  }
+
+  .bb-main-product--tropic .product__column .product__price-container .price,
+  .bb-main-product--tropic .product__column .product__tax,
+  .bb-main-product--tropic .product__column .volume-pricing-note {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bb-main-product--tropic .product__column .product__information {
+    text-align: center;
+  }
+
+  .bb-main-product--tropic .product__column .product__information ul {
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .bb-main-product--tropic .product__column .product__information li {
+    text-align: center;
+  }
+
+  .bb-main-product--tropic .product__column .price__container.prices-in-one-line,
+  .bb-main-product--tropic .product__column .prices-in-one-line {
+    justify-content: center;
+  }
+
+  .bb-main-product--tropic .product__column .badges__container {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .bb-main-product--tropic .product__column .inventory-block {
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Size / colour rows: centre labels + swatches to match price / meta (theme legend uses space-between). */
+  .bb-main-product--tropic .product__column fieldset.product-form__input.bb-pdp-opt .variants-label {
+    justify-content: center;
+    text-align: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .bb-main-product--tropic .product__column fieldset.bb-pdp-opt .product-form__container.product-form__container__color {
+    justify-content: center;
+  }
+
+  .bb-main-product--tropic .product__column .bb-pdp-opt--size .product-form__container {
+    justify-content: center;
+  }
+
+  .bb-main-product--tropic .product__column fieldset.bb-pdp-opt--size .bb-pdp-modal-opener--size-guide-inline {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .bb-main-product--tropic .product__column fieldset.bb-pdp-opt--size button.bb-pdp-size-guide {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .bb-main-product--tropic .product__column fieldset.bb-pdp-opt .product-form__container--flex-mobile {
+    justify-content: center;
+  }
+
+  /*
+   * Ask a question + size guide: centred row, one line each (no 50% columns — that truncated text).
+   * Row lives inside .product__buttons__container; theme gives children ~33% flex-basis — force full width
+   * so justify-content:center actually centres the pair in the column.
+   */
+  .bb-main-product--tropic .product__column .product__buttons__container > .bb-pdp-subtle-link-row,
+  .bb-main-product--tropic .product__column .product__buttons__container .bb-pdp-subtle-link-row {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .bb-main-product--tropic .product__column .bb-pdp-subtle-link-row,
+  .bb-product--tropic .bb-pdp-subtle-link-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    gap: 0.65rem 1.25rem;
+    overflow: visible;
+  }
+
+  .bb-main-product--tropic .product__column .bb-pdp-subtle-link-row .bb-pdp-modal-opener--subtle,
+  .bb-product--tropic .bb-pdp-subtle-link-row .bb-pdp-modal-opener--subtle {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0;
+    margin: 0.35rem 0 0 !important;
+    display: flex !important;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .bb-main-product--tropic .product__column .bb-pdp-subtle-link-row .bb-pdp-subtle-modal-trigger,
+  .bb-product--tropic .bb-pdp-subtle-link-row .bb-pdp-subtle-modal-trigger {
+    white-space: nowrap;
+    max-width: none;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: center;
+    justify-content: center;
+    font-size: clamp(11px, 2.9vw, 13px);
+  }
+
+  /*
+   * Gallery: allow vertical scroll past tall slides (pan-x alone prevented finger scroll to page).
+   * pan-x pan-y keeps horizontal swipes for Swiper while letting the page scroll vertically.
+   */
+  .bb-main-product--tropic .product--thumbnail_slider__mobile {
+    touch-action: pan-x pan-y;
+  }
+
+  .bb-main-product--tropic .swiper-slider__product-page__mobile swiper-slider.swiper,
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-wrapper,
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide {
+    touch-action: pan-x pan-y;
+  }
+
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide .product-media__item,
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide .product__media,
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide img {
+    touch-action: pan-x pan-y;
+  }
+
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide .deferred-media__poster {
+    touch-action: pan-x pan-y;
+  }
+
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .lightbox-opener {
+    touch-action: pan-x pan-y;
+  }
+
+  /* Inactive slides: loaded video/iframe must not capture horizontal swipes (iOS). */
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide:not(.swiper-slide-active) deferred-media,
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide:not(.swiper-slide-active) deferred-media video,
+  .bb-main-product--tropic .swiper-slider__product-page__mobile .swiper-slide:not(.swiper-slide-active) deferred-media iframe {
+    pointer-events: none !important;
+  }
+
+  .bb-main-product--tropic .bb-pdp-gallery-zoom-hint {
+    margin: 0.5rem auto 0;
+    padding: 0 0.75rem;
+    max-width: 100%;
+    text-align: center;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(10, 10, 10, 0.45);
+    line-height: 1.4;
+  }
+}
+
+@media (min-width: 577px) {
+  .bb-main-product--tropic .bb-pdp-gallery-zoom-hint {
+    display: none;
+  }
+
+  .bb-main-product--tropic .bb-pdp-lightbox-zoom-tooltip {
+    display: none;
+  }
+}
+

@@ -1,0 +1,155 @@
+/**
+ * BB Hero on content pages (FAQ, etc.) — same treatment as homepage hero.
+ */
+@layer bb;
+
+@layer bb {
+  .bb-hero-section {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .bb-hero-section .bb-hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    min-height: var(--bb-hero-min-h-mobile);
+    background: #0a0a0a;
+  }
+
+  @media (min-width: 577px) {
+    .bb-hero-section .bb-hero {
+      min-height: var(--bb-hero-min-h);
+    }
+  }
+
+  .bb-hero-section .bb-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .bb-hero-section .bb-hero__media picture,
+  .bb-hero-section .bb-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .bb-hero-section .bb-hero__media picture {
+    position: absolute;
+    inset: 0;
+  }
+
+  .bb-hero-section .bb-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 46, 46, 0.35) 0%,
+      rgba(10, 46, 46, 0.5) 50%,
+      rgba(10, 46, 46, 0.62) 100%
+    );
+    opacity: calc(var(--bb-hero-overlay, 0.35) + 0.15);
+    pointer-events: none;
+  }
+
+  .bb-hero-section .bb-hero__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: var(--bb-hero-align, center);
+    justify-content: var(--bb-hero-justify, center);
+    min-height: var(--bb-hero-min-h-mobile);
+    padding: 2.5rem 1.5rem;
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 577px) {
+    .bb-hero-section .bb-hero__inner {
+      min-height: var(--bb-hero-min-h);
+      padding: 4rem 2.5rem;
+    }
+  }
+
+  .bb-hero-section .bb-hero__content {
+    position: relative;
+    z-index: 2;
+    max-width: 40rem;
+    text-align: var(--bb-hero-text-align, center);
+  }
+
+  .bb-hero-section .bb-hero__eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    font-size: var(--bb-hero-eyebrow-size, 0.65rem);
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bb-hero-eyebrow-color, #4ac6be) !important;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  .bb-hero-section .bb-hero__heading {
+    margin: 0 0 1rem;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    font-weight: 400 !important;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    color: var(--bb-hero-heading-color, #fff) !important;
+    font-size: var(--bb-hero-heading-size-mobile, clamp(2rem, 5vw, 3.75rem));
+    text-shadow: 0 2px 32px rgba(0, 0, 0, 0.45);
+  }
+
+  @media (min-width: 577px) {
+    .bb-hero-section .bb-hero__heading {
+      font-size: var(--bb-hero-heading-size, clamp(2rem, 5vw, 3.75rem));
+    }
+  }
+
+  .bb-hero-section .bb-hero__sub {
+    margin: 0 0 1.75rem;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    font-size: var(--bb-hero-sub-size, 0.95rem);
+    font-weight: 300;
+    line-height: 1.75;
+    letter-spacing: 0.02em;
+    color: var(--bb-hero-sub-color, rgba(255, 255, 255, 0.92)) !important;
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.38);
+  }
+
+  .bb-hero-section .bb-hero__sub p {
+    margin: 0;
+    font-size: inherit;
+  }
+
+  .bb-hero-section .bb-hero__sub p + p {
+    margin-top: 0.75rem;
+  }
+
+  .bb-hero-section .bb-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 14px 36px;
+    border-radius: 0 !important;
+    font-weight: 400;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: var(--bb-hero-btn-bg, transparent) !important;
+    color: var(--bb-hero-btn-text, #fff) !important;
+    border: 1px solid var(--bb-hero-btn-border, #fff) !important;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  }
+
+  .bb-hero-section .bb-hero__cta:hover {
+    background: var(--bb-hero-btn-bg-hover, #fff) !important;
+    color: var(--bb-hero-btn-text-hover, #000) !important;
+    border-color: var(--bb-hero-btn-border-hover, #fff) !important;
+  }
+}

@@ -1,0 +1,267 @@
+{{ 'bb-shipping-returns.css' | asset_url | stylesheet_tag }}
+
+<div class="bb-shipping-page" id="bb-shipping-{{ section.id }}">
+  <div
+    class="bb-shipping-hero"
+    {% if section.settings.hero_image != blank %}
+      style="background-image: url('{{ section.settings.hero_image | image_url: width: 2400 }}');"
+    {% endif %}
+  >
+    <div class="bb-shipping-hero__overlay" aria-hidden="true"></div>
+    <div class="bb-shipping-hero__inner page-width">
+      {%- if section.settings.hero_title != blank -%}
+        <h1 class="bb-shipping-hero__title">{{ section.settings.hero_title | escape }}</h1>
+      {%- endif -%}
+      {%- if section.settings.hero_lead != blank -%}
+        <p class="bb-shipping-hero__lead">{{ section.settings.hero_lead | escape }}</p>
+      {%- endif -%}
+      <span class="bb-shipping-hero__rule" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="bb-shipping-features page-width">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'feature' -%}
+        <div class="bb-shipping-feature" {{ block.shopify_attributes }}>
+          <div class="bb-shipping-feature__icon" aria-hidden="true">
+            {%- case block.settings.icon -%}
+              {%- when 'box' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></svg>
+              {%- when 'truck' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+              {%- when 'return' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+              {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            {%- endcase -%}
+          </div>
+          {%- if block.settings.title != blank -%}
+            <h2 class="bb-shipping-feature__title">{{ block.settings.title | escape }}</h2>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="bb-shipping-feature__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="bb-shipping-details">
+    <div class="bb-shipping-details__col">
+      {%- if section.settings.shipping_title != blank -%}
+        <h2 class="bb-shipping-details__title">{{ section.settings.shipping_title | escape }}</h2>
+      {%- endif -%}
+      <ul class="bb-shipping-list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'shipping_point' -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="bb-shipping-list__check" aria-hidden="true"></span>
+              <span>{{ block.settings.text | escape }}</span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+    <div class="bb-shipping-details__col">
+      {%- if section.settings.returns_title != blank -%}
+        <h2 class="bb-shipping-details__title">{{ section.settings.returns_title | escape }}</h2>
+      {%- endif -%}
+      <ul class="bb-shipping-list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'returns_point' -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="bb-shipping-list__check" aria-hidden="true"></span>
+              <span>{{ block.settings.text | escape }}</span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+
+  <div
+    class="bb-shipping-cta"
+    {% if section.settings.cta_image != blank %}
+      style="background-image: url('{{ section.settings.cta_image | image_url: width: 2400 }}');"
+    {% endif %}
+  >
+    <div class="bb-shipping-cta__overlay" aria-hidden="true"></div>
+    <div class="bb-shipping-cta__inner">
+      {%- if section.settings.cta_title != blank -%}
+        <h2 class="bb-shipping-cta__title">{{ section.settings.cta_title | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.cta_text != blank -%}
+        <p class="bb-shipping-cta__text">{{ section.settings.cta_text | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_button_label != blank and section.settings.cta_button_link != blank -%}
+        <a class="bb-shipping-cta__btn" href="{{ section.settings.cta_button_link }}">{{ section.settings.cta_button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="bb-shipping-trust page-width">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'trust' -%}
+        <div class="bb-shipping-trust__item" {{ block.shopify_attributes }}>
+          {%- case block.settings.icon -%}
+            {%- when 'pin' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            {%- when 'globe' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            {%- else -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6 9 17l-5-5"/></svg>
+          {%- endcase -%}
+          <span>{{ block.settings.text | escape }}</span>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "BB Shipping & Returns",
+  "tag": "section",
+  "class": "bb-shipping-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_lead",
+      "label": "Hero lead",
+      "default": "Simple, transparent, and designed to make shopping with confidence easy."
+    },
+    {
+      "type": "text",
+      "id": "shipping_title",
+      "label": "Shipping column title",
+      "default": "Shipping"
+    },
+    {
+      "type": "text",
+      "id": "returns_title",
+      "label": "Returns column title",
+      "default": "Returns"
+    },
+    {
+      "type": "image_picker",
+      "id": "cta_image",
+      "label": "CTA background image"
+    },
+    {
+      "type": "text",
+      "id": "cta_title",
+      "label": "CTA title",
+      "default": "Ready for Your Next Escape?"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Discover swimwear designed for sunshine, salt water, and unforgettable holidays."
+    },
+    {
+      "type": "text",
+      "id": "cta_button_label",
+      "label": "CTA button label",
+      "default": "Shop New Arrivals"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_link",
+      "label": "CTA button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature column",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "box", "label": "Box" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "return", "label": "Return" },
+            { "value": "chat", "label": "Chat" }
+          ],
+          "default": "box"
+        },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "shipping_point",
+      "name": "Shipping point",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "returns_point",
+      "name": "Returns point",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust bar item",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "pin", "label": "Pin" },
+            { "value": "globe", "label": "Globe" },
+            { "value": "check", "label": "Check" }
+          ],
+          "default": "pin"
+        },
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB Shipping & Returns",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "box", "title": "Free Shipping", "text": "Enjoy free shipping on all orders over $250 USD." } },
+        { "type": "feature", "settings": { "icon": "truck", "title": "Fast Worldwide Delivery", "text": "We ship worldwide from Thailand using trusted express carriers such as DHL and UPS." } },
+        { "type": "feature", "settings": { "icon": "return", "title": "Easy Returns", "text": "Eligible items may be returned within 30 days of delivery." } },
+        { "type": "feature", "settings": { "icon": "chat", "title": "Need Assistance?", "text": "Our customer care team is always here to help." } },
+        { "type": "shipping_point", "settings": { "text": "Free shipping on all orders over $250 USD." } },
+        { "type": "shipping_point", "settings": { "text": "Flat rate of $7 for orders within Thailand." } },
+        { "type": "shipping_point", "settings": { "text": "We ship worldwide from Thailand." } },
+        { "type": "shipping_point", "settings": { "text": "Express carriers such as DHL and UPS." } },
+        { "type": "shipping_point", "settings": { "text": "Tracking provided once your order ships." } },
+        { "type": "shipping_point", "settings": { "text": "Orders dispatch within 1–2 business days." } },
+        { "type": "returns_point", "settings": { "text": "30-day return window from delivery." } },
+        { "type": "returns_point", "settings": { "text": "Items must be unworn and in original condition." } },
+        { "type": "returns_point", "settings": { "text": "Hygiene liners and tags must remain attached." } },
+        { "type": "returns_point", "settings": { "text": "Refunds to original payment method." } },
+        { "type": "returns_point", "settings": { "text": "Final sale items excluded." } },
+        { "type": "trust", "settings": { "icon": "pin", "text": "Shipped from Thailand" } },
+        { "type": "trust", "settings": { "icon": "globe", "text": "We ship worldwide" } },
+        { "type": "trust", "settings": { "icon": "check", "text": "Secure payments" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

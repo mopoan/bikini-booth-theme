@@ -1,0 +1,108 @@
+/**
+ * FAQ page (template: page.faqs) — hero legibility + accordion spacing.
+ */
+.bb-root.bb-faq-page.bb-page-modern.template-page #MainContent,
+.bb-root.bb-faq-page.bb-page-modern.template-page #MainContent .content-for-layout {
+  background: #faf9f7 !important;
+}
+
+/* --- Hero: readable on bright store photo --- */
+.bb-root.bb-faq-page .bb-hero-section .bb-hero__overlay {
+  opacity: 1 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 46, 46, 0.42) 0%,
+    rgba(10, 46, 46, 0.52) 45%,
+    rgba(10, 46, 46, 0.68) 100%
+  ) !important;
+}
+
+.bb-root.bb-faq-page .bb-hero-section .bb-hero__eyebrow {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif) !important;
+  color: #4ac6be !important;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+.bb-root.bb-faq-page .bb-hero-section .bb-hero__heading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif) !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.45);
+}
+
+.bb-root.bb-faq-page .bb-hero-section .bb-hero__sub,
+.bb-root.bb-faq-page .bb-hero-section .bb-hero__sub p {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* --- FAQ accordion band --- */
+.bb-root.bb-faq-page #MainContent > .shopify-section:has([data-section-name="accordion"]) {
+  padding-top: clamp(2.75rem, 6vw, 4.25rem);
+  padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  margin-bottom: 0;
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] {
+  --color-accent-section: #4ac6be;
+  --color-lines: rgba(10, 46, 46, 0.12);
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .page-width,
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .page-wide {
+  max-width: min(760px, calc(100vw - 2.5rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] toggle-component {
+  background: #ffffff;
+  border: 1px solid rgba(10, 46, 46, 0.08);
+  padding: 0.35rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .chm-toggle {
+  border-bottom: 1px solid rgba(10, 46, 46, 0.1);
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .chm-toggle:last-child {
+  border-bottom: 0;
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .chm-toggle__heading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #0a2e2e;
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .chm-toggle[open] .chm-toggle__heading,
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .chm-toggle__button:hover .chm-toggle__heading {
+  color: #4ac6be;
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .chm-toggle__content {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  color: rgba(10, 46, 46, 0.78);
+  line-height: 1.65;
+  padding-bottom: 1.1rem;
+}
+
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .plusminus:before,
+.bb-root.bb-faq-page #MainContent [data-section-name="accordion"] .plusminus:after {
+  background-color: #4ac6be;
+}
+
+@media (max-width: 576px) {
+  .bb-root.bb-faq-page #MainContent > .shopify-section:has([data-section-name="accordion"]) {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+
+  .bb-root.bb-faq-page #MainContent [data-section-name="accordion"] toggle-component {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

@@ -1,0 +1,81 @@
+{%- liquid
+  assign bb_social_enabled = false
+  if enable__social
+    assign bb_social_enabled = true
+  elsif block != blank and block.settings.show_social
+    assign bb_social_enabled = true
+  elsif block != blank and block.settings.show_social_icons
+    assign bb_social_enabled = true
+  endif
+-%}
+{%- if bb_social_enabled -%}
+{%- for i in (1..10) -%}
+{%- assign sm_key = 'social_media_' | append: i -%}
+{%- assign sm_url = settings[sm_key] | strip -%}
+{%- if sm_url != blank -%}
+  {%- liquid
+    assign sm_l = sm_url | downcase
+    assign icon_slug = ''
+    if sm_l contains 'youtu.be' or sm_l contains 'youtube.com' or sm_l contains 'youtube.'
+      assign icon_slug = 'youtube'
+    elsif sm_l contains 'pinterest'
+      assign icon_slug = 'pinterest'
+    elsif sm_l contains 'tiktok'
+      assign icon_slug = 'tiktok'
+    elsif sm_l contains 'instagram' or sm_l contains 'instagr.am'
+      assign icon_slug = 'instagram'
+    elsif sm_l contains 'facebook' or sm_l contains 'fb.com' or sm_l contains 'fb.me'
+      assign icon_slug = 'facebook'
+    elsif sm_l contains 'twitter.com' or sm_l contains 'x.com'
+      assign icon_slug = 'twitter'
+    elsif sm_l contains 'linkedin'
+      assign icon_slug = 'linkedin'
+    elsif sm_l contains 'snapchat'
+      assign icon_slug = 'snapchat'
+    endif
+    assign icon_rendered = ''
+    assign icon_label = ''
+  -%}
+  {%- if icon_slug != blank -%}
+    {%- if settings.social_media_roundness -%}
+      {%- assign icon_try = icon_slug | append: '_r' -%}
+    {%- else -%}
+      {%- assign icon_try = icon_slug -%}
+    {%- endif -%}
+    {%- capture icon_rendered -%}{%- render 'icons-list-social', icon_name: icon_try -%}{%- endcapture -%}
+    {%- assign icon_rendered = icon_rendered | strip -%}
+    {%- assign icon_label = icon_slug | capitalize -%}
+  {%- else -%}
+    {%- assign host_parts = sm_url | split: '//' | last | replace: 'www.', '' | split: '.' -%}
+    {%- for part in host_parts -%}
+      {%- if settings.social_media_roundness -%}
+        {%- assign icon_try = part | append: '_r' -%}
+      {%- else -%}
+        {%- assign icon_try = part -%}
+      {%- endif -%}
+      {%- capture icon_rendered -%}{%- render 'icons-list-social', icon_name: icon_try -%}{%- endcapture -%}
+      {%- assign icon_rendered = icon_rendered | strip -%}
+      {%- if icon_rendered != blank -%}
+        {%- assign icon_label = part | capitalize | strip -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if icon_rendered != blank -%}
+    <li>
+      <a href="{{ sm_url }}" rel="noopener noreferrer" target="_blank">
+        {{ icon_rendered }}
+        <span class="body2 visually-hidden social-icons__text">{{ icon_label }}</span>
+      </a>
+    </li>
+  {%- else -%}
+    {%- assign icon_label = sm_url | split: '//' | last | split: '/' | first | truncate: 42, '…' -%}
+    <li>
+      <a href="{{ sm_url }}" class="social-icons__text-link" rel="noopener noreferrer" target="_blank">
+        <span class="body2">{{ icon_label | escape }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+{%- endif -%}

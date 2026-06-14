@@ -1,0 +1,56 @@
+/**
+ * Bikini Booth — footer layout: 3-column rhythm + brand column with logo/social vs newsletter.
+ */
+@media (min-width: 1024px) {
+  footer[id^="theme-section-"] .footer__block__items {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1.1fr) !important;
+    column-gap: clamp(1.5rem, 3vw, 2.75rem) !important;
+    row-gap: 2rem !important;
+    width: 100% !important;
+    align-items: start !important;
+  }
+
+  footer[id^="theme-section-"] .footer__block__items > .footer__block-item {
+    max-width: none !important;
+    width: auto !important;
+  }
+
+  /* Social block: logo + icons left, newsletter form right (same block). */
+  footer[id^="theme-section-"] .footer__block-item .social__block-container:has(.social__block-newsletter) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) !important;
+    grid-template-areas:
+      "logo newsletter"
+      "icons newsletter" !important;
+    column-gap: 2rem !important;
+    row-gap: 0.75rem !important;
+    align-items: start !important;
+  }
+
+  footer[id^="theme-section-"] .footer__block-item .social__block-container > .footer__link__logo {
+    grid-area: logo !important;
+  }
+
+  footer[id^="theme-section-"] .footer__block-item .social__block-container > .social__block-newsletter {
+    grid-area: newsletter !important;
+    grid-row: 1 / span 2 !important;
+    align-self: start !important;
+    margin: 0 !important;
+  }
+
+  footer[id^="theme-section-"] .footer__block-item .social__block-container > .footer__block-social-icons {
+    grid-area: icons !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* bb-footer-primary includes copyright; avoid duplicate Shopify/theme bottom bar */
+footer[id^="theme-section-"] .footer__copyright {
+  display: none !important;
+}
+
+/* Policy link strip is redundant / mis-placed when legal lives elsewhere */
+.bb-root footer[id^="theme-section-"] .footer__content-bottom ul.policies {
+  display: none !important;
+}

@@ -1,0 +1,478 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}"{% if settings.wokiee_rtl or shop.locale == 'ar' %} dir="rtl"{% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    {%- if settings.heading_font_type == "shopify" or settings.body_font_type == "shopify" -%}
+    {%- if settings.type_header_font.system? == false or settings.type_body_font.system? == false -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endif -%}
+    {%- endif -%}
+    
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'meta-tags' %}
+    
+
+    <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+    {%- if template.name == 'product' -%}
+    <script src="{{ 'bb-product-complete-set.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    <script src="{{ 'bb-mega-menu-tropic.js' | asset_url }}" defer="defer"></script>
+
+    {{ content_for_header }}
+
+    {%- render "head-styles" -%}
+    {%- render "style-grid" -%}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'product' -%}
+    {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+    {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+    {{ 'component-media-gallery.css' | asset_url | stylesheet_tag }}
+    {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+    {{ 'component-swiper-slider.css' | asset_url | stylesheet_tag }}
+    {{ 'bikini-booth-product-tropic.css' | asset_url | stylesheet_tag }}
+    {{ 'bb-product-pdp-tropic.css' | asset_url | stylesheet_tag }}
+    <style id="bb-product-first-paint">
+      body.template-product.bb-root {
+        background: #faf9f7;
+      }
+      body.template-product.bb-root #MainContent [data-section-name='main-product'] .main-product__container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        width: 100%;
+        align-items: flex-start;
+      }
+      body.template-product.bb-root #MainContent [data-section-name='main-product'] .product__column,
+      body.template-product.bb-root #MainContent [data-section-name='main-product'] .product__column__content {
+        min-width: 0;
+        max-width: 100%;
+      }
+      body.template-product.bb-root #MainContent [data-section-name='main-product'] .product__title h1,
+      body.template-product.bb-root #MainContent [data-section-name='main-product'] .bb-pdp-product-title {
+        white-space: normal;
+        word-break: normal;
+        overflow-wrap: break-word;
+        max-width: 100%;
+        font-weight: 400;
+        line-height: 1.25;
+      }
+      body.template-product.bb-root #MainContent [data-section-name='main-product'] swiper-slider.swiper:not(.swiper-initialized) {
+        overflow: hidden;
+      }
+      body.template-product.bb-root #MainContent [data-section-name='main-product'] swiper-slider.swiper:not(.swiper-initialized) .swiper-slide:not(:first-child) {
+        display: none;
+      }
+      @media (max-width: 576px) {
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .main-product__container {
+          flex-direction: column !important;
+          flex-wrap: wrap !important;
+          align-items: stretch !important;
+          gap: 2.5rem;
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden;
+        }
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .product--thumbnail_slider {
+          display: none !important;
+        }
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .bb-pdp__title-mobile--tropic,
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .product--thumbnail_slider__mobile,
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .product__column {
+          flex: 0 0 100% !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+        }
+      }
+      @media (min-width: 577px) {
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .bb-pdp__title-mobile--tropic {
+          display: none;
+        }
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .product--thumbnail_slider__mobile {
+          display: none;
+        }
+      }
+      @media (min-width: 1025px) {
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .main-product__container .product--thumbnail_slider {
+          flex: 0 0 calc(100% - var(--content-width, 50%));
+          width: calc(100% - var(--content-width, 50%));
+          min-width: 0;
+        }
+        body.template-product.bb-root #MainContent [data-section-name='main-product'] .main-product__container .product__column {
+          flex: 0 0 var(--content-width, 50%);
+          width: var(--content-width, 50%);
+          min-width: 0;
+        }
+      }
+    </style>
+    {%- endif -%}
+    {%- if template.name == 'collection' -%}
+    <style id="bb-collection-first-paint">
+      body.template-collection.bb-root #MainContent {
+        min-height: min(48vh, 900px);
+      }
+    </style>
+    {%- endif -%}
+    {{ 'bb-theme.css' | asset_url | stylesheet_tag }}
+    {%- comment -%}
+      First-paint brand accent: `head-styles` sets :root --color-accent from Theme Editor (often blue).
+      `bb-brand-ui-overrides.css` loads at end of body — too late for first paint (404 CTA, cart, links).
+      Keep in sync with bb-brand-ui-overrides.css (same tokens + customer-page button rules).
+    {%- endcomment -%}
+    <style id="bb-brand-accent-first-paint">
+      body.bb-root {
+        --bb-brand-solid: var(--bb-brand, #4ac6be);
+        --bb-brand-hover-solid: var(--bb-brand-hover, #6dc9c3);
+        --color-accent: var(--bb-brand-solid);
+        --color-accent-section: var(--bb-brand-solid);
+        --color-price-main: var(--bb-brand-solid);
+        --color-tooltip: var(--bb-brand-solid);
+        --color-tooltip-main: var(--bb-brand-solid);
+        --color-tooltip-block: var(--bb-brand-solid);
+      }
+      body.bb-root .global__tooltip__content {
+        background: var(--bb-brand-solid, #4ac6be) !important;
+        color: #ffffff !important;
+      }
+      body.bb-root menu-drawer,
+      body.bb-root menumodal-dialog,
+      body.bb-root cart-drawer {
+        --color-accent-section: var(--bb-brand-solid);
+        --color-price-main-block: var(--bb-brand-solid);
+      }
+      body.bb-root .header-customer-accounts__modal {
+        --color-accent-section: var(--bb-brand-solid);
+        --color-price-main-block: var(--bb-brand-solid);
+      }
+      body.bb-root .header-customer-accounts__modal .account-actions__sign-ins > a.btn {
+        --color-button-block: var(--bb-brand-solid);
+        --color-button-hover-block: var(--bb-brand-hover-solid);
+        --color-button-text_main: #ffffff;
+        --color-button-text-hover_main: #ffffff;
+        --color-button-icon_main: #ffffff;
+        --color-button-icon-hover_main: #ffffff;
+        --color-button-border_main: transparent;
+        --color-button-border-hover_main: transparent;
+      }
+      body.bb-root .btn--checkout {
+        --background: var(--bb-brand-solid);
+        --background-hover: var(--bb-brand-hover-solid);
+        --color: #ffffff;
+        --color-hover: #ffffff;
+        --border: var(--bb-brand-solid);
+        --border-hover: var(--bb-brand-hover-solid);
+        --icon: #ffffff;
+        --icon-hover: #ffffff;
+      }
+      /* Same as bb-brand-ui-overrides.css — base.css #0909FF focus ring loads in <head> before body bundle */
+      body.bb-root *:focus-visible:not(textarea):not(input):not(select) {
+        outline: 2px solid var(--bb-brand-solid, #4ac6be) !important;
+        outline-offset: 2px !important;
+      }
+      body.bb-root .section-header .header__icons modal-opener,
+      body.bb-root .section-header .header__icons .header__button,
+      body.bb-root .section-header .header__icons a.header__button {
+        -webkit-tap-highlight-color: transparent;
+      }
+      body.bb-root .section-header .search-container modal-opener:focus-visible,
+      body.bb-root .section-header .search-container .header__button:focus-visible {
+        outline: 2px solid var(--bb-brand-solid, #4ac6be) !important;
+        outline-offset: 2px !important;
+      }
+      /* Mirror bb-brand-ui-overrides.css — customer account forms (login, register, etc.) */
+      body.bb-root.bb-customer-pages #MainContent .btn:not(.link):not(.btn--border) {
+        --background: var(--bb-brand-solid);
+        --background-hover: var(--bb-brand-hover-solid);
+        --color: #ffffff;
+        --color-hover: #ffffff;
+        --border: var(--bb-brand-solid);
+        --border-hover: var(--bb-brand-hover-solid);
+        --icon: #ffffff;
+        --icon-hover: #ffffff;
+      }
+      body.bb-root.bb-customer-pages #MainContent .btn.btn--border {
+        --background: #ffffff;
+        --background-hover: #f5f5f5;
+        --color: #1a1a1a;
+        --color-hover: #0a0a0a;
+        --border: var(--bb-brand-solid);
+        --border-hover: var(--bb-brand-hover-solid);
+        --icon: var(--bb-brand-solid);
+        --icon-hover: var(--bb-brand-hover-solid);
+      }
+    </style>
+    {{ 'bb-futura-fonts.css' | asset_url | stylesheet_tag }}
+    {{ 'bb-footer-minimal.css' | asset_url | stylesheet_tag }}
+    {{ 'bb-mega-menu-tropic.css' | asset_url | stylesheet_tag }}
+    {{ 'bb-header-tropic-all.css' | asset_url | stylesheet_tag }}
+    {{ 'bb-header-mega-hotfix.css' | asset_url | stylesheet_tag }}
+    {% if settings.wokiee_rtl or shop.locale == 'ar' %}{{ 'base-rtl.css' | asset_url | stylesheet_tag }}{% endif %}
+    {%- if template.name == 'index' -%}
+    {{ 'bb-subframe-homepage.css' | asset_url | stylesheet_tag }}
+    {%- if settings.fixed_header_on_index or settings.fixed_header_on_index_mobile -%}
+    {{ 'bikini-booth-homepage-header.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'bb-index-header-offset.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- endif -%}
+    {{ 'bb-header-final-fix.css' | asset_url | stylesheet_tag }}
+    {{ 'bb-drawer-cart-fonts.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'collection' or template.name == 'search' -%}
+    {{ 'bb-collection-tropic.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- if template.name == 'search' -%}
+    {{ 'bb-search-tropic.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+    {%- if settings.body_font_type == "shopify" and settings.type_body_font.system? == false -%}
+      <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endif -%}
+    {%- if settings.heading_font_type == "shopify" and settings.type_header_font.system? == false -%}
+      <link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin>
+    {%- endif -%}
+
+    {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+      {{ 'component-localization-form.css' | asset_url | stylesheet_tag: preload: true }}
+      <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if settings.predictive_search_enabled -%}
+      <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
+    {%- endif -%}
+    
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "@theme/module-change-svg-id": "{{ 'module-change-svg-id.js' | asset_url }}",
+          "@theme/module-parallax": "{{ 'module-parallax.js' | asset_url }}",
+          "@theme/module-countUp": "{{ 'module-countUp.js' | asset_url }}",
+          "@theme/countUp": "{{ 'countUp.min.js' | asset_url }}",
+          "@theme/image-comparison": "{{ 'module-image-comparison.js' | asset_url }}",
+          "@theme/module-lookbook": "{{ 'module-lookbook.js' | asset_url }}",
+          "@theme/module-animated-badge": "{{ 'module-animated-badge.js' | asset_url }}",
+          "@theme/module-footersticky-nav": "{{ 'module-footersticky-nav.js' | asset_url }}",
+          "@theme/module-current-sales-popup": "{{ 'module-current-sales-popup.js' | asset_url }}"
+        }
+      }
+    </script>
+  </head>
+
+  <body class="bb-root{% if template.directory == 'customers' %} bb-customer-pages{% endif %} template-{{ template.name }}{% if template.name == 'page' and template.suffix == 'wishlist' %} bb-wishlist-page{% endif %}{% if template.name == 'collection' or template.name == 'search' %} bb-collection-tropic{% endif %}{% if template.name == 'page' and template.suffix == 'contact-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' %} bb-contact-tropic{% endif %}{% if template.name == 'page' and template.suffix == 'about-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'about-us' or template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' %} bb-page-modern{% endif %}{% if template.name == 'page' and template.suffix == 'faqs' or template.name == 'page' and page.handle == 'faqs' or template.name == 'page' and page.handle == 'faq' %} bb-faq-page bb-page-modern{% endif %}{% if settings.system_icon_thickness == "-thin.svg" %} icons-are-thin{% endif %}"{% if request.design_mode %} data-supportcode="{{ settings.supportcode }}"{% endif %}>
+    {%- comment -%}
+      Index: component-fixed-header.css (injected with the header) forces transparent desktop chrome until sticky; bb-root overrides
+      live in that asset so they load after head. Inline styles below only adjust which logo variant shows first paint.
+    {%- endcomment -%}
+    {%- if template.name == 'index' and settings.fixed_header_on_index -%}
+    <style id="bb-index-header-logo-first-paint">
+      @media (min-width: 1024px) {
+        body.template-index .fixed-header-group .header__heading > *:first-child:not(:only-child) {
+          display: flex !important;
+        }
+        body.template-index .fixed-header-group .header__heading > *:last-child:not(:only-child) {
+          display: none !important;
+        }
+        body.template-index .fixed-header-group .header__heading .header__heading-link__transparent {
+          display: none !important;
+        }
+      }
+    </style>
+    {%- endif -%}
+    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
+      {{ 'accessibility.skip_to_text' | t }}
+    </a>
+    {%- if settings.cart_type == 'drawer' and template != "cart" -%}
+      {%- section 'cart-drawer' -%}
+    {%- endif -%}
+
+    {%- if template.name == "index" -%}
+    {%- if settings.fixed_header_on_index or settings.fixed_header_on_index_mobile -%}
+    <fixed-headergroup class="fixed-header-group"
+                       {% if settings.fixed_header_on_index %} data-transparent-desktop="true"{%- endif -%}
+                       {% if settings.fixed_header_on_index_mobile %} data-transparent-mobile="true"{%- endif -%}>
+    {%- endif -%}
+    {%- sections 'header-group' -%}
+    {%- if settings.fixed_header_on_index or settings.fixed_header_on_index_mobile -%}</fixed-headergroup>{%- endif -%}
+    {%- else -%}
+    {%- sections 'header-group' -%}
+    {%- endif -%}
+
+    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+      {%- render "breadcrumb" -%}
+      {%- liquid
+        assign bb_inject_about_stack = false
+        assign bb_inject_contact_stack = false
+        if template.name == 'page'
+          if page.handle == 'about-us' or page.handle == 'about'
+            if template.suffix == blank
+              comment
+                About page still on “Default page” — render about stack instead of page.json (FAQ accordion).
+                For theme editor + storefront: assign Theme template “about-us” on the page for full section editing.
+              endcomment
+              assign bb_inject_about_stack = true
+            endif
+          endif
+          unless template.suffix != blank
+            if page.handle == 'contact' or page.handle == 'contact-us'
+              assign bb_inject_contact_stack = true
+            endif
+          endunless
+        endif
+      -%}
+      {%- if bb_inject_about_stack -%}
+        {%- sections 'bb-about-stack-group' -%}
+      {%- elsif bb_inject_contact_stack -%}
+        {%- sections 'bb-contact-stack-group' -%}
+      {%- else -%}
+        {{ content_for_layout }}
+      {%- endif -%}
+    </main>
+
+    {%- if template.name == 'product' -%}
+      {{ 'bb-product.css' | asset_url | stylesheet_tag }}
+      {{ 'bb-quick-view.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+    <div class="footer__content">
+      {%- comment -%}
+        Primary 3-column footer: static section so it always renders with settings_data (same as classic footer).
+        footer-group + theme blocks can be empty on some published themes; do not rely on it alone.
+      {%- endcomment -%}
+      {%- section 'bb-footer-primary' -%}
+      {%- section 'footer' -%}
+    </div>
+    {%- sections 'popups-group' -%}
+    
+    <ul hidden>
+      <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
+      <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
+    </ul>
+
+    <script>
+      window.shopUrl = '{{ request.origin }}';
+      window.routes = {
+        root_url: '{{ routes.root_url }}',
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        cart_url: '{{ routes.cart_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}',
+        all_products_collection_url: '{{ routes.all_products_collection_url }}',
+        collections_url: '{{ routes.collections_url }}'
+      };
+      window.routes.root_url += window.routes.root_url=='/'?'':'/';
+
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+      };
+
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+        unavailable_with_option: `{{ 'products.product.value_unavailable' | t: option_value: '[value]' }}`,
+      };
+
+      window.quickOrderListStrings = {
+        itemsAdded: `{{ 'sections.quick_order_list.items_added.other' | t: quantity: '[quantity]' }}`,
+        itemAdded: `{{ 'sections.quick_order_list.items_added.one' | t: quantity: '[quantity]' }}`,
+        itemsRemoved: `{{ 'sections.quick_order_list.items_removed.other' | t: quantity: '[quantity]' }}`,
+        itemRemoved: `{{ 'sections.quick_order_list.items_removed.one' | t: quantity: '[quantity]' }}`,
+        viewCart: `{{- 'sections.quick_order_list.view_cart' | t -}}`,
+        each: `{{- 'sections.quick_order_list.each' | t: money: '[money]' }}`,
+      };
+
+      window.accessibilityStrings = {
+        imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
+        shareSuccess: `{{ 'general.share.success_message' | t }}`,
+        pauseSlideshow: `{{ 'sections.slideshow.pause_slideshow' | t }}`,
+        playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
+        recipientFormExpanded: `{{ 'recipient.form.expanded' | t }}`,
+        recipientFormCollapsed: `{{ 'recipient.form.collapsed' | t }}`,
+      };
+
+      window.theme_id = '{{ theme.id }}';
+      var wokiee_app = {
+        main_info: {
+          id:'{{ theme.id }}',
+          shop: '{{ shop.permanent_domain }}',
+          domain: '{{ shop.domain }}',
+          lic: '{{ settings.license }}'
+        }
+      };
+
+      {%- if settings.external_links_in_new_tab -%}
+      document.querySelectorAll('a[href^="http"]').forEach((item) => {
+        item.setAttribute('target', '_blank');
+      });
+      {%- endif -%}
+    </script>
+
+    {%- if settings.predictive_search_enabled -%}
+      <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {% if request.design_mode %}
+      <script src="{{ 'main-theme-editor.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if settings.show_add_discount_code -%}
+    <script src="{{ 'cart-discount.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    {%- if settings.enable_recently_viewed_products -%}
+    <recently-viewed-products-record data-count="{{ settings.recently_viewed_products_limit }}"></recently-viewed-products-record>
+    <script src="{{ 'module-recently-viewed-products.js' | asset_url }}" type="module"></script>
+    {%- endif -%}
+    {%- if settings.enable_rating -%}<link rel="stylesheet" href="{{ 'component-review-stars.css' | asset_url }}" media="print" onload="this.media='all'">{%- endif -%}
+    {%- render "quick-view" -%}
+    {%- comment -%}
+      Homepage overrides load last so they win over section inline #theme-section-* styles.
+    {%- endcomment -%}
+    {%- if template.name == 'index' -%}
+      {{ 'bikini-booth-homepage-modern.css' | asset_url | stylesheet_tag }}
+      {{ 'bb-homepage.css' | asset_url | stylesheet_tag }}
+      {{ 'bikini-booth-tropic-of-c-homepage.css' | asset_url | stylesheet_tag }}
+      {{ 'bb-toc-product-grid.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'bikini-booth-scroll-reveal.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {{ 'bb-product-card-brand.css' | asset_url | stylesheet_tag }}
+    {{ 'bb-footer-universal.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'page' and template.suffix == 'about-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'about-us' or template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' -%}
+      {{ 'bb-subframe-homepage.css' | asset_url | stylesheet_tag }}
+      {{ 'bikini-booth-homepage-modern.css' | asset_url | stylesheet_tag }}
+      {{ 'bb-pages-modern.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- if template.name == 'page' and template.suffix == 'contact-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' -%}
+      {{ 'bb-contact-tropic.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- if template.name == 'page' and template.suffix == 'faqs' or template.name == 'page' and page.handle == 'faqs' or template.name == 'page' and page.handle == 'faq' -%}
+      {{ 'bb-faq-page.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {{ 'bb-brand-ui-overrides.css' | asset_url | stylesheet_tag }}
+  </body>
+</html>

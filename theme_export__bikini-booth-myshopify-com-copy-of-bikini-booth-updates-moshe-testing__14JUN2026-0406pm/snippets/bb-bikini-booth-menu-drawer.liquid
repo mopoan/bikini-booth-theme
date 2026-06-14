@@ -1,0 +1,71 @@
+{% comment %}
+  Mobile drawer nav when "Bikini Booth nav" is enabled on the header.
+  Pass section (header) to use "Bikini Booth navigation menu" theme setting, or pass linklist directly.
+{% endcomment %}
+{%- liquid
+  if linklist == blank and section != blank
+    if section.settings.bikini_booth_menu != blank
+      assign linklist = section.settings.bikini_booth_menu.links
+    endif
+    if linklist == blank and section.settings.menu != blank
+      assign linklist = section.settings.menu.links
+    endif
+  endif
+-%}
+<nav class="menu-drawer__navigation menu-drawer__links-padding bb-bikini-booth-menu-drawer" aria-label="Main">
+  <ul class="unstyle-ul">
+    {%- if linklist == blank -%}
+      {%- if request.design_mode -%}
+        <li>
+          <span class="menu-drawer__menu-item h4 menu-drawer__menu-item__main">Choose a Bikini Booth navigation menu in Header settings</span>
+        </li>
+      {%- endif -%}
+    {%- else -%}
+      {%- for link in linklist -%}
+        <li>
+          {%- if link.links != blank -%}
+            <details>
+              <summary>
+                <div class="menu-drawer__menu-item h4 menu-drawer__menu-item__main">
+                  <span>{{ link.title | escape }}</span>
+                  {{- 'icon-arrow-right-small' | append: settings.system_icon_thickness | inline_asset_content -}}
+                </div>
+              </summary>
+              <div class="menu-drawer__submenu">
+                <div class="menu-drawer__inner-submenu">
+                  <ul class="unstyle-ul menu-drawer__submenu-content">
+                    <li>
+                      <button class="menu-drawer__back-button menu-drawer__menu-item link" type="button">
+                        {{- 'icon-arrow-left-2' | append: settings.system_icon_thickness | inline_asset_content -}}
+                      </button>
+                    </li>
+                    <li>
+                      <a
+                        href="{{ link.url }}"
+                        class="menu-drawer__menu-item menu-drawer__menu-item__link h4 menu-drawer__menu-item__main"
+                      >
+                        {{ link.title | escape }}
+                      </a>
+                    </li>
+                    {%- for childlink in link.links -%}
+                      <li>
+                        <a href="{{ childlink.url }}" class="menu-drawer__menu-item h5">{{ childlink.title | escape }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+            </details>
+          {%- else -%}
+            <a
+              href="{{ link.url }}"
+              class="menu-drawer__menu-item h4 menu-drawer__menu-item__main"
+            >
+              <span>{{ link.title | escape }}</span>
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
+  </ul>
+</nav>

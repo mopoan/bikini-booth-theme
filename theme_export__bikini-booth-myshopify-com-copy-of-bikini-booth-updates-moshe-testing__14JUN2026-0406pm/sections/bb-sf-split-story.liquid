@@ -1,0 +1,92 @@
+<section class="bb-subframe bb-subframe-story bb-subframe-story--editorial" id="bb-subframe-story-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="bb-subframe-story__media">
+    {%- if section.settings.image != blank -%}
+      {%- assign story_img_alt = section.settings.heading | escape -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1600 }}"
+        alt="{{ story_img_alt }}"
+        loading="lazy"
+        sizes="(max-width: 989px) 100vw, 52vw"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        srcset="{{ section.settings.image | image_url: width: 900 }} 900w, {{ section.settings.image | image_url: width: 1200 }} 1200w, {{ section.settings.image | image_url: width: 1600 }} 1600w, {{ section.settings.image | image_url: width: 2000 }} 2000w"
+      >
+    {%- elsif section.settings.image_url != blank -%}
+      <img src="{{ section.settings.image_url }}" alt="" width="800" height="1000" loading="lazy">
+    {%- else -%}
+      {%- capture story_stock -%}{%- render 'bb-subframe-stock-url', index: 2 -%}{%- endcapture -%}
+      <img src="{{ story_stock | strip }}" alt="{{ section.settings.heading | escape }}" width="800" height="1000" loading="lazy">
+    {%- endif -%}
+  </div>
+  <div class="bb-subframe-story__text">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="bb-subframe-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="bb-subframe-title bb-subframe-story__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.body != blank -%}
+      <div class="bb-subframe-story__body rte">{{ section.settings.body }}</div>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+      <a class="bb-subframe-story__cta bb-subframe-cta-cohesive" href="{{ section.settings.button_link }}">{{ section.settings.button_label | escape }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "BB - Story split",
+  "tag": "section",
+  "class": "bb-subframe-story-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL (fallback)",
+      "default": "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80&auto=format&fit=crop"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "About us"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Born from the Ocean"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Text",
+      "default": "<p>Bikini Booth was founded on the shores of Bali with a simple mission: to create swimwear that celebrates every body. Our pieces are designed with sustainably sourced fabrics, ethically made, and inspired by the colors of the tropics. We believe that confidence starts with feeling comfortable in your own skin.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB - Story split"
+    }
+  ]
+}
+{% endschema %}

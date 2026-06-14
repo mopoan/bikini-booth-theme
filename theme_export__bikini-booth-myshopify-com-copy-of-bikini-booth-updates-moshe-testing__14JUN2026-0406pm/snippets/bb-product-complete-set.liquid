@@ -1,0 +1,254 @@
+{% comment %}
+  Complete-the-set (Tropic-style): main + pair, bundle visuals, rows, selects.
+  Pair: metafield custom.set_pair_product or block.settings.pair_product.
+{% endcomment %}
+{%- liquid
+  assign pair_product = block.settings.pair_product
+  if product.metafields.custom.set_pair_product != blank
+    assign pair_meta = product.metafields.custom.set_pair_product.value
+    if pair_meta != blank
+      assign pair_product = pair_meta
+    endif
+  endif
+  assign main_size_pos = blank
+  assign main_color_pos = blank
+  assign main_piece_pos = blank
+  assign pair_sync_pos = blank
+  assign pair_piece_pos = blank
+  for o in product.options_with_values
+    assign on = o.name | downcase
+    assign on_up = o.name | upcase
+    if on contains 'size' and main_size_pos == blank
+      assign main_size_pos = o.position
+    endif
+    if on contains 'color' or on contains 'colour'
+      assign main_color_pos = o.position
+    endif
+    if main_piece_pos == blank
+      if on contains 'piece'
+        assign main_piece_pos = o.position
+      elsif on contains 'top' and on contains 'bottom'
+        assign main_piece_pos = o.position
+      elsif on_up contains 'TOP' and on_up contains 'BOTTOM'
+        assign main_piece_pos = o.position
+      endif
+    endif
+  endfor
+
+  for o in pair_product.options_with_values
+    assign on = o.name | downcase
+    assign on_up = o.name | upcase
+    if on contains 'color' or on contains 'colour' or on contains 'pattern'
+      if pair_sync_pos == blank
+        assign pair_sync_pos = o.position
+      endif
+    endif
+    if pair_piece_pos == blank
+      if on contains 'piece'
+        assign pair_piece_pos = o.position
+      elsif on contains 'top' and on contains 'bottom'
+        assign pair_piece_pos = o.position
+      elsif on_up contains 'TOP' and on_up contains 'BOTTOM'
+        assign pair_piece_pos = o.position
+      endif
+    endif
+  endfor
+-%}
+{%- if pair_product == blank -%}
+  {%- if request.design_mode -%}
+    <div class="bb-complete-set bb-complete-set--empty" {{ block.shopify_attributes }}>
+      <p class="body3">Add a paired product in this block, or set metafield custom.set_pair_product (product reference).</p>
+    </div>
+  {%- endif -%}
+{%- else -%}
+  {%- assign pair_first = pair_product.selected_or_first_available_variant -%}
+  <div
+    class="bb-complete-set bb-complete-set--look"
+    id="bb-complete-set-{{ block.id }}"
+    data-bb-complete-set-root
+    data-section-id="{{ section.id }}"
+    data-block-id="{{ block.id }}"
+    data-product-form-id="product-form-{{ section.id }}"
+    data-sync-first-option="{% if block.settings.sync_first_option %}true{% else %}false{% endif %}"
+    data-sync-option-position="{{ pair_sync_pos | default: 1 }}"
+    {% if main_size_pos != blank %}data-bb-main-size-option-position="{{ main_size_pos }}"{% endif %}
+    {% if main_color_pos != blank %}data-bb-main-color-option-position="{{ main_color_pos }}"{% endif %}
+    {% if main_piece_pos != blank %}data-bb-main-piece-option-position="{{ main_piece_pos }}"{% endif %}
+    {% if pair_piece_pos != blank %}data-bb-pair-piece-option-position="{{ pair_piece_pos }}"{% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.heading != blank -%}
+      <h3 class="bb-complete-set__title-look">{{ block.settings.heading | strip | downcase | capitalize | escape }}</h3>
+    {%- endif -%}
+    {%- assign blurb_plain = block.settings.blurb | strip_html | strip -%}
+    {%- if blurb_plain != '' -%}
+      <div class="bb-complete-set__blurb rte body3">{{ block.settings.blurb }}</div>
+    {%- endif -%}
+
+    <div class="bb-complete-set__bundle-visual" aria-hidden="true">
+      <div class="bb-complete-set__bundle-slot">
+        {%- if product.featured_media -%}
+          <img
+            src="{{ product.featured_media | image_url: width: 220 }}"
+            alt=""
+            width="220"
+            height="275"
+            loading="lazy"
+          >
+        {%- endif -%}
+      </div>
+      <span class="bb-complete-set__plus">+</span>
+      <div class="bb-complete-set__bundle-slot">
+        <a href="{{ pair_product.url }}" class="bb-complete-set__bundle-link">
+          {%- if pair_first.featured_media -%}
+            <img
+              src="{{ pair_first.featured_media | image_url: width: 220 }}"
+              alt="{{ pair_first.featured_media.alt | default: pair_product.title | escape }}"
+              width="220"
+              height="275"
+              loading="lazy"
+            >
+          {%- elsif pair_product.featured_media -%}
+            <img
+              src="{{ pair_product.featured_media | image_url: width: 220 }}"
+              alt="{{ pair_product.featured_media.alt | default: pair_product.title | escape }}"
+              width="220"
+              height="275"
+              loading="lazy"
+            >
+          {%- endif -%}
+        </a>
+      </div>
+    </div>
+
+    <div class="bb-complete-set__rows">
+      <div class="bb-complete-set__row bb-complete-set__row--main">
+        <div class="bb-complete-set__row-check bb-complete-set__row-check--static" aria-hidden="true">
+          <span class="bb-complete-set__fake-check"></span>
+        </div>
+        <div class="bb-complete-set__row-copy">
+          <p class="bb-complete-set__line-title">
+            <span class="bb-complete-set__this-label">This item:</span> {{ product.title }}
+          </p>
+          <div class="bb-complete-set__line-price" data-bb-main-item-price>
+            {{ product.selected_or_first_available_variant.price | money }}
+          </div>
+        </div>
+        <div class="bb-complete-set__row-aside bb-complete-set__row-aside--main">
+          {%- if main_piece_pos != blank -%}
+            <span class="bb-complete-set__size-pill bb-complete-set__size-pill--piece" data-bb-main-item-piece>
+              {%- case main_piece_pos -%}
+                {%- when 1 -%}{{ product.selected_or_first_available_variant.option1 | downcase | capitalize }}
+                {%- when 2 -%}{{ product.selected_or_first_available_variant.option2 | downcase | capitalize }}
+                {%- when 3 -%}{{ product.selected_or_first_available_variant.option3 | downcase | capitalize }}
+              {%- endcase -%}
+            </span>
+          {%- endif -%}
+          {%- if main_color_pos != blank -%}
+            <span class="bb-complete-set__size-pill bb-complete-set__size-pill--color" data-bb-main-item-color>
+              {%- case main_color_pos -%}
+                {%- when 1 -%}{{ product.selected_or_first_available_variant.option1 }}
+                {%- when 2 -%}{{ product.selected_or_first_available_variant.option2 }}
+                {%- when 3 -%}{{ product.selected_or_first_available_variant.option3 }}
+              {%- endcase -%}
+            </span>
+          {%- endif -%}
+          {%- if main_size_pos != blank -%}
+            <span class="bb-complete-set__size-pill" data-bb-main-item-size>
+              {%- case main_size_pos -%}
+                {%- when 1 -%}{{ product.selected_or_first_available_variant.option1 }}
+                {%- when 2 -%}{{ product.selected_or_first_available_variant.option2 }}
+                {%- when 3 -%}{{ product.selected_or_first_available_variant.option3 }}
+              {%- endcase -%}
+            </span>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="bb-complete-set__row bb-complete-set__row--pair">
+        <label class="bb-complete-set__row-check">
+          <input
+            type="checkbox"
+            data-bb-complete-set-toggle
+            {% if block.settings.checked_by_default %}checked{% endif %}
+          >
+          <span class="bb-complete-set__fake-check bb-complete-set__fake-check--input"></span>
+        </label>
+        <div class="bb-complete-set__row-copy">
+          <a class="bb-complete-set__pair-name" href="{{ pair_product.url }}">{{ pair_product.title }}</a>
+          <div class="bb-complete-set__line-price" data-bb-pair-price>
+            {{ pair_first.price | money }}
+          </div>
+        </div>
+        <div class="bb-complete-set__row-aside bb-complete-set__pair-selects">
+          {%- unless pair_product.has_only_default_variant -%}
+            {%- for option in pair_product.options_with_values -%}
+              {%- assign pair_on = option.name | downcase -%}
+              {%- assign pair_on_up = option.name | upcase -%}
+              {%- assign skip_pair_option = false -%}
+              {%- if main_piece_pos != blank -%}
+                {%- if pair_on contains 'piece' -%}
+                  {%- assign skip_pair_option = true -%}
+                {%- elsif pair_on contains 'top' and pair_on contains 'bottom' -%}
+                  {%- assign skip_pair_option = true -%}
+                {%- elsif pair_on_up contains 'TOP' and pair_on_up contains 'BOTTOM' -%}
+                  {%- assign skip_pair_option = true -%}
+                {%- endif -%}
+              {%- endif -%}
+              {%- assign current_opt_val = '' -%}
+              {%- case option.position -%}
+                {%- when 1 -%}{%- assign current_opt_val = pair_first.option1 -%}
+                {%- when 2 -%}{%- assign current_opt_val = pair_first.option2 -%}
+                {%- when 3 -%}{%- assign current_opt_val = pair_first.option3 -%}
+              {%- endcase -%}
+              {%- unless skip_pair_option -%}
+                <div class="bb-complete-set__select-wrap">
+                  <select
+                    class="bb-complete-set__select"
+                    data-bb-pair-select="{{ option.position }}"
+                    aria-label="{{ option.name | escape }}"
+                  >
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}" {% if value == current_opt_val %}selected{% endif %}>
+                        {{ value | escape }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endunless -%}
+              <div class="bb-complete-set__radios-hidden" hidden>
+                {%- for value in option.values -%}
+                  {%- assign v_id = 'bb-pair-' | append: block.id | append: '-' | append: option.position | append: '-' | append: forloop.index -%}
+                  <input
+                    type="radio"
+                    class="visually-hidden bb-complete-set__radio"
+                    name="bb-pair-opt-{{ block.id }}-{{ option.position }}"
+                    id="{{ v_id }}"
+                    value="{{ value | escape }}"
+                    data-option-position="{{ option.position }}"
+                    {% if value == current_opt_val %}checked{% endif %}
+                  >
+                {%- endfor -%}
+              </div>
+            {%- endfor -%}
+          {%- endunless -%}
+        </div>
+      </div>
+    </div>
+
+    {%- if main_piece_pos != blank -%}
+      <p class="bb-complete-set__note body3 bb-complete-set__note--piece">
+        Choose top or bottom in the options above. The paired item will match your colour and opposite piece where available.
+      </p>
+    {%- endif -%}
+
+    <p class="bb-complete-set__note body3" data-bb-pair-unavailable hidden>
+      {{ 'products.product.sold_out' | t }}
+    </p>
+
+    <script type="application/json" data-bb-pair-variants>
+      {{ pair_product.variants | json }}
+    </script>
+    <input type="hidden" data-bb-complete-set-variant-id value="{{ pair_first.id }}">
+  </div>
+{%- endif -%}

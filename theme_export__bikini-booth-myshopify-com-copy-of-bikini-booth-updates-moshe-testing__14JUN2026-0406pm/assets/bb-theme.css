@@ -1,0 +1,29 @@
+/**
+ * Bikini Booth — global fork layer
+ * Loaded after base.css. Use @layer bb so overrides stay predictable.
+ */
+@layer bb;
+
+@layer bb {
+  :root {
+    --bb-brand: #4ac6be;
+    --bb-brand-dark: #0c1a6c;
+    --bb-text-on-dark: #ffffff;
+    --bb-radius-button: 30px;
+    /* Primary UI font stack: bb-futura-fonts.css (Futura LT Pro) */
+  }
+
+  .bb-root {
+    --bb-accent: var(--bb-brand);
+    /* Solid-button hover (matches common Theme Editor choice; used by bb-brand-ui-overrides) */
+    --bb-brand-hover: #6dc9c3;
+  }
+
+  /*
+   * Non-home templates: reduce long “all white” first paint while section CSS streams in.
+   * Homepage is excluded so the hero + fixed header offset are not double-stretched.
+   */
+  body.bb-root:not(.template-index):not(.template--index) #MainContent {
+    min-height: min(38vh, 680px);
+  }
+}

@@ -1,0 +1,81 @@
+{% comment %}
+    Renders cart-notification
+
+    Usage:
+    {% render 'cart-notification' %}
+{% endcomment %}
+
+<link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
+<cart-notification class="popup-modal popup-modal__right"> 
+  <div class="popup-modal__overlay" onclick="this.closest('.popup-modal').close()"></div>
+  <div id="cart-notification"
+       class="popup-modal__content popup-modal__content__f-height"
+       aria-modal="true"
+       aria-label="{{ 'general.cart.item_added' | t }}"
+       role="dialog"
+       tabindex="-1"
+    >
+    <button class="popup-modal__toggle modal-close-animation" type="button" onclick="this.closest('.popup-modal').close()" aria-label="{{ 'accessibility.close' | t }}">
+	  {{- 'icon-close' | append: settings.system_icon_thickness | inline_asset_content -}}
+    </button>
+    <div class="cart-notification__content popup-modal__content__data custom__scrollbar">
+      <div class="cart-notification__container text-center">
+        <h4 class="mt0 cart-notification__heading">{{ 'general.cart.item_added' | t }}</h4>
+        
+        <div id="cart-notification-product" class="cart-notification-product"></div>
+  
+        {%- if settings.show_free_delivery -%}
+        <div id="cart-free-delivery" class="free-delivery-bar"></div>
+        {%- endif -%}
+  
+        <div class="cart-notification__links">
+          <a id="cart-notification-button"
+             href="{{ routes.cart_url }}"
+             class="btn btn__transition-text w-full">
+            <div class="btn__texts">
+              <span class="btn__top-text is-visible">{{- 'general.cart.view_empty_cart' | t -}}</span>
+              <span class="btn__bottom-text is-hidden">{{- 'general.cart.view_empty_cart' | t -}}</span>
+            </div>
+          </a>
+          {%- if settings.terms_and_condition_checkbox -%}
+          <terms_and_condition-checkbox>
+            <label for="cart-notification-terms_and_condition_checkbox" class="checkbox-input body2">
+              <input id="cart-notification-terms_and_condition_checkbox"
+                     type="checkbox">
+              <div class="checkbox-input__checkmark">
+                <div class="checkbox-input__flip btn--secondary">
+                  <div class="checkbox-input__front"></div>
+                  <div class="checkbox-input__back">
+					{{- 'icon-checkmark' | append: settings.system_icon_thickness | inline_asset_content -}}
+                  </div>
+                </div>
+              </div>
+              <span>{{ 'general.accept_terms_checkbox_html' | t }}</span>
+            </label>
+          </terms_and_condition-checkbox>
+          {%- endif -%}
+          {%- if settings.show_checkout_button -%}
+          <form action="{{ routes.cart_url }}" method="post" id="cart-notification-form">
+            <button class="btn btn__transition-text w-full" name="checkout">
+              <div class="btn__texts">
+                <span class="btn__top-text is-visible">{{- 'icon-check' | append: settings.system_icon_thickness | inline_asset_content -}}{{ 'sections.cart.checkout' | t }}</span>
+                <span class="btn__bottom-text is-hidden">{{- 'icon-check' | append: settings.system_icon_thickness | inline_asset_content -}}{{ 'sections.cart.checkout' | t }}</span>
+              </div>
+            </button>
+          </form>
+          {%- endif -%}
+          {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons %}
+          <div class="cart__dynamic-checkout-buttons additional-checkout-buttons additional-checkout-buttons--vertical mt10">{{ content_for_additional_checkout_buttons }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="mt40 mb20">
+        <button type="button" class="link link--medium link--max-content link-hover-span strong">
+          {{- 'icon-arrow-left-2' | append: settings.system_icon_thickness | inline_asset_content -}}
+          <span>{{ 'general.continue_shopping' | t }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</cart-notification>

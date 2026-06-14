@@ -1,0 +1,260 @@
+/**
+ * Bikini Booth — minimalist footer (centered logo, teal contact strip, quiet copyright).
+ * Loaded globally; pairs with sections/footer-group.json settings.
+ */
+
+/* Theme breadcrumb (home + page title) is not part of Bikini Booth chrome */
+body.bb-root .breadcrumb {
+  display: none !important;
+}
+
+/* Soft fade from main content into the footer (avoids a hard horizontal seam) */
+.bb-root .footer__content {
+  position: relative;
+  background: #fef9ee;
+  /* Above PDP gallery / .product__column stacking; isolate so sticky Swiper can’t paint “through” */
+  z-index: 50;
+  isolation: isolate;
+  /* Body uses flex column; without this the footer can shrink to zero height on long collection/PDP pages. */
+  flex-shrink: 0;
+  width: 100%;
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Section group wrappers (theme blocks + wokiee footer) must participate in layout */
+.bb-root .footer__content > .shopify-section {
+  display: block !important;
+  position: relative;
+  width: 100%;
+}
+
+/* Fade above footer removed — was .footer__content::before linear-gradient */
+.bb-root .footer__content::before {
+  content: none;
+  display: none !important;
+}
+
+/* Wishlist: fade washes out card prices — disable overlay (class + :has for broad support). */
+.bb-root.bb-wishlist-page .footer__content::before,
+.bb-root:has(wishlist-page) .footer__content::before {
+  display: none !important;
+}
+
+.bb-root.bb-wishlist-page #MainContent,
+.bb-root:has(wishlist-page) #MainContent {
+  padding-bottom: clamp(2rem, 6vw, 4rem);
+}
+
+.bb-root .footer__content [id^="theme-section-"] .section-background,
+.bb-root .footer__content [id^="theme-section-"] {
+  background: #fef9ee !important;
+  --color-base-section: #5c5c5c;
+}
+
+.bb-root .footer__content [id^="theme-section-"] .footer__block__items {
+  padding-top: clamp(2.5rem, 5vw, 3.5rem) !important;
+  padding-bottom: clamp(2rem, 4vw, 2.75rem) !important;
+}
+
+/* Tighten space before copyright when theme footer has no block grid */
+.bb-root .footer__content footer[data-section-name="wokiee-footer"].footer {
+  margin-top: 0 !important;
+}
+
+/* Logo above contact strip */
+.bb-root .footer__content .media-with-text__block-item > .display-block {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+
+.bb-root .footer__content .media-with-text__block-item > .display-block .image-hover-box__container {
+  max-width: 160px;
+  margin-inline: auto;
+}
+
+/* Single horizontal strip: icon + text, teal lines like reference */
+.bb-root .footer__content .media-with-text__block-item__container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem 1.5rem;
+  row-gap: 1rem;
+  padding: 1.1rem 0.75rem;
+  margin-top: 0;
+  border-top: 1px solid rgba(74, 198, 190, 0.55);
+  border-bottom: 1px solid rgba(74, 198, 190, 0.55);
+  max-width: min(960px, 100%);
+  margin-inline: auto;
+}
+
+.bb-root .footer__content .media-with-text__block-item__content {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 !important;
+  color: #4ac6be;
+}
+
+.bb-root .footer__content .media-with-text__block-item__content .theme-icon,
+.bb-root .footer__content .media-with-text__block-item__content svg {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #4ac6be;
+}
+
+.bb-root .footer__content .media-with-text__block-item__content svg path {
+  fill: currentColor;
+}
+
+.bb-root .footer__content .media-with-text__block-item__content .section__richtext__editor {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+  font-size: 13px !important;
+  letter-spacing: 0.02em;
+  line-height: 1.35 !important;
+}
+
+.bb-root .footer__content .media-with-text__block-item__content .section__richtext__editor a {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+.bb-root .footer__content .media-with-text__block-item__content .section__richtext__editor a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Bottom bar: copyright only — calm grey */
+.bb-root .footer__content .footer__content-bottom {
+  padding-top: 0.65rem !important;
+  padding-bottom: 1rem !important;
+  margin-top: 0 !important;
+  border-top: none !important;
+}
+
+.bb-root .footer__content .footer__copyright {
+  color: #5c5c5c !important;
+  font-size: 12px !important;
+  letter-spacing: 0.03em;
+}
+
+.bb-root .footer__content .footer__copyright .copyright__content,
+.bb-root .footer__content .footer__copyright .powered_by_link {
+  color: #5c5c5c !important;
+}
+
+.bb-root .footer__content .footer__copyright a {
+  color: #5c5c5c !important;
+}
+
+@media (max-width: 767px) {
+  .bb-root .footer__content .media-with-text__block-item__container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 0;
+  }
+
+  .bb-root .footer__content .media-with-text__block-item__content {
+    width: 100%;
+  }
+}
+
+/*
+ * Flex column on body (all templates): #MainContent grows, .footer__content always follows.
+ * Previously only product — collection/index PDP-length pages could leave the footer clipped or off-flow.
+ */
+body.bb-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body.bb-root #MainContent {
+  position: relative;
+  z-index: auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+body.bb-root .footer__content {
+  flex: 0 0 auto;
+  width: 100%;
+  margin-top: auto;
+}
+
+/*
+ * Theme "Footer" (Wokiee) with zero blocks: Shopify still renders <footer> + optional bottom bar.
+ * Duplicate copyright is already hidden; the shell kept a full-width white slab under bb-footer-primary
+ * (especially on inner templates). Collapse it unless payment icons are actually present.
+ */
+.bb-root .footer__content footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item)) {
+  background: transparent !important;
+  padding-block: 0 !important;
+  margin-block: 0 !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
+}
+
+.bb-root .footer__content footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item)) .background__horizontal-line {
+  display: none !important;
+}
+
+.bb-root .footer__content footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item)) .footer__content-bottom:not(:has(li.list-payment__item)) {
+  display: none !important;
+}
+
+.bb-root .footer__content footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item)) .footer__content-bottom:has(li.list-payment__item) {
+  background: transparent !important;
+  padding: 0.5rem 0 0 !important;
+  margin: 0 !important;
+}
+
+/* Wrapper around the empty theme footer can still paint white from global section styles. */
+.bb-root .footer__content > .shopify-section:has(footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item))) {
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/*
+ * Empty Wokiee footer (no blocks): section-background--* still applies vertical padding + divider,
+ * leaving a tall slab under bb-footer-primary (especially on PDP).
+ */
+.bb-root .footer__content footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item)).section-background,
+.bb-root .footer__content footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item)) .section-background {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.bb-root .footer__content footer.footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item)) .background__horizontal-line {
+  display: none !important;
+}
+
+body.template-product.bb-root .footer__content > .shopify-section:has(footer[data-section-name="wokiee-footer"]:not(:has(.footer__block-item))) {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Mobile: trim stacked space under Bikini Booth copyright (section padding + theme footer bar). */
+@media (max-width: 749px) {
+  .bb-root .footer__content .shopify-section.bb-footer-primary-section .bb-footer-primary[class*="ai-footer-"] {
+    padding-bottom: clamp(0.65rem, 2.8vw, 1rem) !important;
+  }
+
+  .bb-root .footer__content .shopify-section.bb-footer-primary-section .bb-sf-copyright {
+    margin-top: 1rem;
+    padding-bottom: 0;
+  }
+
+  .bb-root .footer__content footer.footer[data-section-name="wokiee-footer"] .footer__content-bottom {
+    padding-top: 0.5rem !important;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px)) !important;
+  }
+}

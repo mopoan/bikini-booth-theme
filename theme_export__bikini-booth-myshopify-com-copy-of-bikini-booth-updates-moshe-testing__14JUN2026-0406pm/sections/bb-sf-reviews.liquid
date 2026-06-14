@@ -1,0 +1,198 @@
+<section class="bb-subframe bb-subframe-reviews" id="bb-subframe-reviews-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="bb-subframe-reviews__inner">
+    <div class="bb-subframe-section-head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="bb-subframe-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="bb-subframe-title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      <div class="bb-subframe-reviews__rating-row">
+        {%- for i in (1..5) -%}
+          <svg class="bb-subframe-star" style="color: {{ section.settings.star_color }};" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        {%- endfor -%}
+        {%- if section.settings.rating_value != blank -%}
+          <span style="font-size: 14px; font-weight: 500; color: var(--sf-ink, #0a2e2e);">{{ section.settings.rating_value }}</span>
+        {%- endif -%}
+        {%- if section.settings.rating_blurb != blank -%}
+          <span style="font-size: 13px; color: var(--sf-muted, #3d5a5a);">{{ section.settings.rating_blurb | escape }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="bb-subframe-reviews__track">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'review' -%}
+          <article class="bb-subframe-review-card" {{ block.shopify_attributes }}>
+            <div class="bb-subframe-review-card__stars">
+              {%- for i in (1..5) -%}
+                <svg class="bb-subframe-star" style="color: {{ section.settings.star_color }};" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              {%- endfor -%}
+            </div>
+            <p class="bb-subframe-review-card__quote">&ldquo;{{ block.settings.quote | escape }}&rdquo;</p>
+            <div class="bb-subframe-review-card__author">
+              <div class="bb-subframe-review-card__avatar" style="background: {{ block.settings.avatar_color }};">
+                {{ block.settings.initials | escape }}
+              </div>
+              <div>
+                <div class="bb-subframe-review-card__name">{{ block.settings.author | escape }}</div>
+                <div class="bb-subframe-review-card__meta">{{ block.settings.meta | escape }}</div>
+              </div>
+            </div>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+      <div class="bb-subframe-products__cta">
+        <a class="bb-subframe-cta-cohesive" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label | escape }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "BB - Reviews",
+  "tag": "section",
+  "class": "bb-subframe-reviews-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "What our customers say"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Reviews from Google"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#FFD700"
+    },
+    {
+      "type": "text",
+      "id": "rating_value",
+      "label": "Rating value",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "rating_blurb",
+      "label": "Rating subtext",
+      "default": "based on 2,847 reviews"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Bottom button label",
+      "default": "Read All Reviews"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Bottom button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Stars",
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Absolutely gorgeous swimwear. The quality is incredible and the fit is perfect."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name",
+          "default": "Sarah L."
+        },
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Avatar initials",
+          "default": "SL"
+        },
+        {
+          "type": "color",
+          "id": "avatar_color",
+          "label": "Avatar color",
+          "default": "#0a2e2e"
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta line",
+          "default": "Verified Purchase · 2 weeks ago"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB - Reviews",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Absolutely gorgeous swimwear. The quality is incredible and the fit is perfect. I've never felt more confident on the beach. Will definitely be ordering more!",
+            "author": "Sarah L.",
+            "initials": "SL",
+            "avatar_color": "#0a2e2e",
+            "meta": "Verified Purchase · 2 weeks ago"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "The resort sarong is a dream. Fabric feels luxurious and the palm print is stunning in person.",
+            "author": "Emma M.",
+            "initials": "EM",
+            "avatar_color": "#0d9488",
+            "meta": "Verified Purchase · 1 month ago"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Finally found swimwear that actually supports and flatters. The one piece is so well constructed.",
+            "author": "Jessica R.",
+            "initials": "JR",
+            "avatar_color": "#8b7355",
+            "meta": "Verified Purchase · 3 weeks ago"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Obsessed with the crochet cover up. It's the perfect throw-on from pool to bar.",
+            "author": "Amara K.",
+            "initials": "AK",
+            "avatar_color": "#6b3a3a",
+            "meta": "Verified Purchase · 1 month ago"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

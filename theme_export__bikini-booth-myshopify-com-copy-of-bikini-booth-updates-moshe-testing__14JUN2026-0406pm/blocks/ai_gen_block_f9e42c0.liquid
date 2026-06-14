@@ -1,0 +1,75 @@
+{% doc %}
+  @prompt
+    divider with selectable color
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-divider-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-divider-line-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.divider_height }}px;
+    background-color: {{ block.settings.divider_color }};
+    border: none;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-divider-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<divider-block-{{ ai_gen_id }}
+  class="ai-divider-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <hr class="ai-divider-line-{{ ai_gen_id }}">
+</divider-block-{{ ai_gen_id }}>
+
+{% schema %}
+{
+  "name": "Divider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Color",
+      "default": "#D9D9D9"
+    },
+    {
+      "type": "range",
+      "id": "divider_height",
+      "label": "Height",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Divider"
+    }
+  ]
+}
+{% endschema %}

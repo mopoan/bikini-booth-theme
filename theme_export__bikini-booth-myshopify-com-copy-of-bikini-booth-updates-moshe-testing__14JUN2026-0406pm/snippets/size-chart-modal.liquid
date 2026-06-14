@@ -1,0 +1,533 @@
+{%- comment -%}
+  Snippet: size-chart-modal.liquid
+  Usage: {% render 'size-chart-modal', section: section %}
+  Renders a "Size Guide" trigger link + full modal overlay.
+  All table data is driven by the parent section's blocks.
+{%- endcomment -%}
+
+{%- liquid
+  assign tab_blocks = section.blocks | where: 'type', 'tab'
+  assign row_blocks  = section.blocks | where: 'type', 'size_row'
+-%}
+
+{%- comment -%} ── Trigger link ── {%- endcomment -%}
+<button
+  type="button"
+  class="scm-trigger"
+  aria-haspopup="dialog"
+  aria-controls="size-chart-modal"
+  aria-expanded="false"
+>
+  {%- if section.settings.trigger_label != blank -%}
+    {{ section.settings.trigger_label }}
+  {%- else -%}
+    Size Guide
+  {%- endif -%}
+</button>
+
+{%- comment -%} ── Modal overlay ── {%- endcomment -%}
+<div
+  id="size-chart-modal"
+  class="scm-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Size Guide"
+  hidden
+>
+  <div class="scm-backdrop" data-scm-close></div>
+
+  <div class="scm-dialog">
+
+    {%- comment -%} Header {%- endcomment -%}
+    <div class="scm-header">
+      <h2 class="scm-heading">
+        {%- if section.settings.modal_heading != blank -%}
+          {{ section.settings.modal_heading }}
+        {%- else -%}
+          Size Guide
+        {%- endif -%}
+      </h2>
+
+      {%- comment -%} cm / in toggle {%- endcomment -%}
+      <div class="scm-unit-toggle" role="group" aria-label="Unit of measurement">
+        <button type="button" class="scm-unit-btn is-active" data-unit="in" aria-pressed="true">in</button>
+        <button type="button" class="scm-unit-btn" data-unit="cm" aria-pressed="false">cm</button>
+      </div>
+
+      <button type="button" class="scm-close" data-scm-close aria-label="Close size guide">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 1L17 17M17 1L1 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {%- comment -%} Tabs nav {%- endcomment -%}
+    {%- if tab_blocks.size > 0 -%}
+      <div class="scm-tabs" role="tablist" aria-label="Size categories">
+        {%- for block in tab_blocks -%}
+          <button
+            type="button"
+            class="scm-tab{%- if forloop.first %} is-active{%- endif -%}"
+            role="tab"
+            aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
+            aria-controls="scm-panel-{{ block.id }}"
+            id="scm-tab-{{ block.id }}"
+            data-tab="{{ block.id }}"
+            {{ block.shopify_attributes }}
+          >
+            {{- block.settings.tab_label | default: 'Tops' -}}
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Tab panels {%- endcomment -%}
+    <div class="scm-panels">
+      {%- for block in tab_blocks -%}
+        {%- assign panel_rows = row_blocks | where: 'settings.tab_id', block.id -%}
+
+        <div
+          id="scm-panel-{{ block.id }}"
+          class="scm-panel{%- if forloop.first %} is-active{%- endif -%}"
+          role="tabpanel"
+          aria-labelledby="scm-tab-{{ block.id }}"
+          {%- unless forloop.first %} hidden{%- endunless -%}
+          {{ block.shopify_attributes }}
+        >
+
+          {%- comment -%} Measurement table {%- endcomment -%}
+          {%- if panel_rows.size > 0 -%}
+            <div class="scm-table-wrap">
+              <table class="scm-table" aria-label="{{ block.settings.tab_label }} size chart">
+                <thead>
+                  <tr>
+                    <th scope="col">Size</th>
+                    <th scope="col">
+                      <span data-unit-label="bust">
+                        <span class="unit-in">Bust (in)</span>
+                        <span class="unit-cm" hidden>Bust (cm)</span>
+                      </span>
+                    </th>
+                    <th scope="col">
+                      <span data-unit-label="waist">
+                        <span class="unit-in">Waist (in)</span>
+                        <span class="unit-cm" hidden>Waist (cm)</span>
+                      </span>
+                    </th>
+                    <th scope="col">
+                      <span data-unit-label="hips">
+                        <span class="unit-in">Hips (in)</span>
+                        <span class="unit-cm" hidden>Hips (cm)</span>
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for row in panel_rows -%}
+                    <tr {{ row.shopify_attributes }}>
+                      <td class="scm-size-label">{{ row.settings.size_label | default: 'XS' }}</td>
+                      <td>
+                        <span class="unit-in">{{ row.settings.bust_in | default: '—' }}</span>
+                        <span class="unit-cm" hidden>{{ row.settings.bust_cm | default: '—' }}</span>
+                      </td>
+                      <td>
+                        <span class="unit-in">{{ row.settings.waist_in | default: '—' }}</span>
+                        <span class="unit-cm" hidden>{{ row.settings.waist_cm | default: '—' }}</span>
+                      </td>
+                      <td>
+                        <span class="unit-in">{{ row.settings.hips_in | default: '—' }}</span>
+                        <span class="unit-cm" hidden>{{ row.settings.hips_cm | default: '—' }}</span>
+                      </td>
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+          {%- else -%}
+            <p class="scm-empty">No sizing data added yet for this category.</p>
+          {%- endif -%}
+
+          {%- comment -%} Fit notes {%- endcomment -%}
+          {%- if block.settings.fit_notes != blank -%}
+            <div class="scm-fit-notes">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
+                <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <div class="scm-fit-notes__text">{{ block.settings.fit_notes }}</div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Between sizes tip {%- endcomment -%}
+          {%- if block.settings.between_sizes != blank -%}
+            <div class="scm-between-sizes">
+              <strong>Between sizes?</strong>
+              {{ block.settings.between_sizes }}
+            </div>
+          {%- endif -%}
+
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>{%- comment -%} /.scm-dialog {%- endcomment -%}
+</div>{%- comment -%} /.scm-overlay {%- endcomment -%}
+
+
+<style>
+  /* ── Size Chart Modal ─────────────────────────────── */
+  .scm-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-family: inherit;
+    color: #49c6be;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    letter-spacing: 0.03em;
+    transition: opacity 0.2s ease;
+  }
+  .scm-trigger:hover { opacity: 0.75; }
+
+  /* Overlay */
+  .scm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  @media (min-width: 768px) {
+    .scm-overlay { align-items: center; }
+  }
+  .scm-overlay[hidden] { display: none; }
+
+  .scm-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    animation: scm-fade-in 0.25s ease;
+  }
+
+  /* Dialog */
+  .scm-dialog {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    width: 100%;
+    max-width: 680px;
+    max-height: 92dvh;
+    overflow-y: auto;
+    border-radius: 16px 16px 0 0;
+    padding: 24px 20px 32px;
+    animation: scm-slide-up 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    overscroll-behavior: contain;
+  }
+  @media (min-width: 768px) {
+    .scm-dialog {
+      border-radius: 16px;
+      padding: 32px 36px 36px;
+      max-height: 85vh;
+      animation: scm-fade-scale 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+  }
+
+  /* Header */
+  .scm-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .scm-heading {
+    flex: 1;
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  @media (min-width: 768px) {
+    .scm-heading { font-size: 1.25rem; }
+  }
+
+  /* Unit toggle */
+  .scm-unit-toggle {
+    display: flex;
+    background: #f3f3f3;
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .scm-unit-btn {
+    background: none;
+    border: none;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    color: #888;
+    transition: background 0.2s ease, color 0.2s ease;
+    letter-spacing: 0.03em;
+  }
+  .scm-unit-btn.is-active {
+    background: #49c6be;
+    color: #ffffff;
+  }
+
+  /* Close button */
+  .scm-close {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: #888;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
+  }
+  .scm-close:hover {
+    color: #1a1a1a;
+    background: #f3f3f3;
+  }
+
+  /* Tabs */
+  .scm-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #ebebeb;
+    margin-bottom: 24px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .scm-tabs::-webkit-scrollbar { display: none; }
+
+  .scm-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 16px;
+    font-size: 0.8125rem;
+    font-family: inherit;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #888;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-bottom: -1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .scm-tab.is-active {
+    color: #1a1a1a;
+    border-bottom-color: #49c6be;
+  }
+  .scm-tab:hover:not(.is-active) { color: #1a1a1a; }
+
+  /* Table */
+  .scm-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #ebebeb;
+  }
+  .scm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    color: #1a1a1a;
+    min-width: 320px;
+  }
+  .scm-table thead tr {
+    background: #f0faf9;
+  }
+  .scm-table th {
+    padding: 11px 14px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: 0.75rem;
+    color: #49c6be;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .scm-table td {
+    padding: 11px 14px;
+    border-top: 1px solid #f3f3f3;
+    white-space: nowrap;
+  }
+  .scm-table tbody tr:last-child td { border-bottom: none; }
+  .scm-table tbody tr:hover td { background: #fafafa; }
+  .scm-size-label {
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  /* Fit notes */
+  .scm-fit-notes {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #f0faf9;
+    border-left: 3px solid #49c6be;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 0.8125rem;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+  .scm-fit-notes svg { flex-shrink: 0; margin-top: 2px; }
+  .scm-fit-notes__text p { margin: 0; }
+
+  /* Between sizes */
+  .scm-between-sizes {
+    font-size: 0.8125rem;
+    color: #555;
+    line-height: 1.6;
+    padding: 12px 14px;
+    background: #fafafa;
+    border-radius: 8px;
+  }
+  .scm-between-sizes strong {
+    color: #1a1a1a;
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+  }
+  .scm-between-sizes p { margin: 0; }
+
+  .scm-empty {
+    font-size: 0.8125rem;
+    color: #aaa;
+    padding: 24px 0;
+    text-align: center;
+  }
+
+  /* Animations */
+  @keyframes scm-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes scm-slide-up {
+    from { transform: translateY(40px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  @keyframes scm-fade-scale {
+    from { transform: scale(0.97); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scm-overlay *, .scm-dialog { animation: none !important; }
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  const modal   = document.getElementById('size-chart-modal');
+  const trigger = modal ? modal.previousElementSibling : null;
+  if (!modal || !trigger) return;
+
+  // ── Open / close ──────────────────────────────────────────────
+  function openModal() {
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    trigger.setAttribute('aria-expanded', 'true');
+    // Focus first focusable element inside dialog
+    const first = modal.querySelector('button, [href], [tabindex]:not([tabindex="-1"])');
+    if (first) first.focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', openModal);
+
+  modal.addEventListener('click', function (e) {
+    if (e.target.closest('[data-scm-close]')) closeModal();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (!modal.hidden && e.key === 'Escape') closeModal();
+  });
+
+  // Focus trap
+  modal.addEventListener('keydown', function (e) {
+    if (modal.hidden || e.key !== 'Tab') return;
+    const focusable = Array.from(
+      modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    ).filter(el => !el.disabled && !el.closest('[hidden]'));
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
+
+  // ── Unit toggle (in / cm) ─────────────────────────────────────
+  const unitBtns = modal.querySelectorAll('.scm-unit-btn');
+  unitBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const unit = btn.dataset.unit;
+      unitBtns.forEach(function (b) {
+        b.classList.toggle('is-active', b.dataset.unit === unit);
+        b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
+      });
+      // Show/hide unit spans across all panels
+      modal.querySelectorAll('.unit-in').forEach(function (el) {
+        el.hidden = unit !== 'in';
+      });
+      modal.querySelectorAll('.unit-cm').forEach(function (el) {
+        el.hidden = unit !== 'cm';
+      });
+    });
+  });
+
+  // ── Tabs ─────────────────────────────────────────────────────
+  const tabs   = modal.querySelectorAll('.scm-tab');
+  const panels = modal.querySelectorAll('.scm-panel');
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      const targetId = 'scm-panel-' + tab.dataset.tab;
+
+      tabs.forEach(function (t) {
+        const active = t === tab;
+        t.classList.toggle('is-active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+
+      panels.forEach(function (panel) {
+        const active = panel.id === targetId;
+        panel.classList.toggle('is-active', active);
+        panel.hidden = !active;
+      });
+    });
+  });
+
+})();
+</script>

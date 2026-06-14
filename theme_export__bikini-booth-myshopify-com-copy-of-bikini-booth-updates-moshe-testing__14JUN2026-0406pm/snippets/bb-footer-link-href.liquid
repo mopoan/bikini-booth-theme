@@ -1,0 +1,21 @@
+{% comment %}
+  Footer menu href — keeps “About Us” pointing at the about-us page (theme editor + live).
+  Accepts: link {Object}, about_page {Object} optional page from section.settings.about_page or pages['about-us']
+{% endcomment %}
+{%- liquid
+  assign bb_href = link.url
+  assign bb_about_target = about_page
+  if bb_about_target == blank
+    assign bb_about_target = pages['about-us']
+  endif
+  if bb_about_target != blank and link.type == 'page_link' and link.object != blank
+    assign bb_link_handle = link.object.handle | downcase
+    assign bb_link_title = link.title | downcase | strip
+    if bb_link_handle != 'about-us'
+      if bb_link_handle == 'about' or bb_link_title == 'about us' or bb_link_title == 'about'
+        assign bb_href = bb_about_target.url
+      endif
+    endif
+  endif
+-%}
+{{- bb_href -}}

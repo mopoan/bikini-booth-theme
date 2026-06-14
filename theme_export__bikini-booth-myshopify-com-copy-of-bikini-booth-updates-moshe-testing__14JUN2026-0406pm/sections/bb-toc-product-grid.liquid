@@ -1,0 +1,195 @@
+{% comment %}
+  Bikini Booth — editorial product grid (Tropic-of-C–style minimal cards). Homepage-only use recommended.
+{% endcomment %}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign __collection = section.settings.collection
+  assign page_width = section.settings.width
+  if page_width == 'default'
+    assign page_width = settings.page_width_main
+  endif
+-%}
+
+<div
+  id="theme-section-{{ section.id }}"
+  class="{% if section.settings.show_lines == false %}top-spacing-{{ section.settings.top_spacing }}{% endif %} bb-toc-product-grid-section"
+  data-section-name="bb-toc-product-grid"
+  {{ section.shopify_attributes }}
+>
+  <div class="{{ page_width }}">
+    {%- capture button_html -%}
+      {%- if section.settings.link_name != blank and __collection != blank -%}
+        <div>
+          <a href="{{ __collection.url }}" class="btn btn--border btn__transition-text btn-wide">
+            <div class="btn__texts">
+              <span class="btn__top-text is-visible">{{ section.settings.link_name }}</span>
+              <span class="btn__bottom-text is-hidden">{{ section.settings.link_name }}</span>
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+    {%- endcapture -%}
+
+    {%- if section.settings.link_name_position == 'top' and button_html != '' -%}
+      {%- render 'section-heading', section: section, button_html: button_html, custom_class: 'heading-with-button' -%}
+    {%- else -%}
+      {%- render 'section-heading', section: section -%}
+    {%- endif -%}
+
+    {%- if __collection != blank -%}
+      <div
+        class="bb-toc-grid"
+        style="--bb-toc-cols-mobile: {{ section.settings.columns_mobile }}; --bb-toc-cols-tablet: {{ section.settings.columns_tablet }}; --bb-toc-cols-desktop: {{ section.settings.columns_desktop }};"
+      >
+        {%- for product in __collection.products limit: section.settings.product_limit -%}
+          {%- render 'bb-toc-product-card', product: product, section: section -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.link_name_position == 'bottom' and button_html != '' -%}
+      <div class="bb-toc-grid__footer text-center mt20">{{ button_html }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "BB TOC product grid",
+  "tag": "section",
+  "class": "bb-toc-product-grid",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "main_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "main_desc",
+      "label": "Description"
+    },
+    {
+      "type": "select",
+      "id": "heading_aligment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "text-left", "label": "Left" },
+        { "value": "text-center", "label": "Center" },
+        { "value": "text-right", "label": "Right" }
+      ],
+      "default": "text-center"
+    },
+    {
+      "type": "select",
+      "id": "top_spacing",
+      "label": "Top spacing",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "small", "label": "Small" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "default", "label": "Theme default" },
+        { "value": "page-width", "label": "Page width" },
+        { "value": "page-wide", "label": "Wide" },
+        { "value": "page-fullwidth", "label": "Full width" }
+      ],
+      "default": "page-wide"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_lines",
+      "label": "Show section lines",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "label": "Products to show",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns (desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns (tablet)",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns (mobile)",
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show second image on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "label": "Show add to cart (single-variant) or choose options link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "link_name",
+      "label": "Collection link label",
+      "default": "Shop all"
+    },
+    {
+      "type": "select",
+      "id": "link_name_position",
+      "label": "Collection link position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "bottom"
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB TOC product grid"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,494 @@
+/* ============================================================
+   Bikini Booth — Homepage v2
+   Dramatic editorial redesign: dark/light contrast,
+   bold typography, luxury button styling, visual rhythm
+   ============================================================ */
+
+/* ==========  SCROLL REVEAL  ========== */
+.bb-reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bb-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========  GLOBAL TYPOGRAPHY  ========== */
+.content-for-layout .section-heading__heading {
+  letter-spacing: -0.025em;
+  color: #1a1a1a;
+}
+.content-for-layout .section-heading__subheading {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4ac6be;
+}
+.content-for-layout .section-heading__desc {
+  max-width: 540px;
+  margin-inline: auto;
+  line-height: 1.75;
+  color: #666;
+}
+
+/* ==========  GLOBAL BUTTON POLISH  ========== */
+.content-for-layout .btn {
+  transition: background-color 0.35s ease,
+              color 0.35s ease,
+              border-color 0.35s ease,
+              box-shadow 0.35s ease,
+              transform 0.35s ease;
+}
+
+/* ==========  SWIPER CONTROLS  ========== */
+.content-for-layout .custom-swiper-button-prev,
+.content-for-layout .custom-swiper-button-next {
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+.content-for-layout .custom-swiper-button-prev:hover,
+.content-for-layout .custom-swiper-button-next:hover {
+  transform: scale(1.1);
+}
+
+
+/* ============================================================
+   TICKER STRIP — flush to hero, bold marquee
+   ============================================================ */
+[data-section-name="ticker-text"] {
+  margin-top: 0 !important;
+}
+[data-section-name="ticker-text"] .ticker-text__text h2 {
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+
+/* ============================================================
+   CATEGORY BANNERS — cinematic fullwidth tiles
+   ============================================================ */
+[data-section-name="banners"].top-spacing-none {
+  margin-top: 0;
+  padding-top: 0;
+}
+[data-section-name="banners"] .banner__block-item {
+  overflow: hidden;
+  border-radius: 0;
+}
+[data-section-name="banners"] .banner__block-item .image-hover-box__container img {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-section-name="banners"] .banner__block-item:hover .image-hover-box__container img {
+  transform: scale(1.04);
+}
+[data-section-name="banners"] .banner__block-item__heading {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+[data-section-name="banners"] .banner__block-item .banner__block-item__desc p {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  font-weight: 500;
+}
+[data-section-name="banners"] .banner__block-item .btn {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #111 !important;
+  border-color: #fff !important;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 14px 36px;
+  border-radius: 0;
+}
+[data-section-name="banners"] .banner__block-item .btn .btn__top-text,
+[data-section-name="banners"] .banner__block-item .btn .btn__bottom-text {
+  color: #111 !important;
+}
+[data-section-name="banners"] .banner__block-item .btn:hover {
+  background: #111 !important;
+  color: #fff !important;
+  border-color: #111 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+[data-section-name="banners"] .banner__block-item .btn:hover .btn__top-text,
+[data-section-name="banners"] .banner__block-item .btn:hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   FEATURED COLLECTION — clean luxury product grid
+   ============================================================ */
+[data-section-name="featured-collection"] {
+  background: #fff;
+}
+[data-section-name="featured-collection"] .section-heading__heading {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+}
+[data-section-name="featured-collection"] .product-card {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+[data-section-name="featured-collection"] .product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  border-color: transparent;
+}
+[data-section-name="featured-collection"] .product-card .image-hover-box {
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+}
+[data-section-name="featured-collection"] .product-card__content {
+  padding: 14px 12px 18px;
+}
+[data-section-name="featured-collection"] .product-card__title a {
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  color: #333;
+}
+[data-section-name="featured-collection"] .product-card__price .money {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+
+/* ============================================================
+   ABOUT US (media-with-text) — clean editorial style
+   ============================================================ */
+[data-section-name="media-with-text"] .media-with-text__image {
+  overflow: hidden;
+  border-radius: 4px;
+}
+[data-section-name="media-with-text"] .media-with-text__image img {
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-section-name="media-with-text"]:hover .media-with-text__image img {
+  transform: scale(1.04);
+}
+[data-section-name="media-with-text"] .media-with-text__content {
+  padding: 48px 56px !important;
+}
+[data-section-name="media-with-text"] .section-heading__subheading {
+  color: #4ac6be;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  margin-bottom: 12px;
+}
+[data-section-name="media-with-text"] .section-heading__heading {
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  line-height: 1.1;
+  color: #111;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+[data-section-name="media-with-text"] .richtext p {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.85;
+}
+[data-section-name="media-with-text"] .btn {
+  background: #111 !important;
+  color: #fff !important;
+  border-color: #111 !important;
+  border-radius: 0;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 14px 36px;
+  margin-top: 12px;
+}
+[data-section-name="media-with-text"] .btn .btn__top-text,
+[data-section-name="media-with-text"] .btn .btn__bottom-text {
+  color: #fff !important;
+}
+[data-section-name="media-with-text"] .btn:hover {
+  background: #4ac6be !important;
+  border-color: #4ac6be !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(74, 198, 190, 0.3);
+}
+
+
+/* ============================================================
+   OUR MISSION (text section) — dark dramatic section
+   ============================================================ */
+[data-section-name="text"],
+[data-section-name="media-with-text-vertical"] {
+  position: relative;
+}
+[data-section-name="text"] .section-background,
+[data-section-name="media-with-text-vertical"] .section-background {
+  background: #111 !important;
+}
+.content-for-layout [data-section-name="text"] .section-heading__heading,
+.content-for-layout [data-section-name="media-with-text-vertical"] .section-heading__heading {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: #fff !important;
+  font-weight: 300;
+}
+[data-section-name="text"] .section-heading__subheading,
+[data-section-name="media-with-text-vertical"] .section-heading__subheading {
+  color: #4ac6be !important;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+[data-section-name="text"] .section-text-block__heading,
+[data-section-name="media-with-text-vertical"] .section-text-block__heading {
+  color: #fff !important;
+}
+[data-section-name="text"] h5.accent-color,
+[data-section-name="media-with-text-vertical"] h5.accent-color {
+  color: #4ac6be !important;
+}
+[data-section-name="text"] .richtext,
+[data-section-name="text"] .richtext p,
+[data-section-name="media-with-text-vertical"] .richtext,
+[data-section-name="media-with-text-vertical"] .richtext p {
+  color: rgba(255,255,255,0.75) !important;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+[data-section-name="text"] .btn,
+[data-section-name="media-with-text-vertical"] .btn {
+  background: #fff !important;
+  color: #111 !important;
+  border-color: #fff !important;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 14px 40px;
+  border-radius: 0;
+}
+[data-section-name="text"] .btn .btn__top-text,
+[data-section-name="text"] .btn .btn__bottom-text,
+[data-section-name="media-with-text-vertical"] .btn .btn__top-text,
+[data-section-name="media-with-text-vertical"] .btn .btn__bottom-text {
+  color: #111 !important;
+}
+[data-section-name="text"] .btn:hover,
+[data-section-name="media-with-text-vertical"] .btn:hover {
+  background: #4ac6be !important;
+  color: #fff !important;
+  border-color: #4ac6be !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(74, 198, 190, 0.4);
+}
+[data-section-name="text"] .btn:hover .btn__top-text,
+[data-section-name="text"] .btn:hover .btn__bottom-text,
+[data-section-name="media-with-text-vertical"] .btn:hover .btn__top-text,
+[data-section-name="media-with-text-vertical"] .btn:hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   FAQ / ACCORDION — minimal editorial style
+   ============================================================ */
+[data-section-name="accordion"] {
+  background: #fff;
+}
+[data-section-name="accordion"] details {
+  border-color: rgba(0, 0, 0, 0.06);
+  transition: background-color 0.3s ease;
+}
+[data-section-name="accordion"] details[open] {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+[data-section-name="accordion"] summary {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: color 0.3s ease;
+}
+[data-section-name="accordion"] summary:hover {
+  color: #4ac6be;
+}
+[data-section-name="accordion"] details .accordion__content {
+  line-height: 1.85;
+  color: #555;
+}
+[data-section-name="accordion"] .section-heading__heading {
+  color: #1a1a1a;
+}
+
+
+/* ============================================================
+   GOOGLE REVIEWS (_blocks) — clean light theme with subtle polish
+   ============================================================ */
+[data-section-name="_blocks"] {
+  padding-top: 0;
+}
+[class*="ai-google-reviews-container"] {
+  padding: 0 40px;
+}
+[class*="ai-google-reviews-title"] {
+  font-weight: 300 !important;
+  letter-spacing: -0.02em !important;
+}
+[class*="ai-google-reviews-subtitle"] {
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+}
+[class*="ai-google-reviews-card"] {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+[class*="ai-google-reviews-card"]:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.1) !important;
+}
+
+
+/* ============================================================
+   DISTRIBUTOR CTA (media-with-text_2) — bold visible button
+   ============================================================ */
+[data-section-name="media-with-text_2"] .media-with-text__image {
+  overflow: hidden;
+}
+[data-section-name="media-with-text_2"] .media-with-text__image img {
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-section-name="media-with-text_2"]:hover .media-with-text__image img {
+  transform: scale(1.04);
+}
+[data-section-name="media-with-text_2"] .section-heading__heading {
+  font-size: clamp(2rem, 3.5vw, 2.75rem) !important;
+  line-height: 1.1;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+}
+[data-section-name="media-with-text_2"] .richtext p {
+  font-size: 0.95rem;
+  line-height: 1.85;
+}
+[data-section-name="media-with-text_2"] .btn {
+  background: #fff !important;
+  color: #111 !important;
+  border-color: #fff !important;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 14px 36px;
+  border-radius: 0;
+}
+[data-section-name="media-with-text_2"] .btn .btn__top-text,
+[data-section-name="media-with-text_2"] .btn .btn__bottom-text {
+  color: #111 !important;
+}
+[data-section-name="media-with-text_2"] .btn:hover {
+  background: #111 !important;
+  color: #fff !important;
+  border-color: #111 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+}
+[data-section-name="media-with-text_2"] .btn:hover .btn__top-text,
+[data-section-name="media-with-text_2"] .btn:hover .btn__bottom-text {
+  color: #fff !important;
+}
+
+
+/* ============================================================
+   INSTAGRAM FOLLOW BUTTON — fix text truncation only
+   ============================================================ */
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn .btn__top-text,
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn .btn__bottom-text {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  overflow: visible;
+}
+[data-section-name="shop-the-feed"] .secondary-btn__container .btn svg {
+  flex-shrink: 0;
+}
+[data-section-name="shop-the-feed"] .btn-wide {
+  max-width: none !important;
+}
+
+
+/* ============================================================
+   STORE LOCATIONS BAR — proper centering
+   ============================================================ */
+[data-section-name="text-columns-with-icons-type-2"] {
+  text-align: center;
+}
+[data-section-name="text-columns-with-icons-type-2"] .page-grid-3 {
+  justify-content: center;
+  align-items: center;
+}
+[data-section-name="text-columns-with-icons-type-2"] .page-grid-3 > * {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+[data-section-name="text-columns-with-icons-type-2"] .text-with-icons__heading {
+  text-align: center;
+  width: 100%;
+}
+[data-section-name="text-columns-with-icons-type-2"] .text-with-icons__content {
+  text-align: center;
+  align-items: center;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .bb-reveal {
+    transform: translateY(28px);
+  }
+  [data-section-name="banners"] .banner__block-item__heading {
+    font-size: 1.2rem !important;
+  }
+  [data-section-name="media-with-text"] .media-with-text__content {
+    padding: 28px 24px !important;
+  }
+  [data-section-name="shop-the-feed"] .secondary-btn__container .btn {
+    font-size: 0.7rem;
+    padding: 12px 24px;
+    letter-spacing: 0.06em;
+  }
+  [class*="ai-google-reviews-container"] {
+    padding: 0 16px;
+  }
+  [data-section-name="media-with-text_2"] .section-heading__heading {
+    font-size: 1.5rem !important;
+  }
+}

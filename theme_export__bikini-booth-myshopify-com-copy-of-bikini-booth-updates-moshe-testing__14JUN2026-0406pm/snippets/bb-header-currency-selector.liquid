@@ -1,0 +1,44 @@
+{% comment %}
+  Compact currency/country selector for Bikini Booth header (icon row).
+{% endcomment %}
+{%- if localization.available_countries.size > 1 -%}
+<localization-form class="bb-header-currency">
+  {%- form 'localization', id: 'BBHeaderCurrencyForm', class: 'disclosure-form' -%}
+    <div class="disclosure-form-field bb-header-currency__field">
+      <button
+        type="button"
+        class="disclosure-selector bb-header-currency__trigger header__button move-icon-up"
+        aria-expanded="false"
+        aria-controls="BBHeaderCurrencyList"
+        aria-label="{{ 'localization.country_label' | t }}"
+      >
+        <span class="bb-header-currency__code body3">
+          {{ localization.country.currency.iso_code }}
+        </span>
+        <span class="bb-header-currency__chevron" aria-hidden="true">
+          {{- 'icon-arrow-down-small' | append: settings.system_icon_thickness | inline_asset_content -}}
+        </span>
+      </button>
+      <div id="BBHeaderCurrencyList" class="disclosure_element disclosure__list tobottom toright bb-header-currency__panel" hidden>
+        <div class="disclosure__list__content custom__scrollbar">
+          <ul role="list" class="unstyle-ul">
+            {%- for country in localization.available_countries -%}
+              <li tabindex="-1">
+                <a
+                  class="disclosure__link link link-hover-span link__base-to_accent-color body3{% if country.iso_code == localization.country.iso_code %} link-active{% endif %}"
+                  href="#"
+                  {% if country.iso_code == localization.country.iso_code %}aria-current="true"{% endif %}
+                  data-value="{{ country.iso_code }}"
+                >
+                  <span>{{ country.currency.iso_code }} · {{ country.currency.symbol }}</span>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+      <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+    </div>
+  {%- endform -%}
+</localization-form>
+{%- endif -%}

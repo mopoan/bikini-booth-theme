@@ -1,0 +1,132 @@
+/**
+ * Bikini Booth — Tropic of C–aligned homepage (index only)
+ * Loads LAST. Editorial: full-bleed hero, airy width, minimal chrome, calm type.
+ * Reference: https://tropicofc.com/en-gb
+ */
+
+/* --- Editorial canvas: calm white, subtle text rendering --- */
+.bb-root.template-index {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bb-root.template-index .content-for-layout {
+  background: #fff !important;
+  color: #111;
+}
+
+/* Narrower readable measure (TOC feels contained, not full-bleed text everywhere) */
+.bb-root.template-index #MainContent .page-wide,
+.bb-root.template-index #MainContent .page-width {
+  max-width: min(1320px, calc(100vw - 3rem)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* BB Hero + header: do not override here — use bb-hero.liquid + bb-homepage.css + bikini-booth-homepage-header.css only. */
+
+/* --- Strip Wokiee “boxed” feel: softer section chrome on index --- */
+.bb-root.template-index #MainContent [class*="section-heading"] {
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bb-root.template-index #MainContent .section-heading__heading {
+  letter-spacing: -0.045em !important;
+  font-weight: 200 !important;
+}
+
+/* --- Product rows: more air, flatter (TOC = image-first, quiet type) --- */
+.bb-root.template-index #MainContent [data-section-name="featured-collection"] .product-card .image-hover-box,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .product-card .image-hover-box,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .product-card-small .image-hover-box {
+  border-radius: 0 !important;
+}
+
+.bb-root.template-index #MainContent [data-section-name="featured-collection"] .product-card-small__heading,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .product-card-small__heading {
+  font-size: 0.8125rem !important;
+  letter-spacing: 0.04em !important;
+  font-weight: 400 !important;
+}
+
+.bb-root.template-index #MainContent [data-section-name="featured-collection"] .price__main,
+.bb-root.template-index #MainContent [data-section-name="featured-collection"] .price__sale,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .price__main,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .price__sale {
+  font-size: 0.8125rem !important;
+  letter-spacing: 0.03em !important;
+}
+
+/* --- Ticker: single editorial strip (less “promo bar”, more runway) --- */
+.bb-root.template-index [data-section-name="ticker-text"] .ticker-text__text h2 {
+  font-weight: 300 !important;
+  letter-spacing: 0.35em !important;
+  font-size: 0.65rem !important;
+}
+
+/* --- Swiper arrows: whisper, not UI chrome --- */
+.bb-root.template-index .custom-swiper-button-prev,
+.bb-root.template-index .custom-swiper-button-next {
+  opacity: 0.35 !important;
+}
+.bb-root.template-index .custom-swiper-button-prev:hover,
+.bb-root.template-index .custom-swiper-button-next:hover {
+  opacity: 0.55 !important;
+}
+
+/* --- CSS gate (Wokiee featured-collection + shop-the-feed): backup hide for editorial chrome --- */
+.bb-root.template-index #MainContent [data-section-name="featured-collection"] productcard-buttons,
+.bb-root.template-index #MainContent [data-section-name="featured-collection"] .product-card__media-buttons,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] productcard-buttons,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .product-card__media-buttons {
+  display: none !important;
+}
+
+/* Breakpoint check: compare side-by-side with tropicofc.com at 1440px, 1024px, 375px after Theme Editor changes. */
+
+/* --- Homepage cohesion fixes (font, seams, follow button, PNG support) --- */
+.bb-root.template-index #MainContent,
+.bb-root.template-index #MainContent :is(p, span, a, button, input, select, textarea, h1, h2, h3, h4, h5, h6) {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
+}
+
+/* "Our clothing in motion": keep a clean white canvas (footer fade is global in bb-footer-minimal.css) */
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] {
+  background: #ffffff !important;
+  padding-bottom: clamp(2.75rem, 7vw, 4.5rem) !important;
+}
+
+/* Follow button: remove dark frame / pseudo border, keep clean mint outline */
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .secondary-btn__container .btn {
+  border: 1px solid var(--bb-brand, #4ac6be) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: none !important;
+  color: var(--sf-ink, #0a2e2e) !important;
+}
+
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .secondary-btn__container .btn::before,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .secondary-btn__container .btn::after {
+  border: 0 !important;
+  box-shadow: none !important;
+  content: none !important;
+}
+
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .secondary-btn__container .btn .btn__top-text,
+.bb-root.template-index #MainContent [data-section-name="shop-the-feed"] .secondary-btn__container .btn .btn__bottom-text {
+  color: var(--sf-ink, #0a2e2e) !important;
+}
+
+/* Collection-fed homepage sections: force white backgrounds for transparent PNG products */
+.bb-root.template-index #MainContent .bb-subframe-products,
+.bb-root.template-index #MainContent [data-section-name="featured-collection"],
+.bb-root.template-index #MainContent .bb-toc-product-grid-section {
+  background: #ffffff !important;
+}
+
+.bb-root.template-index #MainContent .bb-subframe-ptile__media,
+.bb-root.template-index #MainContent [data-section-name="featured-collection"] .image-hover-box,
+.bb-root.template-index #MainContent .bb-toc-card__media {
+  background: #ffffff !important;
+}

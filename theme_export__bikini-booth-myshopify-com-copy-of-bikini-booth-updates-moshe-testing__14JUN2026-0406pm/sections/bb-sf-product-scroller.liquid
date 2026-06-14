@@ -1,0 +1,185 @@
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign coll = section.settings.collection
+  assign show_ph = true
+  if section.settings.show_placeholders_when_empty == false
+    assign show_ph = false
+  endif
+  assign plink = coll.url
+  if plink == blank
+    assign plink = section.settings.button_link
+  endif
+  if plink == blank
+    assign plink = routes.all_products_collection_url
+  endif
+-%}
+
+<section class="bb-subframe bb-subframe-products" id="bb-subframe-products-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="bb-subframe-products__inner">
+    <div class="bb-subframe-section-head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="bb-subframe-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="bb-subframe-title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if coll != blank and coll.products_count > 0 -%}
+      <div class="bb-subframe-products__track-wrap">
+        <div class="bb-subframe-products__track" data-bb-products-track>
+          {%- for product in coll.products limit: section.settings.product_limit -%}
+            {%- render 'bb-subframe-product-tile', product: product, section: section, tile_index: forloop.index0 -%}
+          {%- endfor -%}
+        </div>
+        <button
+          type="button"
+          class="bb-subframe-products__arrow"
+          data-bb-products-next
+          aria-label="Show more products"
+        >
+          {{- 'icon-arrow-right' | append: settings.system_icon_thickness | inline_asset_content -}}
+        </button>
+      </div>
+    {%- elsif show_ph -%}
+      <div class="bb-subframe-products__track-wrap">
+        <div class="bb-subframe-products__track" data-bb-products-track>
+          {%- for i in (1..section.settings.product_limit) -%}
+            {%- render 'bb-subframe-product-placeholder', section: section, index: i, link_url: plink -%}
+          {%- endfor -%}
+        </div>
+        <button
+          type="button"
+          class="bb-subframe-products__arrow"
+          data-bb-products-next
+          aria-label="Show more products"
+        >
+          {{- 'icon-arrow-right' | append: settings.system_icon_thickness | inline_asset_content -}}
+        </button>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="bb-subframe-products__cta">
+        {%- assign btn_url = section.settings.button_link -%}
+        {%- if btn_url == blank and coll != blank -%}
+          {%- assign btn_url = coll.url -%}
+        {%- endif -%}
+        {%- if btn_url != blank -%}
+          <a class="bb-subframe-cta-cohesive" href="{{ btn_url }}">{{ section.settings.button_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('bb-subframe-products-{{ section.id }}');
+    if (!root) return;
+    var track = root.querySelector('[data-bb-products-track]');
+    var next = root.querySelector('[data-bb-products-next]');
+    if (!track || !next) return;
+
+    function getStep() {
+      var tile = track.querySelector('.bb-subframe-ptile');
+      if (!tile) return Math.max(280, Math.round(track.clientWidth * 0.6));
+      var styles = window.getComputedStyle(track);
+      var gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+      return Math.round(tile.getBoundingClientRect().width + gap);
+    }
+
+    function updateArrowVisibility() {
+      var maxLeft = track.scrollWidth - track.clientWidth;
+      next.style.display = track.scrollLeft >= maxLeft - 2 ? 'none' : 'inline-flex';
+    }
+
+    next.addEventListener('click', function () {
+      track.scrollBy({ left: getStep(), behavior: 'smooth' });
+    });
+
+    track.addEventListener('scroll', updateArrowVisibility, { passive: true });
+    window.addEventListener('resize', updateArrowVisibility);
+    updateArrowVisibility();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "BB - Product row",
+  "tag": "section",
+  "class": "bb-subframe-product-scroller-section",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Best sellers"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Product badge text",
+      "default": "bikini booth x summer",
+      "info": "Shown on each product image."
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "label": "Products to show",
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "View All Products"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to collection URL if empty."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_placeholders_when_empty",
+      "label": "Show stock image placeholders when collection is empty",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "placeholder_caption",
+      "label": "Placeholder tile caption",
+      "default": "Shop the collection",
+      "info": "Shown when using placeholders."
+    },
+    {
+      "type": "text",
+      "id": "placeholder_price_hint",
+      "label": "Placeholder price line (optional)",
+      "info": "e.g. From £98 - or leave empty to hide."
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB - Product row"
+    }
+  ]
+}
+{% endschema %}

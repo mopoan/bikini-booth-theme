@@ -1,0 +1,82 @@
+{% comment %}
+  Minimal TOC-style product tile (Bikini Booth). Used by bb-toc-product-grid only.
+  Accepts: product {Product}, section {Section}
+{% endcomment %}
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+  assign featured = product.featured_media
+  assign alt_primary = product.title
+  if featured.alt != blank
+    assign alt_primary = featured.alt
+  endif
+  assign second_media = nil
+  if section.settings.show_secondary_image and product.media.size > 1
+    assign second_media = product.media[1]
+  endif
+  assign alt_second = product.title
+  if second_media != nil and second_media.alt != blank
+    assign alt_second = second_media.alt
+  endif
+-%}
+<article class="bb-toc-card" data-product-id="{{ product.id }}">
+  <a class="bb-toc-card__media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+    {%- if featured != blank -%}
+      <span class="bb-toc-card__media-inner">
+        {%- assign toc_ar = featured.aspect_ratio | default: 1 -%}
+        {%- if toc_ar == 0 -%}{%- assign toc_ar = 1 -%}{%- endif -%}
+        {%- assign toc_h = 900 | divided_by: toc_ar | round -%}
+        <img
+          class="bb-toc-card__img"
+          src="{{ featured | image_url: width: 900 }}"
+          alt="{{ alt_primary | escape }}"
+          loading="lazy"
+          width="900"
+          height="{{ toc_h }}"
+        >
+        {%- if second_media != nil -%}
+          {%- assign toc_ar2 = second_media.aspect_ratio | default: 1 -%}
+          {%- if toc_ar2 == 0 -%}{%- assign toc_ar2 = 1 -%}{%- endif -%}
+          {%- assign toc_h2 = 900 | divided_by: toc_ar2 | round -%}
+          <img
+            class="bb-toc-card__img bb-toc-card__img--second"
+            src="{{ second_media | image_url: width: 900 }}"
+            alt="{{ alt_second | escape }}"
+            loading="lazy"
+            width="900"
+            height="{{ toc_h2 }}"
+          >
+        {%- endif -%}
+      </span>
+    {%- else -%}
+      <span class="bb-toc-card__placeholder"></span>
+    {%- endif -%}
+  </a>
+  <div class="bb-toc-card__info">
+    <a class="bb-toc-card__title" href="{{ product.url }}">{{ product.title }}</a>
+    {%- if settings.cart_type != 'catalog_mode' -%}
+      <div class="bb-toc-card__price">
+        {%- render 'price', product: product, size: settings.product_card_price_size -%}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.enable_quick_add and settings.cart_type != 'catalog_mode' and product.available -%}
+      {%- if product.has_only_default_variant -%}
+        <product-form class="bb-toc-card__form">
+          {%- assign form_id = 'bb-toc-form-' | append: section.id | append: '-' | append: product.id -%}
+          {%- form 'product', product, id: form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+            <input type="hidden" name="id" value="{{ v.id }}">
+            <button type="submit" name="add" class="bb-toc-card__add btn btn--border">
+              <span class="btn__texts">
+                <span class="btn__top-text is-visible">{{ 'products.product.add_to_cart' | t }}</span>
+              </span>
+            </button>
+            <div class="product-form__error-message-wrapper mt10" role="alert" hidden>
+              <span class="product-form__error-message color-error body3"></span>
+            </div>
+          {%- endform -%}
+        </product-form>
+      {%- else -%}
+        <a class="bb-toc-card__shop link-underline" href="{{ product.url }}">{{ 'products.product.choose_options' | t }}</a>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</article>

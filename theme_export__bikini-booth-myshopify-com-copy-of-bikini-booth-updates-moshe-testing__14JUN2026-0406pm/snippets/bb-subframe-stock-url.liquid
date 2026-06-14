@@ -1,0 +1,9 @@
+{% comment %}
+  Returns one Unsplash URL by index (cycle). Pass: index (integer).
+{% endcomment %}
+{%- liquid
+  assign pool = 'https://images.unsplash.com/photo-1570976447640-ac859083963f?w=700&q=80&auto=format&fit=crop||https://images.unsplash.com/photo-1559563458-527698bf5295?w=700&q=80&auto=format&fit=crop||https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=700&q=80&auto=format&fit=crop||https://images.unsplash.com/photo-1590736969955-71cc94901144?w=700&q=80&auto=format&fit=crop||https://images.unsplash.com/photo-1564485377539-4af72d1f6a2f?w=700&q=80&auto=format&fit=crop||https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=700&q=80&auto=format&fit=crop||https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=700&q=80&auto=format&fit=crop||https://images.unsplash.com/photo-1476575632444-8e2e12a3fa80?w=700&q=80&auto=format&fit=crop'
+  assign arr = pool | split: '||'
+  assign idx = index | default: 0 | modulo: arr.size
+-%}
+{{- arr[idx] -}}

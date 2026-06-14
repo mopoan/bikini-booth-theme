@@ -1,0 +1,106 @@
+/**
+ * Bikini Booth — product card media actions (wishlist / quick view): visible on light photo backgrounds.
+ */
+.product-card .product-card__media-buttons__item,
+.product-card wishlist-button.product-card__media-buttons__item {
+  background: rgba(74, 198, 190, 0.14) !important;
+  border: 1px solid rgba(74, 198, 190, 0.9) !important;
+  color: #0a5c56 !important;
+}
+
+.product-card .product-card__media-buttons__item svg path,
+.product-card wishlist-button.product-card__media-buttons__item svg path {
+  fill: #0a5c56 !important;
+}
+
+.product-card .product-card__media-buttons__item:hover,
+.product-card wishlist-button.product-card__media-buttons__item:hover {
+  background: rgba(74, 198, 190, 0.28) !important;
+  border-color: #4ac6be !important;
+  color: #063d3a !important;
+}
+
+/* Carousel prev/next (featured grids, recently viewed, etc.) — teal chips, visible on white */
+.bb-root .custom-swiper-button-prev,
+.bb-root .custom-swiper-button-next {
+  opacity: 1 !important;
+}
+
+.bb-root .custom-swiper-button-prev:before,
+.bb-root .custom-swiper-button-next:before {
+  background: rgba(74, 198, 190, 0.18) !important;
+  background-color: rgba(74, 198, 190, 0.18) !important;
+  box-shadow: 0 0 0 1px rgba(74, 198, 190, 0.9), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  opacity: 1 !important;
+}
+
+.bb-root .custom-swiper-button-prev svg path,
+.bb-root .custom-swiper-button-next svg path {
+  fill: #0a5c56 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bb-root .custom-swiper-button-prev:hover:before,
+  .bb-root .custom-swiper-button-next:hover:before {
+    background: rgba(74, 198, 190, 0.3) !important;
+    box-shadow: 0 0 0 1px #4ac6be, 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .bb-root .custom-swiper-button-prev:hover svg path,
+  .bb-root .custom-swiper-button-next:hover svg path {
+    fill: #063d3a !important;
+  }
+}
+
+.bb-root .product-card .internal-swiper-button-prev,
+.bb-root .product-card .internal-swiper-button-next {
+  background: rgba(74, 198, 190, 0.18) !important;
+  border: 1px solid rgba(74, 198, 190, 0.9) !important;
+  color: #0a5c56 !important;
+  opacity: 1 !important;
+}
+
+.bb-root .product-card .internal-swiper-button-prev svg path,
+.bb-root .product-card .internal-swiper-button-next svg path {
+  fill: #0a5c56 !important;
+}
+
+/* PDP main gallery (not inside .product-card) — teal chips, readable on white */
+.bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-prev,
+.bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-next {
+  opacity: 1 !important;
+  background: rgba(74, 198, 190, 0.22) !important;
+  border: 1px solid rgba(74, 198, 190, 0.95) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-prev svg.theme-icon path,
+.bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-next svg.theme-icon path,
+.bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-prev svg path,
+.bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-next svg path {
+  fill: #0a5c56 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-prev:hover,
+  .bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-next:hover {
+    background: rgba(74, 198, 190, 0.35) !important;
+    border-color: #4ac6be !important;
+  }
+
+  .bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-prev:hover svg path,
+  .bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-next:hover svg path,
+  .bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-prev:hover svg.theme-icon path,
+  .bb-root.template-product .main-product__container .swiper__animated-arrows .internal-swiper-button-next:hover svg.theme-icon path {
+    fill: #063d3a !important;
+  }
+}
+
+/* Keep arrows in the slide (theme hides off-canvas until hover) */
+.bb-root.template-product .main-product__container .swiper.swiper__animated-arrows .internal-swiper-button-prev {
+  left: 10px !important;
+}
+
+.bb-root.template-product .main-product__container .swiper.swiper__animated-arrows .internal-swiper-button-next {
+  right: 10px !important;
+}

@@ -1,0 +1,91 @@
+/**
+ * Bikini Booth — quick view drawer: keep product content at the top, readable type, sensible scroll.
+ */
+#PopupModal-quickview.popup-modal {
+  z-index: 10350 !important;
+}
+
+#PopupModal-quickview.popup-modal .popup-modal__content.popup-modal__content__f-height {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  width: min(520px, 92vw) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding-top: 3rem !important;
+  padding-bottom: 0 !important;
+  overflow: hidden !important;
+}
+
+#PopupModal-quickview .popup-modal__content__data {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  height: auto !important;
+}
+
+#PopupModal-quickview .popup-modal__content__content.popup-modal__content__content--padding {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 2rem !important;
+  margin-top: 0 !important;
+}
+
+#PopupModal-quickview .main-product__container {
+  flex-direction: column !important;
+  gap: 1.25rem !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+}
+
+/* Put title/price/details first; gallery second (DOM is usually media-first on PDP). */
+#PopupModal-quickview .main-product__container .product__column {
+  order: 1 !important;
+}
+
+#PopupModal-quickview .main-product__container .product--thumbnail_slider,
+#PopupModal-quickview .main-product__container .product--thumbnail_slider__mobile {
+  order: 2 !important;
+}
+
+/* PDP sticky rules + tall media read as “empty” space above the fold inside the drawer. */
+#PopupModal-quickview .product--thumbnail_slider,
+#PopupModal-quickview .product--thumbnail_slider__mobile,
+#PopupModal-quickview .product__media-sticky,
+#PopupModal-quickview .product__right-column-sticky {
+  position: static !important;
+  top: auto !important;
+  align-self: stretch !important;
+}
+
+#PopupModal-quickview .product--thumbnail_slider .swiper-slider__product-page__radius,
+#PopupModal-quickview .product--thumbnail_slider__mobile .swiper-slider__product-page__radius {
+  max-height: min(38vh, 320px) !important;
+}
+
+#PopupModal-quickview .product--thumbnail_slider .swiper,
+#PopupModal-quickview .product--thumbnail_slider__mobile .swiper {
+  max-height: min(38vh, 320px) !important;
+}
+
+#PopupModal-quickview .product__title h1,
+#PopupModal-quickview .product__title h2,
+#PopupModal-quickview .product__title .featured-product-heading {
+  font-size: clamp(1.2rem, 2.8vw, 1.65rem) !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.01em !important;
+}
+
+#PopupModal-quickview .product__price-container [class*="price"] {
+  font-size: 1rem !important;
+}
+
+#PopupModal-quickview .product__information,
+#PopupModal-quickview .body3 {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}

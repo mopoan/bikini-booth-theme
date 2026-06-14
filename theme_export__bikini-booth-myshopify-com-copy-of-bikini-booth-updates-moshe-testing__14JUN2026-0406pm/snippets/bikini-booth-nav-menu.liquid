@@ -1,0 +1,53 @@
+{% comment %}
+  Tropic-style main nav — items from Shopify Navigation (linklist).
+  Items with children use bb-mega-tropic-dropdown (left links + collection product images).
+{% endcomment %}
+{{ 'bikini-booth-nav.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  if linklist == blank and section != blank
+    if section.settings.bikini_booth_menu != blank
+      assign linklist = section.settings.bikini_booth_menu.links
+    endif
+    if linklist == blank and section.settings.menu != blank
+      assign linklist = section.settings.menu.links
+    endif
+  endif
+
+  assign start_count = start_count | default: 0
+  assign linklist_size = 0
+  if linklist != blank
+    assign linklist_size = linklist.size
+  endif
+  assign end_count = end_count | default: linklist_size
+  assign menu_limit = end_count | minus: start_count
+  if menu_limit < 0
+    assign menu_limit = 0
+  endif
+  assign nav_class = custom_class | default: '' | append: ' bikini-booth-nav-menu'
+-%}
+{%- if linklist != blank and menu_limit > 0 -%}
+<nav class="list-menu menu--animation-underline list-menu--classic {{ nav_class }}" data-bikini-booth-nav>
+  <ul class="unstyle-ul list-menu--inline">
+    {%- for link in linklist offset: start_count, limit: menu_limit -%}
+      {%- if link.links != blank -%}
+        <li class="list-menu--hover submenu-container submenu--to-left bb-mega-tropic-wrap">
+          <a href="{{ link.url }}" class="body2 list-menu__item{% if link.current %} list-menu__item--active{% endif %} {{ menu_font_weight }}">
+            <span>{{ link.title | escape }}{{- 'icon-arrow-down-small' | append: settings.system_icon_thickness | inline_asset_content -}}</span>
+          </a>
+          {% render 'bb-mega-tropic-dropdown', parent_link: link %}
+        </li>
+      {%- else -%}
+        <li class="list-menu--hover">
+          <a href="{{ link.url }}" class="body2 list-menu__item{% if link.current %} list-menu__item--active{% endif %} {{ menu_font_weight }}">
+            <span>{{ link.title | escape }}</span>
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</nav>
+{%- elsif request.design_mode -%}
+<nav class="list-menu menu--animation-underline list-menu--classic {{ nav_class }}" data-bikini-booth-nav>
+  <p class="body2" style="margin:0;color:#0a5c56;">Select a navigation menu in Header → Bikini Booth navigation menu</p>
+</nav>
+{%- endif -%}

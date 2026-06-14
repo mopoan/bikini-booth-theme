@@ -1,0 +1,108 @@
+{%- comment -%}
+  Sort dropdown + grid density + "Showing n Results" (Tropic-style right cluster).
+  Params: section, collection, sort_by, enable_sorting, enable_dynamic_grid, enable_products_count_main
+{%- endcomment -%}
+<div class="bb-collection-toolbar__actions">
+  <div class="bb-collection-toolbar__actions-row">
+    {%- if enable_sorting -%}
+    <facet-filters-form class="display-block facet-filters-form__desktop bb-collection-toolbar__sort">
+      <form id="FacetSortForm" class="sorting sorting--tropic-inline">
+        <div class="select field">
+          <select class="field__input"
+                  id="SortBy"
+                  name="sort_by"
+                  aria-label="{{ 'products.facets.sort_button' | t }}"
+                  aria-describedby="a11y-refresh-page-message"
+            >
+            {%- for option in collection.sort_options -%}
+              <option
+                value="{{ option.value | escape }}"
+                {% if option.value == sort_by %}
+                  selected="selected"
+                {% endif %}
+              >
+                {{ option.name | escape }}
+              </option>
+            {%- endfor -%}
+          </select>
+          <label class="field__label visually-hidden" for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+          <div class="field__icon field__icon--select">
+            {{- 'icon-arrow-down-small' | append: settings.system_icon_thickness | inline_asset_content -}}
+          </div>
+        </div>
+      </form>
+    </facet-filters-form>
+    {%- endif -%}
+
+    {%- if enable_sorting and section.settings.enable_dynamic_grid == true -%}
+    <span class="bb-collection-toolbar__vd" aria-hidden="true"></span>
+    {%- endif -%}
+
+    <div class="grid-selector bb-collection-toolbar__grid-selector">
+      {%- if section.settings.enable_dynamic_grid -%}
+      {%- liquid
+        assign bb_density_d = section.settings.grid
+        if bb_density_d != 'page-grid-2' and bb_density_d != 'page-grid-4' and bb_density_d != 'page-grid-6'
+          assign bb_density_d = 'page-grid-4'
+        endif
+        assign bb_density_t = section.settings.grid_tablet
+        if bb_density_t != 'page-grid-st-2' and bb_density_t != 'page-grid-st-4' and bb_density_t != 'page-grid-st-6'
+          assign bb_density_t = 'page-grid-st-4'
+        endif
+      -%}
+      <collection-grid>
+        <div class="collection-grid collection-grid-desktop bb-collection-grid--desktop-cols">
+          <button type="button"
+                  class="collection-grid__item bb-collection-grid__density-btn{% if bb_density_d == "page-grid-2" %} active-d{% endif %}{% if bb_density_t == "page-grid-st-2" %} active-t{% endif %}"
+                  data-grid="page-grid-2"
+                  data-grid-t="page-grid-st-2"
+                  aria-pressed="{% if bb_density_d == "page-grid-2" %}true{% else %}false{% endif %}"
+                  aria-label="Show 2 products per row">
+            2
+          </button>
+          <button type="button"
+                  class="collection-grid__item bb-collection-grid__density-btn{% if bb_density_d == "page-grid-4" %} active-d{% endif %}{% if bb_density_t == "page-grid-st-4" %} active-t{% endif %}"
+                  data-grid="page-grid-4"
+                  data-grid-t="page-grid-st-4"
+                  aria-pressed="{% if bb_density_d == "page-grid-4" %}true{% else %}false{% endif %}"
+                  aria-label="Show 4 products per row">
+            4
+          </button>
+          <button type="button"
+                  class="collection-grid__item bb-collection-grid__density-btn{% if bb_density_d == "page-grid-6" %} active-d{% endif %}{% if bb_density_t == "page-grid-st-6" %} active-t{% endif %}"
+                  data-grid="page-grid-6"
+                  data-grid-t="page-grid-st-6"
+                  aria-pressed="{% if bb_density_d == "page-grid-6" %}true{% else %}false{% endif %}"
+                  aria-label="Show 6 products per row">
+            6
+          </button>
+        </div>
+        <div class="collection-grid collection-grid-mobile">
+          <div class="collection-grid__item{% if section.settings.mobile_grid == "page-grid-sp-1" %} active-m{% endif %}"
+               data-grid-m="page-grid-sp-1">
+            {% render 'icons-collection-grid' screen_size:"mobile", icon_size:3 %}
+          </div>
+          <div class="collection-grid__item{% if section.settings.mobile_grid == "page-grid-sp-2" %} active-m{% endif %}"
+               data-grid-m="page-grid-sp-2">
+            {% render 'icons-collection-grid' screen_size:"mobile", icon_size:2 %}
+          </div>
+          <div class="collection-grid__item{% if section.settings.mobile_grid == "page-grid-sp-1-list" %} active-m{% endif %}"
+               data-grid-m="page-grid-sp-1-list">
+            {% render 'icons-collection-grid' screen_size:"mobile", icon_size:1 %}
+          </div>
+        </div>
+      </collection-grid>
+      {%- endif -%}
+    </div>
+
+    {%- if enable_products_count_main -%}
+      <p id="ProductCount" class="mt0 products_count bb-collection-toolbar__count body2">
+        {%- if collection.results_count -%}
+          {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
+        {%- else -%}
+          {{ 'products.facets.showing_results' | t: count: collection.products_count }}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+</div>

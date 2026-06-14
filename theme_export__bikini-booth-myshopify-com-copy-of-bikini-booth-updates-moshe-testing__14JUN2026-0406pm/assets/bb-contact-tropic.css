@@ -1,0 +1,91 @@
+/**
+ * Bikini Booth — contact pages (template suffix contact-us or contact, or handles contact / contact-us):
+ * cream canvas, editorial heading stack, rounded inputs, teal primary button.
+ */
+.bb-contact-tropic.template-page #MainContent,
+.bb-contact-tropic.template-page #MainContent .content-for-layout {
+  background: #fdfaf5 !important;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .page-width .page-width-half,
+.bb-contact-tropic [data-section-name="contact-form"] .page-wide .page-width-half {
+  max-width: min(36rem, 100%);
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .section-heading-container {
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .section-heading-elements .subheading {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #4ac6be;
+  margin-bottom: 0.65rem;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .contact-form-desktop-heading h2,
+.bb-contact-tropic [data-section-name="contact-form"] .contact-form-mobile-heading h2,
+.bb-contact-tropic [data-section-name="contact-form"] .section-heading-text {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-size: clamp(1.65rem, 2.8vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  text-transform: none;
+  color: #0a2e2e;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .section-heading-desc-text,
+.bb-contact-tropic [data-section-name="contact-form"] .section__richtext__editor,
+.bb-contact-tropic [data-section-name="contact-form"] .body2 {
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(10, 46, 46, 0.72);
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .field__input,
+.bb-contact-tropic [data-section-name="contact-form"] .text-area.field__input {
+  border-radius: 10px !important;
+  min-height: 3rem;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .field--text-area .field__input {
+  min-height: 10rem;
+  padding-top: 1rem;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .field__icon {
+  color: rgba(10, 46, 46, 0.45);
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .form-inputs-top-spacing {
+  margin-top: 1rem !important;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .form-inputs-top-spacing-button {
+  margin-top: 1.35rem !important;
+}
+
+.bb-contact-tropic [data-section-name="contact-form"] .btn--submit,
+.bb-contact-tropic [data-section-name="contact-form"] button[type="submit"].btn-wide {
+  border-radius: var(--radius-button, 10px) !important;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.bb-contact-tropic [data-section-name="text-columns-with-icons-type-1"] .section-background,
+.bb-contact-tropic [data-section-name="text-columns-with-icons-type-1"] {
+  border-top: 1px solid rgba(10, 46, 46, 0.08);
+}

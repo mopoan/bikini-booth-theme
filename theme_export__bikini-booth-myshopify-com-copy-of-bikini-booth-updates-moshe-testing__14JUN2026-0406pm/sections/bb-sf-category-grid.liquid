@@ -1,0 +1,108 @@
+<section class="bb-subframe bb-subframe-cat-section" id="bb-subframe-cat-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="bb-subframe-cat-inner">
+    <div class="bb-subframe-cat-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'category' -%}
+          <a class="bb-subframe-cat-card" href="{{ block.settings.url }}" {{ block.shopify_attributes }}>
+            <div class="bb-subframe-cat-card__media">
+              {%- if block.settings.image != blank -%}
+                {%- assign cat_img_alt = block.settings.title | escape -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  alt="{{ cat_img_alt }}"
+                  loading="lazy"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                >
+              {%- elsif block.settings.image_url != blank -%}
+                <img src="{{ block.settings.image_url }}" alt="{{ block.settings.title | escape }}" width="800" height="1000" loading="lazy">
+              {%- else -%}
+                {%- capture cat_stock -%}{%- render 'bb-subframe-stock-url', index: forloop.index0 -%}{%- endcapture -%}
+                <img src="{{ cat_stock | strip }}" alt="{{ block.settings.title | escape }}" width="800" height="1000" loading="lazy">
+              {%- endif -%}
+              <div class="bb-subframe-cat-card__overlay" aria-hidden="true"></div>
+              <div class="bb-subframe-cat-card__label">
+                <span>{{ block.settings.title | escape }}</span>
+                <span class="bb-subframe-cat-card__rule" aria-hidden="true"></span>
+              </div>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "BB - Category grid",
+  "tag": "section",
+  "class": "bb-subframe-category-section",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "New Arrivals"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Image URL (optional)",
+          "info": "Used when no image is uploaded."
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB - Category grid",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "New Arrivals",
+            "url": "/collections/all"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Swimwear",
+            "url": "/collections/swimwear"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Resort Wear",
+            "url": "/collections/resortwear"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Accessories",
+            "url": "/collections/all"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,119 @@
+/**
+ * BB TOC product grid — minimal cards (scoped; does not affect header or bb-hero).
+ */
+.bb-root.template-index #MainContent .bb-toc-product-grid-section .bb-toc-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--bb-toc-cols-mobile, 2), minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 750px) {
+  .bb-root.template-index #MainContent .bb-toc-product-grid-section .bb-toc-grid {
+    grid-template-columns: repeat(var(--bb-toc-cols-tablet, 3), minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .bb-root.template-index #MainContent .bb-toc-product-grid-section .bb-toc-grid {
+    grid-template-columns: repeat(var(--bb-toc-cols-desktop, 4), minmax(0, 1fr));
+  }
+}
+
+.bb-toc-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bb-toc-card__media {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: #f5f5f5;
+}
+
+.bb-toc-card__media-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bb-toc-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.45s ease, transform 0.6s ease;
+}
+
+.bb-toc-card__img--second {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.bb-toc-card__media:hover .bb-toc-card__img--second {
+  opacity: 1;
+}
+
+.bb-toc-card__media:hover .bb-toc-card__img:not(.bb-toc-card__img--second) {
+  opacity: 0;
+}
+
+.bb-toc-card__placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #e8e8e8;
+}
+
+.bb-toc-card__info {
+  padding-top: 0.75rem;
+  text-align: center;
+}
+
+.bb-toc-card__title {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  color: #111;
+  text-decoration: none;
+}
+
+.bb-toc-card__title:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bb-toc-card__price {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.03em;
+}
+
+.bb-toc-card__form {
+  margin-top: 0.65rem;
+}
+
+.bb-toc-card__add {
+  min-height: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.bb-toc-card__shop {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bb-toc-grid__footer {
+  margin-top: 1.5rem;
+}

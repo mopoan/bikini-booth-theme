@@ -1,0 +1,255 @@
+{% comment %} Subframe-style homepage hero: promo bar + full-bleed image + logo + nav pills {% endcomment %}
+
+<section
+  class="bb-subframe{% if section.settings.show_centered_logo_and_nav %} bb-subframe-hero--centered-nav{% endif %}"
+  id="bb-subframe-hero-{{ section.id }}"
+  style="--bb-hero-img-x: {{ section.settings.hero_image_anchor_x | default: 50 }}%; --bb-hero-img-y: {{ section.settings.hero_image_anchor_y | default: 92 }}%;"
+  {{ section.shopify_attributes }}
+>
+  {%- if section.settings.show_promo_bar -%}
+    <div class="bb-subframe-promo">
+      <div class="bb-subframe-promo__left" aria-hidden="true"></div>
+      <div class="bb-subframe-promo__center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span class="bb-subframe-promo__text">{{ section.settings.promo_text | escape }}</span>
+      </div>
+      <div class="bb-subframe-promo__actions">
+        {%- if section.settings.wishlist_url != blank -%}
+          <a href="{{ section.settings.wishlist_url }}" class="bb-subframe-icon-btn" aria-label="Wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          </a>
+        {%- endif -%}
+        <a href="{{ routes.search_url }}" class="bb-subframe-icon-btn" aria-label="{{ 'general.search.search' | t }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+        </a>
+        <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="bb-subframe-icon-btn" aria-label="{{ 'customer.account.title' | t }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+        <div class="bb-subframe-cart-wrap">
+          <a href="{{ routes.cart_url }}" class="bb-subframe-icon-btn" aria-label="{{ 'templates.cart.cart' | t }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          </a>
+          {%- if cart.item_count > 0 -%}
+            <span class="bb-subframe-cart-count">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="bb-subframe-hero">
+    {%- if section.settings.hero_image != blank or section.settings.hero_image_mobile != blank -%}
+      <picture>
+        {%- if section.settings.hero_image_mobile != blank -%}
+          <source media="(max-width: 749px)" srcset="{{ section.settings.hero_image_mobile | image_url: width: 1200 }}">
+        {%- endif -%}
+        {%- if section.settings.hero_image != blank -%}
+          <img
+            class="bb-subframe-hero__bg"
+            src="{{ section.settings.hero_image | image_url: width: 2400 }}"
+            alt="{{ section.settings.hero_image.alt | default: shop.name | escape }}"
+            width="{{ section.settings.hero_image.width }}"
+            height="{{ section.settings.hero_image.height }}"
+            loading="eager"
+            fetchpriority="high"
+            sizes="100vw"
+            srcset="{{ section.settings.hero_image | image_url: width: 1200 }} 1200w, {{ section.settings.hero_image | image_url: width: 1800 }} 1800w, {{ section.settings.hero_image | image_url: width: 2400 }} 2400w"
+          >
+        {%- else -%}
+          <img
+            class="bb-subframe-hero__bg"
+            src="{{ section.settings.hero_image_mobile | image_url: width: 1200 }}"
+            alt="{{ section.settings.hero_image_mobile.alt | default: shop.name | escape }}"
+            width="{{ section.settings.hero_image_mobile.width }}"
+            height="{{ section.settings.hero_image_mobile.height }}"
+            loading="eager"
+            fetchpriority="high"
+            sizes="100vw"
+          >
+        {%- endif -%}
+      </picture>
+    {%- elsif section.settings.hero_image_url != blank -%}
+      <img class="bb-subframe-hero__bg" src="{{ section.settings.hero_image_url }}" alt="" width="1920" height="1080" loading="eager" fetchpriority="high">
+    {%- else -%}
+      {%- capture hero_stock -%}{%- render 'bb-subframe-stock-url', index: 6 -%}{%- endcapture -%}
+      <img class="bb-subframe-hero__bg" src="{{ hero_stock | strip }}" alt="" width="1920" height="1080" loading="eager" fetchpriority="high">
+    {%- endif -%}
+    <div class="bb-subframe-hero__gradient" aria-hidden="true"></div>
+
+    {%- comment -%} Logo + nav in hero duplicate the theme header when header-group is shown (typical on homepage). Off by default, enable only for hero-only layouts. {%- endcomment -%}
+    {%- if section.settings.show_centered_logo_and_nav -%}
+      {%- if section.settings.logo_image != blank -%}
+        <div class="bb-subframe-hero__logo-row">
+          <a class="bb-subframe-hero__logo-link" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+          <img
+            class="bb-subframe-hero__logo"
+            src="{{ section.settings.logo_image | image_url: width: 400 }}"
+            alt="{{ shop.name | escape }}"
+            width="{{ section.settings.logo_image.width }}"
+            height="{{ section.settings.logo_image.height }}"
+            loading="eager"
+          >
+          </a>
+        </div>
+      {%- elsif section.settings.logo_image_url != blank -%}
+        <div class="bb-subframe-hero__logo-row">
+          <a class="bb-subframe-hero__logo-link" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+          <img class="bb-subframe-hero__logo" src="{{ section.settings.logo_image_url }}" alt="{{ shop.name | escape }}" width="320" height="80" loading="eager">
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="bb-subframe-hero__nav-wrap">
+          <div class="bb-subframe-hero__rule" aria-hidden="true"></div>
+          <nav class="bb-subframe-hero__nav" aria-label="Featured categories">
+            {%- assign nav_count = 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'nav_link' -%}
+                {%- assign nav_count = nav_count | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- assign nav_i = 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'nav_link' -%}
+                {%- assign nav_i = nav_i | plus: 1 -%}
+                <a href="{{ block.settings.url }}" {{ block.shopify_attributes }}>{{ block.settings.title | escape }}</a>
+                {%- if nav_i < nav_count -%}
+                  <span class="bb-subframe-hero__sep" aria-hidden="true"></span>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </nav>
+          <div class="bb-subframe-hero__rule" aria-hidden="true"></div>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    <div class="bb-subframe-hero__spacer" aria-hidden="true"></div>
+  </div>
+</section>
+
+{%- comment -%}
+  When “logo + nav inside hero” is on, duplicate suppression lives in assets/bb-subframe-homepage.css
+  (body.template-index:has(.bb-subframe-hero--centered-nav) …). The theme header often uses
+  bottom-menu-to-center, that layout does not wrap the logo row in menuwith-logo, so CSS must hide
+  nav.desktop-main-menu and .header__heading, not only menuwith-logo.
+{%- endcomment -%}
+
+{% schema %}
+{
+  "name": "BB - Hero",
+  "tag": "section",
+  "class": "bb-subframe-hero-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_centered_logo_and_nav",
+      "label": "Show logo and nav inside hero",
+      "default": false,
+      "info": "Shows logo, thin lines, and nav over the hero (reference layout). When on, hide duplicate theme menu: use Header → Logo position “Center” + Menu “Center” so the rule below can target it, or adjust header if you still see two menus."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo_bar",
+      "label": "Show top promo bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Promo bar text",
+      "default": "Subscribe to our newsletter for 10% off"
+    },
+    {
+      "type": "url",
+      "id": "wishlist_url",
+      "label": "Wishlist URL",
+      "info": "Optional. Leave empty to hide the heart icon."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero background image — desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_mobile",
+      "label": "Hero background image — mobile"
+    },
+    {
+      "type": "text",
+      "id": "hero_image_url",
+      "label": "Hero image URL (fallback)",
+      "info": "Used only if no image is selected. External URL.",
+      "default": "https://egniatlvhajtqurt.public.blob.vercel-storage.com/prod/37747/dacefdd0968d/ai/image-WDKThWs9jErwPShf0fs0bPYlGiATp4.jpg"
+    },
+    {
+      "type": "range",
+      "id": "hero_image_anchor_x",
+      "min": 35,
+      "max": 65,
+      "step": 1,
+      "unit": "%",
+      "label": "Image horizontal focus",
+      "default": 50,
+      "info": "Shifts the crop left/right when the subject isn’t centered in the file."
+    },
+    {
+      "type": "range",
+      "id": "hero_image_anchor_y",
+      "min": 45,
+      "max": 95,
+      "step": 1,
+      "unit": "%",
+      "label": "Image vertical focus",
+      "default": 92,
+      "info": "Higher = more of the top of the photo is cropped, so the person sits lower and stays under the logo/nav (try 88–95 for portraits)."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo (centered on hero)"
+    },
+    {
+      "type": "text",
+      "id": "logo_image_url",
+      "label": "Logo URL (fallback)",
+      "default": "https://egniatlvhajtqurt.public.blob.vercel-storage.com/prod/37747/dacefdd0968d/ai/image-xofge6lBip3ywUMpYNFhxoeM38KrUa.png"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Nav link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Label",
+          "default": "New Arrivals"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB - Hero",
+      "blocks": [
+        { "type": "nav_link", "settings": { "title": "New Arrivals", "url": "/collections/all" } },
+        { "type": "nav_link", "settings": { "title": "Best Seller", "url": "/collections/all" } },
+        { "type": "nav_link", "settings": { "title": "Swimwear", "url": "/collections/swimwear" } },
+        { "type": "nav_link", "settings": { "title": "Resort Wear", "url": "/collections/resortwear" } },
+        { "type": "nav_link", "settings": { "title": "Accessories", "url": "/collections/all" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

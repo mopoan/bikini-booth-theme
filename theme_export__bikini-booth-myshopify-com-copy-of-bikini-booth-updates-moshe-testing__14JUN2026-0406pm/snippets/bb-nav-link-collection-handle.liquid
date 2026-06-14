@@ -1,0 +1,11 @@
+{% comment %}
+  Outputs a collection handle for mega menu product shots (no whitespace).
+  Accepts: link {Object} Shopify menu link
+{% endcomment %}
+{%- if link.type == 'collection_link' and link.object != blank -%}
+  {{- link.object.handle -}}
+{%- elsif link.url contains '/collections/' -%}
+  {%- assign _tail = link.url | split: '/collections/' | last | split: '?' | first | split: '#' | first -%}
+  {%- assign _handle = _tail | split: '/' | first -%}
+  {{- _handle -}}
+{%- endif -%}

@@ -1,0 +1,23 @@
+{% comment %}
+  Outputs a JSON array of up to 3 products from a collection (featured image + url + title).
+  Accepts: handle {String} collection handle
+  Fewer than 3: JS pads repeats. Empty collection: [].
+{% endcomment %}
+{%- assign _h = handle | strip -%}
+{%- assign _coll = collections[_h] -%}
+[
+{%- if _coll != empty -%}
+  {%- assign _n = 0 -%}
+  {%- for product in _coll.products limit: 36 -%}
+    {%- if _n >= 3 -%}{%- break -%}{%- endif -%}
+    {%- if product.featured_media != blank -%}
+      {%- if _n > 0 -%},{%- endif -%}
+      {"src":{{ product.featured_media | image_url: width: 900 | json }},"url":{{ product.url | json }},"title":{{ product.title | json }}}
+      {%- assign _n = _n | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if _n == 0 and _coll.featured_image != blank -%}
+    {"src":{{ _coll.featured_image | image_url: width: 900 | json }},"url":{{ _coll.url | json }},"title":{{ _coll.title | json }}}
+  {%- endif -%}
+{%- endif -%}
+]

@@ -1,0 +1,136 @@
+/**
+ * Bikini Booth — header + mega menu (all templates).
+ * Keeps nav typography aligned with the homepage and ensures mega panels paint above #MainContent.
+ */
+
+@media (min-width: 1025px) {
+  /* Nav label style — same rhythm as homepage (not compact 11px). */
+  .bb-root .section-header .bikini-booth-nav-menu .list-menu__item span {
+    letter-spacing: 0.06em;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: #0a5c56;
+  }
+
+  .bb-root .section-header nav.desktop-main-menu .list-menu__item span,
+  .bb-root .section-header .header__desktop .header__main .list-menu__item span {
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
+    color: #0a5c56;
+  }
+
+  .bb-root [data-section-name="announcement-bar-header"] .announcement-bar-header__block_text p {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  /* Mega panels must sit above page content (hero / first sections) */
+  .bikini-booth-nav-menu .bb-mega-tropic.submenu-design__simple {
+    z-index: 10050 !important;
+  }
+
+  /* Enforce consistent spacing across all Tropic mega-menu variants. */
+  .bikini-booth-nav-menu .bb-mega-tropic .bb-mega-tropic__layout {
+    grid-template-columns: minmax(14rem, 18rem) minmax(34rem, 1fr) !important;
+    gap: clamp(2rem, 5vw, 4rem) !important;
+  }
+
+  .bikini-booth-nav-menu .bb-mega-tropic .bb-mega-tropic__shots {
+    grid-template-columns: repeat(3, minmax(10.5rem, 1fr)) !important;
+    gap: 0.75rem !important;
+    justify-items: stretch !important;
+  }
+
+  .bikini-booth-nav-menu .bb-mega-tropic .bb-mega-tropic__shot {
+    min-width: 0 !important;
+  }
+
+  /* Homepage: fixed wrapper (hotfix files in layout refine stacking + #MainContent offset). */
+  body.template-index fixed-headergroup.fixed-header-group,
+  body.template-index .fixed-header-group {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 10002 !important;
+  }
+
+  body.template-index .section-header {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    z-index: 10020 !important;
+  }
+
+  body.template-index #MainContent {
+    padding-top: 86px !important;
+  }
+
+  body.template-index .section-header,
+  body.template-index .section-header .header__desktop__shadow,
+  body.template-index .section-header .header__main,
+  body.template-index .section-header .header__main .header,
+  body.template-index .section-header .header__section-background__boxed {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.template-index .section-header .header__desktop__shadow:before {
+    box-shadow: none !important;
+  }
+
+  body.bb-root .section-header .bikini-booth-nav-menu .list-menu__item span,
+  body.bb-root .section-header nav.desktop-main-menu .list-menu__item span,
+  body.bb-root .section-header nav.desktop-main-menu .list-menu__item,
+  body.bb-root .section-header .header__desktop .header__main .list-menu__item span {
+    font-size: 16px !important;
+    letter-spacing: 0.06em !important;
+    line-height: 1.3 !important;
+    color: #0a5c56 !important;
+  }
+
+  body.bb-root .section-header .bikini-booth-nav-menu .list-menu__item span svg.theme-icon path,
+  body.bb-root .section-header nav.desktop-main-menu .list-menu__item span svg.theme-icon path {
+    fill: #0a5c56 !important;
+  }
+
+  body.bb-root .section-header .header__button,
+  body.bb-root .section-header .header__icons .header__button,
+  body.bb-root .section-header .header__button__bubble__text {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+    --color-text-icons-block: #0a5c56 !important;
+    --color-text-link-block: #0a5c56 !important;
+  }
+
+  body.bb-root .section-header .header__icons svg path,
+  body.bb-root .section-header .search-container svg path {
+    fill: #0a5c56 !important;
+  }
+
+  body.bb-root [data-section-name="announcement-bar-header"] .announcement-bar-header__block_text p {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Sticky strip: keep logo / wordmark from clipping against the top edge */
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__heading {
+    padding-top: 0.45rem;
+    padding-bottom: 0.35rem;
+    box-sizing: border-box;
+  }
+
+  body.template-index .fixed-header-group:has(.sticky-activated) .header__heading img {
+    display: block;
+    max-height: clamp(2.25rem, 5vw, 3rem);
+    width: auto;
+    object-fit: contain;
+  }
+}
