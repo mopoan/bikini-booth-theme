@@ -2,13 +2,13 @@
   Section: size-chart.liquid
   Purpose: Standalone size guide page section for Bikini Booth.
   Also drives the size-chart-modal snippet when rendered on product pages.
-  All content is editable in the Shopify theme editor.
-{%- endcomment -%}
 
-{%- liquid
-  assign tab_blocks = section.blocks | where: 'type', 'tab'
-  assign row_blocks  = section.blocks | where: 'type', 'size_row'
--%}
+  Block order logic:
+  - Blocks are looped once in order.
+  - A "tab" block opens a new tab panel.
+  - All "size_row" blocks that follow belong to that tab, until the next "tab" block.
+  - No Tab ID linking needed — order in the editor is everything.
+{%- endcomment -%}
 
 <section
   class="sc-section"
@@ -17,7 +17,6 @@
 >
   <div class="sc-container">
 
-    {%- comment -%} Section heading {%- endcomment -%}
     {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
       <header class="sc-section-header">
         {%- if section.settings.heading != blank -%}
@@ -39,117 +38,162 @@
         </div>
       </div>
 
-      {%- comment -%} Tabs nav {%- endcomment -%}
-      {%- if tab_blocks.size > 0 -%}
+      {%- comment -%} Build tab nav and panels in a single pass through blocks {%- endcomment -%}
+      {%- liquid
+        assign tab_count = 0
+        for block in section.blocks
+          if block.type == 'tab'
+            assign tab_count = tab_count | plus: 1
+          endif
+        endfor
+      -%}
+
+      {%- if tab_count > 0 -%}
+
+        {%- comment -%} Tab nav — first pass {%- endcomment -%}
         <div class="sc-tabs" role="tablist" aria-label="Size categories">
-          {%- for block in tab_blocks -%}
-            <button
-              type="button"
-              class="sc-tab{%- if forloop.first %} is-active{%- endif -%}"
-              role="tab"
-              aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
-              aria-controls="sc-panel-{{ section.id }}-{{ block.id }}"
-              id="sc-tab-{{ section.id }}-{{ block.id }}"
-              data-tab="{{ block.id }}"
-              {{ block.shopify_attributes }}
-            >
-              {{- block.settings.tab_label | default: 'Tops' -}}
-            </button>
+          {%- assign tab_index = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'tab' -%}
+              <button
+                type="button"
+                class="sc-tab{%- if tab_index == 0 %} is-active{%- endif -%}"
+                role="tab"
+                aria-selected="{%- if tab_index == 0 -%}true{%- else -%}false{%- endif -%}"
+                aria-controls="sc-panel-{{ section.id }}-{{ block.id }}"
+                id="sc-tab-{{ section.id }}-{{ block.id }}"
+                data-tab="{{ block.id }}"
+                {{ block.shopify_attributes }}
+              >
+                {{- block.settings.tab_label | default: 'Tops' -}}
+              </button>
+              {%- assign tab_index = tab_index | plus: 1 -%}
+            {%- endif -%}
           {%- endfor -%}
         </div>
+
+        {%- comment -%} Panels — second pass, grouping rows under their preceding tab {%- endcomment -%}
+        <div class="sc-panels">
+          {%- assign current_tab = nil -%}
+          {%- assign tab_index = 0 -%}
+          {%- assign open_panel = false -%}
+
+          {%- for block in section.blocks -%}
+
+            {%- if block.type == 'tab' -%}
+
+              {%- comment -%} Close previous panel if open {%- endcomment -%}
+              {%- if open_panel -%}
+                  {%- if current_tab.settings.fit_notes != blank -%}
+                    <div class="sc-fit-notes">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
+                        <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                      <div class="sc-fit-notes__text">{{ current_tab.settings.fit_notes }}</div>
+                    </div>
+                  {%- endif -%}
+                  {%- if current_tab.settings.between_sizes != blank -%}
+                    <div class="sc-between-sizes">
+                      <strong>Between sizes?</strong>
+                      {{ current_tab.settings.between_sizes }}
+                    </div>
+                  {%- endif -%}
+                </div>{%- comment -%}/.sc-panel{%- endcomment -%}
+              {%- endif -%}
+
+              {%- comment -%} Open new panel {%- endcomment -%}
+              {%- assign current_tab = block -%}
+              {%- assign is_first = false -%}
+              {%- if tab_index == 0 -%}{%- assign is_first = true -%}{%- endif -%}
+              <div
+                id="sc-panel-{{ section.id }}-{{ block.id }}"
+                class="sc-panel{%- if is_first %} is-active{%- endif -%}"
+                role="tabpanel"
+                aria-labelledby="sc-tab-{{ section.id }}-{{ block.id }}"
+                {%- unless is_first %} hidden{%- endunless -%}
+                {{ block.shopify_attributes }}
+              >
+                <div class="sc-table-wrap">
+                  <table class="sc-table" aria-label="{{ block.settings.tab_label }} size chart">
+                    <thead>
+                      <tr>
+                        <th scope="col">Size</th>
+                        <th scope="col">
+                          <span class="unit-in">Bust (in)</span>
+                          <span class="unit-cm" hidden>Bust (cm)</span>
+                        </th>
+                        <th scope="col">
+                          <span class="unit-in">Waist (in)</span>
+                          <span class="unit-cm" hidden>Waist (cm)</span>
+                        </th>
+                        <th scope="col">
+                          <span class="unit-in">Hips (in)</span>
+                          <span class="unit-cm" hidden>Hips (cm)</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="sc-tbody-{{ section.id }}-{{ block.id }}">
+              {%- assign open_panel = true -%}
+              {%- assign tab_index = tab_index | plus: 1 -%}
+              {%- assign panel_has_rows = false -%}
+
+            {%- elsif block.type == 'size_row' and open_panel -%}
+
+              {%- assign panel_has_rows = true -%}
+              <tr {{ block.shopify_attributes }}>
+                <td class="sc-size-label">{{ block.settings.size_label | default: 'XS' }}</td>
+                <td>
+                  <span class="unit-in">{{ block.settings.bust_in | default: '—' }}</span>
+                  <span class="unit-cm" hidden>{{ block.settings.bust_cm | default: '—' }}</span>
+                </td>
+                <td>
+                  <span class="unit-in">{{ block.settings.waist_in | default: '—' }}</span>
+                  <span class="unit-cm" hidden>{{ block.settings.waist_cm | default: '—' }}</span>
+                </td>
+                <td>
+                  <span class="unit-in">{{ block.settings.hips_in | default: '—' }}</span>
+                  <span class="unit-cm" hidden>{{ block.settings.hips_cm | default: '—' }}</span>
+                </td>
+              </tr>
+
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- comment -%} Close the last open panel {%- endcomment -%}
+          {%- if open_panel -%}
+                    {%- unless panel_has_rows -%}
+                      <tr><td colspan="4" class="sc-empty-cell">No sizing data added yet.</td></tr>
+                    {%- endunless -%}
+                    </tbody>
+                  </table>
+                </div>
+                {%- if current_tab.settings.fit_notes != blank -%}
+                  <div class="sc-fit-notes">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
+                      <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <div class="sc-fit-notes__text">{{ current_tab.settings.fit_notes }}</div>
+                  </div>
+                {%- endif -%}
+                {%- if current_tab.settings.between_sizes != blank -%}
+                  <div class="sc-between-sizes">
+                    <strong>Between sizes?</strong>
+                    {{ current_tab.settings.between_sizes }}
+                  </div>
+                {%- endif -%}
+              </div>{%- comment -%}/.sc-panel{%- endcomment -%}
+          {%- endif -%}
+
+        </div>{%- comment -%}/.sc-panels{%- endcomment -%}
+
+      {%- else -%}
+        <p class="sc-empty">Add a Size Category Tab block in the theme editor to get started.</p>
       {%- endif -%}
 
-      {%- comment -%} Tab panels {%- endcomment -%}
-      <div class="sc-panels">
-        {%- for block in tab_blocks -%}
-          {%- assign panel_rows = row_blocks | where: 'settings.tab_id', block.id -%}
+    </div>{%- comment -%}/.sc-card{%- endcomment -%}
 
-          <div
-            id="sc-panel-{{ section.id }}-{{ block.id }}"
-            class="sc-panel{%- if forloop.first %} is-active{%- endif -%}"
-            role="tabpanel"
-            aria-labelledby="sc-tab-{{ section.id }}-{{ block.id }}"
-            {%- unless forloop.first %} hidden{%- endunless -%}
-            {{ block.shopify_attributes }}
-          >
-
-            {%- comment -%} Measurement table {%- endcomment -%}
-            {%- if panel_rows.size > 0 -%}
-              <div class="sc-table-wrap">
-                <table class="sc-table" aria-label="{{ block.settings.tab_label }} size chart">
-                  <thead>
-                    <tr>
-                      <th scope="col">Size</th>
-                      <th scope="col">
-                        <span class="unit-in">Bust (in)</span>
-                        <span class="unit-cm" hidden>Bust (cm)</span>
-                      </th>
-                      <th scope="col">
-                        <span class="unit-in">Waist (in)</span>
-                        <span class="unit-cm" hidden>Waist (cm)</span>
-                      </th>
-                      <th scope="col">
-                        <span class="unit-in">Hips (in)</span>
-                        <span class="unit-cm" hidden>Hips (cm)</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {%- for row in panel_rows -%}
-                      <tr {{ row.shopify_attributes }}>
-                        <td class="sc-size-label">{{ row.settings.size_label | default: 'XS' }}</td>
-                        <td>
-                          <span class="unit-in">{{ row.settings.bust_in | default: '—' }}</span>
-                          <span class="unit-cm" hidden>{{ row.settings.bust_cm | default: '—' }}</span>
-                        </td>
-                        <td>
-                          <span class="unit-in">{{ row.settings.waist_in | default: '—' }}</span>
-                          <span class="unit-cm" hidden>{{ row.settings.waist_cm | default: '—' }}</span>
-                        </td>
-                        <td>
-                          <span class="unit-in">{{ row.settings.hips_in | default: '—' }}</span>
-                          <span class="unit-cm" hidden>{{ row.settings.hips_cm | default: '—' }}</span>
-                        </td>
-                      </tr>
-                    {%- endfor -%}
-                  </tbody>
-                </table>
-              </div>
-            {%- else -%}
-              <p class="sc-empty">No sizing data added yet for this category.</p>
-            {%- endif -%}
-
-            {%- comment -%} Fit notes {%- endcomment -%}
-            {%- if block.settings.fit_notes != blank -%}
-              <div class="sc-fit-notes">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
-                  <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                <div class="sc-fit-notes__text">{{ block.settings.fit_notes }}</div>
-              </div>
-            {%- endif -%}
-
-            {%- comment -%} Between sizes tip {%- endcomment -%}
-            {%- if block.settings.between_sizes != blank -%}
-              <div class="sc-between-sizes">
-                <strong>Between sizes?</strong>
-                {{ block.settings.between_sizes }}
-              </div>
-            {%- endif -%}
-
-          </div>
-        {%- endfor -%}
-
-        {%- comment -%} Fallback if no tab blocks added {%- endcomment -%}
-        {%- if tab_blocks.size == 0 -%}
-          <p class="sc-empty">Add size chart tabs and rows in the theme editor to get started.</p>
-        {%- endif -%}
-      </div>
-
-    </div>{%- comment -%} /.sc-card {%- endcomment -%}
-
-    {%- comment -%} How to measure guide link {%- endcomment -%}
     {%- if section.settings.measure_link_label != blank and section.settings.measure_link_url != blank -%}
       <p class="sc-measure-link">
         <a href="{{ section.settings.measure_link_url }}">{{ section.settings.measure_link_label }}</a>
@@ -171,7 +215,6 @@
     margin: 0 auto;
   }
 
-  /* Section header */
   .sc-section-header {
     text-align: center;
     margin-bottom: 32px;
@@ -194,7 +237,6 @@
     line-height: 1.6;
   }
 
-  /* Card wrapper */
   .sc-card {
     background: #ffffff;
     border: 1px solid #ebebeb;
@@ -202,7 +244,6 @@
     overflow: hidden;
   }
 
-  /* Top bar (unit toggle) */
   .sc-top-bar {
     display: flex;
     justify-content: flex-end;
@@ -210,7 +251,6 @@
     padding: 16px 20px 0;
   }
 
-  /* Unit toggle */
   .sc-unit-toggle {
     display: flex;
     background: #f3f3f3;
@@ -236,7 +276,6 @@
     color: #ffffff;
   }
 
-  /* Tabs */
   .sc-tabs {
     display: flex;
     border-bottom: 1px solid #ebebeb;
@@ -270,13 +309,11 @@
   }
   .sc-tab:hover:not(.is-active) { color: #1a1a1a; }
 
-  /* Panels */
   .sc-panels { padding: 24px 20px; }
   @media (min-width: 768px) {
     .sc-panels { padding: 28px 28px; }
   }
 
-  /* Table */
   .sc-table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -310,7 +347,13 @@
   .sc-table tbody tr:hover td { background: #fafafa; }
   .sc-size-label { font-weight: 600; }
 
-  /* Fit notes */
+  .sc-empty-cell {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.8125rem;
+    padding: 24px 16px !important;
+  }
+
   .sc-fit-notes {
     display: flex;
     align-items: flex-start;
@@ -327,7 +370,6 @@
   .sc-fit-notes svg { flex-shrink: 0; margin-top: 3px; }
   .sc-fit-notes__text p { margin: 0; }
 
-  /* Between sizes */
   .sc-between-sizes {
     font-size: 0.875rem;
     color: #555;
@@ -346,7 +388,6 @@
   }
   .sc-between-sizes p { margin: 0; }
 
-  /* Measure link */
   .sc-measure-link {
     text-align: center;
     margin-top: 20px;
@@ -363,7 +404,7 @@
   .sc-empty {
     font-size: 0.875rem;
     color: #aaa;
-    padding: 32px 0;
+    padding: 32px 20px;
     text-align: center;
     margin: 0;
   }
@@ -385,12 +426,8 @@
         b.classList.toggle('is-active', b.dataset.unit === unit);
         b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
       });
-      section.querySelectorAll('.unit-in').forEach(function (el) {
-        el.hidden = unit !== 'in';
-      });
-      section.querySelectorAll('.unit-cm').forEach(function (el) {
-        el.hidden = unit !== 'cm';
-      });
+      section.querySelectorAll('.unit-in').forEach(function (el) { el.hidden = unit !== 'in'; });
+      section.querySelectorAll('.unit-cm').forEach(function (el) { el.hidden = unit !== 'cm'; });
     });
   });
 
@@ -509,7 +546,7 @@
           "type": "richtext",
           "id": "fit_notes",
           "label": "Fit notes",
-          "info": "Displayed below the size table as a highlighted tip.",
+          "info": "Shown below the table as a highlighted callout.",
           "default": "<p>Our tops run true to size. For extra coverage, size up one.</p>"
         },
         {
@@ -524,12 +561,6 @@
       "type": "size_row",
       "name": "Size Row",
       "settings": [
-        {
-          "type": "text",
-          "id": "tab_id",
-          "label": "Tab ID",
-          "info": "Copy the block ID of the Tab this row belongs to. Find it in the URL bar when you click a Tab block in the theme editor."
-        },
         {
           "type": "text",
           "id": "size_label",
@@ -577,41 +608,7 @@
   ],
   "presets": [
     {
-      "name": "Size Chart",
-      "blocks": [
-        {
-          "type": "tab",
-          "settings": {
-            "tab_label": "Bikini Tops",
-            "fit_notes": "<p>Our tops run true to size. Triangle and bandeau styles have tie adjustability — when in doubt, size up.</p>",
-            "between_sizes": "<p>We recommend sizing up for extra coverage and support, or sizing down for a more secure fit.</p>"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "tab_label": "Bikini Bottoms",
-            "fit_notes": "<p>Bottoms are cut to sit at the hip. If you prefer a higher waist, size up one.</p>",
-            "between_sizes": "<p>Go up a size for more coverage, or down for a cheekier look.</p>"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "tab_label": "One-Pieces",
-            "fit_notes": "<p>One-pieces are sized by bust. If your bust and hip differ by more than one size, we recommend sizing by hip and adjusting straps.</p>",
-            "between_sizes": "<p>When between sizes, consider your height — taller frames may prefer sizing up to ensure torso length comfort.</p>"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "tab_label": "Cover-Ups",
-            "fit_notes": "<p>Cover-ups are designed with an oversized, relaxed fit. Most styles suit XS–M in one size.</p>",
-            "between_sizes": "<p>If you prefer a more fitted look, size down. For a flowy drape effect, stick with your usual size.</p>"
-          }
-        }
-      ]
+      "name": "Size Chart"
     }
   ]
 }
