@@ -4,7 +4,6 @@
   Also drives the size-chart-modal snippet when rendered on product pages.
 
   Block order logic:
-  - Blocks are looped once in order.
   - A "tab" block opens a new tab panel.
   - All "size_row" blocks that follow belong to that tab, until the next "tab" block.
   - No Tab ID linking needed — order in the editor is everything.
@@ -20,7 +19,10 @@
     {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
       <header class="sc-section-header">
         {%- if section.settings.heading != blank -%}
-          <h2 class="sc-section-heading">{{ section.settings.heading }}</h2>
+          <h2 class="sc-section-heading">
+            <svg class="sc-heading-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
+            {{ section.settings.heading }}
+          </h2>
         {%- endif -%}
         {%- if section.settings.subheading != blank -%}
           <p class="sc-section-subheading">{{ section.settings.subheading }}</p>
@@ -30,15 +32,13 @@
 
     <div class="sc-card">
 
-      {%- comment -%} Unit toggle {%- endcomment -%}
       <div class="sc-top-bar">
         <div class="sc-unit-toggle" role="group" aria-label="Unit of measurement">
-          <button type="button" class="sc-unit-btn is-active" data-unit="in" aria-pressed="true">in</button>
-          <button type="button" class="sc-unit-btn" data-unit="cm" aria-pressed="false">cm</button>
+          <button type="button" class="sc-unit-btn sc-unit-on" data-unit="in" aria-pressed="true">in</button>
+          <button type="button" class="sc-unit-btn sc-unit-off" data-unit="cm" aria-pressed="false">cm</button>
         </div>
       </div>
 
-      {%- comment -%} Build tab nav and panels in a single pass through blocks {%- endcomment -%}
       {%- liquid
         assign tab_count = 0
         for block in section.blocks
@@ -50,7 +50,6 @@
 
       {%- if tab_count > 0 -%}
 
-        {%- comment -%} Tab nav — first pass {%- endcomment -%}
         <div class="sc-tabs" role="tablist" aria-label="Size categories">
           {%- assign tab_index = 0 -%}
           {%- for block in section.blocks -%}
@@ -72,37 +71,39 @@
           {%- endfor -%}
         </div>
 
-        {%- comment -%} Panels — second pass, grouping rows under their preceding tab {%- endcomment -%}
         <div class="sc-panels">
           {%- assign current_tab = nil -%}
           {%- assign tab_index = 0 -%}
           {%- assign open_panel = false -%}
+          {%- assign panel_has_rows = false -%}
 
           {%- for block in section.blocks -%}
 
             {%- if block.type == 'tab' -%}
 
-              {%- comment -%} Close previous panel if open {%- endcomment -%}
               {%- if open_panel -%}
-                  {%- if current_tab.settings.fit_notes != blank -%}
-                    <div class="sc-fit-notes">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
-                        <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
-                      </svg>
-                      <div class="sc-fit-notes__text">{{ current_tab.settings.fit_notes }}</div>
-                    </div>
-                  {%- endif -%}
-                  {%- if current_tab.settings.between_sizes != blank -%}
-                    <div class="sc-between-sizes">
-                      <strong>Between sizes?</strong>
-                      {{ current_tab.settings.between_sizes }}
-                    </div>
-                  {%- endif -%}
-                </div>{%- comment -%}/.sc-panel{%- endcomment -%}
+                      {%- unless panel_has_rows -%}
+                        <tr><td colspan="4" class="sc-empty-cell">No sizing data added yet.</td></tr>
+                      {%- endunless -%}
+                      </tbody></table></div>
+                    {%- if current_tab.settings.fit_notes != blank -%}
+                      <div class="sc-fit-notes">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                        <div class="sc-fit-notes__text">{{ current_tab.settings.fit_notes }}</div>
+                      </div>
+                    {%- endif -%}
+                    {%- if current_tab.settings.between_sizes != blank -%}
+                      <div class="sc-between-sizes">
+                        <strong>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+                          Between sizes?
+                        </strong>
+                        {{ current_tab.settings.between_sizes }}
+                      </div>
+                    {%- endif -%}
+                  </div>
               {%- endif -%}
 
-              {%- comment -%} Open new panel {%- endcomment -%}
               {%- assign current_tab = block -%}
               {%- assign is_first = false -%}
               {%- if tab_index == 0 -%}{%- assign is_first = true -%}{%- endif -%}
@@ -119,80 +120,57 @@
                     <thead>
                       <tr>
                         <th scope="col">Size</th>
-                        <th scope="col">
-                          <span class="unit-in">Bust (in)</span>
-                          <span class="unit-cm" hidden>Bust (cm)</span>
-                        </th>
-                        <th scope="col">
-                          <span class="unit-in">Waist (in)</span>
-                          <span class="unit-cm" hidden>Waist (cm)</span>
-                        </th>
-                        <th scope="col">
-                          <span class="unit-in">Hips (in)</span>
-                          <span class="unit-cm" hidden>Hips (cm)</span>
-                        </th>
+                        <th scope="col"><span class="unit-in">Bust (in)</span><span class="unit-cm" hidden>Bust (cm)</span></th>
+                        <th scope="col"><span class="unit-in">Waist (in)</span><span class="unit-cm" hidden>Waist (cm)</span></th>
+                        <th scope="col"><span class="unit-in">Hips (in)</span><span class="unit-cm" hidden>Hips (cm)</span></th>
                       </tr>
                     </thead>
-                    <tbody id="sc-tbody-{{ section.id }}-{{ block.id }}">
+                    <tbody>
               {%- assign open_panel = true -%}
               {%- assign tab_index = tab_index | plus: 1 -%}
               {%- assign panel_has_rows = false -%}
 
             {%- elsif block.type == 'size_row' and open_panel -%}
-
               {%- assign panel_has_rows = true -%}
               <tr {{ block.shopify_attributes }}>
                 <td class="sc-size-label">{{ block.settings.size_label | default: 'XS' }}</td>
-                <td>
-                  <span class="unit-in">{{ block.settings.bust_in | default: '—' }}</span>
-                  <span class="unit-cm" hidden>{{ block.settings.bust_cm | default: '—' }}</span>
-                </td>
-                <td>
-                  <span class="unit-in">{{ block.settings.waist_in | default: '—' }}</span>
-                  <span class="unit-cm" hidden>{{ block.settings.waist_cm | default: '—' }}</span>
-                </td>
-                <td>
-                  <span class="unit-in">{{ block.settings.hips_in | default: '—' }}</span>
-                  <span class="unit-cm" hidden>{{ block.settings.hips_cm | default: '—' }}</span>
-                </td>
+                <td><span class="unit-in">{{ block.settings.bust_in | default: '—' }}</span><span class="unit-cm" hidden>{{ block.settings.bust_cm | default: '—' }}</span></td>
+                <td><span class="unit-in">{{ block.settings.waist_in | default: '—' }}</span><span class="unit-cm" hidden>{{ block.settings.waist_cm | default: '—' }}</span></td>
+                <td><span class="unit-in">{{ block.settings.hips_in | default: '—' }}</span><span class="unit-cm" hidden>{{ block.settings.hips_cm | default: '—' }}</span></td>
               </tr>
-
             {%- endif -%}
           {%- endfor -%}
 
-          {%- comment -%} Close the last open panel {%- endcomment -%}
           {%- if open_panel -%}
-                    {%- unless panel_has_rows -%}
-                      <tr><td colspan="4" class="sc-empty-cell">No sizing data added yet.</td></tr>
-                    {%- endunless -%}
-                    </tbody>
-                  </table>
-                </div>
+                  {%- unless panel_has_rows -%}
+                    <tr><td colspan="4" class="sc-empty-cell">No sizing data added yet.</td></tr>
+                  {%- endunless -%}
+                  </tbody></table></div>
                 {%- if current_tab.settings.fit_notes != blank -%}
                   <div class="sc-fit-notes">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
-                      <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                     <div class="sc-fit-notes__text">{{ current_tab.settings.fit_notes }}</div>
                   </div>
                 {%- endif -%}
                 {%- if current_tab.settings.between_sizes != blank -%}
                   <div class="sc-between-sizes">
-                    <strong>Between sizes?</strong>
+                    <strong>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+                      Between sizes?
+                    </strong>
                     {{ current_tab.settings.between_sizes }}
                   </div>
                 {%- endif -%}
-              </div>{%- comment -%}/.sc-panel{%- endcomment -%}
+              </div>
           {%- endif -%}
 
-        </div>{%- comment -%}/.sc-panels{%- endcomment -%}
+        </div>
 
       {%- else -%}
         <p class="sc-empty">Add a Size Category Tab block in the theme editor to get started.</p>
       {%- endif -%}
 
-    </div>{%- comment -%}/.sc-card{%- endcomment -%}
+    </div>
 
     {%- if section.settings.measure_link_label != blank and section.settings.measure_link_url != blank -%}
       <p class="sc-measure-link">
@@ -205,210 +183,246 @@
 
 
 <style>
-  /* ── Size Chart Section ─────────────────────────────── */
   #size-chart-{{ section.id }} {
     padding: {{ section.settings.padding_top | default: 48 }}px 20px {{ section.settings.padding_bottom | default: 48 }}px;
+    background: #faf8f4;
   }
 
-  .sc-container {
+  #size-chart-{{ section.id }} .sc-container {
     max-width: 760px;
     margin: 0 auto;
   }
 
-  .sc-section-header {
+  #size-chart-{{ section.id }} .sc-section-header {
     text-align: center;
-    margin-bottom: 32px;
-  }
-  .sc-section-heading {
-    font-size: 1.625rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #1a1a1a;
-    margin: 0 0 8px;
-  }
-  @media (min-width: 768px) {
-    .sc-section-heading { font-size: 2rem; }
-  }
-  .sc-section-subheading {
-    font-size: 0.9375rem;
-    color: #777;
-    margin: 0;
-    line-height: 1.6;
+    margin-bottom: 28px;
   }
 
-  .sc-card {
+  #size-chart-{{ section.id }} .sc-section-heading {
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #2a2520;
+    margin: 0 0 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  @media (min-width: 768px) {
+    #size-chart-{{ section.id }} .sc-section-heading { font-size: 1.5rem; }
+  }
+
+  #size-chart-{{ section.id }} .sc-heading-icon {
+    flex-shrink: 0;
+  }
+
+  #size-chart-{{ section.id }} .sc-section-subheading {
+    font-size: 0.875rem;
+    color: #8a8077;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  #size-chart-{{ section.id }} .sc-card {
     background: #ffffff;
-    border: 1px solid #ebebeb;
-    border-radius: 14px;
+    border: 0.5px solid #e0dbd3;
+    border-radius: 12px;
     overflow: hidden;
   }
 
-  .sc-top-bar {
+  #size-chart-{{ section.id }} .sc-top-bar {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
-    padding: 16px 20px 0;
+    padding: 14px 18px 0;
   }
 
-  .sc-unit-toggle {
-    display: flex;
-    background: #f3f3f3;
+  #size-chart-{{ section.id }} .sc-unit-toggle {
+    display: inline-flex;
+    border: 1.5px solid #49c6be;
     border-radius: 999px;
-    padding: 3px;
-    gap: 2px;
+    overflow: hidden;
   }
-  .sc-unit-btn {
-    background: none;
-    border: none;
-    border-radius: 999px;
+
+  #size-chart-{{ section.id }} .sc-unit-btn {
+    display: inline-block;
     padding: 4px 14px;
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-family: inherit;
     font-weight: 500;
+    letter-spacing: 0.05em;
     cursor: pointer;
-    color: #888;
-    transition: background 0.2s ease, color 0.2s ease;
-    letter-spacing: 0.03em;
+    border: none;
+    transition: background 0.15s, color 0.15s;
   }
-  .sc-unit-btn.is-active {
+
+  #size-chart-{{ section.id }} .sc-unit-on {
     background: #49c6be;
     color: #ffffff;
   }
 
-  .sc-tabs {
+  #size-chart-{{ section.id }} .sc-unit-off {
+    background: #ffffff;
+    color: #49c6be;
+  }
+
+  #size-chart-{{ section.id }} .sc-tabs {
     display: flex;
-    border-bottom: 1px solid #ebebeb;
-    padding: 0 8px;
-    margin-top: 12px;
+    border-bottom: 1px solid #e8e4dd;
+    padding: 0 6px;
+    margin-top: 10px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
-  .sc-tabs::-webkit-scrollbar { display: none; }
+  #size-chart-{{ section.id }} .sc-tabs::-webkit-scrollbar { display: none; }
 
-  .sc-tab {
+  #size-chart-{{ section.id }} .sc-tab {
+    display: inline-block;
     background: none;
     border: none;
     border-bottom: 2px solid transparent;
-    padding: 12px 16px;
-    font-size: 0.8125rem;
+    padding: 10px 14px;
+    font-size: 0.6875rem;
     font-family: inherit;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    color: #888;
+    font-weight: 400;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #a09890;
     cursor: pointer;
     white-space: nowrap;
     margin-bottom: -1px;
-    transition: color 0.2s ease, border-color 0.2s ease;
-    text-transform: uppercase;
+    transition: color 0.15s, border-color 0.15s;
   }
-  .sc-tab.is-active {
-    color: #1a1a1a;
+
+  #size-chart-{{ section.id }} .sc-tab.is-active {
+    color: #49c6be;
     border-bottom-color: #49c6be;
-  }
-  .sc-tab:hover:not(.is-active) { color: #1a1a1a; }
-
-  .sc-panels { padding: 24px 20px; }
-  @media (min-width: 768px) {
-    .sc-panels { padding: 28px 28px; }
+    font-weight: 500;
   }
 
-  .sc-table-wrap {
+  #size-chart-{{ section.id }} .sc-tab:not(.is-active):hover {
+    color: #2a2520;
+    border-bottom-color: #c5e8e6;
+  }
+
+  #size-chart-{{ section.id }} .sc-panels {
+    padding: 20px 18px 4px;
+  }
+
+  #size-chart-{{ section.id }} .sc-table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    border: 1px solid #ebebeb;
+    margin-bottom: 14px;
+    border: 0.5px solid #e8e4dd;
+    border-radius: 8px;
+    overflow: hidden;
   }
-  .sc-table {
+
+  #size-chart-{{ section.id }} .sc-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
-    color: #1a1a1a;
-    min-width: 340px;
-  }
-  .sc-table thead tr { background: #f0faf9; }
-  .sc-table th {
-    padding: 12px 16px;
-    text-align: left;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    font-size: 0.75rem;
-    color: #49c6be;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .sc-table td {
-    padding: 12px 16px;
-    border-top: 1px solid #f3f3f3;
-    white-space: nowrap;
-  }
-  .sc-table tbody tr:hover td { background: #fafafa; }
-  .sc-size-label { font-weight: 600; }
-
-  .sc-empty-cell {
-    text-align: center;
-    color: #aaa;
     font-size: 0.8125rem;
-    padding: 24px 16px !important;
+    color: #2a2520;
+    min-width: 320px;
   }
 
-  .sc-fit-notes {
+  #size-chart-{{ section.id }} .sc-table thead tr {
+    background: #faf8f4;
+  }
+
+  #size-chart-{{ section.id }} .sc-table th {
+    padding: 9px 13px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.6875rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #8a8077;
+    white-space: nowrap;
+    border-bottom: 0.5px solid #e8e4dd;
+  }
+
+  #size-chart-{{ section.id }} .sc-table td {
+    padding: 10px 13px;
+    border-top: 0.5px solid #f0ece6;
+  }
+
+  #size-chart-{{ section.id }} .sc-table tbody tr:last-child td { border-bottom: none; }
+  #size-chart-{{ section.id }} .sc-table tbody tr:hover td { background: #faf8f4; }
+  #size-chart-{{ section.id }} .sc-size-label { font-weight: 500; }
+
+  #size-chart-{{ section.id }} .sc-empty-cell {
+    text-align: center;
+    color: #a09890;
+    font-size: 0.8125rem;
+    padding: 24px 13px;
+  }
+
+  #size-chart-{{ section.id }} .sc-fit-notes {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    background: #f0faf9;
-    border-left: 3px solid #49c6be;
-    border-radius: 0 8px 8px 0;
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    font-size: 0.875rem;
-    color: #1a1a1a;
-    line-height: 1.6;
+    gap: 9px;
+    background: #f5fbfa;
+    border-left: 1.5px solid #49c6be;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 0.8125rem;
+    color: #3a3530;
+    line-height: 1.65;
   }
-  .sc-fit-notes svg { flex-shrink: 0; margin-top: 3px; }
-  .sc-fit-notes__text p { margin: 0; }
 
-  .sc-between-sizes {
-    font-size: 0.875rem;
-    color: #555;
-    line-height: 1.6;
-    padding: 14px 16px;
-    background: #fafafa;
-    border-radius: 8px;
+  #size-chart-{{ section.id }} .sc-fit-notes svg { flex-shrink: 0; margin-top: 2px; }
+  #size-chart-{{ section.id }} .sc-fit-notes__text p { margin: 0; }
+
+  #size-chart-{{ section.id }} .sc-between-sizes {
+    background: #faf8f4;
+    border-radius: 6px;
+    padding: 11px 14px;
+    margin-bottom: 20px;
+    font-size: 0.8125rem;
+    color: #6a6560;
+    line-height: 1.65;
   }
-  .sc-between-sizes strong {
-    color: #1a1a1a;
-    display: block;
+
+  #size-chart-{{ section.id }} .sc-between-sizes strong {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #2a2520;
+    font-weight: 500;
     margin-bottom: 4px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    font-size: 0.875rem;
-  }
-  .sc-between-sizes p { margin: 0; }
-
-  .sc-measure-link {
-    text-align: center;
-    margin-top: 20px;
     font-size: 0.8125rem;
   }
-  .sc-measure-link a {
+
+  #size-chart-{{ section.id }} .sc-between-sizes strong svg { flex-shrink: 0; }
+  #size-chart-{{ section.id }} .sc-between-sizes p { margin: 0; }
+
+  #size-chart-{{ section.id }} .sc-measure-link {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+
+  #size-chart-{{ section.id }} .sc-measure-link a {
     color: #49c6be;
     text-decoration: underline;
     text-underline-offset: 2px;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.15s;
   }
-  .sc-measure-link a:hover { opacity: 0.75; }
 
-  .sc-empty {
-    font-size: 0.875rem;
-    color: #aaa;
+  #size-chart-{{ section.id }} .sc-measure-link a:hover { opacity: 0.75; }
+
+  #size-chart-{{ section.id }} .sc-empty {
+    font-size: 0.8125rem;
+    color: #a09890;
     padding: 32px 20px;
     text-align: center;
     margin: 0;
   }
 </style>
+
 
 <script>
 (function () {
@@ -417,13 +431,13 @@
   var section = document.getElementById('size-chart-{{ section.id }}');
   if (!section) return;
 
-  // ── Unit toggle ───────────────────────────────────────────────
   var unitBtns = section.querySelectorAll('.sc-unit-btn');
   unitBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var unit = btn.dataset.unit;
       unitBtns.forEach(function (b) {
-        b.classList.toggle('is-active', b.dataset.unit === unit);
+        b.classList.toggle('sc-unit-on', b.dataset.unit === unit);
+        b.classList.toggle('sc-unit-off', b.dataset.unit !== unit);
         b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
       });
       section.querySelectorAll('.unit-in').forEach(function (el) { el.hidden = unit !== 'in'; });
@@ -431,7 +445,6 @@
     });
   });
 
-  // ── Tabs ──────────────────────────────────────────────────────
   var tabs   = section.querySelectorAll('.sc-tab');
   var panels = section.querySelectorAll('.sc-panel');
 

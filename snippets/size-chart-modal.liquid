@@ -1,12 +1,10 @@
 {%- comment -%}
   Snippet: size-chart-modal.liquid
   Usage: {% render 'size-chart-modal', section: section %}
-
   Renders a "Size Guide" trigger link + full modal overlay.
   Rows belong to the tab block that precedes them in block order — no Tab ID needed.
 {%- endcomment -%}
 
-{%- comment -%} ── Trigger link ── {%- endcomment -%}
 <button
   type="button"
   class="scm-trigger"
@@ -14,10 +12,10 @@
   aria-controls="size-chart-modal-{{ section.id }}"
   aria-expanded="false"
 >
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
   {{- section.settings.trigger_label | default: 'Size Guide' -}}
 </button>
 
-{%- comment -%} ── Modal overlay ── {%- endcomment -%}
 <div
   id="size-chart-modal-{{ section.id }}"
   class="scm-overlay"
@@ -31,21 +29,19 @@
   <div class="scm-dialog">
 
     <div class="scm-header">
-      <h2 class="scm-heading">{{- section.settings.modal_heading | default: 'Size Guide' -}}</h2>
-
+      <h2 class="scm-heading">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
+        {{- section.settings.modal_heading | default: 'Size Guide' -}}
+      </h2>
       <div class="scm-unit-toggle" role="group" aria-label="Unit of measurement">
-        <button type="button" class="scm-unit-btn is-active" data-unit="in" aria-pressed="true">in</button>
-        <button type="button" class="scm-unit-btn" data-unit="cm" aria-pressed="false">cm</button>
+        <button type="button" class="scm-unit-btn scm-unit-on" data-unit="in" aria-pressed="true">in</button>
+        <button type="button" class="scm-unit-btn scm-unit-off" data-unit="cm" aria-pressed="false">cm</button>
       </div>
-
       <button type="button" class="scm-close" data-scm-close aria-label="Close size guide">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M1 1L17 17M17 1L1 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
 
-    {%- comment -%} Tab nav — first pass {%- endcomment -%}
     {%- liquid
       assign tab_count = 0
       for block in section.blocks
@@ -56,6 +52,7 @@
     -%}
 
     {%- if tab_count > 0 -%}
+
       <div class="scm-tabs" role="tablist" aria-label="Size categories">
         {%- assign tab_index = 0 -%}
         {%- for block in section.blocks -%}
@@ -76,7 +73,6 @@
         {%- endfor -%}
       </div>
 
-      {%- comment -%} Panels — second pass {%- endcomment -%}
       <div class="scm-panels">
         {%- assign current_tab = nil -%}
         {%- assign tab_index = 0 -%}
@@ -94,16 +90,16 @@
                   </tbody></table></div>
                 {%- if current_tab.settings.fit_notes != blank -%}
                   <div class="scm-fit-notes">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
-                      <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                     <div class="scm-fit-notes__text">{{ current_tab.settings.fit_notes }}</div>
                   </div>
                 {%- endif -%}
                 {%- if current_tab.settings.between_sizes != blank -%}
                   <div class="scm-between-sizes">
-                    <strong>Between sizes?</strong>
+                    <strong>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+                      Between sizes?
+                    </strong>
                     {{ current_tab.settings.between_sizes }}
                   </div>
                 {%- endif -%}
@@ -125,18 +121,9 @@
                   <thead>
                     <tr>
                       <th scope="col">Size</th>
-                      <th scope="col">
-                        <span class="unit-in">Bust (in)</span>
-                        <span class="unit-cm" hidden>Bust (cm)</span>
-                      </th>
-                      <th scope="col">
-                        <span class="unit-in">Waist (in)</span>
-                        <span class="unit-cm" hidden>Waist (cm)</span>
-                      </th>
-                      <th scope="col">
-                        <span class="unit-in">Hips (in)</span>
-                        <span class="unit-cm" hidden>Hips (cm)</span>
-                      </th>
+                      <th scope="col"><span class="unit-in">Bust (in)</span><span class="unit-cm" hidden>Bust (cm)</span></th>
+                      <th scope="col"><span class="unit-in">Waist (in)</span><span class="unit-cm" hidden>Waist (cm)</span></th>
+                      <th scope="col"><span class="unit-in">Hips (in)</span><span class="unit-cm" hidden>Hips (cm)</span></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -148,18 +135,9 @@
             {%- assign panel_has_rows = true -%}
             <tr>
               <td class="scm-size-label">{{ block.settings.size_label | default: 'XS' }}</td>
-              <td>
-                <span class="unit-in">{{ block.settings.bust_in | default: '—' }}</span>
-                <span class="unit-cm" hidden>{{ block.settings.bust_cm | default: '—' }}</span>
-              </td>
-              <td>
-                <span class="unit-in">{{ block.settings.waist_in | default: '—' }}</span>
-                <span class="unit-cm" hidden>{{ block.settings.waist_cm | default: '—' }}</span>
-              </td>
-              <td>
-                <span class="unit-in">{{ block.settings.hips_in | default: '—' }}</span>
-                <span class="unit-cm" hidden>{{ block.settings.hips_cm | default: '—' }}</span>
-              </td>
+              <td><span class="unit-in">{{ block.settings.bust_in | default: '—' }}</span><span class="unit-cm" hidden>{{ block.settings.bust_cm | default: '—' }}</span></td>
+              <td><span class="unit-in">{{ block.settings.waist_in | default: '—' }}</span><span class="unit-cm" hidden>{{ block.settings.waist_cm | default: '—' }}</span></td>
+              <td><span class="unit-in">{{ block.settings.hips_in | default: '—' }}</span><span class="unit-cm" hidden>{{ block.settings.hips_cm | default: '—' }}</span></td>
             </tr>
           {%- endif -%}
 
@@ -172,33 +150,37 @@
                 </tbody></table></div>
               {%- if current_tab.settings.fit_notes != blank -%}
                 <div class="scm-fit-notes">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <circle cx="8" cy="8" r="7" stroke="#49c6be" stroke-width="1.5"/>
-                    <path d="M8 7v4M8 5.5V5" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                   <div class="scm-fit-notes__text">{{ current_tab.settings.fit_notes }}</div>
                 </div>
               {%- endif -%}
               {%- if current_tab.settings.between_sizes != blank -%}
                 <div class="scm-between-sizes">
-                  <strong>Between sizes?</strong>
+                  <strong>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+                    Between sizes?
+                  </strong>
                   {{ current_tab.settings.between_sizes }}
                 </div>
               {%- endif -%}
             </div>
         {%- endif -%}
 
-      </div>{%- comment -%}/.scm-panels{%- endcomment -%}
+      </div>
+
     {%- else -%}
       <p class="scm-empty">No size data available yet.</p>
     {%- endif -%}
 
-  </div>{%- comment -%}/.scm-dialog{%- endcomment -%}
-</div>{%- comment -%}/.scm-overlay{%- endcomment -%}
+  </div>
+</div>
 
 
 <style>
   .scm-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     background: none;
     border: none;
     padding: 0;
@@ -208,8 +190,8 @@
     color: #49c6be;
     text-decoration: underline;
     text-underline-offset: 2px;
-    letter-spacing: 0.03em;
-    transition: opacity 0.2s ease;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
   }
   .scm-trigger:hover { opacity: 0.75; }
 
@@ -221,15 +203,13 @@
     align-items: flex-end;
     justify-content: center;
   }
-  @media (min-width: 768px) {
-    .scm-overlay { align-items: center; }
-  }
+  @media (min-width: 768px) { .scm-overlay { align-items: center; } }
   .scm-overlay[hidden] { display: none; }
 
   .scm-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(42,37,32,0.5);
     cursor: pointer;
     animation: scm-fade-in 0.25s ease;
   }
@@ -243,14 +223,14 @@
     max-height: 92dvh;
     overflow-y: auto;
     border-radius: 16px 16px 0 0;
-    padding: 24px 20px 32px;
+    padding: 22px 18px 32px;
     animation: scm-slide-up 0.3s cubic-bezier(0.22,1,0.36,1);
     overscroll-behavior: contain;
   }
   @media (min-width: 768px) {
     .scm-dialog {
-      border-radius: 16px;
-      padding: 32px 36px 36px;
+      border-radius: 14px;
+      padding: 28px 28px 32px;
       max-height: 85vh;
       animation: scm-fade-scale 0.25s cubic-bezier(0.22,1,0.36,1);
     }
@@ -259,62 +239,65 @@
   .scm-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 20px;
   }
+
   .scm-heading {
     flex: 1;
-    font-size: 1.125rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: #1a1a1a;
+    color: #2a2520;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  @media (min-width: 768px) { .scm-heading { font-size: 1.25rem; } }
 
   .scm-unit-toggle {
-    display: flex;
-    background: #f3f3f3;
+    display: inline-flex;
+    border: 1.5px solid #49c6be;
     border-radius: 999px;
-    padding: 3px;
-    gap: 2px;
+    overflow: hidden;
     flex-shrink: 0;
   }
+
   .scm-unit-btn {
-    background: none;
-    border: none;
-    border-radius: 999px;
-    padding: 4px 12px;
-    font-size: 0.75rem;
+    display: inline-block;
+    padding: 3px 12px;
+    font-size: 0.6875rem;
     font-family: inherit;
     font-weight: 500;
+    letter-spacing: 0.05em;
     cursor: pointer;
-    color: #888;
-    transition: background 0.2s ease, color 0.2s ease;
-    letter-spacing: 0.03em;
+    border: none;
+    transition: background 0.15s, color 0.15s;
   }
-  .scm-unit-btn.is-active { background: #49c6be; color: #ffffff; }
+
+  .scm-unit-on  { background: #49c6be; color: #ffffff; }
+  .scm-unit-off { background: #ffffff;  color: #49c6be; }
 
   .scm-close {
     background: none;
     border: none;
-    padding: 6px;
+    padding: 5px;
     cursor: pointer;
-    color: #888;
+    color: #a09890;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s ease, background 0.2s ease;
     flex-shrink: 0;
+    transition: color 0.15s, background 0.15s;
   }
-  .scm-close:hover { color: #1a1a1a; background: #f3f3f3; }
+  .scm-close:hover { color: #2a2520; background: #f0ece6; }
 
   .scm-tabs {
     display: flex;
-    border-bottom: 1px solid #ebebeb;
-    margin-bottom: 24px;
+    border-bottom: 1px solid #e8e4dd;
+    margin-bottom: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -322,101 +305,106 @@
   .scm-tabs::-webkit-scrollbar { display: none; }
 
   .scm-tab {
+    display: inline-block;
     background: none;
     border: none;
     border-bottom: 2px solid transparent;
-    padding: 10px 16px;
-    font-size: 0.8125rem;
+    padding: 9px 13px;
+    font-size: 0.6875rem;
     font-family: inherit;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    color: #888;
+    font-weight: 400;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #a09890;
     cursor: pointer;
     white-space: nowrap;
     margin-bottom: -1px;
-    transition: color 0.2s ease, border-color 0.2s ease;
-    text-transform: uppercase;
+    transition: color 0.15s, border-color 0.15s;
   }
-  .scm-tab.is-active { color: #1a1a1a; border-bottom-color: #49c6be; }
-  .scm-tab:hover:not(.is-active) { color: #1a1a1a; }
+  .scm-tab.is-active { color: #49c6be; border-bottom-color: #49c6be; font-weight: 500; }
+  .scm-tab:not(.is-active):hover { color: #2a2520; border-bottom-color: #c5e8e6; }
+
+  .scm-panels { padding: 16px 0 0; }
 
   .scm-table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    border: 1px solid #ebebeb;
+    margin-bottom: 14px;
+    border: 0.5px solid #e8e4dd;
+    border-radius: 8px;
+    overflow: hidden;
   }
+
   .scm-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8125rem;
-    color: #1a1a1a;
-    min-width: 320px;
+    color: #2a2520;
+    min-width: 300px;
   }
-  .scm-table thead tr { background: #f0faf9; }
+  .scm-table thead tr { background: #faf8f4; }
   .scm-table th {
-    padding: 11px 14px;
+    padding: 9px 13px;
     text-align: left;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    font-size: 0.75rem;
-    color: #49c6be;
+    font-weight: 500;
+    font-size: 0.6875rem;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
+    color: #8a8077;
     white-space: nowrap;
+    border-bottom: 0.5px solid #e8e4dd;
   }
-  .scm-table td {
-    padding: 11px 14px;
-    border-top: 1px solid #f3f3f3;
-    white-space: nowrap;
-  }
-  .scm-table tbody tr:hover td { background: #fafafa; }
-  .scm-size-label { font-weight: 600; }
+  .scm-table td { padding: 10px 13px; border-top: 0.5px solid #f0ece6; }
+  .scm-table tbody tr:last-child td { border-bottom: none; }
+  .scm-table tbody tr:hover td { background: #faf8f4; }
+  .scm-size-label { font-weight: 500; }
 
   .scm-empty-cell {
     text-align: center;
-    color: #aaa;
+    color: #a09890;
     font-size: 0.8125rem;
-    padding: 24px 14px !important;
+    padding: 24px 13px;
   }
 
   .scm-fit-notes {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    background: #f0faf9;
-    border-left: 3px solid #49c6be;
-    border-radius: 0 8px 8px 0;
-    padding: 12px 14px;
-    margin-bottom: 16px;
+    gap: 9px;
+    background: #f5fbfa;
+    border-left: 1.5px solid #49c6be;
+    padding: 10px 14px;
+    margin-bottom: 12px;
     font-size: 0.8125rem;
-    color: #1a1a1a;
-    line-height: 1.6;
+    color: #3a3530;
+    line-height: 1.65;
   }
   .scm-fit-notes svg { flex-shrink: 0; margin-top: 2px; }
   .scm-fit-notes__text p { margin: 0; }
 
   .scm-between-sizes {
+    background: #faf8f4;
+    border-radius: 6px;
+    padding: 11px 14px;
+    margin-bottom: 6px;
     font-size: 0.8125rem;
-    color: #555;
-    line-height: 1.6;
-    padding: 12px 14px;
-    background: #fafafa;
-    border-radius: 8px;
+    color: #6a6560;
+    line-height: 1.65;
   }
   .scm-between-sizes strong {
-    color: #1a1a1a;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #2a2520;
+    font-weight: 500;
     margin-bottom: 4px;
-    font-weight: 600;
     font-size: 0.8125rem;
-    letter-spacing: 0.02em;
   }
+  .scm-between-sizes strong svg { flex-shrink: 0; }
   .scm-between-sizes p { margin: 0; }
 
   .scm-empty {
     font-size: 0.8125rem;
-    color: #aaa;
+    color: #a09890;
     padding: 24px 0;
     text-align: center;
   }
@@ -431,9 +419,10 @@
     from { transform: scale(0.97); opacity: 0; } to { transform: scale(1); opacity: 1; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .scm-overlay *, .scm-dialog { animation: none !important; }
+    .scm-backdrop, .scm-dialog { animation: none !important; }
   }
 </style>
+
 
 <script>
 (function () {
@@ -448,7 +437,7 @@
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
     trigger.setAttribute('aria-expanded', 'true');
-    var first = modal.querySelector('button, [href], [tabindex]:not([tabindex="-1"])');
+    var first = modal.querySelector('button:not([data-scm-close])');
     if (first) first.focus();
   }
 
@@ -467,7 +456,6 @@
     if (!modal.hidden && e.key === 'Escape') closeModal();
   });
 
-  // Focus trap
   modal.addEventListener('keydown', function (e) {
     if (modal.hidden || e.key !== 'Tab') return;
     var focusable = Array.from(
@@ -479,13 +467,13 @@
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
-  // Unit toggle
   var unitBtns = modal.querySelectorAll('.scm-unit-btn');
   unitBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var unit = btn.dataset.unit;
       unitBtns.forEach(function (b) {
-        b.classList.toggle('is-active', b.dataset.unit === unit);
+        b.classList.toggle('scm-unit-on', b.dataset.unit === unit);
+        b.classList.toggle('scm-unit-off', b.dataset.unit !== unit);
         b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
       });
       modal.querySelectorAll('.unit-in').forEach(function (el) { el.hidden = unit !== 'in'; });
@@ -493,7 +481,6 @@
     });
   });
 
-  // Tabs
   var tabs   = modal.querySelectorAll('.scm-tab');
   var panels = modal.querySelectorAll('.scm-panel');
   tabs.forEach(function (tab) {
