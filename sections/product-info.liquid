@@ -1,0 +1,730 @@
+{%- comment -%}
+  Section: product-info.liquid
+  Purpose: Product purchase form — title, price, piece toggle, color swatches,
+           size selector, add to cart, wishlist.
+
+  Requires on same page:
+    bb-product-auto-connect.liquid (snippet) — fires bb:productDataReady
+    size-chart-modal.liquid (snippet) — size guide modal
+
+  Events fired:
+    bb:variantChange  { variantId, price, available }  — when size selected
+    bb:pieceChange    { url }                           — when piece toggled
+
+  Events listened:
+    bb:productDataReady { colorSwatches, pieceLinks, hasPieceToggle, color, piece }
+{%- endcomment -%}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+{%- comment -%}
+  Price display logic:
+  - If product has a piece (Top/Bottom) → show "From [lowest price]" until a piece is selected via JS
+  - Once piece is selected via JS, "From" is removed and exact price shown
+  - We detect "has piece" by checking if title contains " Top - " or " Bottom - "
+{%- endcomment -%}
+{%- assign product_title_lower = product.title | downcase -%}
+{%- assign is_bikini_piece = false -%}
+{%- if product_title_lower contains ' top - ' or product_title_lower contains ' bottom - ' -%}
+  {%- assign is_bikini_piece = true -%}
+{%- endif -%}
+
+{%- comment -%} Find lowest price across all variants for "From" display {%- endcomment -%}
+{%- assign lowest_price = product.price_min -%}
+
+{%- comment -%} Auto-connect engine — must render before form JS runs {%- endcomment -%}
+{% render 'bb-product-auto-connect' %}
+
+{%- comment -%} Size chart modal {%- endcomment -%}
+{% render 'size-chart-modal' %}
+
+<div class="bb-info" id="bb-info-{{ section.id }}">
+
+  {%- comment -%} ── Meta: title, tagline, stock, price ── {%- endcomment -%}
+  <div class="bb-info__meta">
+
+    <h1 class="bb-info__title">
+      {{- product.title | split: ' - ' | first -}}
+    </h1>
+
+    {%- if product.metafields.custom.tagline != blank -%}
+      <p class="bb-info__tagline">{{ product.metafields.custom.tagline }}</p>
+    {%- elsif product.description != blank -%}
+      <p class="bb-info__tagline">{{ product.description | strip_html | truncate: 130 }}</p>
+    {%- endif -%}
+
+    <div class="bb-info__meta-row">
+      {%- if current_variant.available -%}
+        <span class="bb-info__stock bb-info__stock--in">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          In stock
+        </span>
+      {%- else -%}
+        <span class="bb-info__stock bb-info__stock--out">Out of stock</span>
+      {%- endif -%}
+    </div>
+
+    <div class="bb-info__price-row">
+      <span class="bb-info__price" id="bb-price-{{ section.id }}">
+        <span class="bb-info__price-from" id="bb-price-from-{{ section.id }}" {%- unless is_bikini_piece %} hidden{%- endunless -%}>From </span>
+        <span id="bb-price-amount-{{ section.id }}">{{ current_variant.price | money }}</span>
+      </span>
+      {%- if section.settings.price_note != blank -%}
+        <span class="bb-info__price-note" id="bb-price-note-{{ section.id }}">{{ section.settings.price_note }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Store Liquid-rendered prices for JS to use — avoids hardcoding currency {%- endcomment -%}
+    <script>
+      window.BB = window.BB || {};
+      window.BB.prices = window.BB.prices || {};
+      window.BB.prices['{{ section.id }}'] = {
+        current: {{ current_variant.price | json }},
+        currentFormatted: {{ current_variant.price | money | json }},
+        isBikiniPiece: {{ is_bikini_piece | json }}
+      };
+    </script>
+
+    <div class="bb-info__links">
+      {%- if section.settings.ask_question_url != blank -%}
+        <a href="{{ section.settings.ask_question_url }}" class="bb-info__link">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Ask a question
+        </a>
+        <span class="bb-info__link-div" aria-hidden="true"></span>
+      {%- endif -%}
+      <button
+        type="button"
+        class="bb-info__link bb-info__size-guide-trigger"
+        aria-haspopup="dialog"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
+        Size guide
+      </button>
+    </div>
+
+  </div>
+
+  {%- comment -%} ── Piece toggle (bikinis only — shown by JS) ── {%- endcomment -%}
+  <div class="bb-info__section bb-info__piece-section" id="bb-piece-section-{{ section.id }}" hidden>
+    <div class="bb-info__section-label">Choose your piece</div>
+    <div class="bb-piece-toggle" role="group" aria-label="Choose your piece">
+      <button
+        type="button"
+        class="bb-piece-btn"
+        id="bb-piece-top-{{ section.id }}"
+        aria-pressed="false"
+      >
+        <span class="bb-piece-btn__name">Top</span>
+        <span class="bb-piece-btn__price" id="bb-piece-top-price-{{ section.id }}"></span>
+      </button>
+      <button
+        type="button"
+        class="bb-piece-btn"
+        id="bb-piece-bottom-{{ section.id }}"
+        aria-pressed="false"
+      >
+        <span class="bb-piece-btn__name">Bottom</span>
+        <span class="bb-piece-btn__price" id="bb-piece-bottom-price-{{ section.id }}"></span>
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} ── Color swatches ── {%- endcomment -%}
+  <div class="bb-info__section">
+    <div class="bb-info__section-label">
+      Choose your color
+      <span class="bb-info__section-value" id="bb-color-name-{{ section.id }}"></span>
+    </div>
+    <div
+      class="bb-swatches"
+      id="bb-swatches-{{ section.id }}"
+      role="list"
+      aria-label="Color options"
+    >
+      <div class="bb-swatches__loading" aria-live="polite">
+        <div class="bb-swatch-placeholder"></div>
+        <div class="bb-swatch-placeholder"></div>
+        <div class="bb-swatch-placeholder"></div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ── Size selector ── {%- endcomment -%}
+  <div class="bb-info__section">
+    <div class="bb-info__section-label">Choose your size</div>
+    <div class="bb-sizes" role="group" aria-label="Choose your size" id="bb-sizes-{{ section.id }}">
+      {%- for variant in product.variants -%}
+        <button
+          type="button"
+          class="bb-size-btn{%- if variant == current_variant %} is-active{%- endif -%}{%- unless variant.available %} is-sold-out{%- endunless -%}"
+          data-variant-id="{{ variant.id }}"
+          data-variant-price="{{ variant.price | money }}"
+          data-available="{{ variant.available }}"
+          aria-label="{{ variant.title }}{%- unless variant.available %} — sold out{%- endunless -%}"
+          {%- unless variant.available %}aria-disabled="true"{%- endunless -%}
+        >
+          {{ variant.title }}
+        </button>
+      {%- endfor -%}
+    </div>
+    <button
+      type="button"
+      class="bb-info__link bb-info__size-guide-trigger"
+      style="margin-top: 6px;"
+      aria-haspopup="dialog"
+    >
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
+      Not sure? View size guide
+    </button>
+    <div
+      class="bb-size-error"
+      id="bb-size-error-{{ section.id }}"
+      role="alert"
+      aria-live="polite"
+      hidden
+    >
+      Please select a size to continue.
+    </div>
+  </div>
+
+  {%- comment -%} ── Add to cart + wishlist ── {%- endcomment -%}
+  <div class="bb-info__atc-row">
+    <form
+      method="post"
+      action="/cart/add"
+      id="bb-atc-form-{{ section.id }}"
+      class="bb-atc-form"
+      novalidate
+    >
+      <input type="hidden" name="id" id="bb-variant-id-{{ section.id }}" value="{{ current_variant.id }}">
+      <input type="hidden" name="quantity" value="1">
+      <button
+        type="submit"
+        class="bb-atc-btn"
+        id="bb-atc-btn-{{ section.id }}"
+        {%- unless current_variant.available %} disabled aria-disabled="true"{%- endunless -%}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="bb-atc-btn__label" id="bb-atc-label-{{ section.id }}">Add to cart</span>
+        <span class="bb-atc-btn__price" id="bb-atc-price-{{ section.id }}">— {{ current_variant.price | money }}</span>
+      </button>
+    </form>
+
+    <button
+      type="button"
+      class="bb-wl-btn"
+      id="bb-wl-btn-{{ section.id }}"
+      data-wishlist-handle="{{ product.handle }}"
+      data-wishlist-product-id="{{ product.id }}"
+      aria-label="Add {{ product.title | escape }} to wishlist"
+      aria-pressed="false"
+    >
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </button>
+  </div>
+
+</div>
+
+
+<style>
+  #bb-info-{{ section.id }} {
+    background: #ffffff;
+    padding: 22px 22px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Meta */
+  #bb-info-{{ section.id }} .bb-info__meta {
+    padding-bottom: 16px;
+    border-bottom: 0.5px solid #f0ece6;
+    margin-bottom: 16px;
+  }
+  #bb-info-{{ section.id }} .bb-info__title {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2a2520;
+    margin: 0 0 5px;
+  }
+  #bb-info-{{ section.id }} .bb-info__tagline {
+    font-size: 0.75rem;
+    color: #8a8077;
+    line-height: 1.55;
+    margin: 0 0 10px;
+  }
+  #bb-info-{{ section.id }} .bb-info__meta-row {
+    margin-bottom: 6px;
+  }
+  #bb-info-{{ section.id }} .bb-info__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+  }
+  #bb-info-{{ section.id }} .bb-info__stock--in { color: #3a7d44; }
+  #bb-info-{{ section.id }} .bb-info__stock--out { color: #a09890; }
+
+  #bb-info-{{ section.id }} .bb-info__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  #bb-info-{{ section.id }} .bb-info__price {
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: #2a2520;
+  }
+  #bb-info-{{ section.id }} .bb-info__price-note {
+    font-size: 0.6875rem;
+    color: #49c6be;
+  }
+
+  #bb-info-{{ section.id }} .bb-info__links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  #bb-info-{{ section.id }} .bb-info__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    color: #49c6be;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  #bb-info-{{ section.id }} .bb-info__link:hover { opacity: 0.75; }
+  #bb-info-{{ section.id }} .bb-info__link-div {
+    width: 0.5px;
+    height: 11px;
+    background: #d8d3cc;
+  }
+
+  /* Section wrapper */
+  #bb-info-{{ section.id }} .bb-info__section {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 0.5px solid #f0ece6;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  #bb-info-{{ section.id }} .bb-info__section-label {
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2a2520;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #bb-info-{{ section.id }} .bb-info__section-value {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.75rem;
+    color: #2a2520;
+  }
+
+  /* Piece toggle */
+  #bb-info-{{ section.id }} .bb-piece-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  #bb-info-{{ section.id }} .bb-piece-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px;
+    border: 1.5px solid #e0dbd3;
+    border-radius: 8px;
+    background: #ffffff;
+    text-decoration: none;
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+    gap: 2px;
+  }
+  #bb-info-{{ section.id }} .bb-piece-btn.is-active {
+    border-color: #49c6be;
+    background: #f0faf9;
+  }
+  #bb-info-{{ section.id }} .bb-piece-btn__name {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #2a2520;
+  }
+  #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__name { color: #49c6be; }
+  #bb-info-{{ section.id }} .bb-piece-btn__price {
+    font-size: 0.625rem;
+    color: #8a8077;
+  }
+  #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__price { color: #49c6be; }
+
+  /* Swatches */
+  #bb-info-{{ section.id }} .bb-swatches {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  #bb-info-{{ section.id }} .bb-swatches__loading { display: flex; gap: 8px; }
+  #bb-info-{{ section.id }} .bb-swatch-placeholder {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #f0ece6;
+    animation: bb-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes bb-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
+  }
+  #bb-info-{{ section.id }} .bb-swatch {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: block;
+    border: none;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  #bb-info-{{ section.id }} .bb-swatch:hover { opacity: 0.85; }
+  #bb-info-{{ section.id }} .bb-swatch.is-active {
+    outline: 2px solid #49c6be;
+    outline-offset: 3px;
+  }
+  #bb-info-{{ section.id }} .bb-swatch.is-unavailable {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* Size buttons */
+  #bb-info-{{ section.id }} .bb-sizes {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  #bb-info-{{ section.id }} .bb-size-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #d0cbc4;
+    background: #ffffff;
+    color: #2a2520;
+    font-size: 0.6875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+  #bb-info-{{ section.id }} .bb-size-btn.is-active {
+    border: 1.5px solid #2a2520;
+    font-weight: 500;
+  }
+  #bb-info-{{ section.id }} .bb-size-btn.is-sold-out {
+    border-color: #e8e4dd;
+    background: #faf8f4;
+    color: #c8c0b8;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+  #bb-info-{{ section.id }} .bb-size-btn:not(.is-sold-out):not(.is-active):hover {
+    border-color: #2a2520;
+  }
+  #bb-info-{{ section.id }} .bb-size-error {
+    font-size: 0.6875rem;
+    color: #c0392b;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ATC row */
+  #bb-info-{{ section.id }} .bb-info__atc-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  #bb-info-{{ section.id }} .bb-atc-form { flex: 1; }
+  #bb-info-{{ section.id }} .bb-atc-btn {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: #49c6be;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  #bb-info-{{ section.id }} .bb-atc-btn:hover:not(:disabled) { opacity: 0.9; }
+  #bb-info-{{ section.id }} .bb-atc-btn:disabled {
+    background: #c8c0b8;
+    cursor: not-allowed;
+    opacity: 1;
+  }
+  #bb-info-{{ section.id }} .bb-atc-btn svg { stroke: #ffffff; flex-shrink: 0; }
+  #bb-info-{{ section.id }} .bb-atc-btn__price { opacity: 0.85; font-weight: 400; }
+
+  #bb-info-{{ section.id }} .bb-wl-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid #e0dbd3;
+    background: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+  }
+  #bb-info-{{ section.id }} .bb-wl-btn:hover { border-color: #49c6be; }
+  #bb-info-{{ section.id }} .bb-wl-btn svg { stroke: #a09890; transition: stroke 0.15s, fill 0.15s; }
+  #bb-info-{{ section.id }} .bb-wl-btn.is-active svg { stroke: #49c6be; fill: #49c6be; }
+
+  @media (max-width: 767px) {
+    #bb-info-{{ section.id }} { padding: 16px 14px 0; }
+  }
+</style>
+
+
+<script>
+(function () {
+  'use strict';
+
+  var sid         = '{{ section.id }}';
+  var section     = document.getElementById('bb-info-' + sid);
+  if (!section) return;
+
+  var priceAmountEl = document.getElementById('bb-price-amount-' + sid);
+  var priceFromEl   = document.getElementById('bb-price-from-' + sid);
+  var priceNoteEl   = document.getElementById('bb-price-note-' + sid);
+  var atcPriceEl    = document.getElementById('bb-atc-price-' + sid);
+  var atcLabelEl    = document.getElementById('bb-atc-label-' + sid);
+  var atcBtn        = document.getElementById('bb-atc-btn-' + sid);
+  var variantInput  = document.getElementById('bb-variant-id-' + sid);
+  var sizeError     = document.getElementById('bb-size-error-' + sid);
+  var colorNameEl   = document.getElementById('bb-color-name-' + sid);
+  var swatchWrap    = document.getElementById('bb-swatches-' + sid);
+  var pieceSection  = document.getElementById('bb-piece-section-' + sid);
+  var pieceTopBtn   = document.getElementById('bb-piece-top-' + sid);
+  var pieceBotBtn   = document.getElementById('bb-piece-bottom-' + sid);
+  var pieceTopPrc   = document.getElementById('bb-piece-top-price-' + sid);
+  var pieceBotPrc   = document.getElementById('bb-piece-bottom-price-' + sid);
+  var wlBtn         = document.getElementById('bb-wl-btn-' + sid);
+  var sizeButtons   = section.querySelectorAll('.bb-size-btn');
+  var selectedVariantId = null;
+
+  /* Prices pre-rendered by Liquid — currency handled by Shopify Markets */
+  var bbPrices = (window.BB && window.BB.prices && window.BB.prices[sid]) || {};
+
+  function removePriceFrom() {
+    if (priceFromEl) priceFromEl.hidden = true;
+    if (priceNoteEl) priceNoteEl.hidden = true;
+  }
+
+  /* ── Auto-connect data ── */
+  document.addEventListener('bb:productDataReady', function (e) {
+    var data = e.detail;
+
+    /* Piece toggle */
+    if (data.hasPieceToggle) {
+      pieceSection.hidden = false;
+
+      var currentPiece    = data.piece;
+      var currentFormatted = bbPrices.currentFormatted || '';
+
+      if (currentPiece === 'Top') {
+        pieceTopBtn.classList.add('is-active');
+        pieceTopBtn.href            = data.url;
+        pieceTopPrc.textContent     = currentFormatted;
+        if (data.pieceLinks['Bottom']) {
+          pieceBotBtn.href = data.pieceLinks['Bottom'].url;
+          if (data.pieceLinks['Bottom'].price) {
+            pieceBotPrc.textContent = formatShopifyMoney(data.pieceLinks['Bottom'].price);
+          }
+        }
+      } else if (currentPiece === 'Bottom') {
+        pieceBotBtn.classList.add('is-active');
+        pieceBotBtn.href            = data.url;
+        pieceBotPrc.textContent     = currentFormatted;
+        if (data.pieceLinks['Top']) {
+          pieceTopBtn.href = data.pieceLinks['Top'].url;
+          if (data.pieceLinks['Top'].price) {
+            pieceTopPrc.textContent = formatShopifyMoney(data.pieceLinks['Top'].price);
+          }
+        }
+      }
+
+      /* Piece is already known — remove "From" immediately */
+      removePriceFrom();
+    }
+
+    /* Color swatches */
+    if (data.colorSwatches && data.colorSwatches.length > 0) {
+      swatchWrap.innerHTML = '';
+      if (colorNameEl && data.color) colorNameEl.textContent = data.color;
+
+      data.colorSwatches.forEach(function (sw) {
+        var el      = document.createElement('a');
+        el.href     = sw.url;
+        el.className = 'bb-swatch' +
+          (sw.active       ? ' is-active'      : '') +
+          (!sw.available   ? ' is-unavailable' : '');
+        el.setAttribute('role', 'listitem');
+        el.setAttribute('aria-label', sw.color + (!sw.available ? ' — sold out' : ''));
+        el.title = sw.color;
+
+        if (sw.useImage) {
+          el.style.backgroundImage = 'url(' + sw.imageUrl + ')';
+        } else {
+          el.style.background = sw.hex;
+          if (sw.hex === '#ffffff') el.style.border = '1px solid #e0dbd3';
+        }
+        swatchWrap.appendChild(el);
+      });
+    }
+  });
+
+  /* ── Size selection ── */
+  sizeButtons.forEach(function (btn) {
+    if (btn.dataset.available === 'false') return;
+    btn.addEventListener('click', function () {
+      sizeButtons.forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      selectedVariantId = btn.dataset.variantId;
+      if (variantInput)  variantInput.value = selectedVariantId;
+      if (priceAmountEl) priceAmountEl.textContent = btn.dataset.variantPrice;
+      if (atcPriceEl)    atcPriceEl.textContent = '— ' + btn.dataset.variantPrice;
+      if (sizeError)     sizeError.hidden = true;
+      removePriceFrom();
+
+      document.dispatchEvent(new CustomEvent('bb:variantChange', {
+        detail: {
+          variantId: selectedVariantId,
+          price:     btn.dataset.variantPrice,
+          available: true
+        }
+      }));
+    });
+  });
+
+  /* ── ATC submit ── */
+  var form = document.getElementById('bb-atc-form-' + sid);
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      if (!section.querySelector('.bb-size-btn.is-active')) {
+        e.preventDefault();
+        if (sizeError) sizeError.hidden = false;
+        var first = section.querySelector('.bb-size-btn:not(.is-sold-out)');
+        if (first) first.focus();
+        return;
+      }
+      if (atcLabelEl) atcLabelEl.textContent = 'Adding…';
+      if (atcBtn)     atcBtn.disabled = true;
+      setTimeout(function () {
+        if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
+        if (atcBtn)     atcBtn.disabled = false;
+      }, 1800);
+    });
+  }
+
+  /* ── Wishlist ── */
+  if (wlBtn) {
+    wlBtn.addEventListener('click', function () {
+      var active = wlBtn.classList.toggle('is-active');
+      wlBtn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      document.dispatchEvent(new CustomEvent('wishlist:toggle', {
+        detail: {
+          handle:    wlBtn.dataset.wishlistHandle,
+          productId: wlBtn.dataset.wishlistProductId,
+          active:    active
+        }
+      }));
+    });
+  }
+
+  /* ── Size guide trigger ── */
+  section.querySelectorAll('.bb-info__size-guide-trigger').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var modal = document.querySelector('.scm-overlay');
+      if (modal) {
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  function formatShopifyMoney(cents) {
+    if (!cents) return '';
+    /* Use Shopify's own money format string so Markets/currency is respected */
+    var amount = parseFloat(cents) / 100;
+    return window.Shopify && window.Shopify.currency
+      ? amount.toFixed(2) + ' ' + window.Shopify.currency.active
+      : amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Product info",
+  "tag": "div",
+  "class": "bb-product-info-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Price note",
+      "default": "Top and bottom sold separately."
+    },
+    {
+      "type": "url",
+      "id": "ask_question_url",
+      "label": "Ask a question URL"
+    }
+  ],
+  "presets": [
+    { "name": "Product info" }
+  ]
+}
+{% endschema %}

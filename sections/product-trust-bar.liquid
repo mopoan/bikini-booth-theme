@@ -1,0 +1,153 @@
+{%- comment -%}
+  Section: product-trust-bar.liquid
+  Purpose: Four trust signals below the ATC button on product pages.
+  Fully editable in the theme editor — labels, icons, and links per item.
+  Standalone: no dependencies on other sections or snippets.
+{%- endcomment -%}
+
+<div class="bb-trust" id="bb-trust-{{ section.id }}">
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'trust_item' -%}
+      <div class="bb-trust__item" {{ block.shopify_attributes }}>
+        {%- case block.settings.icon -%}
+          {%- when 'shipping' -%}
+            <svg class="bb-trust__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          {%- when 'location' -%}
+            <svg class="bb-trust__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {%- when 'returns' -%}
+            <svg class="bb-trust__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.32"/></svg>
+          {%- when 'lock' -%}
+            <svg class="bb-trust__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          {%- when 'star' -%}
+            <svg class="bb-trust__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          {%- when 'leaf' -%}
+            <svg class="bb-trust__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 22c1.25-1.25 2.5-2.5 3.75-5C7 14.5 7.5 12 8 10c1-4 4-7 9-8-1 5-2 8-4 10s-5 3-8 4c-1.5.5-2.5 1-3 2z"/><path d="M2 22L12 12"/></svg>
+          {%- else -%}
+            <svg class="bb-trust__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#49c6be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        {%- endcase -%}
+        <span class="bb-trust__label">{{ block.settings.label }}</span>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+
+<style>
+  #bb-trust-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 14px 22px;
+    background: #ffffff;
+    border-top: 0.5px solid #f0ece6;
+    border-bottom: 0.5px solid #f0ece6;
+  }
+
+  #bb-trust-{{ section.id }} .bb-trust__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    text-align: center;
+  }
+
+  #bb-trust-{{ section.id }} .bb-trust__icon {
+    flex-shrink: 0;
+  }
+
+  #bb-trust-{{ section.id }} .bb-trust__label {
+    font-size: 0.5625rem;
+    color: #6a6560;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+  }
+
+  @media (max-width: 767px) {
+    #bb-trust-{{ section.id }} {
+      padding: 14px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    #bb-trust-{{ section.id }} .bb-trust__item {
+      flex-direction: row;
+      text-align: left;
+      gap: 8px;
+    }
+    #bb-trust-{{ section.id }} .bb-trust__label {
+      font-size: 0.6875rem;
+    }
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Product trust bar",
+  "tag": "div",
+  "class": "bb-product-trust-section",
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping",  "label": "Shipping truck" },
+            { "value": "location",  "label": "Location pin" },
+            { "value": "returns",   "label": "Returns arrow" },
+            { "value": "lock",      "label": "Secure lock" },
+            { "value": "star",      "label": "Star" },
+            { "value": "leaf",      "label": "Leaf" },
+            { "value": "shield",    "label": "Shield" }
+          ],
+          "default": "shield"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Trust signal"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product trust bar",
+      "blocks": [
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "label": "Free shipping over $250"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "location",
+            "label": "Ships from Thailand"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "returns",
+            "label": "30-day returns"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "lock",
+            "label": "Secure checkout"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

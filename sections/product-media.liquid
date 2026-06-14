@@ -1,0 +1,379 @@
+{%- comment -%}
+  Section: product-media.liquid
+  Purpose: Product image gallery for Bikini Booth product pages.
+  Renders: Main image with crossfade, thumbnail strip, mobile swipe + dots, zoom overlay.
+  Standalone: No dependencies on other sections or snippets.
+{%- endcomment -%}
+
+<div class="bb-media" id="bb-media-{{ section.id }}">
+
+  {%- comment -%} ── Main image area ── {%- endcomment -%}
+  <div class="bb-media__main" id="bb-media-main-{{ section.id }}" aria-label="Product images">
+
+    {%- if product.images.size > 0 -%}
+      {%- for image in product.images -%}
+        <div
+          class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
+          data-index="{{ forloop.index0 }}"
+          role="img"
+          aria-label="{{ image.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.images.size }}"
+          aria-hidden="{%- if forloop.first -%}false{%- else -%}true{%- endif -%}"
+        >
+          <img
+            src="{{ image | image_url: width: 1000 }}"
+            srcset="
+              {{ image | image_url: width: 480 }} 480w,
+              {{ image | image_url: width: 750 }} 750w,
+              {{ image | image_url: width: 1000 }} 1000w
+            "
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ image.alt | escape | default: product.title }}"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+            class="bb-media__img"
+          >
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      <div class="bb-media__slide is-active bb-media__slide--empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0b4a8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p class="bb-media__empty-label">No images</p>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Zoom button {%- endcomment -%}
+    {%- if section.settings.enable_zoom and product.images.size > 0 -%}
+      <button
+        type="button"
+        class="bb-media__zoom"
+        id="bb-media-zoom-{{ section.id }}"
+        aria-label="Zoom image"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+    {%- endif -%}
+
+    {%- comment -%} Mobile dots {%- endcomment -%}
+    {%- if product.images.size > 1 -%}
+      <div class="bb-media__dots" aria-hidden="true" id="bb-media-dots-{{ section.id }}">
+        {%- for image in product.images -%}
+          <div class="bb-media__dot{%- if forloop.first %} is-active{%- endif -%}" data-index="{{ forloop.index0 }}"></div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+
+  {%- comment -%} ── Thumbnail strip ── {%- endcomment -%}
+  {%- if product.images.size > 1 -%}
+    <div
+      class="bb-media__thumbs"
+      id="bb-media-thumbs-{{ section.id }}"
+      role="tablist"
+      aria-label="Product image thumbnails"
+    >
+      {%- for image in product.images -%}
+        <button
+          type="button"
+          class="bb-media__thumb{%- if forloop.first %} is-active{%- endif -%}"
+          role="tab"
+          aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
+          aria-label="View image {{ forloop.index }}"
+          data-index="{{ forloop.index0 }}"
+        >
+          <img
+            src="{{ image | image_url: width: 120, height: 150, crop: 'center' }}"
+            alt="{{ image.alt | escape | default: product.title }}"
+            width="48"
+            height="60"
+            loading="lazy"
+          >
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+</div>
+
+
+<style>
+  #bb-media-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    background: #f0ece6;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    max-height: 100vh;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__main {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    {%- if section.settings.image_ratio == 'square' -%}
+    aspect-ratio: 1;
+    {%- elsif section.settings.image_ratio == 'portrait' -%}
+    aspect-ratio: 3 / 4;
+    {%- else -%}
+    min-height: 420px;
+    {%- endif -%}
+  }
+
+  #bb-media-{{ section.id }} .bb-media__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  #bb-media-{{ section.id }} .bb-media__slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #bb-media-{{ section.id }} .bb-media__slide--empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f0ece6;
+  }
+  #bb-media-{{ section.id }} .bb-media__empty-label {
+    font-size: 0.75rem;
+    color: #c0b4a8;
+    letter-spacing: 0.04em;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__zoom {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255,255,255,0.92);
+    border: 0.5px solid #e0dbd3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #2a2520;
+    transition: background 0.15s;
+    z-index: 2;
+  }
+  #bb-media-{{ section.id }} .bb-media__zoom:hover { background: #ffffff; }
+
+  #bb-media-{{ section.id }} .bb-media__dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: none;
+    justify-content: center;
+    gap: 5px;
+    z-index: 2;
+  }
+  #bb-media-{{ section.id }} .bb-media__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    transition: background 0.2s, width 0.2s;
+    cursor: pointer;
+  }
+  #bb-media-{{ section.id }} .bb-media__dot.is-active {
+    background: #ffffff;
+    width: 14px;
+    border-radius: 3px;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__thumbs {
+    display: flex;
+    gap: 5px;
+    padding: 8px 12px;
+    background: #f0ece6;
+    border-top: 0.5px solid #e0d8cf;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
+  #bb-media-{{ section.id }} .bb-media__thumbs::-webkit-scrollbar { display: none; }
+
+  #bb-media-{{ section.id }} .bb-media__thumb {
+    width: 48px;
+    height: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+  }
+  #bb-media-{{ section.id }} .bb-media__thumb.is-active { border-color: #49c6be; }
+  #bb-media-{{ section.id }} .bb-media__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 767px) {
+    #bb-media-{{ section.id }} {
+      position: relative;
+      max-height: none;
+      top: auto;
+    }
+    #bb-media-{{ section.id }} .bb-media__main { min-height: 320px; }
+    #bb-media-{{ section.id }} .bb-media__dots { display: flex; }
+    #bb-media-{{ section.id }} .bb-media__thumbs { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #bb-media-{{ section.id }} .bb-media__slide { transition: none; }
+  }
+</style>
+
+
+<script>
+(function () {
+  'use strict';
+
+  var section   = document.getElementById('bb-media-{{ section.id }}');
+  if (!section) return;
+
+  var mainEl    = document.getElementById('bb-media-main-{{ section.id }}');
+  var slides    = section.querySelectorAll('.bb-media__slide');
+  var thumbs    = section.querySelectorAll('.bb-media__thumb');
+  var dots      = section.querySelectorAll('.bb-media__dot');
+  var zoomBtn   = document.getElementById('bb-media-zoom-{{ section.id }}');
+  var activeIdx = 0;
+
+  /* ── Go to slide ── */
+  function goTo(idx) {
+    if (idx < 0 || idx >= slides.length) return;
+    slides.forEach(function (s, i) {
+      s.classList.toggle('is-active', i === idx);
+      s.setAttribute('aria-hidden', i !== idx ? 'true' : 'false');
+    });
+    thumbs.forEach(function (t, i) {
+      t.classList.toggle('is-active', i === idx);
+      t.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+    dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
+    activeIdx = idx;
+
+    /* Broadcast so other sections (e.g. product-info) can react */
+    document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: idx } }));
+  }
+
+  /* Thumbnail clicks */
+  thumbs.forEach(function (btn) {
+    btn.addEventListener('click', function () { goTo(parseInt(btn.dataset.index, 10)); });
+  });
+
+  /* Dot clicks */
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () { goTo(parseInt(dot.dataset.index, 10)); });
+  });
+
+  /* Mobile swipe */
+  if (mainEl) {
+    var startX = 0;
+    mainEl.addEventListener('touchstart', function (e) {
+      startX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    mainEl.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) < 40) return;
+      if (dx < 0) goTo(activeIdx + 1);
+      if (dx > 0) goTo(activeIdx - 1);
+    }, { passive: true });
+  }
+
+  /* Zoom overlay */
+  if (zoomBtn) {
+    zoomBtn.addEventListener('click', function () {
+      var activeImg = section.querySelector('.bb-media__slide.is-active img');
+      if (!activeImg) return;
+
+      var overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
+
+      var img    = document.createElement('img');
+      img.src    = activeImg.src.replace(/width=\d+/, 'width=1600');
+      img.alt    = activeImg.alt;
+      img.style.cssText = 'max-width:90vw;max-height:90vh;object-fit:contain;';
+      overlay.appendChild(img);
+
+      var closeBtn = document.createElement('button');
+      closeBtn.style.cssText = 'position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.12);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;';
+      closeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+      closeBtn.setAttribute('aria-label', 'Close zoom');
+      overlay.appendChild(closeBtn);
+
+      document.body.appendChild(overlay);
+      document.body.style.overflow = 'hidden';
+
+      function close() {
+        overlay.remove();
+        document.body.style.overflow = '';
+      }
+
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay || e.target === closeBtn || closeBtn.contains(e.target)) close();
+      });
+      document.addEventListener('keydown', function esc(e) {
+        if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+      });
+    });
+  }
+
+  /* Listen for external slide change requests (e.g. from color swatch navigation) */
+  document.addEventListener('bb:requestSlide', function (e) {
+    if (e.detail && typeof e.detail.index === 'number') goTo(e.detail.index);
+  });
+
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Product media",
+  "tag": "div",
+  "class": "bb-product-media-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "natural", "label": "Natural" },
+        { "value": "square",  "label": "Square (1:1)" },
+        { "value": "portrait","label": "Portrait (3:4)" }
+      ],
+      "default": "natural"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable zoom",
+      "default": true
+    }
+  ],
+  "presets": [
+    { "name": "Product media" }
+  ]
+}
+{% endschema %}

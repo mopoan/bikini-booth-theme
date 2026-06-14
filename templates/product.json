@@ -1,23 +1,122 @@
 {
   "sections": {
-    "main-product": {
-      "type": "main-product",
+    "product-media": {
+      "type": "product-media",
+      "settings": {
+        "image_ratio": "natural",
+        "enable_zoom": true
+      }
+    },
+    "product-info": {
+      "type": "product-info",
+      "settings": {
+        "price_note": "Top and bottom sold separately.",
+        "ask_question_url": "/pages/contact"
+      }
+    },
+    "product-trust-bar": {
+      "type": "product-trust-bar",
       "blocks": {
-        "look-item-1": {
+        "trust-1": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "label": "Free shipping over $250"
+          }
+        },
+        "trust-2": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "location",
+            "label": "Ships from Thailand"
+          }
+        },
+        "trust-3": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "returns",
+            "label": "30-day returns"
+          }
+        },
+        "trust-4": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "lock",
+            "label": "Secure checkout"
+          }
+        }
+      },
+      "block_order": ["trust-1", "trust-2", "trust-3", "trust-4"]
+    },
+    "product-fit-note": {
+      "type": "product-fit-note",
+      "settings": {
+        "fit_note": "<p>Our model is 5'9.5\", wears size S top and size S bottom. For reference, she has a 34B bust, 24\" waist and 34.5\" hips.</p>"
+      }
+    },
+    "product-social-proof": {
+      "type": "product-social-proof",
+      "blocks": {
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "google_url": "",
+            "rating": 5,
+            "quote": "The most flattering bikini I've ever owned. Wore it every day in Koh Samui — the fit is perfect and the fabric holds up beautifully.",
+            "author": "Sofia P. — Bangkok",
+            "initials": "SP",
+            "verified": true
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "google_url": "",
+            "rating": 5,
+            "quote": "Amazing quality and the colours are stunning. I get so many compliments every time I wear mine. Will definitely be buying more.",
+            "author": "Emma R. — London",
+            "initials": "ER",
+            "verified": true
+          }
+        },
+        "review-3": {
+          "type": "review",
+          "settings": {
+            "google_url": "",
+            "rating": 5,
+            "quote": "Perfect for my holiday in Phuket. The sizing is great and it stayed in place all day. Highly recommend!",
+            "author": "Claire T. — Sydney",
+            "initials": "CT",
+            "verified": true
+          }
+        }
+      },
+      "block_order": ["review-1", "review-2", "review-3"],
+      "settings": {
+        "sp_section_title": "As worn by our community",
+        "sp_ugc_pool_size": 10,
+        "sp_ugc_handles": "@bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth",
+        "sp_instagram_handle": "@bikinibooth"
+      }
+    },
+    "product-complete-the-look": {
+      "type": "product-complete-the-look",
+      "blocks": {
+        "look-1": {
           "type": "look_item",
           "settings": {
             "ctl_label": "This item",
             "ctl_is_current": true
           }
         },
-        "look-item-2": {
+        "look-2": {
           "type": "look_item",
           "settings": {
             "ctl_label": "Bottom",
             "ctl_is_current": false
           }
         },
-        "look-item-3": {
+        "look-3": {
           "type": "look_item",
           "settings": {
             "ctl_label": "Resortwear",
@@ -25,28 +124,22 @@
           }
         }
       },
-      "block_order": [
-        "look-item-1",
-        "look-item-2",
-        "look-item-3"
-      ],
+      "block_order": ["look-1", "look-2", "look-3"]
+    },
+    "product-accordions": {
+      "type": "product-accordions",
       "settings": {
-        "price_note": "Top and bottom sold separately.",
-        "ask_question_url": "/pages/contact",
-        "fit_note": "<p>Our model is 5'9.5\", wears size S top and size S bottom.</p>",
-        "care_instructions": "<p>Rinse thoroughly in cold water after each use and dry flat or hang in the shade. Hand wash only with a small amount of mild detergent. Do not machine wash, tumble dry, bleach, iron, or dry clean.</p>",
-        "shipping_info": "<p>Free shipping on orders over $250. Flat rate $7 for domestic Thailand orders. International orders ship via DHL or UPS express from Thailand. Returns are not accepted on sale items.</p>",
-        "sp_section_title": "As worn by our community",
-        "sp_ugc_pool_size": 10,
-        "sp_ugc_handles": "@bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth, @bikinibooth",
-        "sp_instagram_handle": "@bikinibooth",
-        "sp_review_rating": 5,
-        "sp_review_text": "<p>\"The most flattering bikini I've ever owned. Wore it every day in Koh Samui — the fit is perfect and the fabric holds up beautifully.\"</p>",
-        "sp_review_author": "Sofia P. — Bangkok",
-        "sp_review_initials": "SP",
-        "sp_review_verified": true
+        "shipping_page_handle": "shipping-returns"
       }
     }
   },
-  "order": ["main-product"]
+  "order": [
+    "product-media",
+    "product-info",
+    "product-trust-bar",
+    "product-fit-note",
+    "product-social-proof",
+    "product-complete-the-look",
+    "product-accordions"
+  ]
 }
