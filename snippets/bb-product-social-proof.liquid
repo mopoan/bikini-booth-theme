@@ -1,0 +1,415 @@
+{%- comment -%}
+  Snippet: bb-product-social-proof.liquid
+  Purpose: Social proof panel — randomised UGC pool + featured review.
+
+  UGC layout:
+    Desktop/Mobile: 1 tall portrait video (9:16) left + 2 stacked images right.
+    If first picked item is an image, it fills the tall slot and works fine.
+    The script picks 3 random items; slot 0 = tall left, slots 1-2 = stacked right.
+
+  File naming (upload to Shopify Admin → Content → Files):
+    ugc-001.mp4 + ugc-001.jpg  (video + poster thumbnail)
+    ugc-002.jpg                (image only)
+    ugc-003.mp4 + ugc-003.jpg
+    ... up to ugc-020
+
+  Schema settings (in sections/main-product.liquid):
+    sp_section_title    text
+    sp_section_subtitle text
+    sp_ugc_pool_size    range 1–20
+    sp_ugc_handles      textarea  (comma-separated, one per slot number)
+    sp_instagram_handle text
+    sp_review_text      richtext
+    sp_review_author    text
+    sp_review_initials  text
+    sp_review_rating    range 1–5
+    sp_review_verified  checkbox
+{%- endcomment -%}
+
+{%- assign ugc_pool_size   = section.settings.sp_ugc_pool_size | default: 10 -%}
+{%- assign ugc_handles_raw = section.settings.sp_ugc_handles | default: '' -%}
+
+<div class="bb-sp" id="bb-sp-{{ section.id }}">
+
+  <div class="bb-sp__head">
+    <p class="bb-sp__title">
+      {{- section.settings.sp_section_title | default: 'As worn by our community' -}}
+    </p>
+    <p class="bb-sp__subtitle">
+      {%- if section.settings.sp_section_subtitle != blank -%}
+        {{ section.settings.sp_section_subtitle }}
+      {%- else -%}
+        Tag us{% if section.settings.sp_instagram_handle != blank %} {{ section.settings.sp_instagram_handle }}{% endif %} for a chance to be featured
+      {%- endif -%}
+    </p>
+  </div>
+
+  {%- comment -%} UGC grid — 1 tall left + 2 stacked right {%- endcomment -%}
+  <div
+    class="bb-sp__ugc-grid"
+    id="bb-sp-ugc-{{ section.id }}"
+    aria-label="Community photos and videos"
+    data-pool-size="{{ ugc_pool_size }}"
+    data-handles="{{ ugc_handles_raw | escape }}"
+  >
+    <div class="bb-sp__ugc-tall bb-sp__ugc-skeleton" aria-hidden="true"></div>
+    <div class="bb-sp__ugc-stack">
+      <div class="bb-sp__ugc-small bb-sp__ugc-skeleton" aria-hidden="true"></div>
+      <div class="bb-sp__ugc-small bb-sp__ugc-skeleton" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  {%- comment -%} Featured review {%- endcomment -%}
+  {%- if section.settings.sp_review_text != blank -%}
+    <div class="bb-sp__review" aria-label="Customer review">
+      {%- assign rating = section.settings.sp_review_rating | default: 5 -%}
+      <div class="bb-sp__stars" aria-label="{{ rating }} out of 5 stars">
+        {%- for i in (1..5) -%}
+          {%- if i <= rating -%}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#49c6be" stroke="#49c6be" stroke-width="1.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          {%- else -%}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d0cbc4" stroke-width="1.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="bb-sp__review-text">{{ section.settings.sp_review_text }}</div>
+      <div class="bb-sp__review-author">
+        {%- if section.settings.sp_review_initials != blank -%}
+          <div class="bb-sp__review-avatar" aria-hidden="true">
+            {{ section.settings.sp_review_initials | upcase | truncate: 2, '' }}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.sp_review_author != blank -%}
+          <span class="bb-sp__review-name">{{ section.settings.sp_review_author }}</span>
+        {%- endif -%}
+        {%- if section.settings.sp_review_verified -%}
+          <span class="bb-sp__verified">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3a7d44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verified buyer
+          </span>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.sp_instagram_handle != blank -%}
+    <a
+      href="https://instagram.com/{{ section.settings.sp_instagram_handle | remove: '@' }}"
+      class="bb-sp__ig-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Follow {{ section.settings.sp_instagram_handle }} on Instagram"
+    >
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      Follow {{ section.settings.sp_instagram_handle }}
+    </a>
+  {%- endif -%}
+
+</div>
+
+
+<style>
+  #bb-sp-{{ section.id }} {
+    padding: 20px;
+    background: #faf8f4;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__head { display: flex; flex-direction: column; gap: 3px; }
+  #bb-sp-{{ section.id }} .bb-sp__title { font-size: 0.625rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #2a2520; }
+  #bb-sp-{{ section.id }} .bb-sp__subtitle { font-size: 0.6875rem; color: #8a8077; }
+
+  /* ── UGC grid: 1 tall left + 2 stacked right ── */
+  #bb-sp-{{ section.id }} .bb-sp__ugc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    height: 280px;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-tall {
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+    background: #e8e4dc;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-small {
+    flex: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background: #e8e4dc;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-skeleton {
+    background: #ede9e2;
+    animation: bb-sp-pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes bb-sp-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(42,37,32,0.55));
+    padding: 16px 8px 7px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-handle {
+    font-size: 0.5625rem;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__ugc-badge {
+    position: absolute;
+    top: 7px; right: 7px;
+    width: 22px; height: 22px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #bb-sp-{{ section.id }} .bb-sp__unmute {
+    position: absolute;
+    top: 7px; left: 7px;
+    background: rgba(255,255,255,0.88);
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 0.5rem;
+    color: #2a2520;
+    letter-spacing: 0.04em;
+    display: none;
+    pointer-events: none;
+  }
+
+  /* Review */
+  #bb-sp-{{ section.id }} .bb-sp__review { background: #ffffff; border: 0.5px solid #e8e4dd; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+  #bb-sp-{{ section.id }} .bb-sp__stars { display: flex; gap: 3px; }
+  #bb-sp-{{ section.id }} .bb-sp__review-text { font-size: 0.6875rem; color: #3a3530; line-height: 1.65; font-style: italic; }
+  #bb-sp-{{ section.id }} .bb-sp__review-text p { margin: 0; }
+  #bb-sp-{{ section.id }} .bb-sp__review-author { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  #bb-sp-{{ section.id }} .bb-sp__review-avatar { width: 22px; height: 22px; border-radius: 50%; background: #f0ece6; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; font-weight: 500; color: #8a8077; flex-shrink: 0; }
+  #bb-sp-{{ section.id }} .bb-sp__review-name { font-size: 0.625rem; color: #6a6560; }
+  #bb-sp-{{ section.id }} .bb-sp__verified { display: inline-flex; align-items: center; gap: 3px; font-size: 0.5625rem; color: #3a7d44; }
+
+  #bb-sp-{{ section.id }} .bb-sp__ig-link { display: inline-flex; align-items: center; gap: 5px; font-size: 0.6875rem; color: #49c6be; text-decoration: underline; text-underline-offset: 2px; transition: opacity 0.15s; align-self: flex-start; }
+  #bb-sp-{{ section.id }} .bb-sp__ig-link:hover { opacity: 0.75; }
+
+  @media (max-width: 767px) {
+    #bb-sp-{{ section.id }} { padding: 16px 14px; border-top: 0.5px solid #e8e4dd; }
+    #bb-sp-{{ section.id }} .bb-sp__ugc-grid { height: 240px; }
+  }
+</style>
+
+
+<script>
+(function () {
+  'use strict';
+
+  var grid = document.getElementById('bb-sp-ugc-{{ section.id }}');
+  if (!grid) return;
+
+  var poolSize   = parseInt(grid.dataset.poolSize || '10', 10);
+  var handlesRaw = grid.dataset.handles || '';
+  var handles    = handlesRaw.split(',').map(function (h) { return h.trim(); });
+
+  function pad(n) {
+    return n < 10 ? '00' + n : n < 100 ? '0' + n : '' + n;
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j   = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function probeFile(url) {
+    return new Promise(function (resolve) {
+      if (url.endsWith('.mp4')) {
+        var v = document.createElement('video');
+        v.onloadedmetadata = function () { resolve(true); };
+        v.onerror          = function () { resolve(false); };
+        v.src = url;
+        v.load();
+      } else {
+        var img = new Image();
+        img.onload  = function () { resolve(true); };
+        img.onerror = function () { resolve(false); };
+        img.src = url;
+      }
+    });
+  }
+
+  async function resolveSlot(index) {
+    var num      = pad(index);
+    var videoUrl = '/files/ugc-' + num + '.mp4';
+    var imgUrl   = '/files/ugc-' + num + '.jpg';
+    var handle   = handles[index - 1] || null;
+
+    if (await probeFile(videoUrl)) {
+      return { type: 'video', videoUrl: videoUrl, thumbUrl: imgUrl, handle: handle };
+    }
+    if (await probeFile(imgUrl)) {
+      return { type: 'image', imgUrl: imgUrl, handle: handle };
+    }
+    return null;
+  }
+
+  function igSvg() {
+    return '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
+  }
+
+  function escHtml(str) {
+    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function overlay(handle) {
+    if (!handle) return '';
+    return '<div class="bb-sp__ugc-overlay">' + igSvg() + '<span class="bb-sp__ugc-handle">' + escHtml(handle) + '</span></div>';
+  }
+
+  function buildVideo(item, isTablet) {
+    var wrap  = document.createElement('div');
+    wrap.innerHTML = '';
+
+    var video         = document.createElement('video');
+    video.className   = 'bb-sp__ugc-media';
+    video.src         = item.videoUrl;
+    video.poster      = item.thumbUrl;
+    video.autoplay    = true;
+    video.muted       = true;
+    video.loop        = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('muted', '');
+    wrap.appendChild(video);
+    video.play().catch(function () {});
+
+    var badge = document.createElement('div');
+    badge.className   = 'bb-sp__ugc-badge';
+    badge.innerHTML   = '<svg width="10" height="10" viewBox="0 0 24 24" fill="#ffffff" stroke="none" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    wrap.appendChild(badge);
+
+    var unmute = document.createElement('div');
+    unmute.className  = 'bb-sp__unmute';
+    unmute.textContent = 'Tap to unmute';
+    wrap.appendChild(unmute);
+
+    if (item.handle) {
+      var ov = document.createElement('div');
+      ov.innerHTML = overlay(item.handle);
+      wrap.appendChild(ov.firstChild);
+    }
+
+    var muted = true;
+    wrap.addEventListener('click', function () {
+      muted        = !muted;
+      video.muted  = muted;
+      unmute.style.display = muted ? 'none' : 'block';
+    });
+
+    return wrap;
+  }
+
+  function buildImage(item) {
+    var wrap = document.createElement('div');
+    var img  = document.createElement('img');
+    img.className = 'bb-sp__ugc-media';
+    img.src       = item.imgUrl;
+    img.alt       = item.handle ? 'Photo by ' + item.handle : 'Community photo';
+    img.loading   = 'lazy';
+    wrap.appendChild(img);
+
+    if (item.handle) {
+      var ov = document.createElement('div');
+      ov.innerHTML = overlay(item.handle);
+      wrap.appendChild(ov.firstChild);
+    }
+    return wrap;
+  }
+
+  function buildItem(item) {
+    return item.type === 'video' ? buildVideo(item) : buildImage(item);
+  }
+
+  async function buildGrid() {
+    var indices  = [];
+    for (var i = 1; i <= poolSize; i++) { indices.push(i); }
+    var shuffled = shuffle(indices);
+
+    var results = [];
+    var tried   = 0;
+    while (results.length < 3 && tried < shuffled.length) {
+      var slot = await resolveSlot(shuffled[tried]);
+      if (slot) results.push(slot);
+      tried++;
+    }
+
+    if (results.length === 0) {
+      grid.style.display = 'none';
+      return;
+    }
+
+    /* Build DOM: tall slot + stack slot */
+    var tallSlot  = grid.querySelector('.bb-sp__ugc-tall');
+    var stackSlot = grid.querySelector('.bb-sp__ugc-stack');
+    var smalls    = stackSlot ? stackSlot.querySelectorAll('.bb-sp__ugc-small') : [];
+
+    /* Slot 0 → tall */
+    if (results[0] && tallSlot) {
+      tallSlot.classList.remove('bb-sp__ugc-skeleton');
+      var inner0 = buildItem(results[0]);
+      while (inner0.firstChild) tallSlot.appendChild(inner0.firstChild);
+    }
+
+    /* Slots 1 & 2 → stacked small */
+    [1, 2].forEach(function (idx) {
+      var smallEl = smalls[idx - 1];
+      if (!smallEl) return;
+      if (results[idx]) {
+        smallEl.classList.remove('bb-sp__ugc-skeleton');
+        var inner = buildItem(results[idx]);
+        while (inner.firstChild) smallEl.appendChild(inner.firstChild);
+      } else {
+        smallEl.style.display = 'none';
+      }
+    });
+  }
+
+  buildGrid();
+})();
+</script>
