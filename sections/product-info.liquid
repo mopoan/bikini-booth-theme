@@ -109,24 +109,24 @@
   <div class="bb-info__section bb-info__piece-section" id="bb-piece-section-{{ section.id }}" hidden>
     <div class="bb-info__section-label">Choose your piece</div>
     <div class="bb-piece-toggle" role="group" aria-label="Choose your piece">
-      <button
-        type="button"
+      <a
         class="bb-piece-btn"
         id="bb-piece-top-{{ section.id }}"
-        aria-pressed="false"
+        href="#"
+        aria-label="Shop Top"
       >
         <span class="bb-piece-btn__name">Top</span>
         <span class="bb-piece-btn__price" id="bb-piece-top-price-{{ section.id }}"></span>
-      </button>
-      <button
-        type="button"
+      </a>
+      <a
         class="bb-piece-btn"
         id="bb-piece-bottom-{{ section.id }}"
-        aria-pressed="false"
+        href="#"
+        aria-label="Shop Bottom"
       >
         <span class="bb-piece-btn__name">Bottom</span>
         <span class="bb-piece-btn__price" id="bb-piece-bottom-price-{{ section.id }}"></span>
-      </button>
+      </a>
     </div>
   </div>
 
@@ -560,15 +560,15 @@
     if (priceNoteEl) priceNoteEl.hidden = true;
   }
 
-  /* ── Auto-connect data ── */
-  document.addEventListener('bb:productDataReady', function (e) {
-    var data = e.detail;
+  /* ── Auto-connect data — handle both early and late firing ── */
+  function handleProductData(data) {
+    if (!data) return;
 
     /* Piece toggle */
     if (data.hasPieceToggle) {
       pieceSection.hidden = false;
 
-      var currentPiece    = data.piece;
+      var currentPiece     = data.piece;
       var currentFormatted = bbPrices.currentFormatted || '';
 
       if (currentPiece === 'Top') {
@@ -593,7 +593,7 @@
         }
       }
 
-      /* Piece is already known — remove "From" immediately */
+      /* Piece is known — remove "From" immediately */
       removePriceFrom();
     }
 
@@ -603,11 +603,11 @@
       if (colorNameEl && data.color) colorNameEl.textContent = data.color;
 
       data.colorSwatches.forEach(function (sw) {
-        var el      = document.createElement('a');
-        el.href     = sw.url;
+        var el       = document.createElement('a');
+        el.href      = sw.url;
         el.className = 'bb-swatch' +
-          (sw.active       ? ' is-active'      : '') +
-          (!sw.available   ? ' is-unavailable' : '');
+          (sw.active      ? ' is-active'      : '') +
+          (!sw.available  ? ' is-unavailable' : '');
         el.setAttribute('role', 'listitem');
         el.setAttribute('aria-label', sw.color + (!sw.available ? ' — sold out' : ''));
         el.title = sw.color;
@@ -621,6 +621,14 @@
         swatchWrap.appendChild(el);
       });
     }
+  }
+
+  /* Listen for event — also check if data already available (timing safety) */
+  if (window.BB && window.BB.productData) {
+    handleProductData(window.BB.productData);
+  }
+  document.addEventListener('bb:productDataReady', function (e) {
+    handleProductData(e.detail);
   });
 
   /* ── Size selection ── */
@@ -692,13 +700,18 @@
     });
   });
 
-  function formatShopifyMoney(cents) {
-    if (!cents) return '';
-    /* Use Shopify's own money format string so Markets/currency is respected */
-    var amount = parseFloat(cents) / 100;
-    return window.Shopify && window.Shopify.currency
-      ? amount.toFixed(2) + ' ' + window.Shopify.currency.active
-      : amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  function formatShopifyMoney(price) {
+    if (!price) return '';
+    /* Shopify /products.json returns prices as decimal strings e.g. "1497.00"
+       NOT in cents — display as-is with active currency */
+    var amount = parseFloat(price);
+    var currency = window.Shopify && window.Shopify.currency
+      ? window.Shopify.currency.active
+      : '';
+    return amount.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + (currency ? ' ' + currency : '');
   }
 
 })();
