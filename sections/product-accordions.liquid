@@ -40,7 +40,7 @@
         {%- endif -%}
 
       {%- when 'care_metafield' -%}
-        {%- assign care_content = product.metafields.custom.care_instructions.value -%}
+        {%- assign care_content = product.metafields.custom.care_composition.value -%}
         {%- if care_content != blank -%}
           <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
             <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
