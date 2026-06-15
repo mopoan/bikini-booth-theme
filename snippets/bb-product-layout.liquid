@@ -60,10 +60,20 @@
       margin-left: 0;
     }
 
-    /* Also target product recommendations directly */
-    body.template-product main.content-for-layout [class*="product-recommendations"],
-    body.template-product main.content-for-layout [id*="product-recommendations"],
-    body.template-product main.content-for-layout [id*="product_recommendations"] {
+    /* Target product recommendations by custom element and data attribute */
+    body.template-product main.content-for-layout product-recommendations,
+    body.template-product main.content-for-layout [data-section-name="product-recommendations"],
+    body.template-product main.content-for-layout [id*="product_recommendations"],
+    body.template-product main.content-for-layout [id*="product-recommendations"] {
+      display: block;
+      float: none;
+      clear: both;
+      width: 100%;
+      margin-left: 0;
+    }
+
+    /* Also target the shopify-section wrapper containing it */
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
       float: none;
       clear: both;
       width: 100%;
