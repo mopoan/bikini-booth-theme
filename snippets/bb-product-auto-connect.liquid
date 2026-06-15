@@ -3,35 +3,27 @@
   Purpose: Auto-connects related products by name convention.
 
   Naming convention (required):
-    [Style] Top - [Color]     e.g. "Kata Bikini Top - Orange"
-    [Style] Bottom - [Color]  e.g. "Kata Bikini Bottom - Orange"
-    [Style] - [Color]         e.g. "Sarong - Sand" (no piece toggle)
+    [Style] [Piece] in [Color]     e.g. "Kata Bikini Top in Orange"
+    [Style] [Piece] in [Color]     e.g. "Kata Bikini Bottom in Orange"
+    [Style] in [Color]             e.g. "Sarong in Sand" (no piece toggle)
 
-  Swatch images:
+  Swatch images (optional):
     Upload to Shopify Files as: swatch-[color-lowercase].png
-    e.g. swatch-orange.png, swatch-leopard.png, swatch-floral.png
-    If a swatch image exists it is always used. Hex is the fallback only.
-
-  Color hex fallbacks:
-    Add entries to colorMap below. Keys must match the color segment of
-    the product title exactly (case-insensitive). Used only when no
-    swatch image is found for that color.
+    e.g. swatch-orange.png, swatch-turquoise.png, swatch-fuchsia.png
+    If a swatch image exists it is used. Hex is the fallback.
 
   Output:
     Fires window.BB.productData and custom event 'bb:productDataReady'.
-    Consumed by bb-product-form.liquid and bb-product-complete-the-look.liquid.
+    Consumed by product-info.liquid section.
 {%- endcomment -%}
-
-{%- assign shop_url = shop.permanent_domain -%}
 
 <script>
 (function () {
   'use strict';
 
-  var PRODUCT_TITLE   = {{ product.title | json }};
-  var PRODUCT_HANDLE  = {{ product.handle | json }};
-  var PRODUCT_URL     = {{ product.url | json }};
-  var SHOP_CDN        = 'https://cdn.shopify.com/s/files/1/';
+  var PRODUCT_TITLE  = {{ product.title | json }};
+  var PRODUCT_HANDLE = {{ product.handle | json }};
+  var PRODUCT_URL    = {{ product.url | json }};
 
   var colorMap = {
     'orange':    '#e8892a',
@@ -60,86 +52,101 @@
 
   var PIECES = ['Top', 'Bottom'];
 
+  /* ── Parse title: "[Style] [Piece] in [Color]" ── */
   function parseTitle(title) {
-    var parts    = title.split(' - ');
-    var color    = parts.length > 1 ? parts[parts.length - 1].trim() : null;
-    var baseName = parts[0].trim();
+    var color    = null;
+    var baseName = title;
     var piece    = null;
-    var style    = baseName;
+    var style    = title;
 
+    /* Split on " in " to get color */
+    var inIdx = title.lastIndexOf(' in ');
+    if (inIdx !== -1) {
+      color    = title.slice(inIdx + 4).trim();
+      baseName = title.slice(0, inIdx).trim();
+    }
+
+    /* Detect piece from base name */
     for (var i = 0; i < PIECES.length; i++) {
       var p = PIECES[i];
-      if (baseName.slice(-p.length - 1) === ' ' + p) {
+      if (baseName.slice(-(p.length + 1)) === ' ' + p) {
         piece = p;
         style = baseName.slice(0, baseName.length - p.length - 1).trim();
         break;
       }
     }
 
+    if (!piece) style = baseName;
+
     return { baseName: baseName, style: style, piece: piece, color: color };
   }
 
   function swatchImageUrl(colorName) {
-    var slug = colorName.toLowerCase().replace(/\s+/g, '-');
-    return '/files/swatch-' + slug + '.png';
+    return '/files/swatch-' + colorName.toLowerCase().replace(/\s+/g, '-') + '.png';
   }
 
-  function swatchImageExists(url, callback) {
-    var img = new Image();
-    img.onload  = function () { callback(true); };
-    img.onerror = function () { callback(false); };
-    img.src = url;
+  function probeImage(url) {
+    return new Promise(function (resolve) {
+      var img    = new Image();
+      img.onload  = function () { resolve(true); };
+      img.onerror = function () { resolve(false); };
+      img.src = url;
+    });
   }
 
-  function fetchAllProducts(page, allProducts, callback) {
-    page        = page || 1;
-    allProducts = allProducts || [];
+  function fetchAllProducts(page, all, callback) {
+    page = page || 1;
+    all  = all  || [];
     fetch('/products.json?limit=250&page=' + page)
       .then(function (r) { return r.json(); })
       .then(function (data) {
         var products = data.products || [];
-        allProducts  = allProducts.concat(products);
+        all = all.concat(products);
         if (products.length === 250) {
-          fetchAllProducts(page + 1, allProducts, callback);
+          fetchAllProducts(page + 1, all, callback);
         } else {
-          callback(allProducts);
+          callback(all);
         }
       })
       .catch(function (err) {
         console.warn('[BB Auto-Connect] Fetch failed:', err);
-        callback(allProducts);
+        callback(all);
       });
   }
 
-  function buildData(allProducts) {
-    var current          = parseTitle(PRODUCT_TITLE);
-    var colorSwatchData  = [];
-    var pieceLinks       = {};
+  async function buildData(allProducts) {
+    var current       = parseTitle(PRODUCT_TITLE);
+    var colorSwatches = [];
+    var pieceLinks    = {};
 
     allProducts.forEach(function (p) {
       if (!p.title || !p.handle) return;
       var parsed = parseTitle(p.title);
 
+      /* Same style + same piece + different color → color swatch */
       var isSamePiece = (
         parsed.style === current.style &&
-        parsed.piece  === current.piece
+        parsed.piece === current.piece
       );
 
+      /* Same style + same color + opposite piece → piece link */
       var isOpposite = (
         current.piece !== null &&
         parsed.style  === current.style &&
         parsed.piece  !== null &&
         parsed.piece  !== current.piece &&
-        parsed.color  === current.color
+        parsed.color  !== null &&
+        current.color !== null &&
+        parsed.color.toLowerCase() === current.color.toLowerCase()
       );
 
       if (isSamePiece && parsed.color) {
-        colorSwatchData.push({
-          color:     parsed.color,
-          hex:       colorMap[parsed.color.toLowerCase()] || '#c8c0b8',
-          imageUrl:  swatchImageUrl(parsed.color),
-          url:       '/products/' + p.handle,
-          active:    p.handle === PRODUCT_HANDLE,
+        colorSwatches.push({
+          color:    parsed.color,
+          hex:      colorMap[parsed.color.toLowerCase()] || '#c8c0b8',
+          imageUrl: swatchImageUrl(parsed.color),
+          url:      '/products/' + p.handle,
+          active:   p.handle === PRODUCT_HANDLE,
           available: p.available !== false
         });
       }
@@ -153,29 +160,15 @@
       }
     });
 
-    colorSwatchData.sort(function (a, b) {
-      return a.color.localeCompare(b.color);
-    });
+    /* Sort swatches alphabetically */
+    colorSwatches.sort(function (a, b) { return a.color.localeCompare(b.color); });
 
-    var pending = colorSwatchData.length;
+    /* Probe swatch images in parallel */
+    await Promise.all(colorSwatches.map(async function (sw) {
+      sw.useImage = await probeImage(sw.imageUrl);
+    }));
 
-    if (pending === 0) {
-      emit(current, colorSwatchData, pieceLinks);
-      return;
-    }
-
-    colorSwatchData.forEach(function (swatch) {
-      swatchImageExists(swatch.imageUrl, function (exists) {
-        swatch.useImage = exists;
-        pending--;
-        if (pending === 0) {
-          emit(current, colorSwatchData, pieceLinks);
-        }
-      });
-    });
-  }
-
-  function emit(current, colorSwatches, pieceLinks) {
+    /* Emit */
     window.BB              = window.BB || {};
     window.BB.productData  = {
       title:          PRODUCT_TITLE,
