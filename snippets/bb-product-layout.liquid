@@ -58,12 +58,19 @@
       clear: left;
     }
 
-    /* ── Full width: recommendations and anything else ── */
-    body.template-product main.content-for-layout .shopify-section:has(product-recommendations),
-    body.template-product main.content-for-layout .bb-product-sp-section ~ .shopify-section:not(.bb-product-acc-section):not(.bb-product-ctl-section) {
-      float: none;
-      clear: both;
-      width: 100%;
+    /* ── Accordion and CTL always float right, even after social proof ── */
+    body.template-product main.content-for-layout .bb-product-acc-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section {
+      float: right !important;
+      width: 50% !important;
+      clear: none !important;
+    }
+
+    /* ── Full width: recommendations only ── */
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
+      float: none !important;
+      clear: both !important;
+      width: 100% !important;
     }
 
     /* ── Clearfix ── */
