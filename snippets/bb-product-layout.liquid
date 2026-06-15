@@ -1,65 +1,82 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
-  Purpose: Two-column desktop layout for Bikini Booth product pages.
+  Purpose: Stable two-column desktop layout for Bikini Booth product pages.
 
-  The sections are direct children of <main id="MainContent" class="content-for-layout">.
-  We make that the grid container and assign each section to a column.
+  Approach: Uses float/position instead of display:contents which breaks
+  on DOM changes. Gallery is position:sticky left half, right column
+  sections get margin-left: 50% to sit beside it.
 {%- endcomment -%}
 
 <style>
   @media (min-width: 900px) {
 
-    /* ── Make main content area a two-column grid ── */
+    /* ── Page container ── */
     body.template-product main.content-for-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
+      position: relative;
       max-width: 1440px;
       margin: 0 auto;
+      min-height: 100vh;
     }
 
-    /* ── Make shopify-section wrappers transparent to grid ── */
-    body.template-product main.content-for-layout > .shopify-section {
-      display: contents;
-    }
-
-    /* ── Left column: gallery — sticky full height ── */
-    .bb-media {
-      grid-column: 1;
-      grid-row: 1 / 4;
+    /* ── Left column: gallery — fixed to left half ── */
+    body.template-product main.content-for-layout .bb-product-media-section {
       position: sticky;
       top: 0;
+      float: left;
+      width: 50%;
       height: 100vh;
       overflow: hidden;
+      z-index: 1;
     }
 
-    /* ── Right column: purchase form ── */
-    .bb-info   { grid-column: 2; grid-row: 1; }
-    .bb-trust  { grid-column: 2; grid-row: 2; }
-    .bb-fit    { grid-column: 2; grid-row: 3; }
-
-    /* ── Bottom left: social proof ── */
-    .bb-sp {
-      grid-column: 1;
-      grid-row: 4;
-      border-top: 0.5px solid #e8e4dd;
+    body.template-product main.content-for-layout .bb-media {
+      height: 100%;
     }
 
-    /* ── Bottom right: complete the look + accordions ── */
-    .bb-ctl      { grid-column: 2; grid-row: 4; border-top: 0.5px solid #e8e4dd; }
-    .bb-acc-wrap { grid-column: 2; grid-row: 5; }
+    /* ── Right column: all other sections sit beside gallery ── */
+    body.template-product main.content-for-layout .bb-product-info-section,
+    body.template-product main.content-for-layout .bb-product-trust-section,
+    body.template-product main.content-for-layout .bb-product-fit-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section,
+    body.template-product main.content-for-layout .bb-product-acc-section {
+      margin-left: 50%;
+      width: 50%;
+      float: right;
+      clear: right;
+    }
 
-    /* ── Social proof needs same row height as CTL ── */
-    .bb-sp { align-self: start; }
+    /* ── Social proof: bottom left, beside right column ── */
+    body.template-product main.content-for-layout .bb-product-sp-section {
+      float: left;
+      width: 50%;
+      clear: left;
+    }
 
-    /* Mobile: reset everything */
+    /* ── Clearfix ── */
+    body.template-product main.content-for-layout::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+
   }
 
   @media (max-width: 899px) {
-    .bb-media {
+    body.template-product main.content-for-layout .bb-product-media-section {
       position: relative !important;
+      float: none !important;
+      width: 100% !important;
       height: auto !important;
-      top: auto !important;
+    }
+    body.template-product main.content-for-layout .bb-product-info-section,
+    body.template-product main.content-for-layout .bb-product-trust-section,
+    body.template-product main.content-for-layout .bb-product-fit-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section,
+    body.template-product main.content-for-layout .bb-product-acc-section,
+    body.template-product main.content-for-layout .bb-product-sp-section {
+      margin-left: 0 !important;
+      width: 100% !important;
+      float: none !important;
     }
   }
 </style>
