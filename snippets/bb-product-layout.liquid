@@ -2,11 +2,10 @@
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout for Bikini Booth product pages.
 
-  Shopify renders sections as:
-    <div id="shopify-section-..." class="shopify-section">   ← outer, no custom class
-      <div class="bb-product-xxx-section">                   ← inner, has our class
+  Shopify DOES apply schema "class" to the outer shopify-section wrapper:
+    <div class="shopify-section bb-product-info-section">
 
-  We use :has() to target the outer wrapper based on its inner content class.
+  So we can target directly by class name.
 {%- endcomment -%}
 
 <style>
@@ -20,7 +19,7 @@
     }
 
     /* ── Left column: gallery ── */
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-media-section) {
+    body.template-product main.content-for-layout .bb-product-media-section {
       position: sticky;
       top: 0;
       float: left;
@@ -42,25 +41,26 @@
     }
 
     /* ── Right column ── */
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-info-section),
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-trust-section),
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-fit-section),
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-acc-section),
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-ctl-section) {
+    body.template-product main.content-for-layout .bb-product-info-section,
+    body.template-product main.content-for-layout .bb-product-trust-section,
+    body.template-product main.content-for-layout .bb-product-fit-section,
+    body.template-product main.content-for-layout .bb-product-acc-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section {
       float: right;
       width: 50%;
       clear: none;
     }
 
     /* ── Bottom left: social proof ── */
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-sp-section) {
+    body.template-product main.content-for-layout .bb-product-sp-section {
       float: left;
       width: 50%;
       clear: left;
     }
 
-    /* ── Full width: recommendations ── */
-    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
+    /* ── Full width: recommendations and anything else ── */
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations),
+    body.template-product main.content-for-layout .bb-product-sp-section ~ .shopify-section:not(.bb-product-acc-section):not(.bb-product-ctl-section) {
       float: none;
       clear: both;
       width: 100%;
@@ -76,7 +76,13 @@
   }
 
   @media (max-width: 899px) {
-    body.template-product main.content-for-layout .shopify-section {
+    body.template-product main.content-for-layout .bb-product-media-section,
+    body.template-product main.content-for-layout .bb-product-info-section,
+    body.template-product main.content-for-layout .bb-product-trust-section,
+    body.template-product main.content-for-layout .bb-product-fit-section,
+    body.template-product main.content-for-layout .bb-product-acc-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section,
+    body.template-product main.content-for-layout .bb-product-sp-section {
       float: none !important;
       width: 100% !important;
       height: auto !important;
