@@ -49,8 +49,10 @@
         class="bb-media__zoom"
         id="bb-media-zoom-{{ section.id }}"
         aria-label="Zoom image"
+        aria-pressed="false"
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        <svg class="bb-media__zoom-in-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        <svg class="bb-media__zoom-out-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
       </button>
     {%- endif -%}
 
@@ -151,7 +153,30 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.4s ease;
+    transform-origin: center center;
+    cursor: zoom-in;
   }
+
+  /* Hover zoom — desktop only */
+  @media (hover: hover) {
+    #bb-media-{{ section.id }} .bb-media__main:hover .bb-media__slide.is-active .bb-media__img {
+      transform: scale(1.35);
+    }
+    #bb-media-{{ section.id }} .bb-media__main.is-zoomed .bb-media__slide.is-active .bb-media__img {
+      transform: scale(1.0);
+      cursor: zoom-in;
+    }
+  }
+
+  /* Click/tap zoom — all devices */
+  #bb-media-{{ section.id }} .bb-media__main.is-zoomed .bb-media__slide.is-active .bb-media__img {
+    transform: scale(1.65);
+    cursor: zoom-out;
+  }
+
+  /* Follow mouse on desktop when zoomed */
+  #bb-media-{{ section.id }} .bb-media__main { cursor: crosshair; }
 
   #bb-media-{{ section.id }} .bb-media__zoom {
     position: absolute;
@@ -301,41 +326,53 @@
     }, { passive: true });
   }
 
-  /* Zoom overlay */
-  if (zoomBtn) {
-    zoomBtn.addEventListener('click', function () {
-      var activeImg = section.querySelector('.bb-media__slide.is-active img');
-      if (!activeImg) return;
+  /* ── In-frame zoom ── */
+  if (zoomBtn && mainEl) {
+    var zoomInIcon  = zoomBtn.querySelector('.bb-media__zoom-in-icon');
+    var zoomOutIcon = zoomBtn.querySelector('.bb-media__zoom-out-icon');
+    var isZoomed    = false;
 
-      var overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
-
-      var img    = document.createElement('img');
-      img.src    = activeImg.src.replace(/width=\d+/, 'width=1600');
-      img.alt    = activeImg.alt;
-      img.style.cssText = 'max-width:90vw;max-height:90vh;object-fit:contain;';
-      overlay.appendChild(img);
-
-      var closeBtn = document.createElement('button');
-      closeBtn.style.cssText = 'position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.12);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;';
-      closeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
-      closeBtn.setAttribute('aria-label', 'Close zoom');
-      overlay.appendChild(closeBtn);
-
-      document.body.appendChild(overlay);
-      document.body.style.overflow = 'hidden';
-
-      function close() {
-        overlay.remove();
-        document.body.style.overflow = '';
+    function setZoom(on) {
+      isZoomed = on;
+      mainEl.classList.toggle('is-zoomed', on);
+      zoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      zoomBtn.setAttribute('aria-label', on ? 'Zoom out' : 'Zoom image');
+      if (zoomInIcon)  zoomInIcon.style.display  = on ? 'none'  : '';
+      if (zoomOutIcon) zoomOutIcon.style.display = on ? ''      : 'none';
+      /* Reset transform-origin when zooming out */
+      if (!on) {
+        var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
+        if (img) img.style.transformOrigin = 'center center';
       }
+    }
 
-      overlay.addEventListener('click', function (e) {
-        if (e.target === overlay || e.target === closeBtn || closeBtn.contains(e.target)) close();
-      });
-      document.addEventListener('keydown', function esc(e) {
-        if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
-      });
+    /* Click zoom button to toggle */
+    zoomBtn.addEventListener('click', function () { setZoom(!isZoomed); });
+
+    /* Click image to toggle */
+    mainEl.addEventListener('click', function (e) {
+      if (e.target.closest('.bb-media__zoom')) return;
+      if (e.target.closest('.bb-media__dot'))  return;
+      setZoom(!isZoomed);
+    });
+
+    /* Mouse move — update transform-origin to follow cursor */
+    mainEl.addEventListener('mousemove', function (e) {
+      if (!isZoomed) return;
+      var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
+      if (!img) return;
+      var rect = mainEl.getBoundingClientRect();
+      var x    = ((e.clientX - rect.left) / rect.width)  * 100;
+      var y    = ((e.clientY - rect.top)  / rect.height) * 100;
+      img.style.transformOrigin = x + '% ' + y + '%';
+    });
+
+    /* Reset zoom when slide changes */
+    document.addEventListener('bb:slideChange', function () { setZoom(false); });
+
+    /* Escape key exits zoom */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isZoomed) setZoom(false);
     });
   }
 
