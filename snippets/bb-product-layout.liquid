@@ -30,7 +30,14 @@
     }
 
     body.template-product main.content-for-layout .bb-media {
-      height: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.template-product main.content-for-layout .bb-media__main {
+      flex: 1;
+      min-height: 0;
     }
 
     /* ── Right column: all other sections sit beside gallery ── */
@@ -39,10 +46,9 @@
     body.template-product main.content-for-layout .bb-product-fit-section,
     body.template-product main.content-for-layout .bb-product-ctl-section,
     body.template-product main.content-for-layout .bb-product-acc-section {
-      margin-left: 50%;
-      width: 50%;
       float: right;
-      clear: right;
+      width: 50%;
+      clear: none;
     }
 
     /* ── Social proof: bottom left, beside right column ── */
