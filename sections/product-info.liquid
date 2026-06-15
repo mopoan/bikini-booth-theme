@@ -654,23 +654,66 @@
     });
   });
 
-  /* ── ATC submit ── */
+  /* ── ATC submit — use fetch to stay on page + open cart drawer ── */
   var form = document.getElementById('bb-atc-form-' + sid);
   if (form) {
     form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      /* Validate size selected */
       if (!section.querySelector('.bb-size-btn.is-active')) {
-        e.preventDefault();
         if (sizeError) sizeError.hidden = false;
         var first = section.querySelector('.bb-size-btn:not(.is-sold-out)');
         if (first) first.focus();
         return;
       }
+
       if (atcLabelEl) atcLabelEl.textContent = 'Adding…';
       if (atcBtn)     atcBtn.disabled = true;
-      setTimeout(function () {
-        if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
+
+      var variantId = variantInput ? parseInt(variantInput.value, 10) : null;
+      if (!variantId) return;
+
+      fetch('/cart/add.js', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body:    JSON.stringify({ id: variantId, quantity: 1 })
+      })
+      .then(function (r) { return r.json(); })
+      .then(function () {
+        if (atcLabelEl) atcLabelEl.textContent = 'Added!';
+
+        /* Try every known cart drawer trigger pattern */
+        document.dispatchEvent(new CustomEvent('cart:open'));
+        document.dispatchEvent(new CustomEvent('cart:updated'));
+        document.dispatchEvent(new CustomEvent('cartdrawer:open'));
+        document.dispatchEvent(new CustomEvent('theme:cart:open'));
+
+        /* Also try clicking the theme's cart icon/button directly */
+        var cartTriggers = [
+          '[data-drawer-open="cart-drawer"]',
+          '[data-cart-drawer-trigger]',
+          '[data-open-drawer="cart"]',
+          '.js-cart-drawer-open',
+          '#cart-icon-bubble',
+          '.cart-icon-bubble',
+          '[aria-controls="cart-drawer"]'
+        ];
+        for (var i = 0; i < cartTriggers.length; i++) {
+          var el = document.querySelector(cartTriggers[i]);
+          if (el) { el.click(); break; }
+        }
+
+        setTimeout(function () {
+          if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
+          if (atcBtn)     atcBtn.disabled = false;
+        }, 1800);
+      })
+      .catch(function (err) {
+        console.warn('[BB ATC] Error:', err);
+        if (atcLabelEl) atcLabelEl.textContent = 'Try again';
         if (atcBtn)     atcBtn.disabled = false;
-      }, 1800);
+      });
     });
   }
 
