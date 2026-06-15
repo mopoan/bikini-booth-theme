@@ -314,15 +314,16 @@
     var link     = data.pieceLinks[oppPiece];
     if (!link) return;
 
-    /* Fetch the opposite piece product data */
-    fetch('/products/' + link.url.replace('/products/', '') + '.js')
+    var handle = link.url.replace('/products/', '');
+
+    fetch('/products/' + handle + '.js')
       .then(function (r) { return r.json(); })
       .then(function (p) {
-        var nameEl   = document.getElementById('bb-ctl-piece-name-' + sid);
-        var labelEl  = document.getElementById('bb-ctl-piece-label-' + sid);
-        var priceEl  = document.getElementById('bb-ctl-piece-price-' + sid);
-        var imgEl    = document.getElementById('bb-ctl-piece-img-' + sid);
-        var sizesEl  = document.getElementById('bb-ctl-piece-sizes-' + sid);
+        var nameEl  = document.getElementById('bb-ctl-piece-name-' + sid);
+        var labelEl = document.getElementById('bb-ctl-piece-label-' + sid);
+        var priceEl = document.getElementById('bb-ctl-piece-price-' + sid);
+        var imgEl   = document.getElementById('bb-ctl-piece-img-' + sid);
+        var sizesEl = document.getElementById('bb-ctl-piece-sizes-' + sid);
 
         if (nameEl)  nameEl.textContent  = p.title.split(' in ')[0];
         if (labelEl) labelEl.textContent = oppPiece;
@@ -330,57 +331,49 @@
 
         /* Image */
         if (imgEl && p.images && p.images[0]) {
-          var img      = document.createElement('img');
-          var rawSrc   = p.images[0].src;
-          /* Add width parameter for Shopify CDN sizing */
-          var sized    = rawSrc.indexOf('?') !== -1
-            ? rawSrc + '&width=160'
-            : rawSrc + '?width=160';
-          img.src      = sized;
-          img.alt      = p.title;
-          img.width    = 60;
-          img.height   = 75;
+          var rawSrc = p.images[0].src;
+          var sized  = rawSrc.indexOf('?') !== -1 ? rawSrc + '&width=160' : rawSrc + '?width=160';
+          var img    = document.createElement('img');
+          img.src    = sized;
+          img.alt    = p.title;
           img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;';
           imgEl.style.cssText = 'width:60px;height:75px;border-radius:6px;overflow:hidden;flex-shrink:0;background:#f0ece6;';
+          imgEl.innerHTML = '';
           imgEl.appendChild(img);
         }
 
         /* Size select */
-        if (sizesEl && p.variants.length > 1) {
-          var sel = document.createElement('select');
-          sel.className = 'bb-ctl__size-select';
-          sel.setAttribute('aria-label', 'Size for ' + p.title);
-          sel.dataset.itemId = p.id;
+        if (sizesEl && p.variants.length > 0) {
+          sizesEl.innerHTML = '';
+          if (p.variants.length > 1) {
+            var sel = document.createElement('select');
+            sel.className = 'bb-ctl__size-select';
+            sel.setAttribute('aria-label', 'Size for ' + p.title);
+            sel.dataset.itemId = p.id;
 
-          p.variants.forEach(function (v) {
-            var opt = document.createElement('option');
-            opt.value = v.id;
-            opt.dataset.price          = v.price;
-            opt.dataset.priceFormatted = formatMoneyFromCents(v.price);
-            opt.textContent = v.title + (v.available ? '' : ' — Sold out');
-            if (!v.available) opt.disabled = true;
-            sel.appendChild(opt);
-          });
+            p.variants.forEach(function (v) {
+              var opt = document.createElement('option');
+              opt.value                  = v.id;
+              opt.dataset.price          = v.price;
+              opt.dataset.priceFormatted = formatMoneyFromCents(v.price);
+              opt.textContent            = v.title + (v.available ? '' : ' — Sold out');
+              if (!v.available) opt.disabled = true;
+              sel.appendChild(opt);
+            });
 
-          var chevron = document.createElement('svg');
-          chevron.setAttribute('width', '10');
-          chevron.setAttribute('height', '10');
-          chevron.setAttribute('viewBox', '0 0 24 24');
-          chevron.setAttribute('fill', 'none');
-          chevron.setAttribute('stroke', '#8a8077');
-          chevron.setAttribute('stroke-width', '2');
-          chevron.className = 'bb-ctl__size-chevron';
-          chevron.innerHTML = '<polyline points="6 9 12 15 18 9"/>';
+            var chevron = document.createElement('span');
+            chevron.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bb-ctl__size-chevron"><polyline points="6 9 12 15 18 9"/></svg>';
 
-          sizesEl.appendChild(sel);
-          sizesEl.appendChild(chevron);
+            sizesEl.appendChild(sel);
+            sizesEl.appendChild(chevron.firstChild);
 
-          sel.addEventListener('change', function () {
-            var opt = sel.options[sel.selectedIndex];
-            pieceRow.dataset.variantId = opt.value;
-            pieceRow.dataset.price     = opt.dataset.price;
-            updateTotal();
-          });
+            sel.addEventListener('change', function () {
+              var opt = sel.options[sel.selectedIndex];
+              pieceRow.dataset.variantId = opt.value;
+              pieceRow.dataset.price     = opt.dataset.price;
+              updateTotal();
+            });
+          }
 
           pieceRow.dataset.variantId = p.variants[0].id;
           pieceRow.dataset.price     = p.variants[0].price;
@@ -395,6 +388,7 @@
       });
   }
 
+  /* Handle both early and late firing of auto-connect */
   if (window.BB && window.BB.productData) {
     handleProductData(window.BB.productData);
   }
