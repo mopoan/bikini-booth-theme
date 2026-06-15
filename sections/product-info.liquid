@@ -745,9 +745,9 @@
 
   function formatShopifyMoney(price) {
     if (!price) return '';
-    /* Shopify /products.json returns prices as decimal strings e.g. "1497.00"
-       NOT in cents — display as-is with active currency */
-    var amount = parseFloat(price);
+    /* Shopify /products.json returns prices in cents as integers e.g. 149400
+       Divide by 100 to get display amount */
+    var amount = parseFloat(price) / 100;
     var currency = window.Shopify && window.Shopify.currency
       ? window.Shopify.currency.active
       : '';

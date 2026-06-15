@@ -326,7 +326,7 @@
 
         if (nameEl)  nameEl.textContent  = p.title.split(' in ')[0];
         if (labelEl) labelEl.textContent = oppPiece;
-        if (priceEl) priceEl.textContent = formatMoney(p.variants[0].price * 100);
+        if (priceEl) priceEl.textContent = formatMoney(p.variants[0].price);
 
         /* Image */
         if (imgEl && p.images && p.images[0]) {
@@ -350,7 +350,7 @@
             var opt = document.createElement('option');
             opt.value = v.id;
             opt.dataset.price          = v.price;
-            opt.dataset.priceFormatted = formatMoney(v.price * 100);
+            opt.dataset.priceFormatted = formatMoney(v.price);
             opt.textContent = v.title + (v.available ? '' : ' — Sold out');
             if (!v.available) opt.disabled = true;
             sel.appendChild(opt);
@@ -396,9 +396,9 @@
     handleProductData(e.detail);
   });
 
-  /* ── Format money ── */
-  function formatMoney(cents) {
-    var amount   = cents / 100;
+  /* ── Format money — prices from /products.json are in cents e.g. 149400 ── */
+  function formatMoney(price) {
+    var amount   = parseFloat(price) / 100;
     var currency = window.Shopify && window.Shopify.currency ? window.Shopify.currency.active : '';
     return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
       (currency ? ' ' + currency : '');
