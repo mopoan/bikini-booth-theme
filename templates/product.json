@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-{
-  "sections": {
-    "main": {
-      "type": "main-product",
-      "disabled": true,
-      "settings": {}
-    },
-=======
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
@@ -18,7 +9,6 @@
  */
 {
   "sections": {
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
     "product_media_bgBNAz": {
       "type": "product-media",
       "name": "Product media",
@@ -37,10 +27,6 @@
     },
     "product_trust_bar_wCfwLk": {
       "type": "product-trust-bar",
-<<<<<<< HEAD
-      "name": "Product trust bar",
-=======
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
       "blocks": {
         "trust_item_MGjPQT": {
           "type": "trust_item",
@@ -77,19 +63,13 @@
         "trust_item_gYnHDg",
         "trust_item_YwHFf9"
       ],
-<<<<<<< HEAD
-=======
       "name": "Product trust bar",
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
       "settings": {}
     },
     "product_fit_note_wXyHaY": {
       "type": "product-fit-note",
       "name": "Product fit note",
       "settings": {
-<<<<<<< HEAD
-        "fit_note": "<p>Our model is 5'9.5\", wears size S top and size S bottom. For reference, she has a 34B bust, 24\" waist and 34.5\" hips.<\/p>"
-=======
         "fit_note": "<p>Our model is 5'9.5\", wears size S top and size S bottom. For reference, she has a 34B bust, 24\" waist and 34.5\" hips.</p>"
       }
     },
@@ -98,15 +78,10 @@
       "name": "Product accordions",
       "settings": {
         "shipping_page_handle": "shipping-returns"
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
       }
     },
     "product_social_proof_iNUapA": {
       "type": "product-social-proof",
-<<<<<<< HEAD
-      "name": "Product social proof",
-=======
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
       "blocks": {
         "review_FUpGYq": {
           "type": "review",
@@ -142,16 +117,12 @@
           }
         }
       },
-<<<<<<< HEAD
-      "block_order": ["review_FUpGYq", "review_BDMaLw", "review_H6mqEB"],
-=======
       "block_order": [
         "review_FUpGYq",
         "review_BDMaLw",
         "review_H6mqEB"
       ],
       "name": "Product social proof",
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
       "settings": {
         "sp_section_title": "As worn by our community",
         "sp_section_subtitle": "",
@@ -160,45 +131,6 @@
         "sp_instagram_handle": "@bikinibooth"
       }
     },
-<<<<<<< HEAD
-    "product_complete_the_look": {
-      "type": "product-complete-the-look",
-      "name": "Complete the look",
-      "blocks": {
-        "look_item_1": {
-          "type": "look_item",
-          "settings": {
-            "ctl_label": "This item",
-            "ctl_is_current": true
-          }
-        },
-        "look_item_2": {
-          "type": "look_item",
-          "settings": {
-            "ctl_label": "Bottom",
-            "ctl_is_current": false
-          }
-        },
-        "look_item_3": {
-          "type": "look_item",
-          "settings": {
-            "ctl_label": "Resortwear",
-            "ctl_is_current": false
-          }
-        }
-      },
-      "block_order": ["look_item_1", "look_item_2", "look_item_3"],
-      "settings": {}
-    },
-    "product_accordions_M7G4Ax": {
-      "type": "product-accordions",
-      "name": "Product accordions",
-      "settings": {
-        "shipping_page_handle": "shipping-returns"
-      }
-    },
-=======
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
     "product_recommendations_rqQaP8": {
       "type": "product-recommendations",
       "name": "t:names.product_recommendations",
@@ -206,18 +138,6 @@
         "product": "{{ closest.product }}",
         "main_subheading": "you may also like",
         "main_heading": "",
-<<<<<<< HEAD
-        "top_spacing": "normal",
-        "width": "default",
-        "recommendation_type": "related",
-        "product_limit": 12,
-        "swipe": true,
-        "show_wishlist": true,
-        "show_quick_view": true,
-        "show_price": true,
-        "show_badge_on_sale": true,
-        "show_badge_sold_out": true
-=======
         "main_desc": "",
         "heading_aligment": "text-center",
         "top_spacing": "normal",
@@ -336,30 +256,24 @@
         "color_media_dots": "rgba(0,0,0,0)",
         "color_active_rating": "rgba(0,0,0,0)",
         "color_base_rating": "rgba(0,0,0,0)"
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
+      }
+    },
+    "product_complete_the_look_wEDMHX": {
+      "type": "product-complete-the-look",
+      "name": "Complete the look",
+      "settings": {
+        "pair_label": "Resortwear"
       }
     }
   },
   "order": [
-<<<<<<< HEAD
-    "main",
-=======
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
     "product_media_bgBNAz",
     "product_info_Ute4BU",
     "product_trust_bar_wCfwLk",
+    "product_accordions_M7G4Ax",
+    "product_complete_the_look_wEDMHX",
     "product_fit_note_wXyHaY",
-<<<<<<< HEAD
-    "product_social_proof_iNUapA",
-    "product_complete_the_look",
-    "product_accordions_M7G4Ax",
-    "product_recommendations_rqQaP8"
-  ]
-}
-=======
-    "product_accordions_M7G4Ax",
     "product_social_proof_iNUapA",
     "product_recommendations_rqQaP8"
   ]
 }
->>>>>>> d67e6d768c020a071bb6250ed4d774a774cef5dc
