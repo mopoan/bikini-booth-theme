@@ -40,7 +40,7 @@
         {%- endif -%}
 
       {%- when 'care_metafield' -%}
-        {%- assign care_content = product.metafields.custom.care_instructions.value -%}
+        {%- assign care_content = product.metafields.custom.care_composition.value -%}
         {%- if care_content != blank -%}
           <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
             <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
@@ -119,8 +119,8 @@
   }
 
   #bb-acc-{{ section.id }} .bb-acc__label {
-    font-size: 0.8125rem;
-    font-weight: 500;
+    font-size: {{ section.settings.label_size | default: '0.8125rem' }};
+    font-weight: {{ section.settings.label_weight | default: '500' }};
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #2a2520;
@@ -149,7 +149,8 @@
 
   #bb-acc-{{ section.id }} .bb-acc__content {
     padding-bottom: 16px;
-    font-size: 0.9rem;
+    font-size: {{ section.settings.content_size | default: '0.875rem' }};
+    font-weight: {{ section.settings.content_weight | default: '400' }};
     color: #6a6560;
     line-height: 1.75;
   }
@@ -199,6 +200,61 @@
   "name": "Product accordions",
   "tag": "div",
   "class": "bb-product-acc-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content typography"
+    },
+    {
+      "type": "select",
+      "id": "content_size",
+      "label": "Content font size",
+      "options": [
+        { "value": "0.75rem",   "label": "Small" },
+        { "value": "0.875rem",  "label": "Medium" },
+        { "value": "1rem",      "label": "Large" },
+        { "value": "1.125rem",  "label": "X-Large" }
+      ],
+      "default": "0.875rem"
+    },
+    {
+      "type": "select",
+      "id": "content_weight",
+      "label": "Content font weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "label_size",
+      "label": "Title font size",
+      "options": [
+        { "value": "0.625rem",  "label": "Small" },
+        { "value": "0.75rem",   "label": "Medium" },
+        { "value": "0.875rem",  "label": "Large" },
+        { "value": "1rem",      "label": "X-Large" }
+      ],
+      "default": "0.8125rem"
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Title font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    }
+  ],
   "blocks": [
     {
       "type": "product_description",
