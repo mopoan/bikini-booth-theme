@@ -28,20 +28,6 @@
     "product_trust_bar_wCfwLk": {
       "type": "product-trust-bar",
       "blocks": {
-        "trust_item_3tiLyT": {
-          "type": "trust_item",
-          "settings": {
-            "icon": "shield",
-            "label": "Trust signal"
-          }
-        },
-        "trust_item_Uh37rT": {
-          "type": "trust_item",
-          "settings": {
-            "icon": "shield",
-            "label": "Trust signal"
-          }
-        },
         "trust_item_MGjPQT": {
           "type": "trust_item",
           "settings": {
@@ -72,8 +58,6 @@
         }
       },
       "block_order": [
-        "trust_item_3tiLyT",
-        "trust_item_Uh37rT",
         "trust_item_MGjPQT",
         "trust_item_gaYUVC",
         "trust_item_gYnHDg",
