@@ -1,11 +1,7 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
-  Purpose: Two-column desktop layout for Bikini Booth product pages.
-
-  Layout structure:
-    Left col:  Gallery (sticky, rows 1-4) | Social proof (row 5)
-    Right col: Info (1) | Trust (2) | Fit (3) | CTL (4) | Accordions (5)
-    Full width: Recommendations (6)
+  Purpose: Two-column desktop layout using CSS Grid with named template areas.
+  Uses grid-template-areas for explicit, content-height-independent placement.
 {%- endcomment -%}
 
 <style>
@@ -14,41 +10,36 @@
     body.template-product main.content-for-layout {
       display: grid !important;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto auto auto auto;
+      grid-template-areas:
+        "media  info"
+        "media  trust"
+        "media  fit"
+        "media  ctl"
+        "sp     acc"
+        "recs   recs";
       align-items: start;
       max-width: 1440px;
       margin: 0 auto;
     }
 
-    /* ── Gallery: left col rows 1-3 sticky ── */
-    body.template-product main.content-for-layout .bb-product-media-section {
-      grid-column: 1;
-      grid-row: 1 / 4;
-      position: sticky;
-      top: 0;
+    body.template-product main.content-for-layout .bb-product-media-section  { grid-area: media; position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    body.template-product main.content-for-layout .bb-product-info-section   { grid-area: info;  min-width: 0; }
+    body.template-product main.content-for-layout .bb-product-trust-section  { grid-area: trust; min-width: 0; }
+    body.template-product main.content-for-layout .bb-product-fit-section    { grid-area: fit;   min-width: 0; }
+    body.template-product main.content-for-layout .bb-product-ctl-section    { grid-area: ctl;   min-width: 0; }
+    body.template-product main.content-for-layout .bb-product-sp-section     { grid-area: sp;    min-width: 0; align-self: start; }
+    body.template-product main.content-for-layout .bb-product-acc-section    { grid-area: acc;   min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs; }
+
+    body.template-product main.content-for-layout .bb-media {
       height: 100vh;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* ── Right column ── */
-    body.template-product main.content-for-layout .bb-product-info-section  { grid-column: 2; grid-row: 1; min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-trust-section { grid-column: 2; grid-row: 2; min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-fit-section   { grid-column: 2; grid-row: 3; min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-ctl-section   { grid-column: 2; grid-row: 4; min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-acc-section   { grid-column: 2; grid-row: 5; min-width: 0; }
-
-    /* ── Left col below gallery: social proof beside CTL ── */
-    body.template-product main.content-for-layout .bb-product-sp-section {
-      grid-column: 1;
-      grid-row: 4 / 6;
-      align-self: start;
-      min-width: 0;
-    }
-
-    /* ── Full width: recommendations ── */
-    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
-      grid-column: 1 / -1;
-      grid-row: 6;
+    body.template-product main.content-for-layout .bb-media__main {
+      flex: 1;
+      height: 0;
     }
 
   }
