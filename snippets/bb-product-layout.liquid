@@ -52,6 +52,24 @@
       clear: left;
     }
 
+    /* ── Product recommendations + any other sections: full width below ── */
+    body.template-product main.content-for-layout .bb-product-sp-section ~ .shopify-section {
+      float: none;
+      clear: both;
+      width: 100%;
+      margin-left: 0;
+    }
+
+    /* Also target product recommendations directly */
+    body.template-product main.content-for-layout [class*="product-recommendations"],
+    body.template-product main.content-for-layout [id*="product-recommendations"],
+    body.template-product main.content-for-layout [id*="product_recommendations"] {
+      float: none;
+      clear: both;
+      width: 100%;
+      margin-left: 0;
+    }
+
     /* ── Clearfix ── */
     body.template-product main.content-for-layout::after {
       content: '';
