@@ -115,15 +115,10 @@
 
   #bb-media-{{ section.id }} .bb-media__main {
     position: relative;
-    flex: 1;
     overflow: hidden;
-    {%- if section.settings.image_ratio == 'square' -%}
-    aspect-ratio: 1;
-    {%- elsif section.settings.image_ratio == 'portrait' -%}
-    aspect-ratio: 3 / 4;
-    {%- else -%}
-    min-height: 420px;
-    {%- endif -%}
+    background: #f0ece6;
+    height: calc(100vh - 80px);
+    min-height: 500px;
   }
 
   #bb-media-{{ section.id }} .bb-media__slide {
