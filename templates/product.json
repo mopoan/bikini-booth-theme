@@ -66,6 +66,13 @@
       "name": "Product trust bar",
       "settings": {}
     },
+    "product_fit_note_wXyHaY": {
+      "type": "product-fit-note",
+      "name": "Product fit note",
+      "settings": {
+        "fit_note": "<p>Our model is 5'9.5\", wears size S top and size S bottom. For reference, she has a 34B bust, 24\" waist and 34.5\" hips.</p>"
+      }
+    },
     "product_complete_the_look_wEDMHX": {
       "type": "product-complete-the-look",
       "name": "Complete the look",
@@ -75,16 +82,21 @@
     },
     "product_accordions_M7G4Ax": {
       "type": "product-accordions",
+      "blocks": {
+        "accordion_YEcEE7": {
+          "type": "accordion",
+          "settings": {
+            "acc_title": "Care & Composition",
+            "acc_content": "{{ product.metafields.custom.care_composition | metafield_tag }}"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_YEcEE7"
+      ],
       "name": "Product accordions",
       "settings": {
         "shipping_page_handle": "shipping-returns"
-      }
-    },
-    "product_fit_note_wXyHaY": {
-      "type": "product-fit-note",
-      "name": "Product fit note",
-      "settings": {
-        "fit_note": "<p>Our model is 5'9.5\", wears size S top and size S bottom. For reference, she has a 34B bust, 24\" waist and 34.5\" hips.</p>"
       }
     },
     "product_social_proof_iNUapA": {
