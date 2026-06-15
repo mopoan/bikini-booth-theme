@@ -278,14 +278,15 @@
       }
     }
   },
-  "order": [
-    "product_media_bgBNAz",
-    "product_info_Ute4BU",
-    "product_trust_bar_wCfwLk",
-    "product_fit_note_wXyHaY",
-    "product_complete_the_look_wEDMHX",
-    "product_accordions_M7G4Ax",
-    "product_social_proof_iNUapA",
-    "product_recommendations_rqQaP8"
-  ]
+ "order": [
+  "main",
+  "product_media_bgBNAz",
+  "product_info_Ute4BU",
+  "product_trust_bar_wCfwLk",
+  "product_fit_note_wXyHaY",
+  "product_complete_the_look",
+  "product_accordions_M7G4Ax",
+  "product_social_proof_iNUapA",
+  "product_recommendations_rqQaP8"
+]
 }
