@@ -31,7 +31,7 @@
     /* ── Gallery: left column, spans all right-column rows ── */
     body.template-product main.content-for-layout .bb-media {
       grid-column: 1;
-      grid-row: 1 / 8;
+      grid-row: 1 / 6;
       position: sticky;
       top: 0;
       height: 100vh;
@@ -52,12 +52,17 @@
     body.template-product main.content-for-layout .bb-ctl       { grid-column: 2; grid-row: 4; }
     body.template-product main.content-for-layout .bb-acc-wrap  { grid-column: 2; grid-row: 5; }
 
-    /* ── Bottom left: social proof ── */
-    body.template-product main.content-for-layout .bb-sp        { grid-column: 1; grid-row: 8; }
+    /* ── Bottom row: social proof left, empty right ── */
+    body.template-product main.content-for-layout .bb-sp {
+      grid-column: 1;
+      grid-row: 6;
+      align-self: start;
+    }
 
     /* ── Full width: recommendations ── */
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
       grid-column: 1 / -1;
+      grid-row: 7;
     }
 
   }
