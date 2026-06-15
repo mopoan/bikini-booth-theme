@@ -1,0 +1,358 @@
+{%- comment -%}
+  Section: product-accordions.liquid
+  Purpose: Fully block-based accordions — all reorderable in theme editor.
+
+  Block types:
+    product_description  — pulls from product.description
+    care_metafield       — pulls from custom.care_instructions metafield
+    shipping_page        — pulls from a Shopify page by handle
+    custom               — richtext set in the editor
+{%- endcomment -%}
+
+{%- capture toggle_svg_minus -%}
+  <span class="bb-acc__toggle" aria-hidden="true">
+    <span class="bb-acc__toggle-minus">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </span>
+    <span class="bb-acc__toggle-plus">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </span>
+  </span>
+{%- endcapture -%}
+
+<div class="bb-acc-wrap" id="bb-acc-{{ section.id }}">
+
+  {%- for block in section.blocks -%}
+
+    {%- case block.type -%}
+
+      {%- when 'product_description' -%}
+        {%- if product.description != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.title | default: 'Details' }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ product.description }}</div>
+            </div>
+          </div>
+        {%- endif -%}
+
+      {%- when 'care_metafield' -%}
+        {%- assign care_content = product.metafields.custom.care_composition.value -%}
+        {%- if care_content != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.title | default: 'Care & composition' }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ care_content }}</div>
+            </div>
+          </div>
+        {%- elsif request.design_mode -%}
+          <div class="bb-acc__missing-page" {{ block.shopify_attributes }}>
+            ⚠️ No care instructions metafield found. Set <strong>custom.care_instructions</strong> on this product.
+          </div>
+        {%- endif -%}
+
+      {%- when 'shipping_page' -%}
+        {%- assign shipping_page = pages[block.settings.page_handle] -%}
+        {%- if shipping_page.content != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.title | default: 'Shipping & returns' }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ shipping_page.content }}</div>
+            </div>
+          </div>
+        {%- elsif request.design_mode -%}
+          <div class="bb-acc__missing-page" {{ block.shopify_attributes }}>
+            ⚠️ No page found with handle "{{ block.settings.page_handle }}". Create it in Online Store → Pages.
+          </div>
+        {%- endif -%}
+
+      {%- when 'custom' -%}
+        {%- if block.settings.acc_title != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.acc_title }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ block.settings.acc_content }}</div>
+            </div>
+          </div>
+        {%- endif -%}
+
+    {%- endcase -%}
+
+  {%- endfor -%}
+
+</div>
+
+
+<style>
+  #bb-acc-{{ section.id }} {
+    background: #ffffff;
+    padding: 0 20px 28px;
+    border-top: 0.5px solid #e8e4dd;
+  }
+
+  #bb-acc-{{ section.id }} .bb-acc__item { border-bottom: 0.5px solid #f0ece6; }
+
+  #bb-acc-{{ section.id }} .bb-acc__btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+  }
+
+  #bb-acc-{{ section.id }} .bb-acc__label {
+    font-size: {{ section.settings.label_size | default: '0.8125rem' }};
+    font-weight: {{ section.settings.label_weight | default: '500' }};
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2a2520;
+  }
+
+  #bb-acc-{{ section.id }} .bb-acc__toggle {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1px solid #e0dbd3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #8a8077;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  #bb-acc-{{ section.id }} .bb-acc__btn:hover .bb-acc__toggle { border-color: #49c6be; color: #49c6be; }
+  #bb-acc-{{ section.id }} .bb-acc__toggle-minus { display: none; }
+  #bb-acc-{{ section.id }} .bb-acc__toggle-plus  { display: flex; }
+  #bb-acc-{{ section.id }} .bb-acc__btn[aria-expanded="true"] .bb-acc__toggle-minus { display: flex; }
+  #bb-acc-{{ section.id }} .bb-acc__btn[aria-expanded="true"] .bb-acc__toggle-plus  { display: none; }
+  #bb-acc-{{ section.id }} .bb-acc__btn[aria-expanded="true"] .bb-acc__toggle { border-color: #49c6be; color: #49c6be; }
+
+  #bb-acc-{{ section.id }} .bb-acc__body { overflow: hidden; max-height: 1200px; transition: max-height 0.3s ease; }
+  #bb-acc-{{ section.id }} .bb-acc__body--closed { max-height: 0; }
+
+  #bb-acc-{{ section.id }} .bb-acc__content {
+    padding-bottom: 16px;
+    font-size: {{ section.settings.content_size | default: '0.875rem' }};
+    font-weight: {{ section.settings.content_weight | default: '400' }};
+    color: #6a6560;
+    line-height: 1.75;
+  }
+  #bb-acc-{{ section.id }} .bb-acc__content p  { margin: 0 0 8px; }
+  #bb-acc-{{ section.id }} .bb-acc__content p:last-child { margin-bottom: 0; }
+  #bb-acc-{{ section.id }} .bb-acc__content ul { padding-left: 16px; margin: 0 0 8px; }
+  #bb-acc-{{ section.id }} .bb-acc__content li { margin-bottom: 4px; }
+  #bb-acc-{{ section.id }} .bb-acc__content a  { color: #49c6be; text-underline-offset: 2px; }
+
+  #bb-acc-{{ section.id }} .bb-acc__missing-page {
+    font-size: 0.75rem; color: #c0392b; padding: 10px 0;
+    border-bottom: 0.5px solid #f0ece6;
+  }
+
+  @media (max-width: 767px) {
+    #bb-acc-{{ section.id }} { padding: 0 14px 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #bb-acc-{{ section.id }} .bb-acc__body { transition: none; }
+  }
+</style>
+
+
+<script>
+(function () {
+  'use strict';
+  var wrap = document.getElementById('bb-acc-{{ section.id }}');
+  if (!wrap) return;
+
+  wrap.querySelectorAll('[data-acc]').forEach(function (acc) {
+    var btn  = acc.querySelector('.bb-acc__btn');
+    var body = acc.querySelector('.bb-acc__body');
+    if (!btn || !body) return;
+    btn.addEventListener('click', function () {
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      body.classList.toggle('bb-acc__body--closed', expanded);
+    });
+  });
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Product accordions",
+  "tag": "div",
+  "class": "bb-product-acc-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content typography"
+    },
+    {
+      "type": "select",
+      "id": "content_size",
+      "label": "Content font size",
+      "options": [
+        { "value": "0.75rem",   "label": "Small" },
+        { "value": "0.875rem",  "label": "Medium" },
+        { "value": "1rem",      "label": "Large" },
+        { "value": "1.125rem",  "label": "X-Large" }
+      ],
+      "default": "0.875rem"
+    },
+    {
+      "type": "select",
+      "id": "content_weight",
+      "label": "Content font weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "label_size",
+      "label": "Title font size",
+      "options": [
+        { "value": "0.625rem",  "label": "Small" },
+        { "value": "0.75rem",   "label": "Medium" },
+        { "value": "0.875rem",  "label": "Large" },
+        { "value": "1rem",      "label": "X-Large" }
+      ],
+      "default": "0.8125rem"
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Title font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_description",
+      "name": "Details",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Details"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "care_metafield",
+      "name": "Care & composition",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Care & composition"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "shipping_page",
+      "name": "Shipping & returns",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shipping & returns"
+        },
+        {
+          "type": "text",
+          "id": "page_handle",
+          "label": "Page handle",
+          "default": "shipping-returns",
+          "info": "Handle of the Shopify page to pull content from."
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "custom",
+      "name": "Custom accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "acc_title",
+          "label": "Title",
+          "default": "More information"
+        },
+        {
+          "type": "richtext",
+          "id": "acc_content",
+          "label": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product accordions",
+      "blocks": [
+        { "type": "product_description" },
+        { "type": "shipping_page" },
+        { "type": "care_metafield" }
+      ]
+    }
+  ]
+}
+{% endschema %}
