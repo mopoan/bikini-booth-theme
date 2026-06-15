@@ -83,12 +83,11 @@
     "product_accordions_M7G4Ax": {
       "type": "product-accordions",
       "blocks": {
-        "custom_d3NrxX": {
-          "type": "custom",
+        "product_description_XpQqTF": {
+          "type": "product_description",
           "settings": {
-            "acc_title": "Details",
-            "acc_content": "{{ product.description }}",
-            "open_by_default": false
+            "title": "Details",
+            "open_by_default": true
           }
         },
         "care_metafield_fxyyTC": {
@@ -108,7 +107,7 @@
         }
       },
       "block_order": [
-        "custom_d3NrxX",
+        "product_description_XpQqTF",
         "care_metafield_fxyyTC",
         "shipping_page_83cBqY"
       ],
