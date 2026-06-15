@@ -94,7 +94,7 @@
         "care_metafield_fxyyTC": {
           "type": "care_metafield",
           "settings": {
-            "title": "Care & composition{{ product.metafields.custom.care_composition | metafield_text }}",
+            "title": "Care & composition",
             "open_by_default": false
           }
         }
