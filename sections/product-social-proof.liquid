@@ -1,34 +1,14 @@
 {%- comment -%}
   Section: product-social-proof.liquid
-  Purpose: Social proof panel — randomised UGC pool (video + image) + featured review.
-           Sits in the left column below the product gallery on desktop.
-           Stacks below the fit note on mobile.
+  Purpose: Social proof panel — block-based UGC pool + Google reviews.
 
-  UGC layout: 1 tall portrait (9:16) left + 2 stacked items right.
-
-  File naming convention (upload to Shopify Admin → Content → Files):
-    ugc-001.mp4 + ugc-001.jpg  (video + poster thumbnail)
-    ugc-002.jpg                (image only)
-    ... up to ugc-020
-
-  On each page load, 3 items are picked at random from the active pool.
-  Videos autoplay muted and loop. Tap to unmute.
-
-  Schema settings:
-    sp_section_title    text
-    sp_section_subtitle text
-    sp_ugc_pool_size    range 1–20
-    sp_ugc_handles      textarea  comma-separated, one per slot number
-    sp_instagram_handle text
-    sp_review_rating    range 1–5
-    sp_review_text      richtext
-    sp_review_author    text
-    sp_review_initials  text
-    sp_review_verified  checkbox
+  UGC blocks: each block is either a video (URL) or image (image_picker) + Instagram handle.
+  On page load JS picks 3 random UGC blocks and displays them in a 9:16 portrait grid.
+  Reviews: block-based, one picked at random per page load, links to direct Google review URL.
 {%- endcomment -%}
 
-{%- assign ugc_pool_size   = section.settings.sp_ugc_pool_size | default: 10 -%}
-{%- assign ugc_handles_raw = section.settings.sp_ugc_handles | default: '' -%}
+{%- assign ugc_blocks    = section.blocks | where: 'type', 'ugc_item' -%}
+{%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
 
 <div class="bb-sp" id="bb-sp-{{ section.id }}">
 
@@ -53,9 +33,22 @@
     class="bb-sp__ugc-grid"
     id="bb-sp-ugc-{{ section.id }}"
     aria-label="Community photos and videos"
-    data-pool-size="{{ ugc_pool_size }}"
-    data-handles="{{ ugc_handles_raw | escape }}"
   >
+    {%- comment -%} Hidden data pool — JS reads and picks 3 random items {%- endcomment -%}
+    <div class="bb-sp__ugc-pool" aria-hidden="true" style="display:none;">
+      {%- for block in ugc_blocks -%}
+        <div
+          class="bb-sp__ugc-pool-item"
+          data-type="{{ block.settings.media_type }}"
+          data-video="{{ block.settings.video_url | escape }}"
+          data-image="{{ block.settings.image | image_url: width: 800 | escape }}"
+          data-handle="{{ block.settings.instagram_handle | escape }}"
+          {{ block.shopify_attributes }}
+        ></div>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} Skeleton placeholders while JS loads {%- endcomment -%}
     <div class="bb-sp__ugc-tall bb-sp__ugc-skeleton" aria-hidden="true"></div>
     <div class="bb-sp__ugc-stack">
       <div class="bb-sp__ugc-small bb-sp__ugc-skeleton" aria-hidden="true"></div>
@@ -63,19 +56,13 @@
     </div>
   </div>
 
-  {%- comment -%} ── Review pool — rendered hidden, JS picks one at random ── {%- endcomment -%}
-  {%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
+  {%- comment -%} ── Review pool — JS picks one at random ── {%- endcomment -%}
   {%- if review_blocks.size > 0 -%}
-    {%- assign google_url = section.settings.google_maps_url | default: '' -%}
-    <div
-      class="bb-sp__review-pool"
-      id="bb-sp-reviews-{{ section.id }}"
-    >
+    <div class="bb-sp__review-pool" id="bb-sp-reviews-{{ section.id }}">
       {%- for block in review_blocks -%}
         {%- assign rating = block.settings.rating | default: 5 -%}
         <div
           class="bb-sp__review{%- unless forloop.first %} bb-sp__review--hidden{%- endunless -%}"
-          data-review-index="{{ forloop.index0 }}"
           data-google-url="{{ block.settings.google_url | escape }}"
           role="article"
           aria-label="Customer review by {{ block.settings.author }}"
@@ -150,12 +137,13 @@
   #bb-sp-{{ section.id }} .bb-sp__title { font-size: 0.625rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #2a2520; }
   #bb-sp-{{ section.id }} .bb-sp__subtitle { font-size: 0.6875rem; color: #8a8077; }
 
-  /* ── UGC grid: 1 tall left + 2 stacked right ── */
+  /* ── UGC grid ── */
   #bb-sp-{{ section.id }} .bb-sp__ugc-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 6px;
     height: 280px;
+    position: relative;
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-tall {
@@ -192,10 +180,7 @@
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-media {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100%; height: 100%; object-fit: cover; display: block;
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-overlay {
@@ -256,74 +241,20 @@
   }
   #bb-sp-{{ section.id }} .bb-sp__review:hover { border-color: #49c6be; }
   #bb-sp-{{ section.id }} .bb-sp__review--hidden { display: none; }
-  #bb-sp-{{ section.id }} .bb-sp__review-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
+  #bb-sp-{{ section.id }} .bb-sp__review-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   #bb-sp-{{ section.id }} .bb-sp__stars { display: flex; gap: 3px; flex-shrink: 0; }
-  #bb-sp-{{ section.id }} .bb-sp__google-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 0.5625rem;
-    color: #8a8077;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-  }
-  #bb-sp-{{ section.id }} .bb-sp__review-text {
-    font-size: 0.6875rem;
-    color: #3a3530;
-    line-height: 1.65;
-    font-style: italic;
-  }
-  #bb-sp-{{ section.id }} .bb-sp__review-text p { margin: 0; }
-  #bb-sp-{{ section.id }} .bb-sp__review-author {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    flex-wrap: wrap;
-  }
-  #bb-sp-{{ section.id }} .bb-sp__review-avatar {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: #f0ece6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.5rem;
-    font-weight: 500;
-    color: #8a8077;
-    flex-shrink: 0;
-  }
+  #bb-sp-{{ section.id }} .bb-sp__google-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.5625rem; color: #8a8077; }
+  #bb-sp-{{ section.id }} .bb-sp__review-text { font-size: 0.6875rem; color: #3a3530; line-height: 1.65; font-style: italic; }
+  #bb-sp-{{ section.id }} .bb-sp__review-author { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  #bb-sp-{{ section.id }} .bb-sp__review-avatar { width: 22px; height: 22px; border-radius: 50%; background: #f0ece6; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; font-weight: 500; color: #8a8077; flex-shrink: 0; }
   #bb-sp-{{ section.id }} .bb-sp__review-name { font-size: 0.625rem; color: #6a6560; }
-  #bb-sp-{{ section.id }} .bb-sp__verified {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 0.5625rem;
-    color: #3a7d44;
-  }
+  #bb-sp-{{ section.id }} .bb-sp__verified { display: inline-flex; align-items: center; gap: 3px; font-size: 0.5625rem; color: #3a7d44; }
 
-  #bb-sp-{{ section.id }} .bb-sp__ig-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.6875rem;
-    color: #49c6be;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: opacity 0.15s;
-    align-self: flex-start;
-  }
+  #bb-sp-{{ section.id }} .bb-sp__ig-link { display: inline-flex; align-items: center; gap: 5px; font-size: 0.6875rem; color: #49c6be; text-decoration: underline; text-underline-offset: 2px; transition: opacity 0.15s; align-self: flex-start; }
   #bb-sp-{{ section.id }} .bb-sp__ig-link:hover { opacity: 0.75; }
 
   @media (max-width: 767px) {
-    #bb-sp-{{ section.id }} {
-      padding: 16px 14px;
-      border-top: 0.5px solid #e8e4dd;
-    }
+    #bb-sp-{{ section.id }} { padding: 16px 14px; border-top: 0.5px solid #e8e4dd; }
     #bb-sp-{{ section.id }} .bb-sp__ugc-grid { height: 240px; }
   }
 </style>
@@ -336,165 +267,117 @@
   var grid = document.getElementById('bb-sp-ugc-{{ section.id }}');
   if (!grid) return;
 
-  var poolSize   = parseInt(grid.dataset.poolSize || '10', 10);
-  var handlesRaw = grid.dataset.handles || '';
-  var handles    = handlesRaw.split(',').map(function (h) { return h.trim(); });
+  /* ── Read UGC pool from Liquid-rendered data divs ── */
+  var poolItems = Array.from(grid.querySelectorAll('.bb-sp__ugc-pool-item'));
 
-  function pad(n) {
-    return n < 10 ? '00' + n : n < 100 ? '0' + n : '' + n;
-  }
+  if (poolItems.length === 0) {
+    grid.style.display = 'none';
+  } else {
 
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
-  }
-
-  function probeFile(url) {
-    return new Promise(function (resolve) {
-      if (url.endsWith('.mp4') || url.endsWith('.mov')) {
-        var v         = document.createElement('video');
-        v.onloadedmetadata = function () { resolve(true); };
-        v.onerror     = function () { resolve(false); };
-        v.src = url;
-        v.load();
-      } else {
-        var img       = new Image();
-        img.onload    = function () { resolve(true); };
-        img.onerror   = function () { resolve(false); };
-        img.src = url;
+    /* Fisher-Yates shuffle */
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
       }
-    });
-  }
-
-  async function resolveSlot(index) {
-    var num      = pad(index);
-    var mp4Url   = '/files/ugc-' + num + '.mp4';
-    var movUrl   = '/files/ugc-' + num + '.mov';
-    var imgUrl   = '/files/ugc-' + num + '.jpg';
-    var handle   = handles[index - 1] || null;
-
-    /* Check mp4 first, then mov, then jpg */
-    if (await probeFile(mp4Url)) {
-      return { type: 'video', videoUrl: mp4Url, thumbUrl: imgUrl, handle: handle };
-    }
-    if (await probeFile(movUrl)) {
-      return { type: 'video', videoUrl: movUrl, thumbUrl: imgUrl, handle: handle };
-    }
-    if (await probeFile(imgUrl)) {
-      return { type: 'image', imgUrl: imgUrl, handle: handle };
-    }
-    return null;
-  }
-
-  function igSvg() {
-    return '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
-  }
-
-  function escHtml(str) {
-    return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function makeOverlay(handle) {
-    var div = document.createElement('div');
-    div.className = 'bb-sp__ugc-overlay';
-    div.innerHTML = igSvg() + '<span class="bb-sp__ugc-handle">' + escHtml(handle) + '</span>';
-    return div;
-  }
-
-  function buildVideo(item) {
-    var video         = document.createElement('video');
-    video.className   = 'bb-sp__ugc-media';
-    video.src         = item.videoUrl;
-    video.poster      = item.thumbUrl;
-    video.autoplay    = true;
-    video.muted       = true;
-    video.loop        = true;
-    video.playsInline = true;
-    video.setAttribute('playsinline', '');
-    video.setAttribute('muted', '');
-
-    var badge = document.createElement('div');
-    badge.className = 'bb-sp__ugc-badge';
-    badge.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-
-    var unmute = document.createElement('div');
-    unmute.className = 'bb-sp__unmute';
-    unmute.textContent = 'Tap to unmute';
-
-    var muted = true;
-    function toggleMute() {
-      muted        = !muted;
-      video.muted  = muted;
-      unmute.style.display = muted ? 'none' : 'block';
+      return a;
     }
 
-    var els = [video, badge, unmute];
-    if (item.handle) els.push(makeOverlay(item.handle));
+    var shuffled = shuffle(poolItems).slice(0, 3);
 
-    video.play().catch(function () {});
-
-    return { els: els, clickHandler: toggleMute };
-  }
-
-  function buildImage(item) {
-    var img     = document.createElement('img');
-    img.className = 'bb-sp__ugc-media';
-    img.src     = item.imgUrl;
-    img.alt     = item.handle ? 'Photo by ' + item.handle : 'Community photo';
-    img.loading = 'lazy';
-
-    var els = [img];
-    if (item.handle) els.push(makeOverlay(item.handle));
-
-    return { els: els, clickHandler: null };
-  }
-
-  function populateSlot(slotEl, item) {
-    slotEl.classList.remove('bb-sp__ugc-skeleton');
-    var built = item.type === 'video' ? buildVideo(item) : buildImage(item);
-    built.els.forEach(function (el) { slotEl.appendChild(el); });
-    if (built.clickHandler) slotEl.addEventListener('click', built.clickHandler);
-  }
-
-  async function buildGrid() {
-    var indices  = [];
-    for (var i = 1; i <= poolSize; i++) { indices.push(i); }
-    var shuffled = shuffle(indices);
-
-    var results = [];
-    var tried   = 0;
-    while (results.length < 3 && tried < shuffled.length) {
-      var slot = await resolveSlot(shuffled[tried]);
-      if (slot) results.push(slot);
-      tried++;
+    function igSvg() {
+      return '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
     }
 
-    if (results.length === 0) {
-      grid.style.display = 'none';
-      return;
+    function escHtml(str) {
+      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    var tallSlot  = grid.querySelector('.bb-sp__ugc-tall');
-    var smalls    = grid.querySelectorAll('.bb-sp__ugc-small');
+    function makeOverlay(handle) {
+      if (!handle) return null;
+      var div = document.createElement('div');
+      div.className = 'bb-sp__ugc-overlay';
+      div.innerHTML = igSvg() + '<span class="bb-sp__ugc-handle">' + escHtml(handle) + '</span>';
+      return div;
+    }
 
-    if (results[0] && tallSlot) populateSlot(tallSlot, results[0]);
+    function buildVideo(data) {
+      var video         = document.createElement('video');
+      video.className   = 'bb-sp__ugc-media';
+      video.src         = data.video;
+      video.autoplay    = true;
+      video.muted       = true;
+      video.loop        = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('muted', '');
 
-    [1, 2].forEach(function (idx) {
-      if (results[idx] && smalls[idx - 1]) {
-        populateSlot(smalls[idx - 1], results[idx]);
-      } else if (smalls[idx - 1]) {
-        smalls[idx - 1].style.display = 'none';
-      }
-    });
+      var badge = document.createElement('div');
+      badge.className = 'bb-sp__ugc-badge';
+      badge.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+
+      var unmute = document.createElement('div');
+      unmute.className = 'bb-sp__unmute';
+      unmute.textContent = 'Tap to unmute';
+
+      var muted = true;
+      var els = [video, badge, unmute];
+      var overlay = makeOverlay(data.handle);
+      if (overlay) els.push(overlay);
+
+      video.play().catch(function () {});
+
+      return {
+        els: els,
+        clickHandler: function () {
+          muted = !muted;
+          video.muted = muted;
+          unmute.style.display = muted ? 'none' : 'block';
+        }
+      };
+    }
+
+    function buildImage(data) {
+      var img     = document.createElement('img');
+      img.className = 'bb-sp__ugc-media';
+      img.src     = data.image;
+      img.alt     = data.handle ? 'Photo by ' + data.handle : 'Community photo';
+      img.loading = 'lazy';
+
+      var els = [img];
+      var overlay = makeOverlay(data.handle);
+      if (overlay) els.push(overlay);
+
+      return { els: els, clickHandler: null };
+    }
+
+    function populateSlot(slotEl, item) {
+      var data = {
+        type:   item.dataset.type,
+        video:  item.dataset.video,
+        image:  item.dataset.image,
+        handle: item.dataset.handle
+      };
+
+      slotEl.classList.remove('bb-sp__ugc-skeleton');
+
+      var built = data.type === 'video' ? buildVideo(data) : buildImage(data);
+      built.els.forEach(function (el) { slotEl.appendChild(el); });
+      if (built.clickHandler) slotEl.addEventListener('click', built.clickHandler);
+    }
+
+    var tallSlot = grid.querySelector('.bb-sp__ugc-tall');
+    var smalls   = grid.querySelectorAll('.bb-sp__ugc-small');
+
+    if (shuffled[0] && tallSlot) populateSlot(tallSlot, shuffled[0]);
+    if (shuffled[1] && smalls[0]) populateSlot(smalls[0], shuffled[1]);
+    else if (smalls[0])           smalls[0].style.display = 'none';
+    if (shuffled[2] && smalls[1]) populateSlot(smalls[1], shuffled[2]);
+    else if (smalls[1])           smalls[1].style.display = 'none';
   }
 
-  buildGrid();
-
-  /* ── Review random rotation + click to open individual Google review ── */
+  /* ── Review random rotation ── */
   (function () {
     var pool = document.getElementById('bb-sp-reviews-{{ section.id }}');
     if (!pool) return;
@@ -502,21 +385,16 @@
     var reviews = pool.querySelectorAll('.bb-sp__review');
     if (reviews.length === 0) return;
 
-    /* Pick a random review */
     var randomIdx = Math.floor(Math.random() * reviews.length);
     reviews.forEach(function (r, i) {
       r.classList.toggle('bb-sp__review--hidden', i !== randomIdx);
     });
 
-    /* Wire click on each review to its own Google URL */
     reviews.forEach(function (r) {
       var googleUrl = r.dataset.googleUrl || '';
       if (!googleUrl) return;
-
       r.setAttribute('role', 'link');
       r.setAttribute('tabindex', '0');
-      r.setAttribute('aria-label', (r.getAttribute('aria-label') || 'Review') + ' — click to read on Google');
-
       r.addEventListener('click', function () {
         window.open(googleUrl, '_blank', 'noopener,noreferrer');
       });
@@ -528,6 +406,7 @@
       });
     });
   })();
+
 })();
 </script>
 
@@ -555,38 +434,47 @@
       "info": "Leave blank to auto-generate from Instagram handle."
     },
     {
-      "type": "header",
-      "content": "UGC pool"
-    },
-    {
-      "type": "range",
-      "id": "sp_ugc_pool_size",
-      "label": "Active pool size",
-      "min": 1,
-      "max": 20,
-      "step": 1,
-      "default": 10,
-      "info": "Number of ugc-001 through ugc-020 files currently uploaded."
-    },
-    {
-      "type": "textarea",
-      "id": "sp_ugc_handles",
-      "label": "Instagram handles",
-      "info": "Comma-separated, one per slot number. e.g. @maya_k, @surf.sara, @lila.bkk",
-      "default": "@bikinibooth, @bikinibooth, @bikinibooth"
-    },
-    {
       "type": "text",
       "id": "sp_instagram_handle",
       "label": "Brand Instagram handle",
       "default": "@bikinibooth"
-    },
-    {
-      "type": "header",
-      "content": "Google reviews"
     }
   ],
   "blocks": [
+    {
+      "type": "ugc_item",
+      "name": "UGC item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "Media type",
+          "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Used for image type, or as video thumbnail."
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL",
+          "info": "Paste the Shopify Files URL of your .mp4 or .mov video. Go to Content → Files, upload your video, then copy its URL."
+        },
+        {
+          "type": "text",
+          "id": "instagram_handle",
+          "label": "Instagram handle",
+          "info": "e.g. @maya_k — shown as overlay on the media item."
+        }
+      ]
+    },
     {
       "type": "review",
       "name": "Google review",
@@ -594,8 +482,7 @@
         {
           "type": "url",
           "id": "google_url",
-          "label": "Direct Google review URL",
-          "info": "On Google Maps, find this review, click the three dots → Share → Copy link."
+          "label": "Direct Google review URL"
         },
         {
           "type": "range",
@@ -610,7 +497,7 @@
           "type": "textarea",
           "id": "quote",
           "label": "Review quote",
-          "default": "The most flattering bikini I've ever owned. The fit is perfect and the fabric holds up beautifully."
+          "default": "The most flattering bikini I've ever owned."
         },
         {
           "type": "text",
@@ -622,8 +509,7 @@
           "type": "text",
           "id": "initials",
           "label": "Initials (avatar)",
-          "default": "SP",
-          "info": "2 letters shown in the avatar circle."
+          "default": "SP"
         },
         {
           "type": "checkbox",
@@ -645,26 +531,6 @@
             "quote": "The most flattering bikini I've ever owned. Wore it every day in Koh Samui — the fit is perfect and the fabric holds up beautifully.",
             "author": "Sofia P. — Bangkok",
             "initials": "SP",
-            "verified": true
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Amazing quality and the colours are stunning. I get so many compliments every time I wear mine. Will definitely be buying more.",
-            "author": "Emma R. — London",
-            "initials": "ER",
-            "verified": true
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Perfect for my holiday in Phuket. The sizing is great and it stayed in place all day. Highly recommend!",
-            "author": "Claire T. — Sydney",
-            "initials": "CT",
             "verified": true
           }
         }
