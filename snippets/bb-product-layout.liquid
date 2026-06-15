@@ -2,24 +2,15 @@
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout for Bikini Booth product pages.
 
-  Approach: Uses CSS Grid on the #shopify-section-group-template wrapper
-  which Shopify creates around all template sections. Each section's
-  inner content div is assigned to a grid column.
-
-  Column layout:
-    Left  (col 1): gallery (sticky full height), then social proof below
-    Right (col 2): info → trust bar → fit note → complete the look → accordions
-
-  Usage: {% render 'bb-product-layout' %}
-  Render this inside product-media.liquid so it loads first.
+  The sections are direct children of <main id="MainContent" class="content-for-layout">.
+  We make that the grid container and assign each section to a column.
 {%- endcomment -%}
 
 <style>
   @media (min-width: 900px) {
 
-    /* ── Make the Shopify section group a two-column grid ── */
-    #shopify-section-group-template-section,
-    [id^="shopify-section-group-template"] {
+    /* ── Make main content area a two-column grid ── */
+    body.template-product main.content-for-layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: start;
@@ -27,61 +18,48 @@
       margin: 0 auto;
     }
 
-    /* Make section wrappers transparent to grid */
-    .shopify-section.bb-product-media-section,
-    .shopify-section.bb-product-info-section,
-    .shopify-section.bb-product-trust-section,
-    .shopify-section.bb-product-fit-section,
-    .shopify-section.bb-product-sp-section,
-    .shopify-section.bb-product-ctl-section,
-    .shopify-section.bb-product-acc-section {
+    /* ── Make shopify-section wrappers transparent to grid ── */
+    body.template-product main.content-for-layout > .shopify-section {
       display: contents;
     }
 
-    /* ── Left column: gallery sticky ── */
+    /* ── Left column: gallery — sticky full height ── */
     .bb-media {
       grid-column: 1;
-      grid-row: 1 / 5;
+      grid-row: 1 / 4;
       position: sticky;
       top: 0;
       height: 100vh;
       overflow: hidden;
     }
 
-    /* ── Right column: purchase form sections ── */
-    .bb-info {
-      grid-column: 2;
-      grid-row: 1;
-    }
-
-    .bb-trust {
-      grid-column: 2;
-      grid-row: 2;
-    }
-
-    .bb-fit {
-      grid-column: 2;
-      grid-row: 3;
-    }
+    /* ── Right column: purchase form ── */
+    .bb-info   { grid-column: 2; grid-row: 1; }
+    .bb-trust  { grid-column: 2; grid-row: 2; }
+    .bb-fit    { grid-column: 2; grid-row: 3; }
 
     /* ── Bottom left: social proof ── */
     .bb-sp {
       grid-column: 1;
-      grid-row: 5;
-      border-top: 0.5px solid #e8e4dd;
-    }
-
-    /* ── Bottom right: complete the look + accordions ── */
-    .bb-ctl {
-      grid-column: 2;
       grid-row: 4;
       border-top: 0.5px solid #e8e4dd;
     }
 
-    .bb-acc-wrap {
-      grid-column: 2;
-      grid-row: 5;
-    }
+    /* ── Bottom right: complete the look + accordions ── */
+    .bb-ctl      { grid-column: 2; grid-row: 4; border-top: 0.5px solid #e8e4dd; }
+    .bb-acc-wrap { grid-column: 2; grid-row: 5; }
 
+    /* ── Social proof needs same row height as CTL ── */
+    .bb-sp { align-self: start; }
+
+    /* Mobile: reset everything */
+  }
+
+  @media (max-width: 899px) {
+    .bb-media {
+      position: relative !important;
+      height: auto !important;
+      top: auto !important;
+    }
   }
 </style>
