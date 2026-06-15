@@ -5,6 +5,9 @@
   Standalone: No dependencies on other sections or snippets.
 {%- endcomment -%}
 
+{%- comment -%} Inject two-column layout CSS for the full product page {%- endcomment -%}
+{% render 'bb-product-layout' %}
+
 <div class="bb-media" id="bb-media-{{ section.id }}">
 
   {%- comment -%} ── Main image area ── {%- endcomment -%}
