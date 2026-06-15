@@ -1,38 +1,43 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
-  Purpose: Two-column desktop layout for Bikini Booth product pages.
-
-  Shopify DOES apply schema "class" to the outer shopify-section wrapper:
-    <div class="shopify-section bb-product-info-section">
-
-  So we can target directly by class name.
+  Purpose: Two-column desktop layout using CSS Grid.
+  Grid is placed on main.content-for-layout with display:contents
+  on shopify-section wrappers so inner divs become grid items.
 {%- endcomment -%}
 
 <style>
   @media (min-width: 900px) {
 
     body.template-product main.content-for-layout {
-      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      align-items: start;
       max-width: 1440px;
       margin: 0 auto;
-      overflow: hidden;
     }
 
-    /* ── Left column: gallery ── */
-    body.template-product main.content-for-layout .bb-product-media-section {
+    /* Make section wrappers transparent to grid */
+    body.template-product main.content-for-layout .bb-product-media-section,
+    body.template-product main.content-for-layout .bb-product-info-section,
+    body.template-product main.content-for-layout .bb-product-trust-section,
+    body.template-product main.content-for-layout .bb-product-fit-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section,
+    body.template-product main.content-for-layout .bb-product-acc-section,
+    body.template-product main.content-for-layout .bb-product-sp-section {
+      display: contents;
+    }
+
+    /* ── Gallery: left column, spans all right-column rows ── */
+    body.template-product main.content-for-layout .bb-media {
+      grid-column: 1;
+      grid-row: 1 / 8;
       position: sticky;
       top: 0;
-      float: left;
-      width: 50%;
-      height: 100vh;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    body.template-product main.content-for-layout .bb-media {
       height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     body.template-product main.content-for-layout .bb-media__main {
@@ -40,62 +45,41 @@
       height: 0;
     }
 
-    /* ── Right column ── */
-    body.template-product main.content-for-layout .bb-product-info-section,
-    body.template-product main.content-for-layout .bb-product-trust-section,
-    body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-acc-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section {
-      float: right;
-      width: 50%;
-      clear: none;
-    }
+    /* ── Right column items ── */
+    body.template-product main.content-for-layout .bb-info      { grid-column: 2; grid-row: 1; }
+    body.template-product main.content-for-layout .bb-trust     { grid-column: 2; grid-row: 2; }
+    body.template-product main.content-for-layout .bb-fit       { grid-column: 2; grid-row: 3; }
+    body.template-product main.content-for-layout .bb-ctl       { grid-column: 2; grid-row: 4; }
+    body.template-product main.content-for-layout .bb-acc-wrap  { grid-column: 2; grid-row: 5; }
 
     /* ── Bottom left: social proof ── */
-    body.template-product main.content-for-layout .bb-product-sp-section {
-      float: left;
-      width: 50%;
-      clear: left;
-    }
+    body.template-product main.content-for-layout .bb-sp        { grid-column: 1; grid-row: 8; }
 
-    /* ── Accordion and CTL always float right, even after social proof ── */
-    body.template-product main.content-for-layout .bb-product-acc-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section {
-      float: right !important;
-      width: 50% !important;
-      clear: none !important;
-    }
-
-    /* ── Full width: recommendations only ── */
+    /* ── Full width: recommendations ── */
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
-      float: none !important;
-      clear: both !important;
-      width: 100% !important;
-    }
-
-    /* ── Clearfix ── */
-    body.template-product main.content-for-layout::after {
-      content: '';
-      display: table;
-      clear: both;
+      grid-column: 1 / -1;
     }
 
   }
 
   @media (max-width: 899px) {
+    body.template-product main.content-for-layout {
+      display: block !important;
+    }
     body.template-product main.content-for-layout .bb-product-media-section,
     body.template-product main.content-for-layout .bb-product-info-section,
     body.template-product main.content-for-layout .bb-product-trust-section,
     body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-acc-section,
     body.template-product main.content-for-layout .bb-product-ctl-section,
+    body.template-product main.content-for-layout .bb-product-acc-section,
     body.template-product main.content-for-layout .bb-product-sp-section {
-      float: none !important;
-      width: 100% !important;
-      height: auto !important;
+      display: block !important;
+    }
+    body.template-product main.content-for-layout .bb-media {
       position: relative !important;
-      top: auto !important;
-      overflow: visible !important;
+      height: auto !important;
+      grid-column: unset !important;
+      grid-row: unset !important;
     }
   }
 </style>
