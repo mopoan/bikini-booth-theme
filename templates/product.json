@@ -83,11 +83,11 @@
     "product_accordions_M7G4Ax": {
       "type": "product-accordions",
       "blocks": {
-        "shipping_page_83cBqY": {
-          "type": "shipping_page",
+        "custom_d3NrxX": {
+          "type": "custom",
           "settings": {
-            "title": "Shipping",
-            "page_handle": "shipping-in-the-product-page",
+            "acc_title": "Details",
+            "acc_content": "{{ product.description }}",
             "open_by_default": false
           }
         },
@@ -97,11 +97,20 @@
             "title": "Care & composition",
             "open_by_default": false
           }
+        },
+        "shipping_page_83cBqY": {
+          "type": "shipping_page",
+          "settings": {
+            "title": "Shipping",
+            "page_handle": "shipping-in-the-product-page",
+            "open_by_default": false
+          }
         }
       },
       "block_order": [
-        "shipping_page_83cBqY",
-        "care_metafield_fxyyTC"
+        "custom_d3NrxX",
+        "care_metafield_fxyyTC",
+        "shipping_page_83cBqY"
       ],
       "name": "Product accordions",
       "settings": {}
