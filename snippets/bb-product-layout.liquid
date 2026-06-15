@@ -1,15 +1,15 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
-  Purpose: Two-column desktop layout using CSS Grid.
-  Grid is placed on main.content-for-layout with display:contents
-  on shopify-section wrappers so inner divs become grid items.
+  Purpose: Two-column desktop layout for Bikini Booth product pages.
+  Uses CSS Grid on main.content-for-layout targeting section wrappers directly.
+  Does NOT use display:contents since the theme overrides it with flex.
 {%- endcomment -%}
 
 <style>
   @media (min-width: 900px) {
 
     body.template-product main.content-for-layout {
-      display: grid;
+      display: grid !important;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto;
       align-items: start;
@@ -17,27 +17,20 @@
       margin: 0 auto;
     }
 
-    /* Make section wrappers transparent to grid */
-    body.template-product main.content-for-layout .bb-product-media-section,
-    body.template-product main.content-for-layout .bb-product-info-section,
-    body.template-product main.content-for-layout .bb-product-trust-section,
-    body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section,
-    body.template-product main.content-for-layout .bb-product-acc-section,
-    body.template-product main.content-for-layout .bb-product-sp-section {
-      display: contents !important;
-    }
-
-    /* ── Gallery: left column, spans all right-column rows ── */
-    body.template-product main.content-for-layout .bb-media {
+    /* ── Gallery: left column, sticky ── */
+    body.template-product main.content-for-layout .bb-product-media-section {
       grid-column: 1;
       grid-row: 1 / 6;
       position: sticky;
       top: 0;
       height: 100vh;
+      overflow: hidden;
+    }
+
+    body.template-product main.content-for-layout .bb-media {
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
     }
 
     body.template-product main.content-for-layout .bb-media__main {
@@ -45,15 +38,15 @@
       height: 0;
     }
 
-    /* ── Right column items ── */
-    body.template-product main.content-for-layout .bb-info      { grid-column: 2; grid-row: 1; }
-    body.template-product main.content-for-layout .bb-trust     { grid-column: 2; grid-row: 2; }
-    body.template-product main.content-for-layout .bb-fit       { grid-column: 2; grid-row: 3; }
-    body.template-product main.content-for-layout .bb-ctl       { grid-column: 2; grid-row: 4; }
-    body.template-product main.content-for-layout .bb-acc-wrap  { grid-column: 2; grid-row: 5; }
+    /* ── Right column ── */
+    body.template-product main.content-for-layout .bb-product-info-section  { grid-column: 2; grid-row: 1; }
+    body.template-product main.content-for-layout .bb-product-trust-section { grid-column: 2; grid-row: 2; }
+    body.template-product main.content-for-layout .bb-product-fit-section   { grid-column: 2; grid-row: 3; }
+    body.template-product main.content-for-layout .bb-product-ctl-section   { grid-column: 2; grid-row: 4; }
+    body.template-product main.content-for-layout .bb-product-acc-section   { grid-column: 2; grid-row: 5; }
 
-    /* ── Bottom row: social proof left, empty right ── */
-    body.template-product main.content-for-layout .bb-sp {
+    /* ── Bottom left: social proof ── */
+    body.template-product main.content-for-layout .bb-product-sp-section {
       grid-column: 1;
       grid-row: 6;
       align-self: start;
@@ -71,20 +64,9 @@
     body.template-product main.content-for-layout {
       display: block !important;
     }
-    body.template-product main.content-for-layout .bb-product-media-section,
-    body.template-product main.content-for-layout .bb-product-info-section,
-    body.template-product main.content-for-layout .bb-product-trust-section,
-    body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section,
-    body.template-product main.content-for-layout .bb-product-acc-section,
-    body.template-product main.content-for-layout .bb-product-sp-section {
-      display: block !important;
-    }
-    body.template-product main.content-for-layout .bb-media {
+    body.template-product main.content-for-layout .bb-product-media-section {
       position: relative !important;
       height: auto !important;
-      grid-column: unset !important;
-      grid-row: unset !important;
     }
   }
 </style>
