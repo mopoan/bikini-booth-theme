@@ -83,21 +83,28 @@
     "product_accordions_M7G4Ax": {
       "type": "product-accordions",
       "blocks": {
-        "accordion_YEcEE7": {
-          "type": "accordion",
+        "shipping_page_83cBqY": {
+          "type": "shipping_page",
           "settings": {
-            "acc_title": "Care & Composition",
-            "acc_content": "<p>{{ product.metafields.custom.care_composition | metafield_tag }}</p>"
+            "title": "Shipping",
+            "page_handle": "shipping-in-the-product-page",
+            "open_by_default": false
+          }
+        },
+        "care_metafield_fxyyTC": {
+          "type": "care_metafield",
+          "settings": {
+            "title": "Care & composition{{ product.metafields.custom.care_composition | metafield_text }}",
+            "open_by_default": false
           }
         }
       },
       "block_order": [
-        "accordion_YEcEE7"
+        "shipping_page_83cBqY",
+        "care_metafield_fxyyTC"
       ],
       "name": "Product accordions",
-      "settings": {
-        "shipping_page_handle": "shipping-in-the-product-page"
-      }
+      "settings": {}
     },
     "product_social_proof_iNUapA": {
       "type": "product-social-proof",
@@ -278,15 +285,14 @@
       }
     }
   },
- "order": [
-  "main",
-  "product_media_bgBNAz",
-  "product_info_Ute4BU",
-  "product_trust_bar_wCfwLk",
-  "product_fit_note_wXyHaY",
-  "product_complete_the_look",
-  "product_accordions_M7G4Ax",
-  "product_social_proof_iNUapA",
-  "product_recommendations_rqQaP8"
-]
+  "order": [
+    "product_media_bgBNAz",
+    "product_info_Ute4BU",
+    "product_trust_bar_wCfwLk",
+    "product_fit_note_wXyHaY",
+    "product_complete_the_look_wEDMHX",
+    "product_accordions_M7G4Ax",
+    "product_social_proof_iNUapA",
+    "product_recommendations_rqQaP8"
+  ]
 }
