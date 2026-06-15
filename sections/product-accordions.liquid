@@ -1,123 +1,95 @@
 {%- comment -%}
   Section: product-accordions.liquid
-  Purpose: Product detail accordions — Details, Care & Composition,
-           Shipping & Returns, plus optional custom blocks.
-           Toggle uses a clear + / − switch.
-  Standalone: No dependencies on other sections or snippets.
+  Purpose: Fully block-based accordions — all reorderable in theme editor.
+
+  Block types:
+    product_description  — pulls from product.description
+    care_metafield       — pulls from custom.care_instructions metafield
+    shipping_page        — pulls from a Shopify page by handle
+    custom               — richtext set in the editor
 {%- endcomment -%}
+
+{%- capture toggle_svg_minus -%}
+  <span class="bb-acc__toggle" aria-hidden="true">
+    <span class="bb-acc__toggle-minus">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </span>
+    <span class="bb-acc__toggle-plus">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </span>
+  </span>
+{%- endcapture -%}
 
 <div class="bb-acc-wrap" id="bb-acc-{{ section.id }}">
 
-  {%- comment -%} ── Details (from product description) ── {%- endcomment -%}
-  {%- if product.description != blank -%}
-    <div class="bb-acc__item" data-acc>
-      <button
-        type="button"
-        class="bb-acc__btn"
-        aria-expanded="true"
-        aria-controls="bb-acc-details-{{ section.id }}"
-      >
-        <span class="bb-acc__label">Details</span>
-        <span class="bb-acc__toggle" aria-hidden="true">
-          <span class="bb-acc__toggle-minus">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </span>
-          <span class="bb-acc__toggle-plus">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </span>
-        </span>
-      </button>
-      <div class="bb-acc__body" id="bb-acc-details-{{ section.id }}">
-        <div class="bb-acc__content">{{ product.description }}</div>
-      </div>
-    </div>
-  {%- endif -%}
-
-  {%- comment -%} ── Care & Composition — from product metafield ── {%- endcomment -%}
-  {%- assign care_content = product.metafields.custom.care_instructions.value -%}
-  {%- if care_content != blank -%}
-    <div class="bb-acc__item" data-acc>
-      <button
-        type="button"
-        class="bb-acc__btn"
-        aria-expanded="false"
-        aria-controls="bb-acc-care-{{ section.id }}"
-      >
-        <span class="bb-acc__label">Care & composition</span>
-        <span class="bb-acc__toggle" aria-hidden="true">
-          <span class="bb-acc__toggle-minus">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </span>
-          <span class="bb-acc__toggle-plus">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </span>
-        </span>
-      </button>
-      <div class="bb-acc__body bb-acc__body--closed" id="bb-acc-care-{{ section.id }}">
-        <div class="bb-acc__content">{{ care_content }}</div>
-      </div>
-    </div>
-  {%- endif -%}
-
-  {%- comment -%} ── Shipping & Returns — from a Shopify page by handle ── {%- endcomment -%}
-  {%- assign shipping_page_handle = section.settings.shipping_page_handle | default: 'shipping-returns' -%}
-  {%- assign shipping_page = pages[shipping_page_handle] -%}
-  {%- if shipping_page.content != blank -%}
-    <div class="bb-acc__item" data-acc>
-      <button
-        type="button"
-        class="bb-acc__btn"
-        aria-expanded="false"
-        aria-controls="bb-acc-shipping-{{ section.id }}"
-      >
-        <span class="bb-acc__label">Shipping & returns</span>
-        <span class="bb-acc__toggle" aria-hidden="true">
-          <span class="bb-acc__toggle-minus">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </span>
-          <span class="bb-acc__toggle-plus">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </span>
-        </span>
-      </button>
-      <div class="bb-acc__body bb-acc__body--closed" id="bb-acc-shipping-{{ section.id }}">
-        <div class="bb-acc__content">{{ shipping_page.content }}</div>
-      </div>
-    </div>
-  {%- elsif section.settings.shipping_page_handle != blank -%}
-    {%- comment -%} Page handle set but page not found — helpful editor warning {%- endcomment -%}
-    {%- if request.design_mode -%}
-      <p class="bb-acc__missing-page">
-        ⚠️ No page found with handle "{{ section.settings.shipping_page_handle }}". Create it in <strong>Online Store → Pages</strong>.
-      </p>
-    {%- endif -%}
-  {%- endif -%}
-
-  {%- comment -%} ── Custom accordion blocks ── {%- endcomment -%}
   {%- for block in section.blocks -%}
-    {%- if block.type == 'accordion' and block.settings.acc_title != blank -%}
-      <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
-        <button
-          type="button"
-          class="bb-acc__btn"
-          aria-expanded="false"
-          aria-controls="bb-acc-block-{{ block.id }}"
-        >
-          <span class="bb-acc__label">{{ block.settings.acc_title }}</span>
-          <span class="bb-acc__toggle" aria-hidden="true">
-            <span class="bb-acc__toggle-minus">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </span>
-            <span class="bb-acc__toggle-plus">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </span>
-          </span>
-        </button>
-        <div class="bb-acc__body bb-acc__body--closed" id="bb-acc-block-{{ block.id }}">
-          <div class="bb-acc__content">{{ block.settings.acc_content }}</div>
-        </div>
-      </div>
-    {%- endif -%}
+
+    {%- case block.type -%}
+
+      {%- when 'product_description' -%}
+        {%- if product.description != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.title | default: 'Details' }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ product.description }}</div>
+            </div>
+          </div>
+        {%- endif -%}
+
+      {%- when 'care_metafield' -%}
+        {%- assign care_content = product.metafields.custom.care_instructions.value -%}
+        {%- if care_content != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.title | default: 'Care & composition' }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ care_content }}</div>
+            </div>
+          </div>
+        {%- elsif request.design_mode -%}
+          <div class="bb-acc__missing-page" {{ block.shopify_attributes }}>
+            ⚠️ No care instructions metafield found. Set <strong>custom.care_instructions</strong> on this product.
+          </div>
+        {%- endif -%}
+
+      {%- when 'shipping_page' -%}
+        {%- assign shipping_page = pages[block.settings.page_handle] -%}
+        {%- if shipping_page.content != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.title | default: 'Shipping & returns' }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ shipping_page.content }}</div>
+            </div>
+          </div>
+        {%- elsif request.design_mode -%}
+          <div class="bb-acc__missing-page" {{ block.shopify_attributes }}>
+            ⚠️ No page found with handle "{{ block.settings.page_handle }}". Create it in Online Store → Pages.
+          </div>
+        {%- endif -%}
+
+      {%- when 'custom' -%}
+        {%- if block.settings.acc_title != blank -%}
+          <div class="bb-acc__item" data-acc {{ block.shopify_attributes }}>
+            <button type="button" class="bb-acc__btn" aria-expanded="{{ block.settings.open_by_default }}" aria-controls="bb-acc-{{ block.id }}">
+              <span class="bb-acc__label">{{ block.settings.acc_title }}</span>
+              {{ toggle_svg_minus }}
+            </button>
+            <div class="bb-acc__body{% unless block.settings.open_by_default %} bb-acc__body--closed{% endunless %}" id="bb-acc-{{ block.id }}">
+              <div class="bb-acc__content">{{ block.settings.acc_content }}</div>
+            </div>
+          </div>
+        {%- endif -%}
+
+    {%- endcase -%}
+
   {%- endfor -%}
 
 </div>
@@ -130,9 +102,7 @@
     border-top: 0.5px solid #e8e4dd;
   }
 
-  #bb-acc-{{ section.id }} .bb-acc__item {
-    border-bottom: 0.5px solid #f0ece6;
-  }
+  #bb-acc-{{ section.id }} .bb-acc__item { border-bottom: 0.5px solid #f0ece6; }
 
   #bb-acc-{{ section.id }} .bb-acc__btn {
     width: 100%;
@@ -156,11 +126,9 @@
     color: #2a2520;
   }
 
-  /* Toggle icon */
   #bb-acc-{{ section.id }} .bb-acc__toggle {
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 22px; height: 22px;
     border-radius: 50%;
     border: 1px solid #e0dbd3;
     display: inline-flex;
@@ -169,33 +137,15 @@
     color: #8a8077;
     transition: border-color 0.15s, color 0.15s;
   }
-
-  #bb-acc-{{ section.id }} .bb-acc__btn:hover .bb-acc__toggle {
-    border-color: #49c6be;
-    color: #49c6be;
-  }
-
-  /* Show − when open, + when closed */
+  #bb-acc-{{ section.id }} .bb-acc__btn:hover .bb-acc__toggle { border-color: #49c6be; color: #49c6be; }
   #bb-acc-{{ section.id }} .bb-acc__toggle-minus { display: none; }
   #bb-acc-{{ section.id }} .bb-acc__toggle-plus  { display: flex; }
-
   #bb-acc-{{ section.id }} .bb-acc__btn[aria-expanded="true"] .bb-acc__toggle-minus { display: flex; }
   #bb-acc-{{ section.id }} .bb-acc__btn[aria-expanded="true"] .bb-acc__toggle-plus  { display: none; }
+  #bb-acc-{{ section.id }} .bb-acc__btn[aria-expanded="true"] .bb-acc__toggle { border-color: #49c6be; color: #49c6be; }
 
-  #bb-acc-{{ section.id }} .bb-acc__btn[aria-expanded="true"] .bb-acc__toggle {
-    border-color: #49c6be;
-    color: #49c6be;
-  }
-
-  /* Body */
-  #bb-acc-{{ section.id }} .bb-acc__body {
-    overflow: hidden;
-    max-height: 800px;
-    transition: max-height 0.3s ease;
-  }
-  #bb-acc-{{ section.id }} .bb-acc__body--closed {
-    max-height: 0;
-  }
+  #bb-acc-{{ section.id }} .bb-acc__body { overflow: hidden; max-height: 1200px; transition: max-height 0.3s ease; }
+  #bb-acc-{{ section.id }} .bb-acc__body--closed { max-height: 0; }
 
   #bb-acc-{{ section.id }} .bb-acc__content {
     padding-bottom: 16px;
@@ -210,10 +160,12 @@
   #bb-acc-{{ section.id }} .bb-acc__content a  { color: #49c6be; text-underline-offset: 2px; }
 
   #bb-acc-{{ section.id }} .bb-acc__missing-page {
-    font-size: 0.6875rem;
-    color: #c0392b;
-    padding: 10px 0;
+    font-size: 0.75rem; color: #c0392b; padding: 10px 0;
     border-bottom: 0.5px solid #f0ece6;
+  }
+
+  @media (max-width: 767px) {
+    #bb-acc-{{ section.id }} { padding: 0 14px 24px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -225,7 +177,6 @@
 <script>
 (function () {
   'use strict';
-
   var wrap = document.getElementById('bb-acc-{{ section.id }}');
   if (!wrap) return;
 
@@ -233,7 +184,6 @@
     var btn  = acc.querySelector('.bb-acc__btn');
     var body = acc.querySelector('.bb-acc__body');
     if (!btn || !body) return;
-
     btn.addEventListener('click', function () {
       var expanded = btn.getAttribute('aria-expanded') === 'true';
       btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
@@ -249,30 +199,73 @@
   "name": "Product accordions",
   "tag": "div",
   "class": "bb-product-acc-section",
-  "settings": [
-    {
-      "type": "header",
-      "content": "Care & composition"
-    },
-    {
-      "type": "paragraph",
-      "content": "Content is pulled from the product metafield 'custom.care_instructions' (type: richtext). Set it per product in Products → [product] → Metafields."
-    },
-    {
-      "type": "header",
-      "content": "Shipping & returns"
-    },
-    {
-      "type": "text",
-      "id": "shipping_page_handle",
-      "label": "Page handle",
-      "default": "shipping-returns",
-      "info": "The handle of the Shopify page to pull content from. Find it in Online Store → Pages → [page] → Search engine listing → URL handle."
-    }
-  ],
   "blocks": [
     {
-      "type": "accordion",
+      "type": "product_description",
+      "name": "Details",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Details"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "care_metafield",
+      "name": "Care & composition",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Care & composition"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "shipping_page",
+      "name": "Shipping & returns",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shipping & returns"
+        },
+        {
+          "type": "text",
+          "id": "page_handle",
+          "label": "Page handle",
+          "default": "shipping-returns",
+          "info": "Handle of the Shopify page to pull content from."
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "custom",
       "name": "Custom accordion",
       "settings": [
         {
@@ -285,13 +278,25 @@
           "type": "richtext",
           "id": "acc_content",
           "label": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": false
         }
       ]
     }
   ],
   "presets": [
-    { "name": "Product accordions" }
+    {
+      "name": "Product accordions",
+      "blocks": [
+        { "type": "product_description" },
+        { "type": "shipping_page" },
+        { "type": "care_metafield" }
+      ]
+    }
   ]
 }
 {% endschema %}
-
