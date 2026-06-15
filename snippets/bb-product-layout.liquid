@@ -24,20 +24,26 @@
       top: 0;
       float: left;
       width: 50%;
-      height: 100vh;
+      height: auto;
+      max-height: 100vh;
       overflow: hidden;
       z-index: 1;
     }
 
     body.template-product main.content-for-layout .bb-media {
-      height: 100vh;
+      height: auto;
       display: flex;
       flex-direction: column;
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
     }
 
     body.template-product main.content-for-layout .bb-media__main {
       flex: 1;
       min-height: 0;
+      aspect-ratio: 9 / 16;
+      max-height: calc(100vh - 80px);
     }
 
     /* ── Right column: all other sections sit beside gallery ── */

@@ -1,173 +1,418 @@
-{% comment %}
-    Renders product media
+{%- comment -%}
+  Section: product-media.liquid
+  Purpose: Product image gallery for Bikini Booth product pages.
+  Renders: Main image with crossfade, thumbnail strip, mobile swipe + dots, zoom overlay.
+  Standalone: No dependencies on other sections or snippets.
+{%- endcomment -%}
 
-    Accepts:
-    - section: {Object} Section liquid object
-    - media: {Object} Product Media object
-    - loop: {Boolean} Enable video looping (optional)
-    - variant_image: {Boolean} Whether or not media is associated with a variant
-    - fly_zoom_icon: {Boolean} Default true
+{%- comment -%} Inject two-column layout CSS for the full product page {%- endcomment -%}
+{% render 'bb-product-layout' %}
 
-    Usage:
-    {% render 'product-media',
-      media: media,
-      loop: section.settings.enable_video_looping,
-      variant_image: true
-    %}
-{% endcomment %}
-{%- assign image_zoom = section.settings.image_zoom | default: "none", allow_false: true -%}
-{%- if media.media_type == 'image' -%}
-  {%- liquid
-      capture image_ratio
-      if section.settings.image_ratio == 'auto'
-      echo media.preview_image.aspect_ratio
-      else
-      echo section.settings.image_ratio
-      endif
-      endcapture
-   -%}
-  <div class="product__media border__radius" style="--aspect-ratio: {{ image_ratio }};">
-    <img
-      {% if image_zoom == "hover" %}class="image-magnify-hover hide-cursor"{% endif %}
-      srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
-              {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
-              {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
-              {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
-              {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
-              {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
-              {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
-              {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
-              {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
-      sizes="(min-width: 750px) calc(100vw - 22rem), 1100px"
-      src="{{ media.preview_image | image_url: width: 1445 }}"
-      alt="{{ media.alt | escape }}"
-      loading="lazy"
-      width="1100"
-      height="{{ 1100 | divided_by: media.preview_image.aspect_ratio | ceil }}"
-      data-media-id="{{ media.id }}"
-    >
-  </div>
-  {%- if image_zoom == "lightbox" or image_zoom == "hover" -%}
-  <lightbox-opener class="lightbox-opener{% unless fly_zoom_icon %} hide-cursor{% endunless %}{% if image_zoom == "hover" %} lightbox-opener-mobile{% endif %}"
-                   data-id="lightbox-{{ section.id }}"
-                   data-media-id="{{ media.id }}"></lightbox-opener>
-  {%- endif -%}
-  {%- if image_zoom != "none" -%}
-  {%- unless fly_zoom_icon -%}
-  <zoom-icon class="zoom-icon">
-	{{- 'icon-plus' | append: settings.system_icon_thickness | inline_asset_content -}}
-	{{- 'icon-minus' | append: settings.system_icon_thickness | inline_asset_content -}}
-  </zoom-icon>
-  {%- else -%}
-  <div class="zoom-icon">
-    {{- 'icon-plus' | append: settings.system_icon_thickness | inline_asset_content -}}
-	{{- 'icon-minus' | append: settings.system_icon_thickness | inline_asset_content -}}
-  </div>
-  {%- endunless -%}
-  {%- endif -%}
-{%- elsif section.settings.bb_tropic_pdp and media.media_type == 'video' -%}
-  {%- liquid
-      capture image_ratio
-      if section.settings.image_ratio == 'auto'
-      echo media.aspect_ratio
-      else
-      echo section.settings.image_ratio
-      endif
-      endcapture
-   -%}
-  <div class="product__media product__media--autoplay-video border__radius" style="--aspect-ratio: {{ image_ratio }};" data-media-id="{{ media.id }}">
-    {{ media | media_tag: image_size: '2048x', autoplay: true, loop: loop, controls: false, muted: true, playsinline: true, preload: 'metadata' }}
-  </div>
-{%- else -%}
-  {%- if media.media_type == 'model' -%}
-    <div class="product-media-modal__model" data-media-id="{{ media.id }}">
-    {%- liquid
-        capture image_ratio
-        if section.settings.image_ratio == 'auto'
-        echo 0
-        else
-        echo section.settings.image_ratio
-        endif
-        endcapture
-        assign image_ratio = image_ratio | plus: 0
-     -%}
-      <product-model class="deferred-media media{% if image_ratio > 1 and image_ratio > 0 %} product-model__horizontal{% endif %}" style="aspect-ratio:1;">
-  {%- else -%}
-    {%- liquid
-        capture image_ratio
-        if section.settings.image_ratio == 'auto'
-        echo media.aspect_ratio
-        else
-        echo section.settings.image_ratio
-        endif
-        endcapture
-     -%}
-    <deferred-media class="deferred-media media{% if section.settings.image_ratio != 'auto' %} media_ratio_custom{% endif %}" style="aspect-ratio:{{ image_ratio }};--youtube-media-ratio:{{ media.aspect_ratio }};" data-media-id="{{ media.id }}">
-  {%- endif -%}
+<div class="bb-media" id="bb-media-{{ section.id }}">
 
-    <button id="Deferred-Poster-Modal-{{ media.id }}" class="deferred-media__poster{% if media.media_type == 'model' %} deferred-media__poster-model{% endif %}" type="button">
-      <span class="deferred-media__poster-button">
-        {%- if media.media_type == 'model' -%}
-		  {{- 'icon-3d-model' | append: settings.system_icon_thickness | inline_asset_content -}}
-        {%- else -%}
-		  {{- 'icon-play' | append: settings.system_icon_thickness | inline_asset_content -}}
-        {%- endif -%}
-      </span>
-      <img
-        srcset="{% if media.preview_image.width >= 288 %}{{ media.preview_image | image_url: width: 288 }} 288w,{% endif %}
-                {% if media.preview_image.width >= 576 %}{{ media.preview_image | image_url: width: 576 }} 576w,{% endif %}
-                {% if media.preview_image.width >= 550 %}{{ media.preview_image | image_url: width: 550 }} 550w,{% endif %}
-                {% if media.preview_image.width >= 1100 %}{{ media.preview_image | image_url: width: 1100 }} 1100w,{% endif %}
-                {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
-        src="{{ media | image_url: width: 550, height: 550 }}"
-        sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
-        loading="lazy"
-        width="576"
-        height="{{ 576 | divided_by: media.preview_image.aspect_ratio }}"
-        alt="{{ media.preview_image.alt | escape }}"
-      >
-    </button>
-    <template>
-      {%- case media.media_type -%}
-      {%- when 'external_video' -%}
-        {%- assign video_class = 'js-' | append: media.host -%}
-        {%- if media.host == 'youtube' -%}
-          {{ media | external_video_url: autoplay: true, loop: loop, playlist: media.external_id | external_video_tag: class: video_class, loading: "lazy" }}
-        {%- else -%}
-          {{ media | external_video_url: autoplay: true, loop: loop | external_video_tag: class: video_class, loading: "lazy" }}
-        {%- endif -%}
-      {%- when 'video' -%}
-        {{ media | media_tag: image_size: "2048x", autoplay: true, loop: loop, controls: false, muted: true, playsinline: true, preload: "metadata" }}
-      {%- when 'model' -%}
-        {{ media | media_tag: image_size: "2048x", toggleable: true }}
-      {%- endcase -%}
-    </template>
+  {%- comment -%} ── Main image area ── {%- endcomment -%}
+  <div class="bb-media__main" id="bb-media-main-{{ section.id }}" aria-label="Product images">
 
-  {%- if media.media_type == 'model' -%}
-      </product-model>
-      <button
-        class="btn btn__transition-text btn-media-3d product__xr-button"
-        type="button"
-        aria-label="{{ 'products.product.xr_button_label' | t }}"
-        data-shopify-xr
-        data-shopify-model3d-id="{{ media.id }}"
-        data-shopify-title="title"
-        data-shopify-xr-hidden
+    {%- if product.images.size > 0 -%}
+      {%- for image in product.images -%}
+        <div
+          class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
+          data-index="{{ forloop.index0 }}"
+          role="img"
+          aria-label="{{ image.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.images.size }}"
+          aria-hidden="{%- if forloop.first -%}false{%- else -%}true{%- endif -%}"
         >
-      <div class="btn__texts">
-        <span class="btn__top-text is-visible">{{- 'icon-3d-model' | append: settings.system_icon_thickness | inline_asset_content -}}{{ 'products.product.xr_button' | t }}</span>
-        <span class="btn__bottom-text is-hidden">{{- 'icon-3d-model' | append: settings.system_icon_thickness | inline_asset_content -}}{{ 'products.product.xr_button' | t }}</span>
+          <img
+            src="{{ image | image_url: width: 1000 }}"
+            srcset="
+              {{ image | image_url: width: 480 }} 480w,
+              {{ image | image_url: width: 750 }} 750w,
+              {{ image | image_url: width: 1000 }} 1000w
+            "
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ image.alt | escape | default: product.title }}"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+            class="bb-media__img"
+          >
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      <div class="bb-media__slide is-active bb-media__slide--empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0b4a8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p class="bb-media__empty-label">No images</p>
       </div>
-      </button>
-    </div>
-  {%- else -%}
-    </deferred-media>
-    {%- if image_zoom == 'lightbox' or image_zoom == 'hover' -%}
-    <lightbox-opener
-      class="lightbox-opener lightbox-opener-mobile{% unless fly_zoom_icon %} hide-cursor{% endunless %}"
-      data-id="lightbox-{{ section.id }}"
-      data-media-id="{{ media.id }}"
-    ></lightbox-opener>
     {%- endif -%}
+
+    {%- comment -%} Zoom button {%- endcomment -%}
+    {%- if section.settings.enable_zoom and product.images.size > 0 -%}
+      <button
+        type="button"
+        class="bb-media__zoom"
+        id="bb-media-zoom-{{ section.id }}"
+        aria-label="Zoom image"
+        aria-pressed="false"
+      >
+        <svg class="bb-media__zoom-in-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        <svg class="bb-media__zoom-out-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+    {%- endif -%}
+
+    {%- comment -%} Mobile dots {%- endcomment -%}
+    {%- if product.images.size > 1 -%}
+      <div class="bb-media__dots" aria-hidden="true" id="bb-media-dots-{{ section.id }}">
+        {%- for image in product.images -%}
+          <div class="bb-media__dot{%- if forloop.first %} is-active{%- endif -%}" data-index="{{ forloop.index0 }}"></div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+
+  {%- comment -%} ── Thumbnail strip ── {%- endcomment -%}
+  {%- if product.images.size > 1 -%}
+    <div
+      class="bb-media__thumbs"
+      id="bb-media-thumbs-{{ section.id }}"
+      role="tablist"
+      aria-label="Product image thumbnails"
+    >
+      {%- for image in product.images -%}
+        <button
+          type="button"
+          class="bb-media__thumb{%- if forloop.first %} is-active{%- endif -%}"
+          role="tab"
+          aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
+          aria-label="View image {{ forloop.index }}"
+          data-index="{{ forloop.index0 }}"
+        >
+          <img
+            src="{{ image | image_url: width: 120, height: 150, crop: 'center' }}"
+            alt="{{ image.alt | escape | default: product.title }}"
+            width="48"
+            height="60"
+            loading="lazy"
+          >
+        </button>
+      {%- endfor -%}
+    </div>
   {%- endif -%}
-{%- endif -%}
+
+</div>
+
+
+<style>
+  #bb-media-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    background: #f0ece6;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    max-height: 100vh;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__main {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    background: #f0ece6;
+    aspect-ratio: 9 / 16;
+    max-height: calc(100vh - 80px);
+  }
+
+  #bb-media-{{ section.id }} .bb-media__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  #bb-media-{{ section.id }} .bb-media__slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #bb-media-{{ section.id }} .bb-media__slide--empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f0ece6;
+  }
+  #bb-media-{{ section.id }} .bb-media__empty-label {
+    font-size: 0.75rem;
+    color: #c0b4a8;
+    letter-spacing: 0.04em;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    transition: transform 0.4s ease;
+    transform-origin: center center;
+    cursor: zoom-in;
+    background: #f0ece6;
+  }
+
+  /* Hover zoom — desktop only */
+  @media (hover: hover) {
+    #bb-media-{{ section.id }} .bb-media__main:hover .bb-media__slide.is-active .bb-media__img {
+      transform: scale(1.35);
+    }
+    #bb-media-{{ section.id }} .bb-media__main.is-zoomed .bb-media__slide.is-active .bb-media__img {
+      transform: scale(1.0);
+      cursor: zoom-in;
+    }
+  }
+
+  /* Click/tap zoom — all devices */
+  #bb-media-{{ section.id }} .bb-media__main.is-zoomed .bb-media__slide.is-active .bb-media__img {
+    transform: scale(1.65);
+    cursor: zoom-out;
+  }
+
+  /* Follow mouse on desktop when zoomed */
+  #bb-media-{{ section.id }} .bb-media__main { cursor: crosshair; }
+
+  #bb-media-{{ section.id }} .bb-media__zoom {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255,255,255,0.92);
+    border: 0.5px solid #e0dbd3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #2a2520;
+    transition: background 0.15s;
+    z-index: 2;
+  }
+  #bb-media-{{ section.id }} .bb-media__zoom:hover { background: #ffffff; }
+
+  #bb-media-{{ section.id }} .bb-media__dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: none;
+    justify-content: center;
+    gap: 5px;
+    z-index: 2;
+  }
+  #bb-media-{{ section.id }} .bb-media__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    transition: background 0.2s, width 0.2s;
+    cursor: pointer;
+  }
+  #bb-media-{{ section.id }} .bb-media__dot.is-active {
+    background: #ffffff;
+    width: 14px;
+    border-radius: 3px;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__thumbs {
+    display: flex;
+    gap: 5px;
+    padding: 8px 12px;
+    background: #f0ece6;
+    border-top: 0.5px solid #e0d8cf;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
+  #bb-media-{{ section.id }} .bb-media__thumbs::-webkit-scrollbar { display: none; }
+
+  #bb-media-{{ section.id }} .bb-media__thumb {
+    width: 48px;
+    height: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+  }
+  #bb-media-{{ section.id }} .bb-media__thumb.is-active { border-color: #49c6be; }
+  #bb-media-{{ section.id }} .bb-media__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #f0ece6;
+    display: block;
+  }
+
+  @media (max-width: 767px) {
+    #bb-media-{{ section.id }} {
+      position: relative;
+      max-height: none;
+      top: auto;
+    }
+    #bb-media-{{ section.id }} .bb-media__main { min-height: 320px; }
+    #bb-media-{{ section.id }} .bb-media__dots { display: flex; }
+    #bb-media-{{ section.id }} .bb-media__thumbs { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #bb-media-{{ section.id }} .bb-media__slide { transition: none; }
+  }
+</style>
+
+
+<script>
+(function () {
+  'use strict';
+
+  var section   = document.getElementById('bb-media-{{ section.id }}');
+  if (!section) return;
+
+  var mainEl    = document.getElementById('bb-media-main-{{ section.id }}');
+  var slides    = section.querySelectorAll('.bb-media__slide');
+  var thumbs    = section.querySelectorAll('.bb-media__thumb');
+  var dots      = section.querySelectorAll('.bb-media__dot');
+  var zoomBtn   = document.getElementById('bb-media-zoom-{{ section.id }}');
+  var activeIdx = 0;
+
+  /* ── Go to slide ── */
+  function goTo(idx) {
+    if (idx < 0 || idx >= slides.length) return;
+    slides.forEach(function (s, i) {
+      s.classList.toggle('is-active', i === idx);
+      s.setAttribute('aria-hidden', i !== idx ? 'true' : 'false');
+    });
+    thumbs.forEach(function (t, i) {
+      t.classList.toggle('is-active', i === idx);
+      t.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+    dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
+    activeIdx = idx;
+
+    /* Broadcast so other sections (e.g. product-info) can react */
+    document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: idx } }));
+  }
+
+  /* Thumbnail clicks */
+  thumbs.forEach(function (btn) {
+    btn.addEventListener('click', function () { goTo(parseInt(btn.dataset.index, 10)); });
+  });
+
+  /* Dot clicks */
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () { goTo(parseInt(dot.dataset.index, 10)); });
+  });
+
+  /* Mobile swipe */
+  if (mainEl) {
+    var startX = 0;
+    mainEl.addEventListener('touchstart', function (e) {
+      startX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    mainEl.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) < 40) return;
+      if (dx < 0) goTo(activeIdx + 1);
+      if (dx > 0) goTo(activeIdx - 1);
+    }, { passive: true });
+  }
+
+  /* ── In-frame zoom ── */
+  if (zoomBtn && mainEl) {
+    var zoomInIcon  = zoomBtn.querySelector('.bb-media__zoom-in-icon');
+    var zoomOutIcon = zoomBtn.querySelector('.bb-media__zoom-out-icon');
+    var isZoomed    = false;
+
+    function setZoom(on) {
+      isZoomed = on;
+      mainEl.classList.toggle('is-zoomed', on);
+      zoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      zoomBtn.setAttribute('aria-label', on ? 'Zoom out' : 'Zoom image');
+      if (zoomInIcon)  zoomInIcon.style.display  = on ? 'none'  : '';
+      if (zoomOutIcon) zoomOutIcon.style.display = on ? ''      : 'none';
+      /* Reset transform-origin when zooming out */
+      if (!on) {
+        var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
+        if (img) img.style.transformOrigin = 'center center';
+      }
+    }
+
+    /* Click zoom button to toggle */
+    zoomBtn.addEventListener('click', function () { setZoom(!isZoomed); });
+
+    /* Click image to toggle */
+    mainEl.addEventListener('click', function (e) {
+      if (e.target.closest('.bb-media__zoom')) return;
+      if (e.target.closest('.bb-media__dot'))  return;
+      setZoom(!isZoomed);
+    });
+
+    /* Mouse move — update transform-origin to follow cursor */
+    mainEl.addEventListener('mousemove', function (e) {
+      if (!isZoomed) return;
+      var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
+      if (!img) return;
+      var rect = mainEl.getBoundingClientRect();
+      var x    = ((e.clientX - rect.left) / rect.width)  * 100;
+      var y    = ((e.clientY - rect.top)  / rect.height) * 100;
+      img.style.transformOrigin = x + '% ' + y + '%';
+    });
+
+    /* Reset zoom when slide changes */
+    document.addEventListener('bb:slideChange', function () { setZoom(false); });
+
+    /* Escape key exits zoom */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isZoomed) setZoom(false);
+    });
+  }
+
+  /* Listen for external slide change requests (e.g. from color swatch navigation) */
+  document.addEventListener('bb:requestSlide', function (e) {
+    if (e.detail && typeof e.detail.index === 'number') goTo(e.detail.index);
+  });
+
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Product media",
+  "tag": "div",
+  "class": "bb-product-media-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "natural", "label": "Natural" },
+        { "value": "square",  "label": "Square (1:1)" },
+        { "value": "portrait","label": "Portrait (3:4)" }
+      ],
+      "default": "natural"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable zoom",
+      "default": true
+    }
+  ],
+  "presets": [
+    { "name": "Product media" }
+  ]
+}
+{% endschema %}
