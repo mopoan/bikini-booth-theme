@@ -24,34 +24,28 @@
       top: 0;
       float: left;
       width: 50%;
-      height: auto;
-      max-height: 100vh;
+      height: 100vh;
       overflow: hidden;
       z-index: 1;
     }
 
     body.template-product main.content-for-layout .bb-media {
-      height: auto;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      position: sticky;
-      top: 0;
-      max-height: 100vh;
     }
 
     body.template-product main.content-for-layout .bb-media__main {
       flex: 1;
-      min-height: 0;
-      aspect-ratio: 9 / 16;
-      max-height: calc(100vh - 80px);
+      height: 0; /* flex child needs 0 base so flex:1 takes over */
     }
 
     /* ── Right column: all other sections sit beside gallery ── */
     body.template-product main.content-for-layout .bb-product-info-section,
     body.template-product main.content-for-layout .bb-product-trust-section,
     body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section,
-    body.template-product main.content-for-layout .bb-product-acc-section {
+    body.template-product main.content-for-layout .bb-product-acc-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section {
       float: right;
       width: 50%;
       clear: none;
@@ -111,8 +105,8 @@
     body.template-product main.content-for-layout .bb-product-info-section,
     body.template-product main.content-for-layout .bb-product-trust-section,
     body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section,
     body.template-product main.content-for-layout .bb-product-acc-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section,
     body.template-product main.content-for-layout .bb-product-sp-section {
       margin-left: 0 !important;
       width: 100% !important;
