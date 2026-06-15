@@ -96,7 +96,7 @@
       ],
       "name": "Product accordions",
       "settings": {
-        "shipping_page_handle": "shipping-returns"
+        "shipping_page_handle": "shipping-in-the-product-page"
       }
     },
     "product_social_proof_iNUapA": {
