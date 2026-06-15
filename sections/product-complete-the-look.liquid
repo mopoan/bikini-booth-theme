@@ -1,28 +1,16 @@
 {%- comment -%}
   Section: product-complete-the-look.liquid
-  Purpose: "Complete the look" bundle section.
-           Desktop: checklist rows with running total + add all to cart.
-           Mobile:  horizontal scrollable cards.
+  Purpose: "Complete the look" bundle — pulls products automatically.
 
-  Usage: Add to product template via theme editor.
+  Item 1: Current product (from product object, pre-checked)
+  Item 2: Matching piece Top↔Bottom (from auto-connect via JS)
+  Item 3: Set pair product (from metafield custom.set_pair_product)
 
-  Schema blocks of type "look_item":
-    ctl_product      product    The product to feature
-    ctl_label        text       e.g. "Top", "Bottom", "Resortwear"
-    ctl_is_current   checkbox   Mark as "This item" (current product on page)
-
-  Behaviour:
-    - Current item is pre-checked and locked (cannot be unchecked)
-    - Add-on items are optional — customer checks/unchecks
-    - Size selector per item
-    - Running total updates on every interaction
-    - "Add to cart" posts all checked items in one /cart/add.js request
-    - Fires cart:updated event for theme cart drawer to react
+  No manual block assignment needed — all automatic per product.
 {%- endcomment -%}
 
-{%- assign ctl_blocks = section.blocks | where: 'type', 'look_item' -%}
-
-{%- if ctl_blocks.size > 0 -%}
+{%- assign pair_product = product.metafields.custom.set_pair_product.value -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
 
 <div class="bb-ctl" id="bb-ctl-{{ section.id }}">
 
@@ -33,166 +21,137 @@
 
   {%- comment -%} ── Desktop checklist ── {%- endcomment -%}
   <div class="bb-ctl__list" aria-label="Complete the look — select items">
-    {%- assign divider_shown = false -%}
 
-    {%- for block in ctl_blocks -%}
-      {%- assign ctl_product = block.settings.ctl_product -%}
-      {%- if ctl_product == blank -%}{%- continue -%}{%- endif -%}
-      {%- assign is_current   = block.settings.ctl_is_current -%}
-      {%- assign ctl_variant  = ctl_product.selected_or_first_available_variant -%}
-
-      {%- unless is_current or divider_shown -%}
-        <div class="bb-ctl__divider" aria-hidden="true">
-          <div class="bb-ctl__divider-line"></div>
-          <span class="bb-ctl__divider-text">Add to complete the set</span>
-          <div class="bb-ctl__divider-line"></div>
+    {%- comment -%} Item 1: Current product {%- endcomment -%}
+    <div
+      class="bb-ctl__item is-current is-checked"
+      data-product-id="{{ product.id }}"
+      data-variant-id="{{ current_variant.id }}"
+      data-price="{{ current_variant.price }}"
+      data-slot="current"
+    >
+      <div class="bb-ctl__check" aria-hidden="true">
+        <div class="bb-ctl__chk-on">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        {%- assign divider_shown = true -%}
-      {%- endunless -%}
-
-      <div
-        class="bb-ctl__item{%- if is_current %} is-current is-checked{%- endif -%}"
-        data-product-id="{{ ctl_product.id }}"
-        data-variant-id="{{ ctl_variant.id }}"
-        data-price="{{ ctl_variant.price }}"
-        data-available="{{ ctl_variant.available }}"
-        {{ block.shopify_attributes }}
-      >
-        <div class="bb-ctl__check" aria-hidden="true">
-          {%- if is_current -%}
-            <div class="bb-ctl__chk-on">
-              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-          {%- else -%}
-            <div class="bb-ctl__chk-off"></div>
+      </div>
+      <div class="bb-ctl__img">
+        {%- if product.featured_image != blank -%}
+          <img
+            src="{{ product.featured_image | image_url: width: 120, height: 150, crop: 'center' }}"
+            alt="{{ product.title | escape }}"
+            width="46" height="56" loading="lazy"
+          >
+        {%- endif -%}
+      </div>
+      <div class="bb-ctl__info">
+        <p class="bb-ctl__name">{{ product.title | split: ' in ' | first }}</p>
+        <p class="bb-ctl__piece bb-ctl__piece--current">This item</p>
+        <p class="bb-ctl__price">{{ current_variant.price | money }}</p>
+      </div>
+      <div class="bb-ctl__right">
+        <span class="bb-ctl__this-tag">This item</span>
+        <div class="bb-ctl__size-wrap">
+          {%- if product.variants.size > 1 -%}
+            <select class="bb-ctl__size-select" aria-label="Size" data-item-id="{{ product.id }}">
+              {%- for variant in product.variants -%}
+                <option
+                  value="{{ variant.id }}"
+                  data-price="{{ variant.price }}"
+                  data-price-formatted="{{ variant.price | money }}"
+                  {%- if variant == current_variant %} selected{%- endif -%}
+                  {%- unless variant.available %} disabled{%- endunless -%}
+                >{{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}</option>
+              {%- endfor -%}
+            </select>
+            <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
           {%- endif -%}
         </div>
+      </div>
+    </div>
 
+    {%- comment -%} Divider {%- endcomment -%}
+    <div class="bb-ctl__divider" aria-hidden="true">
+      <div class="bb-ctl__divider-line"></div>
+      <span class="bb-ctl__divider-text">Add to complete the set</span>
+      <div class="bb-ctl__divider-line"></div>
+    </div>
+
+    {%- comment -%} Item 2: Matching piece — populated by JS from auto-connect {%- endcomment -%}
+    <div
+      class="bb-ctl__item bb-ctl__item--piece"
+      id="bb-ctl-piece-{{ section.id }}"
+      data-slot="piece"
+      style="display: none;"
+    >
+      <div class="bb-ctl__check" aria-hidden="true">
+        <div class="bb-ctl__chk-off"></div>
+      </div>
+      <div class="bb-ctl__img bb-ctl__img--piece" id="bb-ctl-piece-img-{{ section.id }}"></div>
+      <div class="bb-ctl__info">
+        <p class="bb-ctl__name" id="bb-ctl-piece-name-{{ section.id }}">—</p>
+        <p class="bb-ctl__piece" id="bb-ctl-piece-label-{{ section.id }}">—</p>
+        <p class="bb-ctl__price" id="bb-ctl-piece-price-{{ section.id }}">—</p>
+      </div>
+      <div class="bb-ctl__right">
+        <div class="bb-ctl__size-wrap" id="bb-ctl-piece-sizes-{{ section.id }}"></div>
+      </div>
+    </div>
+
+    {%- comment -%} Item 3: Set pair from metafield {%- endcomment -%}
+    {%- if pair_product != blank -%}
+      {%- assign pair_variant = pair_product.selected_or_first_available_variant -%}
+      <div
+        class="bb-ctl__item"
+        data-product-id="{{ pair_product.id }}"
+        data-variant-id="{{ pair_variant.id }}"
+        data-price="{{ pair_variant.price }}"
+        data-slot="pair"
+      >
+        <div class="bb-ctl__check" aria-hidden="true">
+          <div class="bb-ctl__chk-off"></div>
+        </div>
         <div class="bb-ctl__img">
-          {%- if ctl_product.featured_image != blank -%}
+          {%- if pair_product.featured_image != blank -%}
             <img
-              src="{{ ctl_product.featured_image | image_url: width: 120, height: 150, crop: 'center' }}"
-              alt="{{ ctl_product.title | escape }}"
-              width="46"
-              height="56"
-              loading="lazy"
+              src="{{ pair_product.featured_image | image_url: width: 120, height: 150, crop: 'center' }}"
+              alt="{{ pair_product.title | escape }}"
+              width="46" height="56" loading="lazy"
             >
           {%- endif -%}
         </div>
-
         <div class="bb-ctl__info">
-          <p class="bb-ctl__name">{{ ctl_product.title | split: ' - ' | first }}</p>
-          <p class="bb-ctl__piece">{{ block.settings.ctl_label | default: ctl_product.type }}</p>
-          <p class="bb-ctl__price" data-base-price="{{ ctl_variant.price }}">
-            {{ ctl_variant.price | money }}
+          <p class="bb-ctl__name">{{ pair_product.title | split: ' in ' | first }}</p>
+          <p class="bb-ctl__piece">{{ section.settings.pair_label | default: 'Resortwear' }}</p>
+          <p class="bb-ctl__price" data-base-price="{{ pair_variant.price }}">
+            {{ pair_variant.price | money }}
           </p>
         </div>
-
         <div class="bb-ctl__right">
-          {%- if is_current -%}
-            <span class="bb-ctl__this-tag">This item</span>
-          {%- endif -%}
           <div class="bb-ctl__size-wrap">
-            {%- if ctl_product.variants.size > 1 -%}
-              <select
-                class="bb-ctl__size-select"
-                aria-label="Size for {{ ctl_product.title | split: ' - ' | first }}"
-                data-item-id="{{ ctl_product.id }}"
-              >
-                {%- for variant in ctl_product.variants -%}
+            {%- if pair_product.variants.size > 1 -%}
+              <select class="bb-ctl__size-select" aria-label="Size for {{ pair_product.title | escape }}" data-item-id="{{ pair_product.id }}">
+                {%- for variant in pair_product.variants -%}
                   <option
                     value="{{ variant.id }}"
                     data-price="{{ variant.price }}"
                     data-price-formatted="{{ variant.price | money }}"
                     {%- unless variant.available %} disabled{%- endunless -%}
-                  >
-                    {{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}
-                  </option>
+                  >{{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}</option>
                 {%- endfor -%}
               </select>
               <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
             {%- else -%}
-              <span class="bb-ctl__size-only">{{ ctl_variant.title }}</span>
+              <span class="bb-ctl__size-only">{{ pair_variant.title }}</span>
             {%- endif -%}
           </div>
         </div>
       </div>
-    {%- endfor -%}
+    {%- endif -%}
+
   </div>
 
-  {%- comment -%} ── Mobile card scroll ── {%- endcomment -%}
-  <div class="bb-ctl__cards" aria-label="Complete the look — swipe to browse">
-    {%- for block in ctl_blocks -%}
-      {%- assign ctl_product = block.settings.ctl_product -%}
-      {%- if ctl_product == blank -%}{%- continue -%}{%- endif -%}
-      {%- assign is_current  = block.settings.ctl_is_current -%}
-      {%- assign ctl_variant = ctl_product.selected_or_first_available_variant -%}
-
-      <div
-        class="bb-ctl__card{%- if is_current %} is-current is-checked{%- endif -%}"
-        data-product-id="{{ ctl_product.id }}"
-        data-variant-id="{{ ctl_variant.id }}"
-        data-price="{{ ctl_variant.price }}"
-      >
-        <div class="bb-ctl__card-img{%- if is_current %} is-this{%- endif -%}">
-          {%- if ctl_product.featured_image != blank -%}
-            <img
-              src="{{ ctl_product.featured_image | image_url: width: 240, height: 300, crop: 'center' }}"
-              alt="{{ ctl_product.title | escape }}"
-              width="120"
-              height="150"
-              loading="lazy"
-            >
-          {%- endif -%}
-          <span class="bb-ctl__card-tag{%- unless is_current %} is-add{%- endunless -%}">
-            {%- if is_current -%}This item{%- else -%}Add on{%- endif -%}
-          </span>
-        </div>
-
-        <p class="bb-ctl__card-name">{{ ctl_product.title | split: ' - ' | first }}</p>
-        <p class="bb-ctl__card-piece">{{ block.settings.ctl_label | default: ctl_product.type }}</p>
-        <p class="bb-ctl__card-price">{{ ctl_variant.price | money }}</p>
-
-        {%- if ctl_product.variants.size > 1 -%}
-          <div class="bb-ctl__card-sizes" role="group" aria-label="Size for {{ ctl_product.title | split: ' - ' | first }}">
-            {%- for variant in ctl_product.variants -%}
-              <button
-                type="button"
-                class="bb-ctl__card-sz{%- if forloop.first %} is-active{%- endif -%}{%- unless variant.available %} is-out{%- endunless -%}"
-                data-variant-id="{{ variant.id }}"
-                data-price="{{ variant.price }}"
-                data-price-formatted="{{ variant.price | money }}"
-                data-item-id="{{ ctl_product.id }}"
-                {%- unless variant.available %}aria-disabled="true"{%- endunless -%}
-              >{{ variant.title }}</button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-
-        <div class="bb-ctl__card-chk-row">
-          {%- if is_current -%}
-            <div class="bb-ctl__chk-on" style="width:16px;height:16px;">
-              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <span class="bb-ctl__card-chk-label">In cart</span>
-          {%- else -%}
-            <div class="bb-ctl__chk-off" style="width:16px;height:16px;"></div>
-            <span class="bb-ctl__card-chk-label">Add to cart</span>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- endfor -%}
-  </div>
-
-  <div class="bb-ctl__scroll-dots" aria-hidden="true" id="bb-ctl-dots-{{ section.id }}">
-    {%- for block in ctl_blocks -%}
-      {%- if block.settings.ctl_product != blank -%}
-        <div class="bb-ctl__scroll-dot{%- if forloop.first %} is-active{%- endif -%}"></div>
-      {%- endif -%}
-    {%- endfor -%}
-  </div>
-
-  {%- comment -%} ── Shared footer ── {%- endcomment -%}
+  {%- comment -%} ── Footer ── {%- endcomment -%}
   <div class="bb-ctl__footer">
     <div class="bb-ctl__total-wrap">
       <span class="bb-ctl__total-label">Total</span>
@@ -217,7 +176,6 @@
     background: #ffffff;
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
   #bb-ctl-{{ section.id }} .bb-ctl__head {
@@ -234,15 +192,9 @@
     text-transform: uppercase;
     color: #2a2520;
   }
-  #bb-ctl-{{ section.id }} .bb-ctl__sub {
-    font-size: 0.6875rem;
-    color: #8a8077;
-  }
+  #bb-ctl-{{ section.id }} .bb-ctl__sub { font-size: 0.6875rem; color: #8a8077; }
 
-  /* ── Desktop list ── */
   #bb-ctl-{{ section.id }} .bb-ctl__list { display: flex; flex-direction: column; }
-  #bb-ctl-{{ section.id }} .bb-ctl__cards { display: none; }
-  #bb-ctl-{{ section.id }} .bb-ctl__scroll-dots { display: none; }
 
   #bb-ctl-{{ section.id }} .bb-ctl__item {
     display: flex;
@@ -313,102 +265,30 @@
     text-transform: uppercase; color: #a09890; white-space: nowrap;
   }
 
-  /* ── Footer ── */
   #bb-ctl-{{ section.id }} .bb-ctl__footer {
     display: flex; align-items: center; justify-content: space-between;
     gap: 10px; background: #f0faf9; padding: 12px 20px;
   }
   #bb-ctl-{{ section.id }} .bb-ctl__total-wrap { display: flex; flex-direction: column; gap: 1px; }
-  #bb-ctl-{{ section.id }} .bb-ctl__total-label {
-    font-size: 0.625rem; color: #2a7a74; letter-spacing: 0.04em;
-  }
-  #bb-ctl-{{ section.id }} .bb-ctl__total-value {
-    font-size: 0.9375rem; font-weight: 500; color: #2a2520;
-  }
+  #bb-ctl-{{ section.id }} .bb-ctl__total-label { font-size: 0.625rem; color: #2a7a74; letter-spacing: 0.04em; }
+  #bb-ctl-{{ section.id }} .bb-ctl__total-value { font-size: 0.9375rem; font-weight: 500; color: #2a2520; }
+
   #bb-ctl-{{ section.id }} .bb-ctl__add-btn {
     display: inline-flex; align-items: center; gap: 6px;
     background: #49c6be; color: #ffffff; border: none; border-radius: 999px;
     padding: 10px 16px; font-size: 0.6875rem; font-weight: 500;
     letter-spacing: 0.06em; text-transform: uppercase;
-    cursor: pointer; font-family: inherit; white-space: nowrap;
-    transition: opacity 0.15s;
+    cursor: pointer; font-family: inherit; white-space: nowrap; transition: opacity 0.15s;
   }
   #bb-ctl-{{ section.id }} .bb-ctl__add-btn:hover { opacity: 0.9; }
   #bb-ctl-{{ section.id }} .bb-ctl__add-btn:disabled { opacity: 0.6; cursor: not-allowed; }
   #bb-ctl-{{ section.id }} .bb-ctl__add-btn svg { stroke: #ffffff; flex-shrink: 0; }
 
-  /* ── Mobile cards ── */
-  #bb-ctl-{{ section.id }} .bb-ctl__card-sz {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 50%;
-    border: 1px solid #d0cbc4; background: #ffffff;
-    font-size: 0.5625rem; color: #2a2520; cursor: pointer; font-family: inherit;
-    transition: border-color 0.15s, background 0.15s, color 0.15s;
-  }
-  #bb-ctl-{{ section.id }} .bb-ctl__card-sz.is-active {
-    border-color: #49c6be; background: #49c6be; color: #ffffff; font-weight: 500;
-  }
-  #bb-ctl-{{ section.id }} .bb-ctl__card-sz.is-out {
-    border-color: #e8e4dd; color: #c8c0b8; text-decoration: line-through; cursor: not-allowed;
-  }
-
   @media (max-width: 767px) {
-    #bb-ctl-{{ section.id }} .bb-ctl__list { display: none; }
     #bb-ctl-{{ section.id }} .bb-ctl__head { padding: 14px 14px 10px; }
-
-    #bb-ctl-{{ section.id }} .bb-ctl__cards {
-      display: flex; gap: 10px;
-      padding: 4px 14px 6px;
-      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__cards::-webkit-scrollbar { display: none; }
-
-    #bb-ctl-{{ section.id }} .bb-ctl__card {
-      flex-shrink: 0; width: 130px;
-      display: flex; flex-direction: column; gap: 5px;
-    }
-
-    #bb-ctl-{{ section.id }} .bb-ctl__card-img {
-      width: 100%; height: 110px; border-radius: 8px; overflow: hidden;
-      position: relative; background: #f0ece6; border: 1.5px solid transparent;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-img.is-this { border-color: #49c6be; }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-img img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-tag {
-      position: absolute; bottom: 6px; left: 6px;
-      font-size: 0.5rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
-      background: #49c6be; color: #ffffff; padding: 2px 6px; border-radius: 3px;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-tag.is-add {
-      background: rgba(255,255,255,0.92); color: #2a2520;
-    }
-
-    #bb-ctl-{{ section.id }} .bb-ctl__card-name {
-      font-size: 0.6875rem; font-weight: 500; color: #2a2520; line-height: 1.3;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-piece { font-size: 0.5625rem; color: #8a8077; }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-price { font-size: 0.6875rem; color: #2a2520; }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-sizes { display: flex; gap: 4px; flex-wrap: wrap; }
-
-    #bb-ctl-{{ section.id }} .bb-ctl__card-chk-row {
-      display: flex; align-items: center; gap: 5px; cursor: pointer;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__card-chk-label { font-size: 0.5625rem; color: #6a6560; }
-
-    #bb-ctl-{{ section.id }} .bb-ctl__scroll-dots {
-      display: flex; gap: 4px; justify-content: center; padding: 4px 0 6px;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__scroll-dot {
-      width: 5px; height: 5px; border-radius: 50%; background: #d0cbc4;
-      transition: width 0.2s ease, background 0.2s ease;
-    }
-    #bb-ctl-{{ section.id }} .bb-ctl__scroll-dot.is-active {
-      width: 14px; border-radius: 3px; background: #49c6be;
-    }
-
     #bb-ctl-{{ section.id }} .bb-ctl__footer { padding: 10px 14px; }
+    #bb-ctl-{{ section.id }} .bb-ctl__item { padding: 10px 14px; }
+    #bb-ctl-{{ section.id }} .bb-ctl__divider { padding: 6px 14px; }
   }
 </style>
 
@@ -417,54 +297,136 @@
 (function () {
   'use strict';
 
-  var ctl      = document.getElementById('bb-ctl-{{ section.id }}');
+  var sid    = '{{ section.id }}';
+  var ctl    = document.getElementById('bb-ctl-' + sid);
   if (!ctl) return;
 
-  var totalEl  = document.getElementById('bb-ctl-total-{{ section.id }}');
-  var addBtn   = document.getElementById('bb-ctl-add-{{ section.id }}');
+  var totalEl  = document.getElementById('bb-ctl-total-' + sid);
+  var addBtn   = document.getElementById('bb-ctl-add-' + sid);
   var addLabel = addBtn ? addBtn.querySelector('.bb-ctl__add-label') : null;
-  var dotsWrap = document.getElementById('bb-ctl-dots-{{ section.id }}');
+  var pieceRow = document.getElementById('bb-ctl-piece-' + sid);
+
+  /* ── Populate matching piece row from auto-connect ── */
+  function handleProductData(data) {
+    if (!data || !data.hasPieceToggle) return;
+
+    var oppPiece = data.piece === 'Top' ? 'Bottom' : 'Top';
+    var link     = data.pieceLinks[oppPiece];
+    if (!link) return;
+
+    /* Fetch the opposite piece product data */
+    fetch('/products/' + link.url.replace('/products/', '') + '.js')
+      .then(function (r) { return r.json(); })
+      .then(function (p) {
+        var nameEl   = document.getElementById('bb-ctl-piece-name-' + sid);
+        var labelEl  = document.getElementById('bb-ctl-piece-label-' + sid);
+        var priceEl  = document.getElementById('bb-ctl-piece-price-' + sid);
+        var imgEl    = document.getElementById('bb-ctl-piece-img-' + sid);
+        var sizesEl  = document.getElementById('bb-ctl-piece-sizes-' + sid);
+
+        if (nameEl)  nameEl.textContent  = p.title.split(' in ')[0];
+        if (labelEl) labelEl.textContent = oppPiece;
+        if (priceEl) priceEl.textContent = formatMoney(p.variants[0].price * 100);
+
+        /* Image */
+        if (imgEl && p.images && p.images[0]) {
+          var img    = document.createElement('img');
+          img.src    = p.images[0].src;
+          img.alt    = p.title;
+          img.width  = 46;
+          img.height = 56;
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+          imgEl.appendChild(img);
+        }
+
+        /* Size select */
+        if (sizesEl && p.variants.length > 1) {
+          var sel = document.createElement('select');
+          sel.className = 'bb-ctl__size-select';
+          sel.setAttribute('aria-label', 'Size for ' + p.title);
+          sel.dataset.itemId = p.id;
+
+          p.variants.forEach(function (v) {
+            var opt = document.createElement('option');
+            opt.value = v.id;
+            opt.dataset.price          = v.price;
+            opt.dataset.priceFormatted = formatMoney(v.price * 100);
+            opt.textContent = v.title + (v.available ? '' : ' — Sold out');
+            if (!v.available) opt.disabled = true;
+            sel.appendChild(opt);
+          });
+
+          var chevron = document.createElement('svg');
+          chevron.setAttribute('width', '10');
+          chevron.setAttribute('height', '10');
+          chevron.setAttribute('viewBox', '0 0 24 24');
+          chevron.setAttribute('fill', 'none');
+          chevron.setAttribute('stroke', '#8a8077');
+          chevron.setAttribute('stroke-width', '2');
+          chevron.className = 'bb-ctl__size-chevron';
+          chevron.innerHTML = '<polyline points="6 9 12 15 18 9"/>';
+
+          sizesEl.appendChild(sel);
+          sizesEl.appendChild(chevron);
+
+          sel.addEventListener('change', function () {
+            var opt = sel.options[sel.selectedIndex];
+            pieceRow.dataset.variantId = opt.value;
+            pieceRow.dataset.price     = opt.dataset.price;
+            updateTotal();
+          });
+
+          pieceRow.dataset.variantId = p.variants[0].id;
+          pieceRow.dataset.price     = p.variants[0].price;
+          pieceRow.dataset.productId = p.id;
+        }
+
+        pieceRow.style.display = '';
+        updateTotal();
+      })
+      .catch(function (err) {
+        console.warn('[BB CTL] Could not load piece product:', err);
+      });
+  }
+
+  if (window.BB && window.BB.productData) {
+    handleProductData(window.BB.productData);
+  }
+  document.addEventListener('bb:productDataReady', function (e) {
+    handleProductData(e.detail);
+  });
+
+  /* ── Format money ── */
+  function formatMoney(cents) {
+    var amount   = cents / 100;
+    var currency = window.Shopify && window.Shopify.currency ? window.Shopify.currency.active : '';
+    return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
+      (currency ? ' ' + currency : '');
+  }
 
   /* ── Collect checked items ── */
   function getCheckedItems() {
     var checked = [];
-    /* Desktop */
     ctl.querySelectorAll('.bb-ctl__item.is-checked').forEach(function (item) {
-      var sel = item.querySelector('.bb-ctl__size-select');
+      var sel       = item.querySelector('.bb-ctl__size-select');
       var variantId = sel ? sel.value : item.dataset.variantId;
       var price     = sel
         ? parseInt(sel.options[sel.selectedIndex].dataset.price || '0', 10)
         : parseInt(item.dataset.price || '0', 10);
-      checked.push({ variantId: variantId, price: price });
+      if (variantId) checked.push({ variantId: variantId, price: price });
     });
     return checked;
   }
 
-  /* ── Update running total ── */
+  /* ── Update total ── */
   function updateTotal() {
     var items = getCheckedItems();
     var total = 0;
     items.forEach(function (i) { total += i.price; });
-    if (totalEl) {
-      totalEl.textContent = total > 0
-        ? formatMoney(total)
-        : '—';
-    }
+    if (totalEl) totalEl.textContent = total > 0 ? formatMoney(total) : '—';
   }
 
-  /* ── Format money using Shopify currency ── */
-  function formatMoney(cents) {
-    var amount   = cents / 100;
-    var currency = window.Shopify && window.Shopify.currency
-      ? window.Shopify.currency.active
-      : '';
-    return amount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }) + (currency ? ' ' + currency : '');
-  }
-
-  /* ── Desktop: row click toggles check ── */
+  /* ── Row click toggles check ── */
   ctl.querySelectorAll('.bb-ctl__item:not(.is-current)').forEach(function (item) {
     item.addEventListener('click', function (e) {
       if (e.target.closest('.bb-ctl__size-wrap')) return;
@@ -472,13 +434,12 @@
       var chkEl     = item.querySelector('.bb-ctl__check');
       if (chkEl) {
         chkEl.innerHTML = isChecked
-          ? '<div class="bb-ctl__chk-on"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>'
+          ? '<div class="bb-ctl__chk-on"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>'
           : '<div class="bb-ctl__chk-off"></div>';
       }
       updateTotal();
     });
 
-    /* Size dropdown updates price on item */
     var sel = item.querySelector('.bb-ctl__size-select');
     if (sel) {
       sel.addEventListener('change', function () {
@@ -492,42 +453,6 @@
     }
   });
 
-  /* ── Mobile: card size buttons ── */
-  ctl.querySelectorAll('.bb-ctl__card-sz:not(.is-out)').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var itemId   = btn.dataset.itemId;
-      var siblings = ctl.querySelectorAll('.bb-ctl__card-sz[data-item-id="' + itemId + '"]');
-      siblings.forEach(function (s) { s.classList.remove('is-active'); });
-      btn.classList.add('is-active');
-      var card = btn.closest('.bb-ctl__card');
-      if (card) {
-        card.dataset.variantId = btn.dataset.variantId;
-        card.dataset.price     = btn.dataset.price;
-        var priceEl = card.querySelector('.bb-ctl__card-price');
-        if (priceEl) priceEl.textContent = btn.dataset.priceFormatted || '';
-      }
-      updateTotal();
-    });
-  });
-
-  /* ── Mobile: card checkbox toggle ── */
-  ctl.querySelectorAll('.bb-ctl__card:not(.is-current)').forEach(function (card) {
-    var chkRow = card.querySelector('.bb-ctl__card-chk-row');
-    if (!chkRow) return;
-    chkRow.addEventListener('click', function () {
-      var isChecked = card.classList.toggle('is-checked');
-      var chkEl     = chkRow.querySelector('.bb-ctl__chk-off, .bb-ctl__chk-on');
-      var label     = chkRow.querySelector('.bb-ctl__card-chk-label');
-      if (chkEl) {
-        chkEl.outerHTML = isChecked
-          ? '<div class="bb-ctl__chk-on" style="width:16px;height:16px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>'
-          : '<div class="bb-ctl__chk-off" style="width:16px;height:16px;"></div>';
-      }
-      if (label) label.textContent = isChecked ? 'In cart' : 'Add to cart';
-      updateTotal();
-    });
-  });
-
   /* ── Add to cart ── */
   if (addBtn) {
     addBtn.addEventListener('click', function () {
@@ -537,19 +462,22 @@
       addBtn.disabled = true;
       if (addLabel) addLabel.textContent = 'Adding…';
 
-      var items = checkedItems.map(function (i) {
-        return { id: parseInt(i.variantId, 10), quantity: 1 };
-      });
-
       fetch('/cart/add.js', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ items: items })
+        body:    JSON.stringify({ items: checkedItems.map(function (i) {
+          return { id: parseInt(i.variantId, 10), quantity: 1 };
+        })})
       })
       .then(function (r) { return r.json(); })
       .then(function () {
         if (addLabel) addLabel.textContent = 'Added!';
         document.dispatchEvent(new CustomEvent('cart:updated'));
+        var cartTriggers = ['[data-drawer-open="cart-drawer"]','[data-cart-drawer-trigger]','#cart-icon-bubble','.cart-icon-bubble','[aria-controls="cart-drawer"]'];
+        for (var i = 0; i < cartTriggers.length; i++) {
+          var el = document.querySelector(cartTriggers[i]);
+          if (el) { el.click(); break; }
+        }
         setTimeout(function () {
           if (addLabel) addLabel.textContent = 'Add to cart';
           addBtn.disabled = false;
@@ -563,20 +491,6 @@
     });
   }
 
-  /* ── Mobile scroll dots ── */
-  var cardsEl = ctl.querySelector('.bb-ctl__cards');
-  var dots    = dotsWrap ? dotsWrap.querySelectorAll('.bb-ctl__scroll-dot') : [];
-  if (cardsEl && dots.length > 0) {
-    cardsEl.addEventListener('scroll', function () {
-      var cardEl    = cardsEl.querySelector('.bb-ctl__card');
-      if (!cardEl) return;
-      var cardWidth = cardEl.offsetWidth + 10;
-      var idx       = Math.round(cardsEl.scrollLeft / cardWidth);
-      dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
-    }, { passive: true });
-  }
-
-  /* Initialise total */
   updateTotal();
 })();
 </script>
@@ -587,53 +501,17 @@
   "name": "Complete the look",
   "tag": "div",
   "class": "bb-product-ctl-section",
-  "blocks": [
+  "settings": [
     {
-      "type": "look_item",
-      "name": "Look item",
-      "settings": [
-        {
-          "type": "product",
-          "id": "ctl_product",
-          "label": "Product"
-        },
-        {
-          "type": "text",
-          "id": "ctl_label",
-          "label": "Piece label",
-          "info": "e.g. Top, Bottom, Resortwear, Jewellery",
-          "default": "Bottom"
-        },
-        {
-          "type": "checkbox",
-          "id": "ctl_is_current",
-          "label": "This is the current product",
-          "default": false,
-          "info": "Check for the item matching the product on this page. It will be pre-checked and locked."
-        }
-      ]
+      "type": "text",
+      "id": "pair_label",
+      "label": "Third item label",
+      "default": "Resortwear",
+      "info": "Label shown for the set pair product from the metafield."
     }
   ],
   "presets": [
-    {
-      "name": "Complete the look",
-      "blocks": [
-        {
-          "type": "look_item",
-          "settings": { "ctl_label": "This item", "ctl_is_current": true }
-        },
-        {
-          "type": "look_item",
-          "settings": { "ctl_label": "Bottom", "ctl_is_current": false }
-        },
-        {
-          "type": "look_item",
-          "settings": { "ctl_label": "Resortwear", "ctl_is_current": false }
-        }
-      ]
-    }
+    { "name": "Complete the look" }
   ]
 }
 {% endschema %}
-
-{%- endif -%}
