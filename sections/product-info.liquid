@@ -351,29 +351,31 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 10px 8px;
-    border: 1.5px solid #e0dbd3;
+    padding: 14px 8px;
+    border: 2px solid #e0dbd3;
     border-radius: 8px;
     background: #ffffff;
     text-decoration: none;
     text-align: center;
     transition: border-color 0.15s, background 0.15s;
-    gap: 2px;
+    gap: 3px;
   }
   #bb-info-{{ section.id }} .bb-piece-btn.is-active {
     border-color: #49c6be;
+    border-width: 2px;
     background: #f0faf9;
   }
   #bb-info-{{ section.id }} .bb-piece-btn__name {
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #2a2520;
   }
   #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__name { color: #49c6be; }
   #bb-info-{{ section.id }} .bb-piece-btn__price {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
     color: #8a8077;
   }
   #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__price { color: #49c6be; }
