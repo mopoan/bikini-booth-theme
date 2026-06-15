@@ -1,1 +1,197 @@
-{"name":"Header","type":"header","sections":{"announcement_bar_header_eT9KD3":{"type":"announcement-bar-header","blocks":{"item_wPKHWm":{"type":"item","settings":{"show_icon":"none","icon_name":"check","block_text":"<p><em>Free Shipping on Orders Over $250<\/em><\/p>"}},"item_c8Xb3w":{"type":"item","settings":{"show_icon":"none","image":"shopify:\/\/shop_images\/Porto_de_Phuket_new.png","icon_name":"check","block_text":"<p><a href=\"https:\/\/maps.app.goo.gl\/x4hQpEE5hiG2LQSi6\" target=\"_blank\" title=\"https:\/\/maps.app.goo.gl\/x4hQpEE5hiG2LQSi6\"><em>Visit Our New Store in Koh-Phangan<\/em><\/a><\/p>"}},"item_4WJEW3":{"type":"item","settings":{"show_icon":"none","icon_name":"bell-ring","block_text":"<p>Get 10% Off Your First Order<\/p>"}}},"block_order":["item_wPKHWm","item_c8Xb3w","item_4WJEW3"],"custom_css":[],"name":"t:header.announcement_bar_header","settings":{"top_spacing":"none","width":"default","content_align":"align-items-center","index_page":false,"desktop_navigation":"none","mobile_navigation":"none","autoplay_enabled":true,"autoplay_time":6,"show_lines":false,"show_lines_bottom":true,"lines_width":"fullwidth","background":"color","color_background":"#fef9ee","gradient":"","image_overlay_opacity":0,"image_overlay_color":"rgba(0,0,0,0)","image_overlay_opacity_mobile":0,"image_overlay_color_mobile":"rgba(0,0,0,0)","imagealign":"center","imagesize":"cover","background_width":"fullwidth","v_padding":10,"color_lines":"rgba(0,0,0,0)","color_text_link":"#373e48","color_text_link_hover":"#e0e0e0","color_text_icons":"#373e48","color_media_arrows":"rgba(0,0,0,0)"}},"header_classic_bikini":{"type":"header","name":"t:header.header_classic","settings":{"use_bikini_booth_nav":true,"bikini_booth_menu":"bikini-booth-main-menu","menu":"bikini-booth-main-menu","width":"default","enable__sticky_header":"mobile__desktop","sticky_type":"always","logo_zoom_out":true,"logo":"shopify:\/\/shop_images\/Bikini_Booth_Logo.png","logo_svg":"","logo_max_width":160,"logo_mobile":"shopify:\/\/shop_images\/Bikini_Booth_Logo.png","logo_svg_mobile":"","logo_max_width_mobile":120,"menu_font_weight":"strong","logo_position":"logo-to-center","classic_menu_position":"bottom-menu-to-center","break_main_menu_count":3,"show_search":"closed","icons_text":"tooltip","icons_text_mobile":"hide","show_top_line":true,"show_bottom_line":true,"width_line":"default","background_width":"fullwidth","background":"hide","color_background":"rgba(0,0,0,0)","gradient":"","imagealign":"center","imagesize":"cover","image_overlay_opacity":0,"image_overlay_color":"rgba(0,0,0,0)","color_base":"rgba(0,0,0,0)","color_accent":"rgba(0,0,0,0)","color_lines":"#ffffff","color_menu_item":"rgba(0,0,0,0)","color_menu_item_hover":"rgba(0,0,0,0)","color_submenu_item":"rgba(0,0,0,0)","color_submenu_item_hover":"rgba(0,0,0,0)","color_submenu_background":"#ffffffeb","color_submenu_shadow":"#0000001f","color_icons":"rgba(0,0,0,0)","color_icons_text":"rgba(0,0,0,0)","color_icons_hover":"rgba(0,0,0,0)","color_icons_text_hover":"rgba(0,0,0,0)","color_counter":"rgba(0,0,0,0)","color_counter_hover":"rgba(0,0,0,0)","color_counter_text":"rgba(0,0,0,0)","color_counter_text_hover":"rgba(0,0,0,0)","color_input_background":"rgba(0,0,0,0)","color_input_border":"rgba(0,0,0,0)","color_input_text":"rgba(0,0,0,0)","color_input_icon":"rgba(0,0,0,0)","color_input_background_hover":"rgba(0,0,0,0)","color_input_border_hover":"rgba(0,0,0,0)","color_input_outline_hover":"rgba(0,0,0,0)","color_input_text_hover":"rgba(0,0,0,0)","color_input_icon_hover":"rgba(0,0,0,0)","color_search_heading":"rgba(0,0,0,0)","color_search_link":"rgba(0,0,0,0)","color_search_link_hover":"rgba(0,0,0,0)","color_search_product_vendor":"rgba(0,0,0,0)","color_search_product_name":"rgba(0,0,0,0)","color_search_product_name_hover":"rgba(0,0,0,0)","color_search_product_price":"rgba(0,0,0,0)","color_search_product_price_sale":"rgba(0,0,0,0)","color_search_product_price_old":"rgba(0,0,0,0)","color_search_show_all":"rgba(0,0,0,0)","color_search_show_all_hover":"rgba(0,0,0,0)","color_search_lines":"rgba(0,0,0,0)","color_search_background":"rgba(0,0,0,0)","color_search_shadow":"rgba(0,0,0,0)","color_account_heading":"rgba(0,0,0,0)","color_account_background":"rgba(0,0,0,0)","color_account_shadow":"rgba(0,0,0,0)","show_button_bg":true,"color_button":"rgba(0,0,0,0)","color_button_gradient":"","color_button_border":"rgba(0,0,0,0)","color_button_text":"rgba(0,0,0,0)","show_button_bg_hover":true,"color_button_hover":"rgba(0,0,0,0)","color_button_gradient_hover":"","color_button_border_hover":"rgba(0,0,0,0)","color_button_text_hover":"rgba(0,0,0,0)","show_shadow_button":true,"color_shadow_button":"rgba(0,0,0,0)","color_shadow_hover_button":"rgba(0,0,0,0)","show_button_bg2":true,"color_button2":"rgba(0,0,0,0)","color_button_gradient2":"","color_button_border2":"rgba(0,0,0,0)","color_button_text2":"rgba(0,0,0,0)","show_button_bg_hover2":true,"color_button_hover2":"rgba(0,0,0,0)","color_button_gradient_hover2":"","color_button_border_hover2":"rgba(0,0,0,0)","color_button_text_hover2":"rgba(0,0,0,0)","show_shadow_button2":true,"color_shadow_button2":"rgba(0,0,0,0)","color_shadow_hover_button2":"rgba(0,0,0,0)"}},"17703774889ad3fbad":{"type":"_blocks","disabled":true,"settings":{}}},"order":["announcement_bar_header_eT9KD3","header_classic_bikini","17703774889ad3fbad"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "announcement_bar_header_eT9KD3": {
+      "type": "announcement-bar-header",
+      "blocks": {
+        "item_wPKHWm": {
+          "type": "item",
+          "settings": {
+            "show_icon": "none",
+            "icon_name": "check",
+            "block_text": "<p><em>Free Shipping on Orders Over $250</em></p>"
+          }
+        },
+        "item_c8Xb3w": {
+          "type": "item",
+          "settings": {
+            "show_icon": "none",
+            "image": "shopify://shop_images/Porto_de_Phuket_new.png",
+            "icon_name": "check",
+            "block_text": "<p><a href=\"https://maps.app.goo.gl/x4hQpEE5hiG2LQSi6\" target=\"_blank\" title=\"https://maps.app.goo.gl/x4hQpEE5hiG2LQSi6\"><em>Visit Our New Store in Koh-Phangan</em></a></p>"
+          }
+        },
+        "item_4WJEW3": {
+          "type": "item",
+          "settings": {
+            "show_icon": "none",
+            "icon_name": "bell-ring",
+            "block_text": "<p>Get 10% Off Your First Order</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_wPKHWm",
+        "item_c8Xb3w",
+        "item_4WJEW3"
+      ],
+      "custom_css": [],
+      "name": "t:header.announcement_bar_header",
+      "settings": {
+        "top_spacing": "none",
+        "width": "default",
+        "content_align": "align-items-center",
+        "index_page": false,
+        "desktop_navigation": "none",
+        "mobile_navigation": "none",
+        "autoplay_enabled": true,
+        "autoplay_time": 6,
+        "show_lines": false,
+        "show_lines_bottom": true,
+        "lines_width": "fullwidth",
+        "background": "color",
+        "color_background": "#F0FAF9",
+        "gradient": "",
+        "image_overlay_opacity": 0,
+        "image_overlay_color": "rgba(0,0,0,0)",
+        "image_overlay_opacity_mobile": 0,
+        "image_overlay_color_mobile": "rgba(0,0,0,0)",
+        "imagealign": "center",
+        "imagesize": "cover",
+        "background_width": "fullwidth",
+        "v_padding": 10,
+        "color_lines": "rgba(0,0,0,0)",
+        "color_text_link": "#373e48",
+        "color_text_link_hover": "#e0e0e0",
+        "color_text_icons": "#373e48",
+        "color_media_arrows": "rgba(0,0,0,0)"
+      }
+    },
+    "header_classic_bikini": {
+      "type": "header",
+      "name": "t:header.header_classic",
+      "settings": {
+        "use_bikini_booth_nav": true,
+        "bikini_booth_menu": "bikini-booth-main-menu",
+        "menu": "bikini-booth-main-menu",
+        "width": "default",
+        "enable__sticky_header": "mobile__desktop",
+        "sticky_type": "always",
+        "logo_zoom_out": true,
+        "logo": "shopify://shop_images/Bikini_Booth_Logo.png",
+        "logo_svg": "",
+        "logo_max_width": 160,
+        "logo_mobile": "shopify://shop_images/Bikini_Booth_Logo.png",
+        "logo_svg_mobile": "",
+        "logo_max_width_mobile": 120,
+        "menu_font_weight": "strong",
+        "logo_position": "logo-to-center",
+        "classic_menu_position": "bottom-menu-to-center",
+        "break_main_menu_count": 3,
+        "show_search": "closed",
+        "icons_text": "tooltip",
+        "icons_text_mobile": "hide",
+        "show_top_line": true,
+        "show_bottom_line": true,
+        "width_line": "default",
+        "background_width": "fullwidth",
+        "background": "hide",
+        "color_background": "rgba(0,0,0,0)",
+        "gradient": "",
+        "imagealign": "center",
+        "imagesize": "cover",
+        "image_overlay_opacity": 0,
+        "image_overlay_color": "rgba(0,0,0,0)",
+        "color_base": "rgba(0,0,0,0)",
+        "color_accent": "rgba(0,0,0,0)",
+        "color_lines": "#ffffff",
+        "color_menu_item": "rgba(0,0,0,0)",
+        "color_menu_item_hover": "rgba(0,0,0,0)",
+        "color_submenu_item": "rgba(0,0,0,0)",
+        "color_submenu_item_hover": "rgba(0,0,0,0)",
+        "color_submenu_background": "#ffffffeb",
+        "color_submenu_shadow": "#0000001f",
+        "color_icons": "rgba(0,0,0,0)",
+        "color_icons_text": "rgba(0,0,0,0)",
+        "color_icons_hover": "rgba(0,0,0,0)",
+        "color_icons_text_hover": "rgba(0,0,0,0)",
+        "color_counter": "rgba(0,0,0,0)",
+        "color_counter_hover": "rgba(0,0,0,0)",
+        "color_counter_text": "rgba(0,0,0,0)",
+        "color_counter_text_hover": "rgba(0,0,0,0)",
+        "color_input_background": "rgba(0,0,0,0)",
+        "color_input_border": "rgba(0,0,0,0)",
+        "color_input_text": "rgba(0,0,0,0)",
+        "color_input_icon": "rgba(0,0,0,0)",
+        "color_input_background_hover": "rgba(0,0,0,0)",
+        "color_input_border_hover": "rgba(0,0,0,0)",
+        "color_input_outline_hover": "rgba(0,0,0,0)",
+        "color_input_text_hover": "rgba(0,0,0,0)",
+        "color_input_icon_hover": "rgba(0,0,0,0)",
+        "color_search_heading": "rgba(0,0,0,0)",
+        "color_search_link": "rgba(0,0,0,0)",
+        "color_search_link_hover": "rgba(0,0,0,0)",
+        "color_search_product_vendor": "rgba(0,0,0,0)",
+        "color_search_product_name": "rgba(0,0,0,0)",
+        "color_search_product_name_hover": "rgba(0,0,0,0)",
+        "color_search_product_price": "rgba(0,0,0,0)",
+        "color_search_product_price_sale": "rgba(0,0,0,0)",
+        "color_search_product_price_old": "rgba(0,0,0,0)",
+        "color_search_show_all": "rgba(0,0,0,0)",
+        "color_search_show_all_hover": "rgba(0,0,0,0)",
+        "color_search_lines": "rgba(0,0,0,0)",
+        "color_search_background": "rgba(0,0,0,0)",
+        "color_search_shadow": "rgba(0,0,0,0)",
+        "color_account_heading": "rgba(0,0,0,0)",
+        "color_account_background": "rgba(0,0,0,0)",
+        "color_account_shadow": "rgba(0,0,0,0)",
+        "show_button_bg": true,
+        "color_button": "rgba(0,0,0,0)",
+        "color_button_gradient": "",
+        "color_button_border": "rgba(0,0,0,0)",
+        "color_button_text": "rgba(0,0,0,0)",
+        "show_button_bg_hover": true,
+        "color_button_hover": "rgba(0,0,0,0)",
+        "color_button_gradient_hover": "",
+        "color_button_border_hover": "rgba(0,0,0,0)",
+        "color_button_text_hover": "rgba(0,0,0,0)",
+        "show_shadow_button": true,
+        "color_shadow_button": "rgba(0,0,0,0)",
+        "color_shadow_hover_button": "rgba(0,0,0,0)",
+        "show_button_bg2": true,
+        "color_button2": "rgba(0,0,0,0)",
+        "color_button_gradient2": "",
+        "color_button_border2": "rgba(0,0,0,0)",
+        "color_button_text2": "rgba(0,0,0,0)",
+        "show_button_bg_hover2": true,
+        "color_button_hover2": "rgba(0,0,0,0)",
+        "color_button_gradient_hover2": "",
+        "color_button_border_hover2": "rgba(0,0,0,0)",
+        "color_button_text_hover2": "rgba(0,0,0,0)",
+        "show_shadow_button2": true,
+        "color_shadow_button2": "rgba(0,0,0,0)",
+        "color_shadow_hover_button2": "rgba(0,0,0,0)"
+      }
+    },
+    "17703774889ad3fbad": {
+      "type": "_blocks",
+      "disabled": true,
+      "settings": {}
+    }
+  },
+  "order": [
+    "announcement_bar_header_eT9KD3",
+    "header_classic_bikini",
+    "17703774889ad3fbad"
+  ]
+}
