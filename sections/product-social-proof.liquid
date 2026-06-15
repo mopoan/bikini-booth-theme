@@ -355,7 +355,7 @@
 
   function probeFile(url) {
     return new Promise(function (resolve) {
-      if (url.endsWith('.mp4')) {
+      if (url.endsWith('.mp4') || url.endsWith('.mov')) {
         var v         = document.createElement('video');
         v.onloadedmetadata = function () { resolve(true); };
         v.onerror     = function () { resolve(false); };
@@ -372,12 +372,17 @@
 
   async function resolveSlot(index) {
     var num      = pad(index);
-    var videoUrl = '/files/ugc-' + num + '.mp4';
+    var mp4Url   = '/files/ugc-' + num + '.mp4';
+    var movUrl   = '/files/ugc-' + num + '.mov';
     var imgUrl   = '/files/ugc-' + num + '.jpg';
     var handle   = handles[index - 1] || null;
 
-    if (await probeFile(videoUrl)) {
-      return { type: 'video', videoUrl: videoUrl, thumbUrl: imgUrl, handle: handle };
+    /* Check mp4 first, then mov, then jpg */
+    if (await probeFile(mp4Url)) {
+      return { type: 'video', videoUrl: mp4Url, thumbUrl: imgUrl, handle: handle };
+    }
+    if (await probeFile(movUrl)) {
+      return { type: 'video', videoUrl: movUrl, thumbUrl: imgUrl, handle: handle };
     }
     if (await probeFile(imgUrl)) {
       return { type: 'image', imgUrl: imgUrl, handle: handle };
