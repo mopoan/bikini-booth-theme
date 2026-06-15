@@ -1,54 +1,35 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
-  Purpose: Stable two-column desktop layout for Bikini Booth product pages.
+  Purpose: Two-column desktop layout for Bikini Booth product pages.
 
-  Approach: Uses float/position instead of display:contents which breaks
-  on DOM changes. Gallery is position:sticky left half, right column
-  sections get margin-left: 50% to sit beside it.
+  Shopify renders sections as:
+    <div id="shopify-section-..." class="shopify-section">   ← outer, no custom class
+      <div class="bb-product-xxx-section">                   ← inner, has our class
+
+  We use :has() to target the outer wrapper based on its inner content class.
 {%- endcomment -%}
 
 <style>
   @media (min-width: 900px) {
 
-    /* ── Page container ── */
     body.template-product main.content-for-layout {
       position: relative;
       max-width: 1440px;
       margin: 0 auto;
-      min-height: 100vh;
-    }
-
-    /* ── Right column: target by section ID patterns ── */
-    body.template-product main.content-for-layout [id*="product_info"],
-    body.template-product main.content-for-layout [id*="product_trust"],
-    body.template-product main.content-for-layout [id*="product_fit"],
-    body.template-product main.content-for-layout [id*="product_accordions"],
-    body.template-product main.content-for-layout [id*="product_complete"],
-    body.template-product main.content-for-layout [id*="complete_the_look"] {
-      float: right !important;
-      width: 50% !important;
-      clear: none !important;
+      overflow: hidden;
     }
 
     /* ── Left column: gallery ── */
-    body.template-product main.content-for-layout [id*="product_media"] {
+    body.template-product main.content-for-layout .shopify-section:has(.bb-product-media-section) {
       position: sticky;
       top: 0;
-      float: left !important;
-      width: 50% !important;
+      float: left;
+      width: 50%;
       height: 100vh;
       overflow: hidden;
       z-index: 1;
     }
 
-    /* ── Left column: social proof ── */
-    body.template-product main.content-for-layout [id*="product_social"] {
-      float: left !important;
-      width: 50% !important;
-      clear: left !important;
-    }
-
-    /* ── Gallery inner elements ── */
     body.template-product main.content-for-layout .bb-media {
       height: 100vh;
       display: flex;
@@ -60,32 +41,29 @@
       height: 0;
     }
 
-    /* ── Product recommendations + any other sections: full width below ── */
-    body.template-product main.content-for-layout .bb-product-sp-section ~ .shopify-section {
-      float: none;
-      clear: both;
-      width: 100%;
-      margin-left: 0;
+    /* ── Right column ── */
+    body.template-product main.content-for-layout .shopify-section:has(.bb-product-info-section),
+    body.template-product main.content-for-layout .shopify-section:has(.bb-product-trust-section),
+    body.template-product main.content-for-layout .shopify-section:has(.bb-product-fit-section),
+    body.template-product main.content-for-layout .shopify-section:has(.bb-product-acc-section),
+    body.template-product main.content-for-layout .shopify-section:has(.bb-product-ctl-section) {
+      float: right;
+      width: 50%;
+      clear: none;
     }
 
-    /* Target product recommendations by custom element and data attribute */
-    body.template-product main.content-for-layout product-recommendations,
-    body.template-product main.content-for-layout [data-section-name="product-recommendations"],
-    body.template-product main.content-for-layout [id*="product_recommendations"],
-    body.template-product main.content-for-layout [id*="product-recommendations"] {
-      display: block;
-      float: none;
-      clear: both;
-      width: 100%;
-      margin-left: 0;
+    /* ── Bottom left: social proof ── */
+    body.template-product main.content-for-layout .shopify-section:has(.bb-product-sp-section) {
+      float: left;
+      width: 50%;
+      clear: left;
     }
 
-    /* Also target the shopify-section wrapper containing it */
+    /* ── Full width: recommendations ── */
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
       float: none;
       clear: both;
       width: 100%;
-      margin-left: 0;
     }
 
     /* ── Clearfix ── */
@@ -98,13 +76,7 @@
   }
 
   @media (max-width: 899px) {
-    body.template-product main.content-for-layout [id*="product_media"],
-    body.template-product main.content-for-layout [id*="product_info"],
-    body.template-product main.content-for-layout [id*="product_trust"],
-    body.template-product main.content-for-layout [id*="product_fit"],
-    body.template-product main.content-for-layout [id*="product_accordions"],
-    body.template-product main.content-for-layout [id*="product_complete"],
-    body.template-product main.content-for-layout [id*="product_social"] {
+    body.template-product main.content-for-layout .shopify-section {
       float: none !important;
       width: 100% !important;
       height: auto !important;
