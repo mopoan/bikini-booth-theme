@@ -396,12 +396,17 @@
     handleProductData(e.detail);
   });
 
-  /* ── Format money — prices from /products.json are in cents e.g. 149400 ── */
+  /* ── Format money — Shopify product APIs return decimal prices e.g. "1494.00" ── */
   function formatMoney(price) {
-    var amount   = parseFloat(price) / 100;
+    var amount   = parseFloat(price);
     var currency = window.Shopify && window.Shopify.currency ? window.Shopify.currency.active : '';
     return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
       (currency ? ' ' + currency : '');
+  }
+
+  /* ── Format money from Liquid cents e.g. 149400 → 1,494.00 ── */
+  function formatMoneyFromCents(cents) {
+    return formatMoney(parseFloat(cents) / 100);
   }
 
   /* ── Collect checked items ── */
@@ -423,7 +428,7 @@
     var items = getCheckedItems();
     var total = 0;
     items.forEach(function (i) { total += i.price; });
-    if (totalEl) totalEl.textContent = total > 0 ? formatMoney(total) : '—';
+    if (totalEl) totalEl.textContent = total > 0 ? formatMoneyFromCents(total) : '—';
   }
 
   /* ── Row click toggles check ── */
