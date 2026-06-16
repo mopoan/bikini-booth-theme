@@ -1,10 +1,7 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
-
-  IMPORTANT: Shopify wraps every section in a div.shopify-section.
-  The grid children are those wrapper divs, not the inner section elements.
-  We target the wrapper via its contained class using :has().
+  Note: !important required on grid-area rules to override theme stylesheet.
 {%- endcomment -%}
 
 <style>
@@ -12,7 +9,7 @@
 
     body.template-product main.content-for-layout {
       display: grid !important;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr !important;
       grid-template-areas:
         "media  info"
         "media  trust"
@@ -20,21 +17,20 @@
         "media  ctl"
         "media  acc"
         "sp     ."
-        "recs   recs";
+        "recs   recs" !important;
       align-items: start;
       max-width: 1440px;
       margin: 0 auto;
     }
 
-    /* Target the shopify-section wrapper divs via :has() */
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-media-section) { grid-area: media; position: sticky; top: 0; height: 100vh; overflow: hidden; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-info-section)  { grid-area: info;  min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-trust-section) { grid-area: trust; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-fit-section)   { grid-area: fit;   min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-ctl-section)   { grid-area: ctl;   min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-acc-section)   { grid-area: acc;   min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-sp-section)    { grid-area: sp;    min-width: 0; align-self: start; }
-    body.template-product main.content-for-layout .shopify-section:has(product-recommendations)   { grid-area: recs; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-media-section  { grid-area: media !important; position: sticky; top: 0; height: 100vh; overflow: hidden; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-info-section   { grid-area: info  !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-trust-section  { grid-area: trust !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-fit-section    { grid-area: fit   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section    { grid-area: ctl   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-acc-section    { grid-area: acc   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-sp-section     { grid-area: sp    !important; min-width: 0; align-self: start; }
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs !important; }
 
     body.template-product main.content-for-layout .bb-media {
       height: 100vh;
@@ -53,7 +49,7 @@
     body.template-product main.content-for-layout {
       display: block !important;
     }
-    body.template-product main.content-for-layout .shopify-section:has(.bb-product-media-section) {
+    body.template-product main.content-for-layout .shopify-section.bb-product-media-section {
       position: relative !important;
       height: auto !important;
     }
