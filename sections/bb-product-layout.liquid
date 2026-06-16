@@ -1,32 +1,35 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
-  Purpose: Stable two-column desktop layout for Bikini Booth product pages.
+  Purpose: Two-column desktop layout using CSS Grid with named template areas.
 
-  Approach: Uses float/position instead of display:contents which breaks
-  on DOM changes. Gallery is position:sticky left half, right column
-  sections get margin-left: 50% to sit beside it.
+  DOM order (must match product.json order):
+  1. media   — left col, rows 1–5, sticky
+  2. sp      — left col, row 6 (directly below media)
+  3. info    — right col row 1
+  4. trust   — right col row 2
+  5. fit     — right col row 3
+  6. ctl     — right col row 4
+  7. acc     — right col row 5
+  8. recs    — full width row 7
 {%- endcomment -%}
 
 <style>
   @media (min-width: 900px) {
 
-    /* ── Page container ── */
     body.template-product main.content-for-layout {
-      position: relative;
-      max-width: 1440px;
-      margin: 0 auto;
-      min-height: 100vh;
-    }
-
-    /* ── Left column: gallery — fixed to left half ── */
-    body.template-product main.content-for-layout .bb-product-media-section {
-      position: sticky;
-      top: 0;
-      float: left;
-      width: 50%;
-      height: 100vh;
-      overflow: hidden;
-      z-index: 1;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      grid-template-areas:
+        "media  info"
+        "media  trust"
+        "media  fit"
+        "media  ctl"
+        "media  acc"
+        "sp     ."
+        "recs   recs" !important;
+      align-items: start !important;
+      max-width: 1440px !important;
+      margin: 0 auto !important;
     }
 
     body.template-product main.content-for-layout .bb-media {
@@ -37,80 +40,68 @@
 
     body.template-product main.content-for-layout .bb-media__main {
       flex: 1;
-      height: 0; /* flex child needs 0 base so flex:1 takes over */
+      height: 0;
     }
-
-    /* ── Right column: all other sections sit beside gallery ── */
-    body.template-product main.content-for-layout .bb-product-info-section,
-    body.template-product main.content-for-layout .bb-product-trust-section,
-    body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section,
-    body.template-product main.content-for-layout .bb-product-acc-section {
-      float: right;
-      width: 50%;
-      clear: none;
-    }
-
-    /* ── Social proof: bottom left, beside right column ── */
-    body.template-product main.content-for-layout .bb-product-sp-section {
-      float: left;
-      width: 50%;
-      clear: left;
-    }
-
-    /* ── Product recommendations + any other sections: full width below ── */
-    body.template-product main.content-for-layout .bb-product-sp-section ~ .shopify-section {
-      float: none;
-      clear: both;
-      width: 100%;
-      margin-left: 0;
-    }
-
-    /* Target product recommendations by custom element and data attribute */
-    body.template-product main.content-for-layout product-recommendations,
-    body.template-product main.content-for-layout [data-section-name="product-recommendations"],
-    body.template-product main.content-for-layout [id*="product_recommendations"],
-    body.template-product main.content-for-layout [id*="product-recommendations"] {
-      display: block;
-      float: none;
-      clear: both;
-      width: 100%;
-      margin-left: 0;
-    }
-
-    /* Also target the shopify-section wrapper containing it */
-    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
-      float: none;
-      clear: both;
-      width: 100%;
-      margin-left: 0;
-    }
-
-    /* ── Clearfix ── */
-    body.template-product main.content-for-layout::after {
-      content: '';
-      display: table;
-      clear: both;
-    }
-
   }
 
   @media (max-width: 899px) {
-    body.template-product main.content-for-layout .bb-product-media-section {
-      position: relative !important;
-      float: none !important;
-      width: 100% !important;
-      height: auto !important;
+    body.template-product main.content-for-layout {
+      display: block !important;
     }
-    body.template-product main.content-for-layout .bb-product-info-section,
-    body.template-product main.content-for-layout .bb-product-trust-section,
-    body.template-product main.content-for-layout .bb-product-fit-section,
-    body.template-product main.content-for-layout .bb-product-ctl-section,
-    body.template-product main.content-for-layout .bb-product-acc-section,
-    body.template-product main.content-for-layout .bb-product-sp-section {
-      margin-left: 0 !important;
-      width: 100% !important;
-      float: none !important;
+    body.template-product main.content-for-layout .shopify-section.bb-product-media-section {
+      position: relative !important;
+      height: auto !important;
     }
   }
 </style>
+
+<script>
+(function () {
+  'use strict';
+
+  function applyGridAreas() {
+    if (window.innerWidth < 900) return;
+
+    var assignments = [
+      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', height: '100vh', overflow: 'hidden' } },
+      { cls: 'bb-product-sp-section',    area: 'sp',    extra: { alignSelf: 'start' } },
+      { cls: 'bb-product-info-section',  area: 'info' },
+      { cls: 'bb-product-trust-section', area: 'trust' },
+      { cls: 'bb-product-fit-section',   area: 'fit' },
+      { cls: 'bb-product-ctl-section',   area: 'ctl' },
+      { cls: 'bb-product-acc-section',   area: 'acc' }
+    ];
+
+    assignments.forEach(function (item) {
+      var el = document.querySelector('.shopify-section.' + item.cls);
+      if (!el) return;
+      el.style.setProperty('grid-area', item.area, 'important');
+      el.style.minWidth = '0';
+      if (item.extra) {
+        if (item.extra.position)  el.style.position  = item.extra.position;
+        if (item.extra.top)       el.style.top        = item.extra.top;
+        if (item.extra.height)    el.style.height     = item.extra.height;
+        if (item.extra.overflow)  el.style.overflow   = item.extra.overflow;
+        if (item.extra.alignSelf) el.style.alignSelf  = item.extra.alignSelf;
+      }
+    });
+
+    var recs = document.querySelector('.shopify-section:has(product-recommendations)');
+    if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyGridAreas);
+  } else {
+    applyGridAreas();
+  }
+  setTimeout(applyGridAreas, 100);
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyGridAreas, 150);
+  });
+
+})();
+</script>
