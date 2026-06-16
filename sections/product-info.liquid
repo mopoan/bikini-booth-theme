@@ -17,21 +17,6 @@
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
-{%- comment -%}
-  Price display logic:
-  - If product has a piece (Top/Bottom) → show "From [lowest price]" until a piece is selected via JS
-  - Once piece is selected via JS, "From" is removed and exact price shown
-  - We detect "has piece" by checking if title contains " Top - " or " Bottom - "
-{%- endcomment -%}
-{%- assign product_title_lower = product.title | downcase -%}
-{%- assign is_bikini_piece = false -%}
-{%- if product_title_lower contains ' top in ' or product_title_lower contains ' bottom in ' -%}
-  {%- assign is_bikini_piece = true -%}
-{%- endif -%}
-
-{%- comment -%} Find lowest price across all variants for "From" display {%- endcomment -%}
-{%- assign lowest_price = product.price_min -%}
-
 {%- comment -%} Auto-connect engine — must render before form JS runs {%- endcomment -%}
 {% render 'bb-product-auto-connect' %}
 
@@ -66,7 +51,6 @@
 
     <div class="bb-info__price-row">
       <span class="bb-info__price" id="bb-price-{{ section.id }}">
-        <span class="bb-info__price-from" id="bb-price-from-{{ section.id }}" {%- unless is_bikini_piece %} hidden{%- endunless -%}>From </span>
         <span id="bb-price-amount-{{ section.id }}">{{ current_variant.price | money }}</span>
       </span>
       {%- if section.settings.price_note != blank -%}
@@ -74,14 +58,12 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} Store Liquid-rendered prices for JS to use — avoids hardcoding currency {%- endcomment -%}
     <script>
       window.BB = window.BB || {};
       window.BB.prices = window.BB.prices || {};
       window.BB.prices['{{ section.id }}'] = {
         current: {{ current_variant.price | json }},
-        currentFormatted: {{ current_variant.price | money | json }},
-        isBikiniPiece: {{ is_bikini_piece | json }}
+        currentFormatted: {{ current_variant.price | money | json }}
       };
     </script>
 
@@ -536,8 +518,6 @@
   if (!section) return;
 
   var priceAmountEl = document.getElementById('bb-price-amount-' + sid);
-  var priceFromEl   = document.getElementById('bb-price-from-' + sid);
-  var priceNoteEl   = document.getElementById('bb-price-note-' + sid);
   var atcPriceEl    = document.getElementById('bb-atc-price-' + sid);
   var atcLabelEl    = document.getElementById('bb-atc-label-' + sid);
   var atcBtn        = document.getElementById('bb-atc-btn-' + sid);
@@ -556,11 +536,6 @@
 
   /* Prices pre-rendered by Liquid — currency handled by Shopify Markets */
   var bbPrices = (window.BB && window.BB.prices && window.BB.prices[sid]) || {};
-
-  function removePriceFrom() {
-    if (priceFromEl) priceFromEl.hidden = true;
-    if (priceNoteEl) priceNoteEl.hidden = true;
-  }
 
   /* ── Auto-connect data — handle both early and late firing ── */
   function handleProductData(data) {
@@ -596,7 +571,6 @@
       }
 
       /* Piece is known — remove "From" immediately */
-      removePriceFrom();
     }
 
     /* Color swatches */
@@ -644,7 +618,6 @@
       if (priceAmountEl) priceAmountEl.textContent = btn.dataset.variantPrice;
       if (atcPriceEl)    atcPriceEl.textContent = '— ' + btn.dataset.variantPrice;
       if (sizeError)     sizeError.hidden = true;
-      removePriceFrom();
 
       document.dispatchEvent(new CustomEvent('bb:variantChange', {
         detail: {
