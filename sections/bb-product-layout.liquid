@@ -63,7 +63,7 @@
     if (window.innerWidth < 900) return;
 
     var assignments = [
-      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', height: '100vh', overflow: 'hidden' } },
+      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', height: '100vh', overflow: 'hidden', alignSelf: 'start', gridRow: '1 / 6' } },
       { cls: 'bb-product-sp-section',    area: 'sp',    extra: { alignSelf: 'start' } },
       { cls: 'bb-product-info-section',  area: 'info' },
       { cls: 'bb-product-trust-section', area: 'trust' },
@@ -80,9 +80,10 @@
       if (item.extra) {
         if (item.extra.position)  el.style.position  = item.extra.position;
         if (item.extra.top)       el.style.top        = item.extra.top;
-        if (item.extra.height)    el.style.height     = item.extra.height;
+        if (item.extra.height)    el.style.setProperty('height', item.extra.height, 'important');
         if (item.extra.overflow)  el.style.overflow   = item.extra.overflow;
         if (item.extra.alignSelf) el.style.alignSelf  = item.extra.alignSelf;
+        if (item.extra.gridRow)   el.style.setProperty('grid-row', item.extra.gridRow, 'important');
       }
     });
 
