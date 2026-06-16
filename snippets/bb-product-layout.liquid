@@ -15,7 +15,8 @@
         "media  trust"
         "media  fit"
         "media  ctl"
-        ".      acc"
+        "media  acc"
+        "media  sp"
         "recs   recs";
       align-items: start;
       max-width: 1440px;
@@ -28,15 +29,8 @@
     body.template-product main.content-for-layout .bb-product-fit-section    { grid-area: fit;   min-width: 0; }
     body.template-product main.content-for-layout .bb-product-ctl-section    { grid-area: ctl;   min-width: 0; }
     body.template-product main.content-for-layout .bb-product-acc-section    { grid-area: acc;   min-width: 0; }
+    body.template-product main.content-for-layout .bb-product-sp-section     { grid-area: sp;    min-width: 0; align-self: start; }
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs; }
-
-    /* Social proof — explicit numeric placement wins over named area conflict */
-    body.template-product main#MainContent.content-for-layout .bb-product-sp-section {
-      grid-column: 1;
-      grid-row: 4;
-      align-self: start;
-      min-width: 0;
-    }
 
     body.template-product main.content-for-layout .bb-media {
       height: 100vh;
