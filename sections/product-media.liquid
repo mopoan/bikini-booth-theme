@@ -1,28 +1,77 @@
 {%- comment -%}
-  Section: product-media.liquid
-  Purpose: Product image gallery — 9:16 portrait stage, vertical thumbnail strip
-           on desktop left, dot navigation on mobile.
-  Injects: bb-product-layout snippet for two-column page grid.
+  Section: product-media.liquid 
+  Purpose: Product image gallery for Bikini Booth product pages.
+  Renders: Main image with crossfade, thumbnail strip, mobile swipe + dots, zoom overlay.
+  Standalone: No dependencies on other sections or snippets.
 {%- endcomment -%}
 
+{%- comment -%} Inject two-column layout CSS for the full product page {%- endcomment -%}
 {% render 'bb-product-layout' %}
 
-{%- assign thumb_position = section.settings.thumb_position -%}
-{%- assign image_fit      = section.settings.image_fit -%}
-{%- assign bg_color       = section.settings.bg_color -%}
-{%- assign border_radius  = section.settings.border_radius -%}
-{%- assign enable_zoom    = section.settings.enable_zoom -%}
-{%- assign enable_dots    = section.settings.enable_dots -%}
-{%- assign sticky         = section.settings.sticky_gallery -%}
+<div class="bb-media" id="bb-media-{{ section.id }}">
 
-<div
-  class="bb-media bb-media--thumbs-{{ thumb_position }}"
-  id="bb-media-{{ section.id }}"
-  data-zoom="{{ enable_zoom }}"
->
+  {%- comment -%} ── Main image area ── {%- endcomment -%}
+  <div class="bb-media__main" id="bb-media-main-{{ section.id }}" aria-label="Product images">
 
-  {%- comment -%} ── Thumbnail strip (desktop left / desktop bottom / hidden) ── {%- endcomment -%}
-  {%- if product.images.size > 1 and thumb_position != 'hidden' -%}
+    {%- if product.images.size > 0 -%}
+      {%- for image in product.images -%}
+        <div
+          class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
+          data-index="{{ forloop.index0 }}"
+          role="img"
+          aria-label="{{ image.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.images.size }}"
+          aria-hidden="{%- if forloop.first -%}false{%- else -%}true{%- endif -%}"
+        >
+          <img
+            src="{{ image | image_url: width: 1000 }}"
+            srcset="
+              {{ image | image_url: width: 480 }} 480w,
+              {{ image | image_url: width: 750 }} 750w,
+              {{ image | image_url: width: 1000 }} 1000w
+            "
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ image.alt | escape | default: product.title }}"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+            class="bb-media__img"
+          >
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      <div class="bb-media__slide is-active bb-media__slide--empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0b4a8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p class="bb-media__empty-label">No images</p>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Zoom button {%- endcomment -%}
+    {%- if section.settings.enable_zoom and product.images.size > 0 -%}
+      <button
+        type="button"
+        class="bb-media__zoom"
+        id="bb-media-zoom-{{ section.id }}"
+        aria-label="Zoom image"
+        aria-pressed="false"
+      >
+        <svg class="bb-media__zoom-in-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        <svg class="bb-media__zoom-out-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+    {%- endif -%}
+
+    {%- comment -%} Mobile dots {%- endcomment -%}
+    {%- if product.images.size > 1 -%}
+      <div class="bb-media__dots" aria-hidden="true" id="bb-media-dots-{{ section.id }}">
+        {%- for image in product.images -%}
+          <div class="bb-media__dot{%- if forloop.first %} is-active{%- endif -%}" data-index="{{ forloop.index0 }}"></div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+
+  {%- comment -%} ── Thumbnail strip ── {%- endcomment -%}
+  {%- if product.images.size > 1 -%}
     <div
       class="bb-media__thumbs"
       id="bb-media-thumbs-{{ section.id }}"
@@ -35,14 +84,14 @@
           class="bb-media__thumb{%- if forloop.first %} is-active{%- endif -%}"
           role="tab"
           aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
-          aria-label="{{ image.alt | escape | default: product.title }} — image {{ forloop.index }}"
+          aria-label="View image {{ forloop.index }}"
           data-index="{{ forloop.index0 }}"
         >
           <img
-            src="{{ image | image_url: width: 160, height: 200, crop: 'center' }}"
+            src="{{ image | image_url: width: 120, height: 150, crop: 'center' }}"
             alt="{{ image.alt | escape | default: product.title }}"
-            width="{{ section.settings.thumb_width }}"
-            height="{{ section.settings.thumb_height }}"
+            width="48"
+            height="60"
             loading="lazy"
           >
         </button>
@@ -50,118 +99,25 @@
     </div>
   {%- endif -%}
 
-  {%- comment -%} ── Main image stage ── {%- endcomment -%}
-  <div class="bb-media__stage-wrap">
-    <div
-      class="bb-media__stage"
-      id="bb-media-stage-{{ section.id }}"
-      aria-label="Product images"
-    >
-
-      {%- if product.images.size > 0 -%}
-        {%- for image in product.images -%}
-          <div
-            class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
-            data-index="{{ forloop.index0 }}"
-            role="img"
-            aria-label="{{ image.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.images.size }}"
-            aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
-          >
-            <img
-              src="{{ image | image_url: width: 1000 }}"
-              srcset="
-                {{ image | image_url: width: 480 }}  480w,
-                {{ image | image_url: width: 750 }}  750w,
-                {{ image | image_url: width: 1000 }} 1000w
-              "
-              sizes="(max-width: 767px) 100vw, 40vw"
-              alt="{{ image.alt | escape | default: product.title }}"
-              width="{{ image.width }}"
-              height="{{ image.height }}"
-              loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
-              class="bb-media__img"
-            >
-          </div>
-        {%- endfor -%}
-      {%- else -%}
-        <div class="bb-media__slide is-active bb-media__no-image">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0b4a8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>No images</p>
-        </div>
-      {%- endif -%}
-
-      {%- comment -%} Zoom button {%- endcomment -%}
-      {%- if enable_zoom and product.images.size > 0 -%}
-        <button
-          type="button"
-          class="bb-media__zoom-btn"
-          id="bb-media-zoom-{{ section.id }}"
-          aria-label="Zoom image"
-          aria-pressed="false"
-        >
-          <svg class="bb-zoom-in" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-          <svg class="bb-zoom-out" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </button>
-      {%- endif -%}
-
-      {%- comment -%} Mobile dots {%- endcomment -%}
-      {%- if enable_dots and product.images.size > 1 -%}
-        <div class="bb-media__dots" aria-hidden="true" id="bb-media-dots-{{ section.id }}">
-          {%- for image in product.images -%}
-            <div
-              class="bb-media__dot{%- if forloop.first %} is-active{%- endif -%}"
-              data-index="{{ forloop.index0 }}"
-            ></div>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-
-    </div>
-  </div>
-
 </div>
 
 
 <style>
-  /* ── Section wrapper ── */
   #bb-media-{{ section.id }} {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: {{ section.settings.thumb_gap }}px;
-    background: {{ bg_color }};
-    padding-top: {{ section.settings.padding_top }}px;
-    padding-bottom: {{ section.settings.padding_bottom }}px;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    background: #f0ece6;
   }
 
-  /* ── Stage wrap fills remaining space ── */
-  #bb-media-{{ section.id }} .bb-media__stage-wrap {
-    flex: 1;
-    min-width: 0;
-  }
-
-  /* ── Stage: enforces 9:16 aspect ratio ── */
-  #bb-media-{{ section.id }} .bb-media__stage {
+  #bb-media-{{ section.id }} .bb-media__main {
     position: relative;
-    width: 100%;
-    {%- case section.settings.aspect_ratio -%}
-      {%- when '9:16' -%}
-        aspect-ratio: 9 / 16;
-      {%- when '3:4' -%}
-        aspect-ratio: 3 / 4;
-      {%- when '1:1' -%}
-        aspect-ratio: 1 / 1;
-      {%- when 'natural' -%}
-        aspect-ratio: auto;
-        min-height: 400px;
-    {%- endcase -%}
-    background: {{ bg_color }};
-    border-radius: {{ border_radius }}px;
     overflow: hidden;
-    cursor: crosshair;
+    background: #f0ece6;
+    /* Height set by JS using screen.height for reliability */
+    min-height: 500px;
+    flex-shrink: 0;
   }
 
-  /* ── Slides ── */
   #bb-media-{{ section.id }} .bb-media__slide {
     position: absolute;
     inset: 0;
@@ -173,66 +129,68 @@
     opacity: 1;
     pointer-events: auto;
   }
-
-  /* ── Images ── */
-  #bb-media-{{ section.id }} .bb-media__img {
-    width: 100%;
-    height: 100%;
-    object-fit: {{ image_fit }};
-    object-position: center top;
-    display: block;
-    transition: transform 0.4s ease;
-    transform-origin: center center;
-  }
-
-  /* ── Hover zoom (desktop) ── */
-  @media (hover: hover) {
-    #bb-media-{{ section.id }} .bb-media__stage:hover .bb-media__slide.is-active .bb-media__img {
-      transform: scale(1.04);
-    }
-  }
-
-  /* ── Click zoom ── */
-  #bb-media-{{ section.id }} .bb-media__stage.is-zoomed .bb-media__slide.is-active .bb-media__img {
-    transform: scale(1.7);
-    cursor: zoom-out;
-  }
-
-  /* ── No image placeholder ── */
-  #bb-media-{{ section.id }} .bb-media__no-image {
+  #bb-media-{{ section.id }} .bb-media__slide--empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    opacity: 1;
-    pointer-events: none;
+    background: #f0ece6;
   }
-  #bb-media-{{ section.id }} .bb-media__no-image p {
+  #bb-media-{{ section.id }} .bb-media__empty-label {
     font-size: 0.75rem;
     color: #c0b4a8;
+    letter-spacing: 0.04em;
   }
 
-  /* ── Zoom button ── */
-  #bb-media-{{ section.id }} .bb-media__zoom-btn {
+  #bb-media-{{ section.id }} .bb-media__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    transition: transform 0.4s ease;
+    transform-origin: center center;
+    cursor: zoom-in;
+    background: #f0ece6;
+  }
+
+  @media (hover: hover) {
+    #bb-media-{{ section.id }} .bb-media__main:hover .bb-media__slide.is-active .bb-media__img {
+      transform: scale(1.35);
+    }
+    #bb-media-{{ section.id }} .bb-media__main.is-zoomed .bb-media__slide.is-active .bb-media__img {
+      transform: scale(1.0);
+      cursor: zoom-in;
+    }
+  }
+
+  #bb-media-{{ section.id }} .bb-media__main.is-zoomed .bb-media__slide.is-active .bb-media__img {
+    transform: scale(1.65);
+    cursor: zoom-out;
+  }
+
+  #bb-media-{{ section.id }} .bb-media__main { cursor: crosshair; }
+
+  #bb-media-{{ section.id }} .bb-media__zoom {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 12px;
+    right: 12px;
     width: 30px;
     height: 30px;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.92);
     border: 0.5px solid #e0dbd3;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 2;
+    color: #2a2520;
     transition: background 0.15s;
+    z-index: 2;
   }
-  #bb-media-{{ section.id }} .bb-media__zoom-btn:hover { background: #ffffff; }
+  #bb-media-{{ section.id }} .bb-media__zoom:hover { background: #ffffff; }
 
-  /* ── Mobile dots ── */
   #bb-media-{{ section.id }} .bb-media__dots {
     position: absolute;
     bottom: 10px;
@@ -247,7 +205,7 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.55);
     transition: background 0.2s, width 0.2s;
     cursor: pointer;
   }
@@ -257,25 +215,22 @@
     border-radius: 3px;
   }
 
-  /* ── Thumbnail strip — left (desktop default) ── */
   #bb-media-{{ section.id }} .bb-media__thumbs {
     display: flex;
-    flex-direction: column;
-    gap: {{ section.settings.thumb_gap }}px;
-    flex-shrink: 0;
-    width: {{ section.settings.thumb_width }}px;
-    max-height: 80vh;
-    overflow-y: auto;
+    gap: 5px;
+    padding: 8px 12px;
+    background: #f0ece6;
+    border-top: 0.5px solid #e0d8cf;
+    overflow-x: auto;
     scrollbar-width: none;
-    padding: 2px;
+    flex-shrink: 0;
   }
   #bb-media-{{ section.id }} .bb-media__thumbs::-webkit-scrollbar { display: none; }
 
-  /* ── Thumbnail button ── */
   #bb-media-{{ section.id }} .bb-media__thumb {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    border-radius: {{ border_radius | divided_by: 2 }}px;
+    width: 48px;
+    height: 60px;
+    border-radius: 4px;
     overflow: hidden;
     border: 1.5px solid transparent;
     background: none;
@@ -283,74 +238,32 @@
     cursor: pointer;
     flex-shrink: 0;
     transition: border-color 0.15s;
-    display: block;
   }
-  #bb-media-{{ section.id }} .bb-media__thumb.is-active {
-    border-color: #49c6be;
-  }
-  #bb-media-{{ section.id }} .bb-media__thumb:not(.is-active):hover {
-    border-color: #c5e8e6;
-  }
+  #bb-media-{{ section.id }} .bb-media__thumb.is-active { border-color: #49c6be; }
   #bb-media-{{ section.id }} .bb-media__thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    object-fit: contain;
+    background: #f0ece6;
     display: block;
   }
 
-  /* ── Bottom thumbnail variant ── */
-  #bb-media-{{ section.id }}.bb-media--thumbs-bottom {
-    flex-direction: column !important;
-  }
-  #bb-media-{{ section.id }}.bb-media--thumbs-bottom .bb-media__thumbs {
-    flex-direction: row;
-    width: 100%;
-    max-height: none;
-    overflow-x: auto;
-    overflow-y: visible;
-    height: {{ section.settings.thumb_height }}px;
-  }
-  #bb-media-{{ section.id }}.bb-media--thumbs-bottom .bb-media__thumb {
-    width: {{ section.settings.thumb_width }}px;
-    aspect-ratio: auto;
-    height: 100%;
-    flex-shrink: 0;
-  }
-
-  /* ── Sticky on desktop ── */
-  {%- if sticky -%}
-  @media (min-width: 900px) {
-    .bb-product-media-section {
-      position: sticky;
-      top: 0;
-      align-self: start;
-    }
-  }
-  {%- endif -%}
-
-  /* ── Mobile ── */
-  @media (max-width: 899px) {
+  @media (max-width: 767px) {
     #bb-media-{{ section.id }} {
-      flex-direction: column !important;
+      position: relative;
+      max-height: none;
+      top: auto;
     }
-
-    {%- unless section.settings.show_thumbs_mobile -%}
-    #bb-media-{{ section.id }} .bb-media__thumbs {
-      display: none;
+    #bb-media-{{ section.id }} .bb-media__main {
+      min-height: 320px;
+      height: 70vw;
     }
-    {%- endunless -%}
-
-    #bb-media-{{ section.id }} .bb-media__dots {
-      display: flex;
-    }
+    #bb-media-{{ section.id }} .bb-media__dots { display: flex; }
+    #bb-media-{{ section.id }} .bb-media__thumbs { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    #bb-media-{{ section.id }} .bb-media__slide,
-    #bb-media-{{ section.id }} .bb-media__img {
-      transition: none;
-    }
+    #bb-media-{{ section.id }} .bb-media__slide { transition: none; }
   }
 </style>
 
@@ -359,122 +272,110 @@
 (function () {
   'use strict';
 
-  var wrap    = document.getElementById('bb-media-{{ section.id }}');
-  var stage   = document.getElementById('bb-media-stage-{{ section.id }}');
-  var thumbsEl = document.getElementById('bb-media-thumbs-{{ section.id }}');
-  var dotsEl  = document.getElementById('bb-media-dots-{{ section.id }}');
-  var zoomBtn = document.getElementById('bb-media-zoom-{{ section.id }}');
-  if (!wrap || !stage) return;
+  var section   = document.getElementById('bb-media-{{ section.id }}');
+  if (!section) return;
 
-  var slides  = stage.querySelectorAll('.bb-media__slide');
-  var thumbs  = thumbsEl ? thumbsEl.querySelectorAll('.bb-media__thumb') : [];
-  var dots    = dotsEl   ? dotsEl.querySelectorAll('.bb-media__dot')     : [];
+  var mainEl    = document.getElementById('bb-media-main-{{ section.id }}');
+  var slides    = section.querySelectorAll('.bb-media__slide');
+  var thumbs    = section.querySelectorAll('.bb-media__thumb');
+  var dots      = section.querySelectorAll('.bb-media__dot');
+  var zoomBtn   = document.getElementById('bb-media-zoom-{{ section.id }}');
   var activeIdx = 0;
-  var isZoomed  = false;
 
-  /* ── Navigate to slide ── */
+  /* ── Set gallery height using screen.availHeight for reliability ── */
+  function setGalleryHeight() {
+    if (!mainEl) return;
+    /* Use screen.availHeight — works correctly even inside Shopify's iframe preview.
+       Skip only on genuinely narrow screens (mobile), not based on window.innerWidth
+       which is unreliable inside iframes. */
+    if (screen.availWidth < 900) return;
+    var h = Math.max(screen.availHeight - 120, 500);
+    mainEl.style.setProperty('height', h + 'px', 'important');
+  }
+
+  setGalleryHeight();
+  window.addEventListener('resize', setGalleryHeight);
+
+  /* ── Go to slide ── */
   function goTo(idx) {
     if (idx < 0 || idx >= slides.length) return;
-
-    slides[activeIdx].classList.remove('is-active');
-    slides[activeIdx].setAttribute('aria-hidden', 'true');
-    if (thumbs[activeIdx]) thumbs[activeIdx].classList.remove('is-active');
-    if (dots[activeIdx])   dots[activeIdx].classList.remove('is-active');
-
+    slides.forEach(function (s, i) {
+      s.classList.toggle('is-active', i === idx);
+      s.setAttribute('aria-hidden', i !== idx ? 'true' : 'false');
+    });
+    thumbs.forEach(function (t, i) {
+      t.classList.toggle('is-active', i === idx);
+      t.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+    dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
     activeIdx = idx;
-
-    slides[activeIdx].classList.add('is-active');
-    slides[activeIdx].setAttribute('aria-hidden', 'false');
-    if (thumbs[activeIdx]) {
-      thumbs[activeIdx].classList.add('is-active');
-      thumbs[activeIdx].setAttribute('aria-selected', 'true');
-      /* Scroll thumbnail into view */
-      thumbs[activeIdx].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
-    }
-    if (dots[activeIdx]) dots[activeIdx].classList.add('is-active');
-
-    if (isZoomed) setZoom(false);
-    document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: activeIdx } }));
+    document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: idx } }));
   }
 
-  /* ── Thumbnail clicks ── */
-  Array.from(thumbs).forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      goTo(parseInt(btn.dataset.index, 10));
-    });
+  thumbs.forEach(function (btn) {
+    btn.addEventListener('click', function () { goTo(parseInt(btn.dataset.index, 10)); });
   });
 
-  /* ── Dot clicks ── */
-  Array.from(dots).forEach(function (dot) {
-    dot.addEventListener('click', function () {
-      goTo(parseInt(dot.dataset.index, 10));
-    });
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () { goTo(parseInt(dot.dataset.index, 10)); });
   });
 
-  /* ── Touch swipe ── */
-  var startX = 0;
-  stage.addEventListener('touchstart', function (e) {
-    startX = e.changedTouches[0].clientX;
-  }, { passive: true });
-  stage.addEventListener('touchend', function (e) {
-    var dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) < 40) return;
-    goTo(dx < 0 ? activeIdx + 1 : activeIdx - 1);
-  }, { passive: true });
+  if (mainEl) {
+    var startX = 0;
+    mainEl.addEventListener('touchstart', function (e) {
+      startX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    mainEl.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) < 40) return;
+      if (dx < 0) goTo(activeIdx + 1);
+      if (dx > 0) goTo(activeIdx - 1);
+    }, { passive: true });
+  }
 
-  /* ── Keyboard navigation ── */
-  stage.setAttribute('tabindex', '0');
-  stage.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(activeIdx + 1); }
-    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); goTo(activeIdx - 1); }
-  });
+  if (zoomBtn && mainEl) {
+    var zoomInIcon  = zoomBtn.querySelector('.bb-media__zoom-in-icon');
+    var zoomOutIcon = zoomBtn.querySelector('.bb-media__zoom-out-icon');
+    var isZoomed    = false;
 
-  /* ── Zoom ── */
-  function setZoom(on) {
-    isZoomed = on;
-    stage.classList.toggle('is-zoomed', on);
-    if (zoomBtn) {
+    function setZoom(on) {
+      isZoomed = on;
+      mainEl.classList.toggle('is-zoomed', on);
       zoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
       zoomBtn.setAttribute('aria-label', on ? 'Zoom out' : 'Zoom image');
-      var zIn  = zoomBtn.querySelector('.bb-zoom-in');
-      var zOut = zoomBtn.querySelector('.bb-zoom-out');
-      if (zIn)  zIn.style.display  = on ? 'none' : '';
-      if (zOut) zOut.style.display = on ? ''     : 'none';
+      if (zoomInIcon)  zoomInIcon.style.display  = on ? 'none' : '';
+      if (zoomOutIcon) zoomOutIcon.style.display = on ? ''     : 'none';
+      if (!on) {
+        var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
+        if (img) img.style.transformOrigin = 'center center';
+      }
     }
-    if (!on) {
-      var img = stage.querySelector('.bb-media__slide.is-active .bb-media__img');
-      if (img) img.style.transformOrigin = 'center center';
-    }
-  }
 
-  if (zoomBtn) {
-    zoomBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
+    zoomBtn.addEventListener('click', function () { setZoom(!isZoomed); });
+
+    mainEl.addEventListener('click', function (e) {
+      if (e.target.closest('.bb-media__zoom')) return;
+      if (e.target.closest('.bb-media__dot'))  return;
       setZoom(!isZoomed);
+    });
+
+    mainEl.addEventListener('mousemove', function (e) {
+      if (!isZoomed) return;
+      var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
+      if (!img) return;
+      var rect = mainEl.getBoundingClientRect();
+      var x    = ((e.clientX - rect.left) / rect.width)  * 100;
+      var y    = ((e.clientY - rect.top)  / rect.height) * 100;
+      img.style.transformOrigin = x + '% ' + y + '%';
+    });
+
+    document.addEventListener('bb:slideChange', function () { setZoom(false); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isZoomed) setZoom(false);
     });
   }
 
-  stage.addEventListener('click', function (e) {
-    if (e.target.closest('.bb-media__zoom-btn')) return;
-    if (e.target.closest('.bb-media__dot')) return;
-    if ('{{ enable_zoom }}' === 'true') setZoom(!isZoomed);
-  });
-
-  stage.addEventListener('mousemove', function (e) {
-    if (!isZoomed) return;
-    var img = stage.querySelector('.bb-media__slide.is-active .bb-media__img');
-    if (!img) return;
-    var rect = stage.getBoundingClientRect();
-    img.style.transformOrigin =
-      ((e.clientX - rect.left) / rect.width  * 100) + '% ' +
-      ((e.clientY - rect.top)  / rect.height * 100) + '%';
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && isZoomed) setZoom(false);
-  });
-
-  /* ── Listen for external slide requests ── */
   document.addEventListener('bb:requestSlide', function (e) {
     if (e.detail && typeof e.detail.index === 'number') goTo(e.detail.index);
   });
@@ -490,153 +391,25 @@
   "class": "bb-product-media-section",
   "settings": [
     {
-      "type": "header",
-      "content": "Image display"
-    },
-    {
       "type": "select",
-      "id": "aspect_ratio",
-      "label": "Main image aspect ratio",
+      "id": "image_ratio",
+      "label": "Image ratio",
       "options": [
-        { "value": "9:16",    "label": "Portrait 9:16 (recommended)" },
-        { "value": "3:4",     "label": "Portrait 3:4" },
-        { "value": "1:1",     "label": "Square 1:1" },
-        { "value": "natural", "label": "Natural (no fixed ratio)" }
+        { "value": "natural", "label": "Natural" },
+        { "value": "square",  "label": "Square (1:1)" },
+        { "value": "portrait","label": "Portrait (3:4)" }
       ],
-      "default": "9:16"
-    },
-    {
-      "type": "select",
-      "id": "image_fit",
-      "label": "Image fit",
-      "options": [
-        { "value": "contain", "label": "Contain (show full image)" },
-        { "value": "cover",   "label": "Cover (fill frame, may crop)" }
-      ],
-      "default": "contain"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Image background color",
-      "default": "#f0ece6"
-    },
-    {
-      "type": "range",
-      "id": "border_radius",
-      "label": "Image border radius (px)",
-      "min": 0,
-      "max": 24,
-      "step": 2,
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "Thumbnails"
-    },
-    {
-      "type": "select",
-      "id": "thumb_position",
-      "label": "Thumbnail position (desktop)",
-      "options": [
-        { "value": "left",   "label": "Left of main image" },
-        { "value": "bottom", "label": "Below main image" },
-        { "value": "hidden", "label": "Hidden" }
-      ],
-      "default": "left"
-    },
-    {
-      "type": "range",
-      "id": "thumb_width",
-      "label": "Thumbnail width (px)",
-      "min": 40,
-      "max": 120,
-      "step": 4,
-      "default": 64
-    },
-    {
-      "type": "range",
-      "id": "thumb_height",
-      "label": "Thumbnail height — bottom layout only (px)",
-      "min": 50,
-      "max": 150,
-      "step": 4,
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "thumb_gap",
-      "label": "Thumbnail gap (px)",
-      "min": 2,
-      "max": 16,
-      "step": 2,
-      "default": 6
-    },
-    {
-      "type": "checkbox",
-      "id": "show_thumbs_mobile",
-      "label": "Show thumbnails on mobile",
-      "default": false
-    },
-    {
-      "type": "header",
-      "content": "Behaviour"
-    },
-    {
-      "type": "checkbox",
-      "id": "sticky_gallery",
-      "label": "Sticky gallery on desktop",
-      "default": true
+      "default": "natural"
     },
     {
       "type": "checkbox",
       "id": "enable_zoom",
-      "label": "Enable image zoom",
+      "label": "Enable zoom",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_dots",
-      "label": "Enable mobile dot indicators",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Padding top (px)",
-      "min": 0,
-      "max": 60,
-      "step": 4,
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Padding bottom (px)",
-      "min": 0,
-      "max": 60,
-      "step": 4,
-      "default": 0
     }
   ],
   "presets": [
-    {
-      "name": "Product media",
-      "settings": {
-        "aspect_ratio": "9:16",
-        "image_fit": "contain",
-        "thumb_position": "left",
-        "thumb_width": 64,
-        "sticky_gallery": true,
-        "enable_zoom": true,
-        "enable_dots": true
-      }
-    }
+    { "name": "Product media" }
   ]
 }
 {% endschema %}
-
