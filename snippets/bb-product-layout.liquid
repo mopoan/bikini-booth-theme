@@ -1,6 +1,10 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
+
+  Social proof sits in DOM position 7 (after accordions).
+  On desktop: moved into media section via JS for left-column placement.
+  On mobile: stays in DOM position 7, no JS manipulation needed.
 {%- endcomment -%}
 
 <style>
@@ -35,38 +39,14 @@
     body.template-product main.content-for-layout {
       display: block !important;
     }
-
-    /* Sentinel element — visible only on mobile via CSS */
-    #bb-mobile-sentinel { display: block; }
   }
-
-  /* Sentinel hidden on desktop */
-  #bb-mobile-sentinel { display: none; }
 </style>
-
-{%- comment -%} Sentinel: CSS makes this visible on mobile, hidden on desktop {%- endcomment -%}
-<div id="bb-mobile-sentinel" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;"></div>
 
 <script>
 (function () {
   'use strict';
 
-  var spOriginalParent = null;
-  var spOriginalNext   = null;
-
-  function isDesktop() {
-    /* Check CSS sentinel — visible (display:block) on mobile, hidden (display:none) on desktop */
-    var sentinel = document.getElementById('bb-mobile-sentinel');
-    if (sentinel) {
-      return getComputedStyle(sentinel).display === 'none';
-    }
-    /* Fallback */
-    return window.matchMedia('(min-width: 900px)').matches;
-  }
-
   function applyLayout() {
-    var desktop = isDesktop();
-
     /* Media section — grid placement */
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
     if (mediaEl) {
@@ -79,10 +59,10 @@
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
 
-    /* Gallery flex-direction */
+    /* Gallery flex-direction — use matchMedia which works correctly */
     var bbMedia = document.querySelector('.bb-media');
     if (bbMedia) {
-      if (desktop) {
+      if (window.matchMedia('(min-width: 900px)').matches) {
         bbMedia.style.setProperty('flex-direction', 'row', 'important');
         bbMedia.style.setProperty('align-items', 'flex-start', 'important');
       } else {
@@ -90,11 +70,9 @@
       }
     }
 
-    /* Social proof placement */
-    if (desktop) {
+    /* Social proof — only move on desktop */
+    if (window.matchMedia('(min-width: 900px)').matches) {
       moveSocialProofToMedia();
-    } else {
-      restoreSocialProof();
     }
   }
 
@@ -104,31 +82,12 @@
     if (!mediaEl || !spEl) return;
     if (spEl.parentElement === mediaEl) return;
 
-    spOriginalParent = spEl.parentElement;
-    spOriginalNext   = spEl.nextElementSibling;
-
     mediaEl.appendChild(spEl);
     spEl.style.removeProperty('grid-area');
     spEl.style.removeProperty('grid-row');
     spEl.style.removeProperty('align-self');
     spEl.style.removeProperty('margin-top');
     spEl.style.position = '';
-  }
-
-  function restoreSocialProof() {
-    var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
-    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
-    if (!spEl || !mediaEl) return;
-    if (spEl.parentElement !== mediaEl) return;
-
-    if (spOriginalParent && spOriginalNext && spOriginalNext.parentElement === spOriginalParent) {
-      spOriginalParent.insertBefore(spEl, spOriginalNext);
-    } else {
-      var recs = document.querySelector('.shopify-section:has(product-recommendations)');
-      if (recs && recs.parentElement) {
-        recs.parentElement.insertBefore(spEl, recs);
-      }
-    }
   }
 
   if (document.readyState === 'loading') {
@@ -138,11 +97,9 @@
   }
   setTimeout(applyLayout, 100);
 
-  var resizeTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(applyLayout, 150);
-  });
+  /* Re-run on resize */
+  var mq = window.matchMedia('(min-width: 900px)');
+  mq.addEventListener('change', applyLayout);
 
 })();
 </script>
