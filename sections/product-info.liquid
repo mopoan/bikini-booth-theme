@@ -95,7 +95,7 @@
   </div>
 
   {%- comment -%} ── Color swatches ── {%- endcomment -%}
-  <div class="bb-info__section">
+  <div class="bb-info__section" id="bb-color-section-{{ section.id }}" hidden>
     <div class="bb-info__section-label">
       Choose your color
       <span class="bb-info__section-value" id="bb-color-name-{{ section.id }}"></span>
@@ -105,13 +105,7 @@
       id="bb-swatches-{{ section.id }}"
       role="list"
       aria-label="Color options"
-    >
-      <div class="bb-swatches__loading" aria-live="polite">
-        <div class="bb-swatch-placeholder"></div>
-        <div class="bb-swatch-placeholder"></div>
-        <div class="bb-swatch-placeholder"></div>
-      </div>
-    </div>
+    ></div>
   </div>
 
   {%- comment -%} ── Size selector ── {%- endcomment -%}
@@ -527,9 +521,7 @@
   function handleProductData(data) {
     if (!data) return;
 
-    var hasPair = data.hasPieceToggle && Object.keys(data.pieceLinks || {}).length > 0;
-
-    if (hasPair) {
+    if (data.hasPieceToggle) {
       pieceSection.hidden = false;
 
       var currentPiece     = data.piece;
@@ -558,8 +550,11 @@
       }
     }
 
+    var colorSection = document.getElementById('bb-color-section-' + sid);
+
     if (data.colorSwatches && data.colorSwatches.length > 0) {
       swatchWrap.innerHTML = '';
+      if (colorSection) colorSection.hidden = false;
       if (colorNameEl && data.color) colorNameEl.textContent = data.color;
 
       data.colorSwatches.forEach(function (sw) {

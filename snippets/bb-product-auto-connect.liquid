@@ -66,10 +66,10 @@
       baseName = title.slice(0, inIdx).trim();
     }
 
-    /* Detect piece from base name */
+    /* Detect piece from base name — must be the LAST word exactly */
     for (var i = 0; i < PIECES.length; i++) {
       var p = PIECES[i];
-      if (baseName.slice(-(p.length + 1)) === ' ' + p) {
+      if (baseName === p || baseName.slice(-(p.length + 1)) === ' ' + p) {
         piece = p;
         style = baseName.slice(0, baseName.length - p.length - 1).trim();
         break;
@@ -163,10 +163,19 @@
     /* Sort swatches alphabetically */
     colorSwatches.sort(function (a, b) { return a.color.localeCompare(b.color); });
 
+    /* Only show swatches when genuine alternatives exist (>1 product with this base) */
+    if (colorSwatches.length < 2) colorSwatches = [];
+
     /* Probe swatch images in parallel */
     await Promise.all(colorSwatches.map(async function (sw) {
       sw.useImage = await probeImage(sw.imageUrl);
     }));
+
+    /*
+      hasPieceToggle: true only when this product has a piece (Top/Bottom)
+      AND a matching opposite piece was actually found in the store.
+    */
+    var hasPieceToggle = current.piece !== null && Object.keys(pieceLinks).length > 0;
 
     /* Emit */
     window.BB              = window.BB || {};
@@ -177,7 +186,7 @@
       style:          current.style,
       piece:          current.piece,
       color:          current.color,
-      hasPieceToggle: current.piece !== null,
+      hasPieceToggle: hasPieceToggle,
       colorSwatches:  colorSwatches,
       pieceLinks:     pieceLinks
     };
