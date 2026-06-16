@@ -25,7 +25,7 @@
 {%- endcomment -%}
 {%- assign product_title_lower = product.title | downcase -%}
 {%- assign is_bikini_piece = false -%}
-{%- if product_title_lower contains ' top - ' or product_title_lower contains ' bottom - ' -%}
+{%- if product_title_lower contains ' top in ' or product_title_lower contains ' bottom in ' -%}
   {%- assign is_bikini_piece = true -%}
 {%- endif -%}
 
