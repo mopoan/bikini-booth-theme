@@ -12,8 +12,15 @@
     e.g. swatch-orange.png, swatch-turquoise.png, swatch-fuchsia.png
     If a swatch image exists it is used. Hex is the fallback.
 
+  Performance:
+    - Catalog is cached in sessionStorage so navigating between products
+      (clicking swatches / piece toggle) does not re-fetch the whole catalog.
+    - Swatches render immediately as hex; swatch images are probed in the
+      background and upgraded only if they exist (no blocking on 404s).
+
   Output:
     Fires window.BB.productData and custom event 'bb:productDataReady'.
+    May fire a second time to upgrade hex swatches to images.
     Consumed by product-info.liquid section.
 {%- endcomment -%}
 
@@ -24,6 +31,8 @@
   var PRODUCT_TITLE  = {{ product.title | json }};
   var PRODUCT_HANDLE = {{ product.handle | json }};
   var PRODUCT_URL    = {{ product.url | json }};
+
+  var CACHE_KEY = 'bb_all_products';
 
   var colorMap = {
     'orange':    '#e8892a',
@@ -94,27 +103,36 @@
     });
   }
 
-  function fetchAllProducts(page, all, callback) {
-    page = page || 1;
-    all  = all  || [];
-    fetch('/products.json?limit=250&page=' + page)
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        var products = data.products || [];
-        all = all.concat(products);
-        if (products.length === 250) {
-          fetchAllProducts(page + 1, all, callback);
-        } else {
+  /* ── Fetch full catalog, cached per browsing session ── */
+  function fetchAllProducts(callback) {
+    try {
+      var cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) { callback(JSON.parse(cached)); return; }
+    } catch (e) {}
+
+    var all = [];
+    function getPage(page) {
+      fetch('/products.json?limit=250&page=' + page)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var products = data.products || [];
+          all = all.concat(products);
+          if (products.length === 250) {
+            getPage(page + 1);
+          } else {
+            try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(all)); } catch (e) {}
+            callback(all);
+          }
+        })
+        .catch(function (err) {
+          console.warn('[BB Auto-Connect] Fetch failed:', err);
           callback(all);
-        }
-      })
-      .catch(function (err) {
-        console.warn('[BB Auto-Connect] Fetch failed:', err);
-        callback(all);
-      });
+        });
+    }
+    getPage(1);
   }
 
-  async function buildData(allProducts) {
+  function buildData(allProducts) {
     var current       = parseTitle(PRODUCT_TITLE);
     var colorSwatches = [];
     var pieceLinks    = {};
@@ -147,7 +165,8 @@
           imageUrl: swatchImageUrl(parsed.color),
           url:      '/products/' + p.handle,
           active:   p.handle === PRODUCT_HANDLE,
-          available: p.available !== false
+          available: p.available !== false,
+          useImage: false
         });
       }
 
@@ -166,36 +185,43 @@
     /* Only show swatches when genuine alternatives exist (>1 product with this base) */
     if (colorSwatches.length < 2) colorSwatches = [];
 
-    /* Probe swatch images in parallel */
-    await Promise.all(colorSwatches.map(async function (sw) {
-      sw.useImage = await probeImage(sw.imageUrl);
-    }));
-
     /*
       hasPieceToggle: true only when this product has a piece (Top/Bottom)
       AND a matching opposite piece was actually found in the store.
     */
     var hasPieceToggle = current.piece !== null && Object.keys(pieceLinks).length > 0;
 
-    /* Emit */
-    window.BB              = window.BB || {};
-    window.BB.productData  = {
-      title:          PRODUCT_TITLE,
-      handle:         PRODUCT_HANDLE,
-      url:            PRODUCT_URL,
-      style:          current.style,
-      piece:          current.piece,
-      color:          current.color,
-      hasPieceToggle: hasPieceToggle,
-      colorSwatches:  colorSwatches,
-      pieceLinks:     pieceLinks
-    };
+    function emit() {
+      window.BB              = window.BB || {};
+      window.BB.productData  = {
+        title:          PRODUCT_TITLE,
+        handle:         PRODUCT_HANDLE,
+        url:            PRODUCT_URL,
+        style:          current.style,
+        piece:          current.piece,
+        color:          current.color,
+        hasPieceToggle: hasPieceToggle,
+        colorSwatches:  colorSwatches,
+        pieceLinks:     pieceLinks
+      };
+      document.dispatchEvent(
+        new CustomEvent('bb:productDataReady', { detail: window.BB.productData })
+      );
+    }
 
-    document.dispatchEvent(
-      new CustomEvent('bb:productDataReady', { detail: window.BB.productData })
-    );
+    /* Emit immediately — swatches render as hex right away, nothing blocks on images */
+    emit();
+
+    /* Probe swatch images in the background; re-emit once to upgrade ONLY if any exist */
+    if (colorSwatches.length) {
+      Promise.all(colorSwatches.map(function (sw) {
+        return probeImage(sw.imageUrl).then(function (ok) { sw.useImage = ok; return ok; });
+      })).then(function (results) {
+        if (results.some(Boolean)) emit();
+      });
+    }
   }
 
-  fetchAllProducts(1, [], buildData);
+  fetchAllProducts(buildData);
 })();
 </script>
