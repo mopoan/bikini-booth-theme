@@ -4,7 +4,7 @@
 
   DOM order (matches product.json):
   1. bb-product-media-section   — left col, sticky
-  2. bb-product-sp-section      — moved into media on desktop, stays in place on mobile
+  2. bb-product-sp-section      — moved into media on desktop, restored on mobile
   3. bb-product-info-section    — right col
   4. bb-product-trust-section   — right col
   5. bb-product-fit-section     — right col
@@ -52,12 +52,16 @@
 (function () {
   'use strict';
 
-  var isDesktop = null;
-  var spOriginalParent  = null;
-  var spOriginalNext    = null;
+  var spOriginalParent = null;
+  var spOriginalNext   = null;
+
+  function isDesktop() {
+    /* Use clientWidth — correctly reflects simulated mobile in DevTools */
+    return document.documentElement.clientWidth >= 900;
+  }
 
   function applyLayout() {
-    var desktop = screen.availWidth >= 900;
+    var desktop = isDesktop();
 
     /* Media section — grid placement */
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
@@ -71,7 +75,7 @@
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
 
-    /* Force gallery flex-direction */
+    /* Gallery flex-direction */
     var bbMedia = document.querySelector('.bb-media');
     if (bbMedia) {
       if (desktop) {
@@ -82,14 +86,12 @@
       }
     }
 
-    /* Social proof — desktop: move into media; mobile: restore to original position */
+    /* Social proof placement */
     if (desktop) {
       moveSocialProofToMedia();
     } else {
       restoreSocialProof();
     }
-
-    isDesktop = desktop;
   }
 
   function moveSocialProofToMedia() {
@@ -98,7 +100,7 @@
     if (!mediaEl || !spEl) return;
     if (spEl.parentElement === mediaEl) return;
 
-    /* Save original position before moving */
+    /* Save original position */
     spOriginalParent = spEl.parentElement;
     spOriginalNext   = spEl.nextElementSibling;
 
@@ -111,22 +113,25 @@
   }
 
   function restoreSocialProof() {
-    var spEl = document.querySelector('.shopify-section.bb-product-sp-section');
-    if (!spEl) return;
-
+    var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
-    if (!mediaEl || spEl.parentElement !== mediaEl) return;
+    if (!spEl || !mediaEl) return;
+    if (spEl.parentElement !== mediaEl) return;
 
-    /* Restore to original position — after accordions, before recommendations */
     if (spOriginalParent) {
       if (spOriginalNext && spOriginalNext.parentElement === spOriginalParent) {
         spOriginalParent.insertBefore(spEl, spOriginalNext);
       } else {
-        /* Fallback — insert before recommendations */
         var recs = document.querySelector('.shopify-section:has(product-recommendations)');
         if (recs && recs.parentElement) {
           recs.parentElement.insertBefore(spEl, recs);
         }
+      }
+    } else {
+      /* First load on mobile — sp was never moved, just ensure it's before recs */
+      var recs = document.querySelector('.shopify-section:has(product-recommendations)');
+      if (recs && recs.parentElement && spEl.parentElement === mediaEl) {
+        recs.parentElement.insertBefore(spEl, recs);
       }
     }
   }
