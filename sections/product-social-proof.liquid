@@ -336,6 +336,12 @@
   grid-column: 1 / -1;
   width: 100%;
 }
+/* Keep sibling sections in editor/source order: a full-width span in a
+   grid using auto-flow: dense would otherwise let later sections (e.g.
+   recommendations) backfill above this one. */
+:has(> .bb-product-sp-wrapper) {
+  grid-auto-flow: row;
+}
 .bb-product-sp-section {
   display: block;
   background: var(--bb-sp-bg);
