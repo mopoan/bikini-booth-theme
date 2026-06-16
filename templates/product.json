@@ -117,12 +117,30 @@
     "product_social_proof_iNUapA": {
       "type": "product-social-proof",
       "blocks": {
+        "ugc_item_f4LKQ3": {
+          "type": "ugc_item",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/598913442_17929597299144912_1515259270469582253_nfull.webp",
+            "video_url": "",
+            "instagram_handle": ""
+          }
+        },
+        "ugc_item_A4wLiz": {
+          "type": "ugc_item",
+          "settings": {
+            "media_type": "video",
+            "image": "shopify://shop_images/IMG_6863.png",
+            "video_url": "",
+            "instagram_handle": ""
+          }
+        },
         "review_FUpGYq": {
           "type": "review",
           "settings": {
-            "google_url": "",
+            "google_url": "https://maps.app.goo.gl/7GcHkXmBZQKYAzmT9",
             "rating": 5,
-            "quote": "The most flattering bikini I've ever owned. Wore it every day in Koh Samui — the fit is perfect and the fabric holds up beautifully.",
+            "quote": "",
             "author": "Sofia P. — Bangkok",
             "initials": "SP",
             "verified": true
@@ -152,6 +170,8 @@
         }
       },
       "block_order": [
+        "ugc_item_f4LKQ3",
+        "ugc_item_A4wLiz",
         "review_FUpGYq",
         "review_BDMaLw",
         "review_H6mqEB"
@@ -160,8 +180,6 @@
       "settings": {
         "sp_section_title": "As worn by our community",
         "sp_section_subtitle": "",
-        "sp_ugc_pool_size": 10,
-        "sp_ugc_handles": "@bikinibooth, @bikinibooth, @bikinibooth",
         "sp_instagram_handle": "@bikinibooth"
       }
     },
