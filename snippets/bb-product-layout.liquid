@@ -2,9 +2,15 @@
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
 
-  Social proof is moved into the media section via JS so it scrolls
-  with the gallery rather than being an independent grid item.
-  overflow: hidden is on .bb-media__main (gallery only), not the wrapper.
+  DOM order (matches product.json):
+  1. bb-product-media-section   — left col, sticky
+  2. bb-product-sp-section      — appended inside media by JS
+  3. bb-product-info-section    — right col
+  4. bb-product-trust-section   — right col
+  5. bb-product-fit-section     — right col
+  6. bb-product-ctl-section     — right col
+  7. bb-product-acc-section     — right col
+  8. product-recommendations    — full width
 {%- endcomment -%}
 
 <style>
@@ -26,28 +32,18 @@
       margin: 0 auto !important;
     }
 
-    body.template-product main.content-for-layout .bb-media {
-      height: auto;
-      display: flex;
-      flex-direction: column;
-    }
+    body.template-product main.content-for-layout .shopify-section.bb-product-info-section  { grid-area: info  !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-trust-section { grid-area: trust !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-fit-section   { grid-area: fit   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section   { grid-area: ctl   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-acc-section   { grid-area: acc   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs !important; }
 
-    body.template-product main.content-for-layout .bb-media__main {
-      flex: 1;
-      min-height: 100vh;
-      height: 0;
-      overflow: hidden;
-    }
   }
 
   @media (max-width: 899px) {
     body.template-product main.content-for-layout {
       display: block !important;
-    }
-    body.template-product main.content-for-layout .shopify-section.bb-product-media-section {
-      position: relative !important;
-      height: auto !important;
-      overflow: visible !important;
     }
   }
 </style>
@@ -56,65 +52,50 @@
 (function () {
   'use strict';
 
-  function applyGridAreas() {
-    if (window.innerWidth < 900) return;
+  function applyLayout() {
+    if (window.innerWidth < 900 && screen.availWidth >= 900) return;
 
-    var assignments = [
-      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', alignSelf: 'start', overflow: 'visible' } },
-      { cls: 'bb-product-info-section',  area: 'info' },
-      { cls: 'bb-product-trust-section', area: 'trust' },
-      { cls: 'bb-product-fit-section',   area: 'fit' },
-      { cls: 'bb-product-ctl-section',   area: 'ctl' },
-      { cls: 'bb-product-acc-section',   area: 'acc' }
-    ];
+    /* Media section — grid placement + sticky */
+    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
+    if (mediaEl) {
+      mediaEl.style.setProperty('grid-area', 'media', 'important');
+      mediaEl.style.minWidth = '0';
+      mediaEl.style.setProperty('overflow', 'visible', 'important');
+    }
 
-    assignments.forEach(function (item) {
-      var el = document.querySelector('.shopify-section.' + item.cls);
-      if (!el) return;
-      el.style.setProperty('grid-area', item.area, 'important');
-      el.style.minWidth = '0';
-      if (item.extra) {
-        if (item.extra.position)  el.style.position  = item.extra.position;
-        if (item.extra.top)       el.style.top        = item.extra.top;
-        if (item.extra.alignSelf) el.style.alignSelf  = item.extra.alignSelf;
-        if (item.extra.overflow)  el.style.setProperty('overflow', item.extra.overflow, 'important');
-      }
-    });
-
+    /* Recs */
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
 
+    /* Move social proof inside media so it scrolls with gallery */
     moveSocialProof();
   }
 
   function moveSocialProof() {
-    if (window.innerWidth < 900) return;
-
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
     var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
     if (!mediaEl || !spEl) return;
     if (spEl.parentElement === mediaEl) return;
 
     mediaEl.appendChild(spEl);
-
     spEl.style.removeProperty('grid-area');
     spEl.style.removeProperty('grid-row');
     spEl.style.removeProperty('align-self');
+    spEl.style.removeProperty('margin-top');
     spEl.style.position = '';
-    spEl.style.marginTop = '';
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyGridAreas);
+    document.addEventListener('DOMContentLoaded', applyLayout);
   } else {
-    applyGridAreas();
+    applyLayout();
   }
-  setTimeout(applyGridAreas, 100);
+  setTimeout(applyLayout, 100);
 
   var resizeTimer;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(applyGridAreas, 150);
+    resizeTimer = setTimeout(applyLayout, 150);
   });
 
 })();
