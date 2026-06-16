@@ -109,12 +109,14 @@
     background: #f0ece6;
   }
 
+  /* Gallery area — fixed full viewport height, clips image transitions */
   #bb-media-{{ section.id }} .bb-media__main {
     position: relative;
     overflow: hidden;
     background: #f0ece6;
     height: calc(100vh - 80px);
     min-height: 500px;
+    flex-shrink: 0;
   }
 
   #bb-media-{{ section.id }} .bb-media__slide {
@@ -253,7 +255,10 @@
       max-height: none;
       top: auto;
     }
-    #bb-media-{{ section.id }} .bb-media__main { min-height: 320px; }
+    #bb-media-{{ section.id }} .bb-media__main {
+      min-height: 320px;
+      height: 70vw;
+    }
     #bb-media-{{ section.id }} .bb-media__dots { display: flex; }
     #bb-media-{{ section.id }} .bb-media__thumbs { display: none; }
   }
