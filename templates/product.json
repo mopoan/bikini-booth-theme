@@ -132,7 +132,7 @@
           "type": "ugc",
           "settings": {
             "video": "shopify://files/videos/ugc-001.mov",
-            "size": "standard",
+            "size": "wide",
             "handle": "@amybeachlife",
             "link": "",
             "alt": "Customer wearing a yellow bikini with a tropical fruit stall behind"
