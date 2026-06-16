@@ -1,7 +1,10 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
-  Note: !important required on grid-area rules to override theme stylesheet.
+
+  Each Shopify section wrapper has both "shopify-section" and the schema class
+  directly on it (e.g. class="shopify-section bb-product-sp-section").
+  We target with compound class selectors + !important to beat theme overrides.
 {%- endcomment -%}
 
 <style>
@@ -23,13 +26,13 @@
       margin: 0 auto;
     }
 
-    body.template-product main.content-for-layout .shopify-section.bb-product-media-section  { grid-area: media !important; position: sticky; top: 0; height: 100vh; overflow: hidden; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-info-section   { grid-area: info  !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-trust-section  { grid-area: trust !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-fit-section    { grid-area: fit   !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section    { grid-area: ctl   !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-acc-section    { grid-area: acc   !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-sp-section     { grid-area: sp    !important; min-width: 0; align-self: start; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-media-section { grid-area: media !important; position: sticky; top: 0; height: 100vh; overflow: hidden; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-info-section  { grid-area: info  !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-trust-section { grid-area: trust !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-fit-section   { grid-area: fit   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section   { grid-area: ctl   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-acc-section   { grid-area: acc   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-sp-section    { grid-area: sp    !important; min-width: 0; align-self: start; }
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs !important; }
 
     body.template-product main.content-for-layout .bb-media {
