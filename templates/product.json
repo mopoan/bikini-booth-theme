@@ -79,40 +79,6 @@
         "pair_label": "Resortwear"
       }
     },
-    "product_accordions_M7G4Ax": {
-      "type": "product-accordions",
-      "blocks": {
-        "product_description_XpQqTF": {
-          "type": "product_description",
-          "settings": {
-            "title": "Details",
-            "open_by_default": true
-          }
-        },
-        "care_metafield_fxyyTC": {
-          "type": "care_metafield",
-          "settings": {
-            "title": "Care & composition",
-            "open_by_default": false
-          }
-        },
-        "shipping_page_83cBqY": {
-          "type": "shipping_page",
-          "settings": {
-            "title": "Shipping",
-            "page_handle": "shipping-in-the-product-page",
-            "open_by_default": false
-          }
-        }
-      },
-      "block_order": [
-        "product_description_XpQqTF",
-        "care_metafield_fxyyTC",
-        "shipping_page_83cBqY"
-      ],
-      "name": "Product accordions",
-      "settings": {}
-    },
     "product_social_proof_iNUapA": {
       "type": "product-social-proof",
       "blocks": {
@@ -181,6 +147,40 @@
         "sp_section_subtitle": "",
         "sp_instagram_handle": "@bikinibooth"
       }
+    },
+    "product_accordions_M7G4Ax": {
+      "type": "product-accordions",
+      "blocks": {
+        "product_description_XpQqTF": {
+          "type": "product_description",
+          "settings": {
+            "title": "Details",
+            "open_by_default": true
+          }
+        },
+        "care_metafield_fxyyTC": {
+          "type": "care_metafield",
+          "settings": {
+            "title": "Care & composition",
+            "open_by_default": false
+          }
+        },
+        "shipping_page_83cBqY": {
+          "type": "shipping_page",
+          "settings": {
+            "title": "Shipping",
+            "page_handle": "shipping-in-the-product-page",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "product_description_XpQqTF",
+        "care_metafield_fxyyTC",
+        "shipping_page_83cBqY"
+      ],
+      "name": "Product accordions",
+      "settings": {}
     },
     "product_recommendations_rqQaP8": {
       "type": "product-recommendations",
