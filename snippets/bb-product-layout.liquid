@@ -55,7 +55,7 @@
   function applyLayout() {
     if (window.innerWidth < 900 && screen.availWidth >= 900) return;
 
-    /* Media section — grid placement + sticky */
+    /* Media section — grid placement */
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
     if (mediaEl) {
       mediaEl.style.setProperty('grid-area', 'media', 'important');
@@ -66,6 +66,18 @@
     /* Recs */
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
+
+    /* Force gallery flex-direction row — overrides any cached theme CSS */
+    var bbMedia = document.querySelector('.bb-media');
+    if (bbMedia) {
+      bbMedia.style.setProperty('flex-direction', 'row', 'important');
+      bbMedia.style.setProperty('align-items', 'flex-start', 'important');
+    }
+
+    /* Mobile — reset to column */
+    if (screen.availWidth < 900) {
+      if (bbMedia) bbMedia.style.setProperty('flex-direction', 'column', 'important');
+    }
 
     /* Move social proof inside media so it scrolls with gallery */
     moveSocialProof();
