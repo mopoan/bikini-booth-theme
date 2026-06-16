@@ -2,15 +2,14 @@
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
 
-  Social proof positioning: sp sits in grid row 6 col 1, but that row starts
-  far below where the media section visually ends (because rows 1-5 are sized
-  by the taller right column content). We use a negative margin-top on sp,
-  calculated in JS, to pull it up flush below the media section's actual
-  visual bottom edge.
+  Social proof is moved into the media section via JS so it scrolls
+  with the gallery rather than being an independent grid item.
+  overflow: hidden is on .bb-media__main (gallery only), not the wrapper.
 {%- endcomment -%}
 
 <style>
   @media (min-width: 900px) {
+
     body.template-product main.content-for-layout {
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
@@ -20,7 +19,7 @@
         "media  fit"
         "media  ctl"
         "media  acc"
-        "sp     ."
+        "media  ."
         "recs   recs" !important;
       align-items: start !important;
       max-width: 1440px !important;
@@ -28,14 +27,16 @@
     }
 
     body.template-product main.content-for-layout .bb-media {
-      height: 100vh;
+      height: auto;
       display: flex;
       flex-direction: column;
     }
 
     body.template-product main.content-for-layout .bb-media__main {
       flex: 1;
+      min-height: 100vh;
       height: 0;
+      overflow: hidden;
     }
   }
 
@@ -46,6 +47,7 @@
     body.template-product main.content-for-layout .shopify-section.bb-product-media-section {
       position: relative !important;
       height: auto !important;
+      overflow: visible !important;
     }
   }
 </style>
@@ -57,69 +59,58 @@
   function applyGridAreas() {
     if (window.innerWidth < 900) return;
 
-    var map = {
-      'bb-product-media-section':  { area: 'media', position: 'sticky', top: '0', height: '100vh', overflow: 'hidden' },
-      'bb-product-info-section':   { area: 'info' },
-      'bb-product-trust-section':  { area: 'trust' },
-      'bb-product-fit-section':    { area: 'fit' },
-      'bb-product-ctl-section':    { area: 'ctl' },
-      'bb-product-acc-section':    { area: 'acc' },
-      'bb-product-sp-section':     { area: 'sp', alignSelf: 'start' }
-    };
+    var assignments = [
+      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', alignSelf: 'start', overflow: 'visible' } },
+      { cls: 'bb-product-info-section',  area: 'info' },
+      { cls: 'bb-product-trust-section', area: 'trust' },
+      { cls: 'bb-product-fit-section',   area: 'fit' },
+      { cls: 'bb-product-ctl-section',   area: 'ctl' },
+      { cls: 'bb-product-acc-section',   area: 'acc' }
+    ];
 
-    Object.keys(map).forEach(function (cls) {
-      var el = document.querySelector('.shopify-section.' + cls);
+    assignments.forEach(function (item) {
+      var el = document.querySelector('.shopify-section.' + item.cls);
       if (!el) return;
-      var props = map[cls];
-      el.style.setProperty('grid-area', props.area, 'important');
+      el.style.setProperty('grid-area', item.area, 'important');
       el.style.minWidth = '0';
-      if (props.position)  el.style.position = props.position;
-      if (props.top)       el.style.top = props.top;
-      if (props.height)    el.style.height = props.height;
-      if (props.overflow)  el.style.overflow = props.overflow;
-      if (props.alignSelf) el.style.alignSelf = props.alignSelf;
+      if (item.extra) {
+        if (item.extra.position)  el.style.position  = item.extra.position;
+        if (item.extra.top)       el.style.top        = item.extra.top;
+        if (item.extra.alignSelf) el.style.alignSelf  = item.extra.alignSelf;
+        if (item.extra.overflow)  el.style.setProperty('overflow', item.extra.overflow, 'important');
+      }
     });
 
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
 
-    /* Pull social proof up to sit directly below the media section */
-    positionSocialProof();
+    moveSocialProof();
   }
 
-  function positionSocialProof() {
+  function moveSocialProof() {
     if (window.innerWidth < 900) return;
 
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
     var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
     if (!mediaEl || !spEl) return;
+    if (spEl.parentElement === mediaEl) return;
 
-    /* Reset first so measurements are clean */
+    mediaEl.appendChild(spEl);
+
+    spEl.style.removeProperty('grid-area');
+    spEl.style.removeProperty('grid-row');
+    spEl.style.removeProperty('align-self');
+    spEl.style.position = '';
     spEl.style.marginTop = '';
-
-    var mediaBottom = mediaEl.getBoundingClientRect().bottom + window.scrollY;
-    var spTop       = spEl.getBoundingClientRect().top    + window.scrollY;
-    var gap         = spTop - mediaBottom;
-
-    if (gap > 0) {
-      spEl.style.setProperty('margin-top', '-' + gap + 'px', 'important');
-    }
-  }
-
-  function init() {
-    applyGridAreas();
-    /* Re-run after images/content may have shifted layout */
-    setTimeout(positionSocialProof, 300);
-    setTimeout(positionSocialProof, 800);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', applyGridAreas);
   } else {
-    init();
+    applyGridAreas();
   }
+  setTimeout(applyGridAreas, 100);
 
-  /* Recalculate on resize */
   var resizeTimer;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);

@@ -107,10 +107,6 @@
     display: flex;
     flex-direction: column;
     background: #f0ece6;
-    position: sticky;
-    top: 0;
-    align-self: start;
-    max-height: 100vh;
   }
 
   #bb-media-{{ section.id }} .bb-media__main {
@@ -158,7 +154,6 @@
     background: #f0ece6;
   }
 
-  /* Hover zoom — desktop only */
   @media (hover: hover) {
     #bb-media-{{ section.id }} .bb-media__main:hover .bb-media__slide.is-active .bb-media__img {
       transform: scale(1.35);
@@ -169,13 +164,11 @@
     }
   }
 
-  /* Click/tap zoom — all devices */
   #bb-media-{{ section.id }} .bb-media__main.is-zoomed .bb-media__slide.is-active .bb-media__img {
     transform: scale(1.65);
     cursor: zoom-out;
   }
 
-  /* Follow mouse on desktop when zoomed */
   #bb-media-{{ section.id }} .bb-media__main { cursor: crosshair; }
 
   #bb-media-{{ section.id }} .bb-media__zoom {
@@ -285,7 +278,6 @@
   var zoomBtn   = document.getElementById('bb-media-zoom-{{ section.id }}');
   var activeIdx = 0;
 
-  /* ── Go to slide ── */
   function goTo(idx) {
     if (idx < 0 || idx >= slides.length) return;
     slides.forEach(function (s, i) {
@@ -298,22 +290,17 @@
     });
     dots.forEach(function (d, i) { d.classList.toggle('is-active', i === idx); });
     activeIdx = idx;
-
-    /* Broadcast so other sections (e.g. product-info) can react */
     document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: idx } }));
   }
 
-  /* Thumbnail clicks */
   thumbs.forEach(function (btn) {
     btn.addEventListener('click', function () { goTo(parseInt(btn.dataset.index, 10)); });
   });
 
-  /* Dot clicks */
   dots.forEach(function (dot) {
     dot.addEventListener('click', function () { goTo(parseInt(dot.dataset.index, 10)); });
   });
 
-  /* Mobile swipe */
   if (mainEl) {
     var startX = 0;
     mainEl.addEventListener('touchstart', function (e) {
@@ -327,7 +314,6 @@
     }, { passive: true });
   }
 
-  /* ── In-frame zoom ── */
   if (zoomBtn && mainEl) {
     var zoomInIcon  = zoomBtn.querySelector('.bb-media__zoom-in-icon');
     var zoomOutIcon = zoomBtn.querySelector('.bb-media__zoom-out-icon');
@@ -338,26 +324,22 @@
       mainEl.classList.toggle('is-zoomed', on);
       zoomBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
       zoomBtn.setAttribute('aria-label', on ? 'Zoom out' : 'Zoom image');
-      if (zoomInIcon)  zoomInIcon.style.display  = on ? 'none'  : '';
-      if (zoomOutIcon) zoomOutIcon.style.display = on ? ''      : 'none';
-      /* Reset transform-origin when zooming out */
+      if (zoomInIcon)  zoomInIcon.style.display  = on ? 'none' : '';
+      if (zoomOutIcon) zoomOutIcon.style.display = on ? ''     : 'none';
       if (!on) {
         var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
         if (img) img.style.transformOrigin = 'center center';
       }
     }
 
-    /* Click zoom button to toggle */
     zoomBtn.addEventListener('click', function () { setZoom(!isZoomed); });
 
-    /* Click image to toggle */
     mainEl.addEventListener('click', function (e) {
       if (e.target.closest('.bb-media__zoom')) return;
       if (e.target.closest('.bb-media__dot'))  return;
       setZoom(!isZoomed);
     });
 
-    /* Mouse move — update transform-origin to follow cursor */
     mainEl.addEventListener('mousemove', function (e) {
       if (!isZoomed) return;
       var img = mainEl.querySelector('.bb-media__slide.is-active .bb-media__img');
@@ -368,16 +350,13 @@
       img.style.transformOrigin = x + '% ' + y + '%';
     });
 
-    /* Reset zoom when slide changes */
     document.addEventListener('bb:slideChange', function () { setZoom(false); });
 
-    /* Escape key exits zoom */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isZoomed) setZoom(false);
     });
   }
 
-  /* Listen for external slide change requests (e.g. from color swatch navigation) */
   document.addEventListener('bb:requestSlide', function (e) {
     if (e.detail && typeof e.detail.index === 'number') goTo(e.detail.index);
   });
