@@ -2,8 +2,19 @@
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
 
-  Social proof is moved into the media section via JS so it scrolls
-  with the gallery rather than being an independent grid item.
+  Grid (desktop):
+    media  info
+    media  trust
+    media  fit
+    media  ctl
+    media  acc
+    sp     sp     <- social proof, full width, below the accordions
+    recs   recs   <- recommendations, full width
+
+  Social proof is placed by grid-area (no DOM moving). For correct MOBILE
+  order, the Social Proof section should sit between Accordions and
+  Recommendations in the theme editor's section list — on mobile the grid
+  collapses to block flow and follows DOM order.
 {%- endcomment -%}
 
 <style>
@@ -18,102 +29,98 @@
         "media  fit"
         "media  ctl"
         "media  acc"
-        "media  ."
+        "sp     sp"
         "recs   recs" !important;
       align-items: start !important;
       max-width: 1440px !important;
       margin: 0 auto !important;
     }
 
-    body.template-product main.content-for-layout .bb-media {
-      height: auto;
-      display: flex;
-      flex-direction: column;
-    }
+    body.template-product main.content-for-layout .shopify-section.bb-product-info-section  { grid-area: info  !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-trust-section { grid-area: trust !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-fit-section   { grid-area: fit   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section   { grid-area: ctl   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-acc-section   { grid-area: acc   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-sp-section    { grid-area: sp    !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs !important; }
 
-    body.template-product main.content-for-layout .bb-media__main {
-      flex: 1;
-      height: 0;
-      min-height: 100vh;
-    }
   }
 
   @media (max-width: 899px) {
     body.template-product main.content-for-layout {
       display: block !important;
     }
-    body.template-product main.content-for-layout .shopify-section.bb-product-media-section {
-      position: relative !important;
-      height: auto !important;
-    }
+
+    /* Sentinel element — visible only on mobile via CSS */
+    #bb-mobile-sentinel { display: block; }
   }
+
+  /* Sentinel hidden on desktop */
+  #bb-mobile-sentinel { display: none; }
 </style>
+
+{%- comment -%} Sentinel: CSS makes this visible on mobile, hidden on desktop {%- endcomment -%}
+<div id="bb-mobile-sentinel" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;"></div>
 
 <script>
 (function () {
   'use strict';
 
-  function applyGridAreas() {
-    if (window.innerWidth < 900) return;
+  function isDesktop() {
+    /* Check CSS sentinel — visible (display:block) on mobile, hidden (display:none) on desktop */
+    var sentinel = document.getElementById('bb-mobile-sentinel');
+    if (sentinel) {
+      return getComputedStyle(sentinel).display === 'none';
+    }
+    /* Fallback */
+    return window.matchMedia('(min-width: 900px)').matches;
+  }
 
-    var assignments = [
-      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', alignSelf: 'start' } },
-      { cls: 'bb-product-info-section',  area: 'info' },
-      { cls: 'bb-product-trust-section', area: 'trust' },
-      { cls: 'bb-product-fit-section',   area: 'fit' },
-      { cls: 'bb-product-ctl-section',   area: 'ctl' },
-      { cls: 'bb-product-acc-section',   area: 'acc' }
-    ];
+  function applyLayout() {
+    var desktop = isDesktop();
 
-    assignments.forEach(function (item) {
-      var el = document.querySelector('.shopify-section.' + item.cls);
-      if (!el) return;
-      el.style.setProperty('grid-area', item.area, 'important');
-      el.style.minWidth = '0';
-      if (item.extra) {
-        if (item.extra.position)  el.style.position  = item.extra.position;
-        if (item.extra.top)       el.style.top        = item.extra.top;
-        if (item.extra.alignSelf) el.style.alignSelf  = item.extra.alignSelf;
-      }
-    });
+    /* Media section — grid placement */
+    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
+    if (mediaEl) {
+      mediaEl.style.setProperty('grid-area', 'media', 'important');
+      mediaEl.style.minWidth = '0';
+      mediaEl.style.setProperty('overflow', 'visible', 'important');
+    }
 
+    /* Social proof — full-width grid row (placed by area, not moved) */
+    var spEl = document.querySelector('.shopify-section.bb-product-sp-section');
+    if (spEl) {
+      spEl.style.setProperty('grid-area', 'sp', 'important');
+      spEl.style.minWidth = '0';
+    }
+
+    /* Recommendations */
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
 
-    /* Move social proof inside media section so it scrolls with the gallery */
-    moveSocialProof();
-  }
-
-  function moveSocialProof() {
-    if (window.innerWidth < 900) return;
-
-    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
-    var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
-    if (!mediaEl || !spEl) return;
-    if (spEl.parentElement === mediaEl) return; /* already moved */
-
-    /* Move sp into media wrapper, after the last child */
-    mediaEl.appendChild(spEl);
-
-    /* Reset any grid placement on sp since it's no longer a grid child */
-    spEl.style.removeProperty('grid-area');
-    spEl.style.removeProperty('grid-row');
-    spEl.style.removeProperty('align-self');
-    spEl.style.position = '';
-    spEl.style.marginTop = '';
+    /* Gallery flex-direction */
+    var bbMedia = document.querySelector('.bb-media');
+    if (bbMedia) {
+      if (desktop) {
+        bbMedia.style.setProperty('flex-direction', 'row', 'important');
+        bbMedia.style.setProperty('align-items', 'flex-start', 'important');
+      } else {
+        bbMedia.style.setProperty('flex-direction', 'column', 'important');
+      }
+    }
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyGridAreas);
+    document.addEventListener('DOMContentLoaded', applyLayout);
   } else {
-    applyGridAreas();
+    applyLayout();
   }
-  setTimeout(applyGridAreas, 100);
+  setTimeout(applyLayout, 100);
 
   var resizeTimer;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(applyGridAreas, 150);
+    resizeTimer = setTimeout(applyLayout, 150);
   });
 
 })();
