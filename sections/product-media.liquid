@@ -282,14 +282,15 @@
   var zoomBtn   = document.getElementById('bb-media-zoom-{{ section.id }}');
   var activeIdx = 0;
 
-  /* ── Set gallery height using screen.height for reliability ── */
+  /* ── Set gallery height using screen.availHeight for reliability ── */
   function setGalleryHeight() {
     if (!mainEl) return;
-    if (window.innerWidth < 900) return;
-    /* Use screen.height as a reliable full-screen measurement,
-       subtract estimated header height */
-    var h = Math.max(screen.height - 120, 500);
-    mainEl.style.height = h + 'px';
+    /* Use screen.availHeight — works correctly even inside Shopify's iframe preview.
+       Skip only on genuinely narrow screens (mobile), not based on window.innerWidth
+       which is unreliable inside iframes. */
+    if (screen.availWidth < 900) return;
+    var h = Math.max(screen.availHeight - 120, 500);
+    mainEl.style.setProperty('height', h + 'px', 'important');
   }
 
   setGalleryHeight();
