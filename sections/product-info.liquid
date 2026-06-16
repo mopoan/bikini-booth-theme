@@ -527,7 +527,9 @@
   function handleProductData(data) {
     if (!data) return;
 
-    if (data.hasPieceToggle) {
+    var hasPair = data.hasPieceToggle && Object.keys(data.pieceLinks || {}).length > 0;
+
+    if (hasPair) {
       pieceSection.hidden = false;
 
       var currentPiece     = data.piece;
