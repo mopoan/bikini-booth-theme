@@ -21,8 +21,7 @@
       "type": "product-info",
       "name": "Product info",
       "settings": {
-        "price_note": "Top and bottom sold separately.",
-        "ask_question_url": ""
+        "price_note": "Top and bottom sold separately."
       }
     },
     "product_trust_bar_wCfwLk": {
@@ -79,40 +78,6 @@
       "settings": {
         "pair_label": "Resortwear"
       }
-    },
-    "product_accordions_M7G4Ax": {
-      "type": "product-accordions",
-      "blocks": {
-        "product_description_XpQqTF": {
-          "type": "product_description",
-          "settings": {
-            "title": "Details",
-            "open_by_default": true
-          }
-        },
-        "care_metafield_fxyyTC": {
-          "type": "care_metafield",
-          "settings": {
-            "title": "Care & composition",
-            "open_by_default": false
-          }
-        },
-        "shipping_page_83cBqY": {
-          "type": "shipping_page",
-          "settings": {
-            "title": "Shipping",
-            "page_handle": "shipping-in-the-product-page",
-            "open_by_default": false
-          }
-        }
-      },
-      "block_order": [
-        "product_description_XpQqTF",
-        "care_metafield_fxyyTC",
-        "shipping_page_83cBqY"
-      ],
-      "name": "Product accordions",
-      "settings": {}
     },
     "product_social_proof_iNUapA": {
       "type": "product-social-proof",
@@ -182,6 +147,40 @@
         "sp_section_subtitle": "",
         "sp_instagram_handle": "@bikinibooth"
       }
+    },
+    "product_accordions_M7G4Ax": {
+      "type": "product-accordions",
+      "blocks": {
+        "product_description_XpQqTF": {
+          "type": "product_description",
+          "settings": {
+            "title": "Details",
+            "open_by_default": true
+          }
+        },
+        "care_metafield_fxyyTC": {
+          "type": "care_metafield",
+          "settings": {
+            "title": "Care & composition",
+            "open_by_default": false
+          }
+        },
+        "shipping_page_83cBqY": {
+          "type": "shipping_page",
+          "settings": {
+            "title": "Shipping",
+            "page_handle": "shipping-in-the-product-page",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "product_description_XpQqTF",
+        "care_metafield_fxyyTC",
+        "shipping_page_83cBqY"
+      ],
+      "name": "Product accordions",
+      "settings": {}
     },
     "product_recommendations_rqQaP8": {
       "type": "product-recommendations",
@@ -309,20 +308,6 @@
         "color_active_rating": "rgba(0,0,0,0)",
         "color_base_rating": "rgba(0,0,0,0)"
       }
-    },
-    "size_chart_mBfKdt": {
-      "type": "size-chart",
-      "name": "Size Chart",
-      "settings": {
-        "heading": "Size Guide",
-        "subheading": "Find your perfect fit.",
-        "modal_heading": "Size Guide",
-        "trigger_label": "Size Guide",
-        "measure_link_label": "How to measure yourself →",
-        "measure_link_url": "shopify://pages/size-guide",
-        "padding_top": 48,
-        "padding_bottom": 48
-      }
     }
   },
   "order": [
@@ -333,7 +318,6 @@
     "product_complete_the_look_wEDMHX",
     "product_accordions_M7G4Ax",
     "product_social_proof_iNUapA",
-    "product_recommendations_rqQaP8",
-    "size_chart_mBfKdt"
+    "product_recommendations_rqQaP8"
   ]
 }
