@@ -1,6 +1,20 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
+
+  Grid (desktop):
+    media  info
+    media  trust
+    media  fit
+    media  ctl
+    media  acc
+    sp     sp     <- social proof, full width, below the accordions
+    recs   recs   <- recommendations, full width
+
+  Social proof is placed by grid-area (no DOM moving). For correct MOBILE
+  order, the Social Proof section should sit between Accordions and
+  Recommendations in the theme editor's section list — on mobile the grid
+  collapses to block flow and follows DOM order.
 {%- endcomment -%}
 
 <style>
@@ -15,7 +29,7 @@
         "media  fit"
         "media  ctl"
         "media  acc"
-        "media  ."
+        "sp     sp"
         "recs   recs" !important;
       align-items: start !important;
       max-width: 1440px !important;
@@ -27,6 +41,7 @@
     body.template-product main.content-for-layout .shopify-section.bb-product-fit-section   { grid-area: fit   !important; min-width: 0; }
     body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section   { grid-area: ctl   !important; min-width: 0; }
     body.template-product main.content-for-layout .shopify-section.bb-product-acc-section   { grid-area: acc   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-sp-section    { grid-area: sp    !important; min-width: 0; }
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs !important; }
 
   }
@@ -51,9 +66,6 @@
 (function () {
   'use strict';
 
-  var spOriginalParent = null;
-  var spOriginalNext   = null;
-
   function isDesktop() {
     /* Check CSS sentinel — visible (display:block) on mobile, hidden (display:none) on desktop */
     var sentinel = document.getElementById('bb-mobile-sentinel');
@@ -75,7 +87,14 @@
       mediaEl.style.setProperty('overflow', 'visible', 'important');
     }
 
-    /* Recs */
+    /* Social proof — full-width grid row (placed by area, not moved) */
+    var spEl = document.querySelector('.shopify-section.bb-product-sp-section');
+    if (spEl) {
+      spEl.style.setProperty('grid-area', 'sp', 'important');
+      spEl.style.minWidth = '0';
+    }
+
+    /* Recommendations */
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
 
@@ -87,46 +106,6 @@
         bbMedia.style.setProperty('align-items', 'flex-start', 'important');
       } else {
         bbMedia.style.setProperty('flex-direction', 'column', 'important');
-      }
-    }
-
-    /* Social proof placement */
-    if (desktop) {
-      moveSocialProofToMedia();
-    } else {
-      restoreSocialProof();
-    }
-  }
-
-  function moveSocialProofToMedia() {
-    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
-    var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
-    if (!mediaEl || !spEl) return;
-    if (spEl.parentElement === mediaEl) return;
-
-    spOriginalParent = spEl.parentElement;
-    spOriginalNext   = spEl.nextElementSibling;
-
-    mediaEl.appendChild(spEl);
-    spEl.style.removeProperty('grid-area');
-    spEl.style.removeProperty('grid-row');
-    spEl.style.removeProperty('align-self');
-    spEl.style.removeProperty('margin-top');
-    spEl.style.position = '';
-  }
-
-  function restoreSocialProof() {
-    var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
-    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
-    if (!spEl || !mediaEl) return;
-    if (spEl.parentElement !== mediaEl) return;
-
-    if (spOriginalParent && spOriginalNext && spOriginalNext.parentElement === spOriginalParent) {
-      spOriginalParent.insertBefore(spEl, spOriginalNext);
-    } else {
-      var recs = document.querySelector('.shopify-section:has(product-recommendations)');
-      if (recs && recs.parentElement) {
-        recs.parentElement.insertBefore(spEl, recs);
       }
     }
   }
