@@ -151,6 +151,7 @@
         "ugc_CcjhiY": {
           "type": "ugc",
           "settings": {
+            "image": "shopify://shop_images/605883750_2315759198851505_3797349508690266541_nfull.webp",
             "size": "standard",
             "handle": "@sunkissed.sofia",
             "link": "",
@@ -160,6 +161,7 @@
         "ugc_PxnpRy": {
           "type": "ugc",
           "settings": {
+            "image": "shopify://shop_images/banner_2_e3b25344-af37-409a-9ff0-f3f5e89a029c.png",
             "size": "tall",
             "handle": "@bikinibooth.babe",
             "link": "",
