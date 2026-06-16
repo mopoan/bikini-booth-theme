@@ -210,6 +210,10 @@
                   assign r = block.settings
                   assign rating = r.rating | default: 5
                   assign pct = rating | times: 20
+                  assign has_src_link = false
+                  if r.source_link != blank
+                    assign has_src_link = true
+                  endif
                 -%}
                 <article class="bb-sp-review" {{ block.shopify_attributes }}>
                   <div class="bb-sp-review__top">
@@ -219,20 +223,19 @@
                     </div>
 
                     {%- if r.source_image != blank -%}
-                      <img
-                        class="bb-sp-review__source-img"
-                        src="{{ r.source_image | image_url: width: 260 }}"
-                        alt="{{ r.source_label | default: 'Verified reviews' }}"
-                        loading="lazy"
-                        height="34"
-                      >
+                      {%- capture source_img -%}<img class="bb-sp-review__source-img" src="{{ r.source_image | image_url: width: 260 }}" alt="{{ r.source_label | default: 'Verified reviews' }}" loading="lazy" height="34">{%- endcapture -%}
+                      {%- if has_src_link -%}
+                        <a class="bb-sp-review__source-link" href="{{ r.source_link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ r.source_label | default: 'Verified reviews' }} — view on Google">{{ source_img }}</a>
+                      {%- else -%}
+                        {{ source_img }}
+                      {%- endif -%}
                     {%- elsif r.source_label != blank -%}
-                      <span class="bb-sp-review__source">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="16" height="16" fill="currentColor">
-                          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.3l-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4z"/>
-                        </svg>
-                        {{ r.source_label }}
-                      </span>
+                      {%- capture source_inner -%}<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="16" height="16" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.3l-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4z"/></svg>{{ r.source_label }}{%- endcapture -%}
+                      {%- if has_src_link -%}
+                        <a class="bb-sp-review__source bb-sp-review__source--link" href="{{ r.source_link }}" target="_blank" rel="noopener noreferrer">{{ source_inner }}</a>
+                      {%- else -%}
+                        <span class="bb-sp-review__source">{{ source_inner }}</span>
+                      {%- endif -%}
                     {%- endif -%}
                   </div>
 
@@ -265,22 +268,15 @@
                         <p class="bb-sp-review__loc">{{ r.author_location }}</p>
                       {%- endif -%}
                       {%- if r.verified and r.verified_label != blank -%}
-                        <p class="bb-sp-review__verified">
-                          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="14" height="14" fill="currentColor">
-                            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.3l-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4z"/>
-                          </svg>
-                          {{ r.verified_label }}
-                        </p>
+                        {%- capture verified_inner -%}<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="14" height="14" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.3l-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4z"/></svg>{{ r.verified_label }}{%- endcapture -%}
+                        {%- if has_src_link -%}
+                          <a class="bb-sp-review__verified bb-sp-review__verified--link" href="{{ r.source_link }}" target="_blank" rel="noopener noreferrer">{{ verified_inner }}</a>
+                        {%- else -%}
+                          <p class="bb-sp-review__verified">{{ verified_inner }}</p>
+                        {%- endif -%}
                       {%- endif -%}
                     </div>
                   </footer>
-
-                  {%- if r.source_link != blank and r.source_link_label != blank -%}
-                    <a class="bb-sp-review__link" href="{{ r.source_link }}" target="_blank" rel="noopener noreferrer">
-                      {{ r.source_link_label }}
-                      <span aria-hidden="true">&rarr;</span>
-                    </a>
-                  {%- endif -%}
                 </article>
               {%- endif -%}
             {%- endfor -%}
@@ -422,7 +418,7 @@
 /* ---------- UGC collage ---------- */
 .bb-sp .bb-sp-ugc {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 .bb-sp .bb-sp-ugc__item {
@@ -434,10 +430,14 @@
   aspect-ratio: 4 / 5;
   text-decoration: none;
 }
-.bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--large,
-.bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--wide {
-  grid-column: span 2;
-  aspect-ratio: 16 / 11;
+/* Tablet: two-up collage (phones stay single full-width column) */
+@media (min-width: 750px) and (max-width: 989px) {
+  .bb-sp .bb-sp-ugc { grid-template-columns: repeat(2, 1fr); }
+  .bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--large,
+  .bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--wide {
+    grid-column: span 2;
+    aspect-ratio: 16 / 11;
+  }
 }
 .bb-sp .bb-sp-ugc__media {
   width: 100%;
@@ -545,6 +545,9 @@
   font-size: 0.8rem;
   font-weight: 500;
 }
+.bb-sp .bb-sp-review__source--link { text-decoration: none; }
+.bb-sp .bb-sp-review__source--link:hover { text-decoration: underline; }
+.bb-sp .bb-sp-review__source-link { display: inline-flex; }
 .bb-sp .bb-sp-review__source svg { color: var(--bb-sp-accent); }
 .bb-sp .bb-sp-review__source-img { max-height: 34px; width: auto; display: block; }
 .bb-sp .bb-sp-review__quote { margin: 14px 0 0; position: relative; }
@@ -602,17 +605,8 @@
   font-size: 0.8rem;
   font-weight: 600;
 }
-.bb-sp .bb-sp-review__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  color: var(--bb-sp-accent);
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-.bb-sp .bb-sp-review__link:hover { text-decoration: underline; }
+.bb-sp a.bb-sp-review__verified { text-decoration: none; }
+.bb-sp a.bb-sp-review__verified:hover { text-decoration: underline; }
 
 /* ---------- Stats ---------- */
 .bb-sp .bb-sp-stats {
@@ -997,8 +991,7 @@
           "default": "Google Verified Reviews"
         },
         { "type": "image_picker", "id": "source_image", "label": "Source badge image (optional)" },
-        { "type": "url", "id": "source_link", "label": "Reviews link (optional)" },
-        { "type": "text", "id": "source_link_label", "label": "Reviews link label", "default": "Read more reviews" }
+        { "type": "url", "id": "source_link", "label": "Google review link", "info": "Links the source badge and the Verified Buyer label to this URL." }
       ]
     },
     {
@@ -1041,8 +1034,7 @@
             "author_location": "Bangkok, Thailand",
             "verified": true,
             "verified_label": "Verified Buyer",
-            "source_label": "Google Verified Reviews",
-            "source_link_label": "Read more reviews"
+            "source_label": "Google Verified Reviews"
           }
         },
         { "type": "stat", "settings": { "icon": "star", "value": "4.9", "label": "Avg rating", "caption": "from 200+ reviews" } },
