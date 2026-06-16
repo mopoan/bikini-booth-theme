@@ -1,6 +1,15 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
+
+  Grid rows (from DevTools inspection):
+  Row 1: media + info
+  Row 2: media + trust
+  Row 3: media + fit
+  Row 4: media + ctl
+  Row 5: media + acc
+  Row 6: sp (left only)
+  Row 7: recs (full width)
 {%- endcomment -%}
 
 <style>
@@ -15,6 +24,7 @@
         "media  fit"
         "media  ctl"
         "media  acc"
+        "sp     ."
         "recs   recs";
       align-items: start;
       max-width: 1440px;
@@ -27,15 +37,8 @@
     body.template-product main.content-for-layout .bb-product-fit-section    { grid-area: fit;   min-width: 0; }
     body.template-product main.content-for-layout .bb-product-ctl-section    { grid-area: ctl;   min-width: 0; }
     body.template-product main.content-for-layout .bb-product-acc-section    { grid-area: acc;   min-width: 0; }
+    body.template-product main.content-for-layout .bb-product-sp-section     { grid-area: sp;    min-width: 0; align-self: start; }
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs; }
-
-    /* Social proof — placed in left column after media using explicit numeric placement */
-    body.template-product main.content-for-layout .bb-product-sp-section {
-      grid-column: 1;
-      grid-row: 2;
-      align-self: start;
-      min-width: 0;
-    }
 
     body.template-product main.content-for-layout .bb-media {
       height: 100vh;
