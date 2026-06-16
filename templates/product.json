@@ -125,76 +125,6 @@
       "name": "Product accordions",
       "settings": {}
     },
-    "product_social_proof_iNUapA": {
-      "type": "product-social-proof",
-      "blocks": {
-        "ugc_item_f4LKQ3": {
-          "type": "ugc_item",
-          "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/598913442_17929597299144912_1515259270469582253_nfull.webp",
-            "video_url": "",
-            "instagram_handle": ""
-          }
-        },
-        "ugc_item_A4wLiz": {
-          "type": "ugc_item",
-          "settings": {
-            "media_type": "video",
-            "image": "shopify://shop_images/IMG_6863.png",
-            "video_url": "",
-            "instagram_handle": ""
-          }
-        },
-        "review_FUpGYq": {
-          "type": "review",
-          "settings": {
-            "google_url": "https://maps.app.goo.gl/7GcHkXmBZQKYAzmT9",
-            "rating": 5,
-            "quote": "",
-            "author": "Sofia P. — Bangkok",
-            "initials": "SP",
-            "verified": true
-          }
-        },
-        "review_BDMaLw": {
-          "type": "review",
-          "settings": {
-            "google_url": "",
-            "rating": 5,
-            "quote": "Amazing quality and the colours are stunning. I get so many compliments every time I wear mine. Will definitely be buying more.",
-            "author": "Emma R. — London",
-            "initials": "ER",
-            "verified": true
-          }
-        },
-        "review_H6mqEB": {
-          "type": "review",
-          "settings": {
-            "google_url": "",
-            "rating": 5,
-            "quote": "Perfect for my holiday in Phuket. The sizing is great and it stayed in place all day. Highly recommend!",
-            "author": "Claire T. — Sydney",
-            "initials": "CT",
-            "verified": true
-          }
-        }
-      },
-      "block_order": [
-        "ugc_item_f4LKQ3",
-        "ugc_item_A4wLiz",
-        "review_FUpGYq",
-        "review_BDMaLw",
-        "review_H6mqEB"
-      ],
-      "disabled": true,
-      "name": "Product social proof",
-      "settings": {
-        "sp_section_title": "As worn by our community",
-        "sp_section_subtitle": "",
-        "sp_instagram_handle": "@bikinibooth"
-      }
-    },
     "product_recommendations_rqQaP8": {
       "type": "product-recommendations",
       "name": "t:names.product_recommendations",
@@ -321,6 +251,143 @@
         "color_active_rating": "rgba(0,0,0,0)",
         "color_base_rating": "rgba(0,0,0,0)"
       }
+    },
+    "product_social_proof_JtFM97": {
+      "type": "product-social-proof",
+      "blocks": {
+        "ugc_U3aUiH": {
+          "type": "ugc",
+          "settings": {
+            "size": "large",
+            "handle": "@amybeachlife",
+            "link": "",
+            "alt": "Customer wearing teal bikini on the beach"
+          }
+        },
+        "ugc_rWtHfp": {
+          "type": "ugc",
+          "settings": {
+            "size": "standard",
+            "handle": "@islanddiaries",
+            "link": "",
+            "alt": "Customer in white bikini and cover-up"
+          }
+        },
+        "ugc_CcjhiY": {
+          "type": "ugc",
+          "settings": {
+            "size": "standard",
+            "handle": "@sunkissed.sofia",
+            "link": "",
+            "alt": "Customer relaxing in swimwear"
+          }
+        },
+        "ugc_PxnpRy": {
+          "type": "ugc",
+          "settings": {
+            "size": "tall",
+            "handle": "@bikinibooth.babe",
+            "link": "",
+            "alt": "Customer in teal bikini by the sea"
+          }
+        },
+        "review_rmapHc": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "<p>The most flattering bikini I’ve ever owned. Wore it every day in Koh Samui — the fit is perfect and the fabric holds up beautifully.</p>",
+            "author_name": "Sofia P.",
+            "author_location": "Bangkok, Thailand",
+            "verified": true,
+            "verified_label": "Verified Buyer",
+            "source_label": "Google Verified Reviews",
+            "source_link": "",
+            "source_link_label": "Read more reviews"
+          }
+        },
+        "stat_pjte3R": {
+          "type": "stat",
+          "settings": {
+            "icon": "star",
+            "value": "4.9",
+            "label": "Avg rating",
+            "caption": "from 200+ reviews"
+          }
+        },
+        "stat_GAAqfd": {
+          "type": "stat",
+          "settings": {
+            "icon": "heart",
+            "value": "200+",
+            "label": "Real reviews",
+            "caption": "from happy beach lovers"
+          }
+        },
+        "stat_UNDYzq": {
+          "type": "stat",
+          "settings": {
+            "icon": "palm",
+            "value": "98%",
+            "label": "Would recommend",
+            "caption": "to their best friend"
+          }
+        },
+        "stat_7rQBdD": {
+          "type": "stat",
+          "settings": {
+            "icon": "globe",
+            "value": "30+",
+            "label": "Countries",
+            "caption": "our bikinis have been loved in"
+          }
+        }
+      },
+      "block_order": [
+        "ugc_U3aUiH",
+        "ugc_rWtHfp",
+        "ugc_CcjhiY",
+        "ugc_PxnpRy",
+        "review_rmapHc",
+        "stat_pjte3R",
+        "stat_GAAqfd",
+        "stat_UNDYzq",
+        "stat_7rQBdD"
+      ],
+      "name": "Product social proof",
+      "settings": {
+        "heading_alignment": "center",
+        "media_layout": "collage",
+        "content_width": 1360,
+        "corner_radius": 18,
+        "heading_size": 52,
+        "padding_top": 72,
+        "padding_bottom": 72,
+        "heading_font": "playfair_display_n4",
+        "body_font": "assistant_n4",
+        "accent_color": "#49c6be",
+        "background_color": "#faf8f4",
+        "card_color": "#fffefb",
+        "heading_color": "#2a2520",
+        "text_color": "#2a2520",
+        "muted_color": "#8a8077",
+        "border_color": "#ece7df",
+        "show_header": true,
+        "eyebrow": "As worn by our community",
+        "heading": "Real beach days. <strong>Real</strong> <em>Bikini Booth girls.</em>",
+        "show_subtext": true,
+        "subtext": "<p>From Koh Samui to wherever the sun takes you. Thank you for being part of the Bikini Booth community.</p>",
+        "show_instagram": true,
+        "instagram_label": "Follow @bikinibooth",
+        "instagram_url": "",
+        "show_ugc": true,
+        "show_badge": true,
+        "badge_line_1": "Real girls",
+        "badge_line_2": "Real moments",
+        "show_reviews": true,
+        "show_stats": true,
+        "show_footer_tag": true,
+        "footer_tag": "Tag @bikinibooth to be featured"
+      }
     }
   },
   "order": [
@@ -330,7 +397,7 @@
     "product_fit_note_wXyHaY",
     "product_complete_the_look_wEDMHX",
     "product_accordions_M7G4Ax",
-    "product_social_proof_iNUapA",
-    "product_recommendations_rqQaP8"
+    "product_recommendations_rqQaP8",
+    "product_social_proof_JtFM97"
   ]
 }
