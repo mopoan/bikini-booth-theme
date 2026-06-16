@@ -1,16 +1,6 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
-
-  DOM order (matches product.json):
-  1. bb-product-media-section   — left col, sticky
-  2. bb-product-sp-section      — moved into media on desktop, restored on mobile
-  3. bb-product-info-section    — right col
-  4. bb-product-trust-section   — right col
-  5. bb-product-fit-section     — right col
-  6. bb-product-ctl-section     — right col
-  7. bb-product-acc-section     — right col
-  8. product-recommendations    — full width
 {%- endcomment -%}
 
 <style>
@@ -45,8 +35,17 @@
     body.template-product main.content-for-layout {
       display: block !important;
     }
+
+    /* Sentinel element — visible only on mobile via CSS */
+    #bb-mobile-sentinel { display: block; }
   }
+
+  /* Sentinel hidden on desktop */
+  #bb-mobile-sentinel { display: none; }
 </style>
+
+{%- comment -%} Sentinel: CSS makes this visible on mobile, hidden on desktop {%- endcomment -%}
+<div id="bb-mobile-sentinel" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;"></div>
 
 <script>
 (function () {
@@ -56,8 +55,13 @@
   var spOriginalNext   = null;
 
   function isDesktop() {
-    /* Use clientWidth — correctly reflects simulated mobile in DevTools */
-    return document.documentElement.clientWidth >= 900;
+    /* Check CSS sentinel — visible (display:block) on mobile, hidden (display:none) on desktop */
+    var sentinel = document.getElementById('bb-mobile-sentinel');
+    if (sentinel) {
+      return getComputedStyle(sentinel).display === 'none';
+    }
+    /* Fallback */
+    return window.matchMedia('(min-width: 900px)').matches;
   }
 
   function applyLayout() {
@@ -100,7 +104,6 @@
     if (!mediaEl || !spEl) return;
     if (spEl.parentElement === mediaEl) return;
 
-    /* Save original position */
     spOriginalParent = spEl.parentElement;
     spOriginalNext   = spEl.nextElementSibling;
 
@@ -118,19 +121,11 @@
     if (!spEl || !mediaEl) return;
     if (spEl.parentElement !== mediaEl) return;
 
-    if (spOriginalParent) {
-      if (spOriginalNext && spOriginalNext.parentElement === spOriginalParent) {
-        spOriginalParent.insertBefore(spEl, spOriginalNext);
-      } else {
-        var recs = document.querySelector('.shopify-section:has(product-recommendations)');
-        if (recs && recs.parentElement) {
-          recs.parentElement.insertBefore(spEl, recs);
-        }
-      }
+    if (spOriginalParent && spOriginalNext && spOriginalNext.parentElement === spOriginalParent) {
+      spOriginalParent.insertBefore(spEl, spOriginalNext);
     } else {
-      /* First load on mobile — sp was never moved, just ensure it's before recs */
       var recs = document.querySelector('.shopify-section:has(product-recommendations)');
-      if (recs && recs.parentElement && spEl.parentElement === mediaEl) {
+      if (recs && recs.parentElement) {
         recs.parentElement.insertBefore(spEl, recs);
       }
     }
