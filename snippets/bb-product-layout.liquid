@@ -4,7 +4,7 @@
 
   DOM order (matches product.json):
   1. bb-product-media-section   — left col, sticky
-  2. bb-product-sp-section      — appended inside media by JS
+  2. bb-product-sp-section      — moved into media on desktop, stays in place on mobile
   3. bb-product-info-section    — right col
   4. bb-product-trust-section   — right col
   5. bb-product-fit-section     — right col
@@ -52,8 +52,12 @@
 (function () {
   'use strict';
 
+  var isDesktop = null;
+  var spOriginalParent  = null;
+  var spOriginalNext    = null;
+
   function applyLayout() {
-    if (window.innerWidth < 900 && screen.availWidth >= 900) return;
+    var desktop = screen.availWidth >= 900;
 
     /* Media section — grid placement */
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
@@ -67,27 +71,36 @@
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
 
-    /* Force gallery flex-direction row — overrides any cached theme CSS */
+    /* Force gallery flex-direction */
     var bbMedia = document.querySelector('.bb-media');
     if (bbMedia) {
-      bbMedia.style.setProperty('flex-direction', 'row', 'important');
-      bbMedia.style.setProperty('align-items', 'flex-start', 'important');
+      if (desktop) {
+        bbMedia.style.setProperty('flex-direction', 'row', 'important');
+        bbMedia.style.setProperty('align-items', 'flex-start', 'important');
+      } else {
+        bbMedia.style.setProperty('flex-direction', 'column', 'important');
+      }
     }
 
-    /* Mobile — reset to column */
-    if (screen.availWidth < 900) {
-      if (bbMedia) bbMedia.style.setProperty('flex-direction', 'column', 'important');
+    /* Social proof — desktop: move into media; mobile: restore to original position */
+    if (desktop) {
+      moveSocialProofToMedia();
+    } else {
+      restoreSocialProof();
     }
 
-    /* Move social proof inside media so it scrolls with gallery */
-    moveSocialProof();
+    isDesktop = desktop;
   }
 
-  function moveSocialProof() {
+  function moveSocialProofToMedia() {
     var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
     var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
     if (!mediaEl || !spEl) return;
     if (spEl.parentElement === mediaEl) return;
+
+    /* Save original position before moving */
+    spOriginalParent = spEl.parentElement;
+    spOriginalNext   = spEl.nextElementSibling;
 
     mediaEl.appendChild(spEl);
     spEl.style.removeProperty('grid-area');
@@ -95,6 +108,27 @@
     spEl.style.removeProperty('align-self');
     spEl.style.removeProperty('margin-top');
     spEl.style.position = '';
+  }
+
+  function restoreSocialProof() {
+    var spEl = document.querySelector('.shopify-section.bb-product-sp-section');
+    if (!spEl) return;
+
+    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
+    if (!mediaEl || spEl.parentElement !== mediaEl) return;
+
+    /* Restore to original position — after accordions, before recommendations */
+    if (spOriginalParent) {
+      if (spOriginalNext && spOriginalNext.parentElement === spOriginalParent) {
+        spOriginalParent.insertBefore(spEl, spOriginalNext);
+      } else {
+        /* Fallback — insert before recommendations */
+        var recs = document.querySelector('.shopify-section:has(product-recommendations)');
+        if (recs && recs.parentElement) {
+          recs.parentElement.insertBefore(spEl, recs);
+        }
+      }
+    }
   }
 
   if (document.readyState === 'loading') {

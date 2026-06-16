@@ -137,19 +137,18 @@
   #bb-sp-{{ section.id }} .bb-sp__title { font-size: 0.625rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #2a2520; }
   #bb-sp-{{ section.id }} .bb-sp__subtitle { font-size: 0.6875rem; color: #8a8077; }
 
-  /* ── UGC grid ── */
+  /* ── UGC grid — aspect-ratio based so it scales at any width ── */
   #bb-sp-{{ section.id }} .bb-sp__ugc-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 6px;
-    height: 280px;
+    aspect-ratio: 2 / 1.4;
     position: relative;
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-tall {
     border-radius: 8px;
     overflow: hidden;
-    height: 100%;
     position: relative;
     background: #e8e4dc;
   }
@@ -158,7 +157,6 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    height: 100%;
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-small {
@@ -167,6 +165,7 @@
     overflow: hidden;
     position: relative;
     background: #e8e4dc;
+    min-height: 0;
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-skeleton {
@@ -180,7 +179,10 @@
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-media {
-    width: 100%; height: 100%; object-fit: cover; display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   #bb-sp-{{ section.id }} .bb-sp__ugc-overlay {
@@ -255,7 +257,7 @@
 
   @media (max-width: 767px) {
     #bb-sp-{{ section.id }} { padding: 16px 14px; border-top: 0.5px solid #e8e4dd; }
-    #bb-sp-{{ section.id }} .bb-sp__ugc-grid { height: 240px; }
+    #bb-sp-{{ section.id }} .bb-sp__ugc-grid { aspect-ratio: 1.5 / 1; }
   }
 </style>
 
@@ -267,14 +269,12 @@
   var grid = document.getElementById('bb-sp-ugc-{{ section.id }}');
   if (!grid) return;
 
-  /* ── Read UGC pool from Liquid-rendered data divs ── */
   var poolItems = Array.from(grid.querySelectorAll('.bb-sp__ugc-pool-item'));
 
   if (poolItems.length === 0) {
     grid.style.display = 'none';
   } else {
 
-    /* Fisher-Yates shuffle */
     function shuffle(arr) {
       var a = arr.slice();
       for (var i = a.length - 1; i > 0; i--) {
@@ -339,11 +339,11 @@
     }
 
     function buildImage(data) {
-      var img     = document.createElement('img');
+      var img       = document.createElement('img');
       img.className = 'bb-sp__ugc-media';
-      img.src     = data.image;
-      img.alt     = data.handle ? 'Photo by ' + data.handle : 'Community photo';
-      img.loading = 'lazy';
+      img.src       = data.image;
+      img.alt       = data.handle ? 'Photo by ' + data.handle : 'Community photo';
+      img.loading   = 'lazy';
 
       var els = [img];
       var overlay = makeOverlay(data.handle);
