@@ -1,16 +1,14 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
-  Purpose: Two-column desktop layout using CSS Grid with named template areas.
+  Purpose: Two-column desktop layout using CSS Grid.
 
-  DOM order (must match product.json section order):
-  1. bb-product-media-section   → media (rows 1–5, col 1, sticky)
-  2. bb-product-info-section    → info  (row 1, col 2)
-  3. bb-product-trust-section   → trust (row 2, col 2)
-  4. bb-product-fit-section     → fit   (row 3, col 2)
-  5. bb-product-ctl-section     → ctl   (row 4, col 2)
-  6. bb-product-acc-section     → acc   (row 5, col 2)
-  7. bb-product-sp-section      → sp    (row 6, col 1)
-  8. product-recommendations    → recs  (row 7, full width)
+  Layout:
+  - Left column:  media (rows 1–2), social proof (row 2)
+  - Right column: info, trust, fit, ctl, acc (rows 1–5)
+  - Full width:   recs (row 3)
+
+  Social proof sits below the gallery by sharing grid-column 1
+  with an explicit grid-row that starts after media ends.
 {%- endcomment -%}
 
 <style>
@@ -19,35 +17,46 @@
     body.template-product main.content-for-layout {
       display: grid !important;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto auto auto auto auto;
-      grid-template-areas:
-        "media  info"
-        "media  trust"
-        "media  fit"
-        "media  ctl"
-        "media  acc"
-        "sp     ."
-        "recs   recs";
       align-items: start;
       max-width: 1440px;
       margin: 0 auto;
     }
 
+    /* Media — left col, row 1, sticky */
     body.template-product main.content-for-layout .bb-product-media-section {
-      grid-area: media;
-      grid-row: 1 / 6;
+      grid-column: 1;
+      grid-row: 1;
       position: sticky;
       top: 0;
       height: 100vh;
       overflow: hidden;
+      min-width: 0;
     }
-    body.template-product main.content-for-layout .bb-product-info-section   { grid-area: info;  min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-trust-section  { grid-area: trust; min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-fit-section    { grid-area: fit;   min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-ctl-section    { grid-area: ctl;   min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-acc-section    { grid-area: acc;   min-width: 0; }
-    body.template-product main.content-for-layout .bb-product-sp-section     { grid-area: sp;    min-width: 0; align-self: start; }
-    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs; }
+
+    /* Right column sections — stack in col 2 row 1 */
+    body.template-product main.content-for-layout .bb-product-info-section,
+    body.template-product main.content-for-layout .bb-product-trust-section,
+    body.template-product main.content-for-layout .bb-product-fit-section,
+    body.template-product main.content-for-layout .bb-product-ctl-section,
+    body.template-product main.content-for-layout .bb-product-acc-section {
+      grid-column: 2;
+      grid-row: 1;
+      min-width: 0;
+    }
+
+    /* Social proof — left col, row 2, directly below media */
+    body.template-product main.content-for-layout .bb-product-sp-section {
+      grid-column: 1;
+      grid-row: 2;
+      min-width: 0;
+      align-self: start;
+    }
+
+    /* Recommendations — full width, row 3 */
+    body.template-product main.content-for-layout .shopify-section:has(product-recommendations) {
+      grid-column: 1 / -1;
+      grid-row: 3;
+    }
 
     body.template-product main.content-for-layout .bb-media {
       height: 100vh;
