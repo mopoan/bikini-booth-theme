@@ -1,522 +1,1024 @@
 {%- comment -%}
-  Section: product-social-proof.liquid
-  Purpose: Social proof panel — block-based UGC pool + Google reviews.
+  ============================================================================
+  Section: Product Social Proof  —  Bikini Booth
+  File:    sections/product-social-proof.liquid
+  Class:   bb-product-sp-section
+  ----------------------------------------------------------------------------
+  Full-width social proof block for OS 2.0 product templates.
+  Renders as a normal grid item (no special placement needed).
 
-  UGC blocks: each block is either a video (URL) or image (image_picker) + Instagram handle.
-  On page load JS picks 3 random UGC blocks and displays them in a 9:16 portrait grid.
-  Reviews: block-based, one picked at random per page load, links to direct Google review URL.
+  Block-based & merchant-editable:
+    - "Customer photo" blocks  -> UGC collage (image OR muted video)
+    - "Review" blocks          -> featured review card(s)
+    - "Trust stat" blocks      -> stat bar
+
+  Notes:
+    - All colours/spacing/type are driven by per-instance CSS custom
+      properties set inline on the root element, so multiple instances
+      never clash and static CSS lives in {% raw %}{% stylesheet %}{% endraw %}.
+    - JS is a self-initialising custom element (<bb-social-proof>), safe for
+      theme-editor section reloads, and respects prefers-reduced-motion.
+    - No external libraries.
+  ============================================================================
 {%- endcomment -%}
 
-{%- assign ugc_blocks    = section.blocks | where: 'type', 'ugc_item' -%}
-{%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
+{%- liquid
+  assign s = section.settings
 
-<div class="bb-sp" id="bb-sp-{{ section.id }}">
+  # Soft tints derived from the accent so the editor only needs one accent colour
+  assign soft_icon = s.accent_color | color_mix: s.background_color, 14
+  assign star_empty = s.accent_color | color_mix: s.background_color, 30
 
-  {%- comment -%} ── Section heading ── {%- endcomment -%}
-  <div class="bb-sp__head">
-    <p class="bb-sp__title">
-      {{- section.settings.sp_section_title | default: 'As worn by our community' -}}
-    </p>
-    <p class="bb-sp__subtitle">
-      {%- if section.settings.sp_section_subtitle != blank -%}
-        {{ section.settings.sp_section_subtitle }}
-      {%- elsif section.settings.sp_instagram_handle != blank -%}
-        Tag us {{ section.settings.sp_instagram_handle }} for a chance to be featured
-      {%- else -%}
-        Tag us for a chance to be featured
-      {%- endif -%}
-    </p>
-  </div>
+  # Detect which block types are present (so empty regions don't render)
+  assign has_ugc = false
+  assign has_review = false
+  assign has_stat = false
+  for block in section.blocks
+    case block.type
+      when 'ugc'
+        assign has_ugc = true
+      when 'review'
+        assign has_review = true
+      when 'stat'
+        assign has_stat = true
+    endcase
+  endfor
 
-  {%- comment -%} ── UGC grid: 1 tall left + 2 stacked right ── {%- endcomment -%}
-  <div
-    class="bb-sp__ugc-grid"
-    id="bb-sp-ugc-{{ section.id }}"
-    aria-label="Community photos and videos"
-  >
-    {%- comment -%} Hidden data pool — JS reads and picks 3 random items {%- endcomment -%}
-    <div class="bb-sp__ugc-pool" aria-hidden="true" style="display:none;">
-      {%- for block in ugc_blocks -%}
-        <div
-          class="bb-sp__ugc-pool-item"
-          data-type="{{ block.settings.media_type }}"
-          data-video="{{ block.settings.video_url | escape }}"
-          data-image="{{ block.settings.image | image_url: width: 800 | escape }}"
-          data-handle="{{ block.settings.instagram_handle | escape }}"
-          {{ block.shopify_attributes }}
-        ></div>
-      {%- endfor -%}
-    </div>
+  assign align = s.heading_alignment
+-%}
 
-    {%- comment -%} Skeleton placeholders while JS loads {%- endcomment -%}
-    <div class="bb-sp__ugc-tall bb-sp__ugc-skeleton" aria-hidden="true"></div>
-    <div class="bb-sp__ugc-stack">
-      <div class="bb-sp__ugc-small bb-sp__ugc-skeleton" aria-hidden="true"></div>
-      <div class="bb-sp__ugc-small bb-sp__ugc-skeleton" aria-hidden="true"></div>
-    </div>
-  </div>
+{{ s.heading_font | font_face: font_display: 'swap' }}
+{{ s.heading_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+{{ s.heading_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+{{ s.body_font | font_face: font_display: 'swap' }}
 
-  {%- comment -%} ── Review pool — JS picks one at random ── {%- endcomment -%}
-  {%- if review_blocks.size > 0 -%}
-    <div class="bb-sp__review-pool" id="bb-sp-reviews-{{ section.id }}">
-      {%- for block in review_blocks -%}
-        {%- assign rating = block.settings.rating | default: 5 -%}
-        <div
-          class="bb-sp__review{%- unless forloop.first %} bb-sp__review--hidden{%- endunless -%}"
-          data-google-url="{{ block.settings.google_url | escape }}"
-          role="article"
-          aria-label="Customer review by {{ block.settings.author }}"
-          {{ block.shopify_attributes }}
-        >
-          <div class="bb-sp__review-top">
-            <div class="bb-sp__stars" aria-label="{{ rating }} out of 5 stars">
-              {%- for i in (1..5) -%}
-                {%- if i <= rating -%}
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#49c6be" stroke="#49c6be" stroke-width="1.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                {%- else -%}
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d0cbc4" stroke-width="1.5" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+<bb-social-proof
+  class="bb-product-sp-section bb-sp--align-{{ align }}"
+  style="
+    --bb-sp-accent: {{ s.accent_color }};
+    --bb-sp-bg: {{ s.background_color }};
+    --bb-sp-card: {{ s.card_color }};
+    --bb-sp-heading: {{ s.heading_color }};
+    --bb-sp-text: {{ s.text_color }};
+    --bb-sp-muted: {{ s.muted_color }};
+    --bb-sp-border: {{ s.border_color }};
+    --bb-sp-soft: {{ soft_icon }};
+    --bb-sp-star-empty: {{ star_empty }};
+    --bb-sp-radius: {{ s.corner_radius }}px;
+    --bb-sp-max: {{ s.content_width }}px;
+    --bb-sp-pt: {{ s.padding_top }}px;
+    --bb-sp-pb: {{ s.padding_bottom }}px;
+    --bb-sp-pt-m: {{ s.padding_top | times: 0.62 | round }}px;
+    --bb-sp-pb-m: {{ s.padding_bottom | times: 0.62 | round }}px;
+    --bb-sp-h-size: {{ s.heading_size }}px;
+    --bb-sp-heading-font: {{ s.heading_font.family }}, {{ s.heading_font.fallback_families }};
+    --bb-sp-body-font: {{ s.body_font.family }}, {{ s.body_font.fallback_families }};
+  "
+>
+  <div class="bb-sp__inner">
+
+    {%- if s.show_header -%}
+      <header class="bb-sp__header">
+        {%- if s.eyebrow != blank -%}
+          <p class="bb-sp__eyebrow">{{ s.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if s.heading != blank -%}
+          <h2 class="bb-sp__heading">{{ s.heading }}</h2>
+        {%- endif -%}
+
+        {%- if s.show_subtext and s.subtext != blank -%}
+          <div class="bb-sp__subtext rte">{{ s.subtext }}</div>
+        {%- endif -%}
+
+        {%- if s.show_instagram and s.instagram_url != blank and s.instagram_label != blank -%}
+          <a
+            class="bb-sp__ig"
+            href="{{ s.instagram_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg class="bb-sp__ig-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor"/>
+            </svg>
+            <span>{{ s.instagram_label }}</span>
+          </a>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- if has_ugc and s.show_ugc or has_review and s.show_reviews -%}
+      <div class="bb-sp__main">
+
+        {%- if has_ugc and s.show_ugc -%}
+          <div class="bb-sp__media">
+            <div class="bb-sp-ugc bb-sp-ugc--{{ s.media_layout }}">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'ugc' -%}
+                  {%- liquid
+                    assign b = block.settings
+                    assign is_link = false
+                    if b.link != blank
+                      assign is_link = true
+                    endif
+                    assign tile_tag = 'div'
+                    if is_link
+                      assign tile_tag = 'a'
+                    endif
+                    assign tile_alt = b.alt | default: b.handle | default: 'Bikini Booth customer photo'
+                  -%}
+                  <{{ tile_tag }}
+                    class="bb-sp-ugc__item bb-sp-ugc__item--{{ b.size }}"
+                    {% if is_link %}href="{{ b.link }}" target="_blank" rel="noopener noreferrer" aria-label="{% if b.handle != blank %}View {{ b.handle }} on Instagram{% else %}View customer photo{% endif %}"{% endif %}
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- if b.video != blank -%}
+                      <video
+                        class="bb-sp-ugc__media"
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                        {% if b.image != blank %}poster="{{ b.image | image_url: width: 900 }}"{% endif %}
+                        {% if b.handle != blank %}aria-label="{{ b.handle }} video"{% else %}aria-label="Customer video"{% endif %}
+                      >
+                        {%- for source in b.video.sources -%}
+                          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                        {%- endfor -%}
+                      </video>
+                    {%- elsif b.image != blank -%}
+                      {{
+                        b.image
+                        | image_url: width: 1100
+                        | image_tag:
+                          class: 'bb-sp-ugc__media',
+                          loading: 'lazy',
+                          widths: '275, 400, 550, 825, 1100',
+                          sizes: '(max-width: 749px) 50vw, 22vw',
+                          alt: tile_alt
+                      }}
+                    {%- else -%}
+                      <div class="bb-sp-ugc__media bb-sp-ugc__media--ph">
+                        {{ 'lifestyle-1' | placeholder_svg_tag: 'bb-sp-ph' }}
+                      </div>
+                    {%- endif -%}
+
+                    {%- if b.handle != blank -%}
+                      <span class="bb-sp-ugc__handle">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="14" height="14">
+                          <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                          <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                          <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor"/>
+                        </svg>
+                        {{ b.handle }}
+                      </span>
+                    {%- endif -%}
+                  </{{ tile_tag }}>
                 {%- endif -%}
               {%- endfor -%}
             </div>
-            {%- if block.settings.google_url != blank -%}
-              <span class="bb-sp__google-badge">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                Google review
-              </span>
-            {%- endif -%}
-          </div>
-          <div class="bb-sp__review-text">{{ block.settings.quote }}</div>
-          <div class="bb-sp__review-author">
-            {%- if block.settings.initials != blank -%}
-              <div class="bb-sp__review-avatar" aria-hidden="true">
-                {{ block.settings.initials | upcase | truncate: 2, '' }}
+
+            {%- if s.show_badge and s.badge_line_1 != blank -%}
+              <div class="bb-sp-badge" aria-hidden="true">
+                <svg class="bb-sp-badge__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21c-.5-4 .2-7 .8-9.4"/>
+                  <path d="M12.8 11.6c-1.6-1.4-4-1.6-6 .2"/>
+                  <path d="M12.8 11.6c1.8-1.2 4.2-1 5.8 1"/>
+                  <path d="M12.8 11.6c-.8-2 0-4.4 2.4-5.6"/>
+                  <path d="M12.8 11.6c-1-1.8-3.2-2.8-5.8-2.2"/>
+                </svg>
+                <span class="bb-sp-badge__text">
+                  <span>{{ s.badge_line_1 }}</span>
+                  {%- if s.badge_line_2 != blank -%}<span>{{ s.badge_line_2 }}</span>{%- endif -%}
+                </span>
               </div>
             {%- endif -%}
-            {%- if block.settings.author != blank -%}
-              <span class="bb-sp__review-name">{{ block.settings.author }}</span>
-            {%- endif -%}
-            {%- if block.settings.verified -%}
-              <span class="bb-sp__verified">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3a7d44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                Verified on Google
-              </span>
-            {%- endif -%}
           </div>
-        </div>
-      {%- endfor -%}
-    </div>
-  {%- endif -%}
+        {%- endif -%}
 
-  {%- comment -%} ── Instagram follow CTA ── {%- endcomment -%}
-  {%- if section.settings.sp_instagram_handle != blank -%}
-    <a
-      href="https://instagram.com/{{ section.settings.sp_instagram_handle | remove: '@' }}"
-      class="bb-sp__ig-link"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Follow {{ section.settings.sp_instagram_handle }} on Instagram"
-    >
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-      Follow {{ section.settings.sp_instagram_handle }}
-    </a>
-  {%- endif -%}
+        {%- if has_review and s.show_reviews -%}
+          <div class="bb-sp__reviews">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'review' -%}
+                {%- liquid
+                  assign r = block.settings
+                  assign rating = r.rating | default: 5
+                  assign pct = rating | times: 20
+                -%}
+                <article class="bb-sp-review" {{ block.shopify_attributes }}>
+                  <div class="bb-sp-review__top">
+                    <div class="bb-sp-stars" role="img" aria-label="Rated {{ rating }} out of 5 stars">
+                      <span class="bb-sp-stars__row bb-sp-stars__row--empty" aria-hidden="true">★★★★★</span>
+                      <span class="bb-sp-stars__row bb-sp-stars__row--full" style="width: {{ pct }}%;" aria-hidden="true">★★★★★</span>
+                    </div>
 
-</div>
+                    {%- if r.source_image != blank -%}
+                      <img
+                        class="bb-sp-review__source-img"
+                        src="{{ r.source_image | image_url: width: 260 }}"
+                        alt="{{ r.source_label | default: 'Verified reviews' }}"
+                        loading="lazy"
+                        height="34"
+                      >
+                    {%- elsif r.source_label != blank -%}
+                      <span class="bb-sp-review__source">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="16" height="16" fill="currentColor">
+                          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.3l-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4z"/>
+                        </svg>
+                        {{ r.source_label }}
+                      </span>
+                    {%- endif -%}
+                  </div>
 
+                  {%- if r.quote != blank -%}
+                    <blockquote class="bb-sp-review__quote">
+                      <span class="bb-sp-review__mark" aria-hidden="true">&ldquo;</span>
+                      <div class="bb-sp-review__text rte">{{ r.quote }}</div>
+                    </blockquote>
+                  {%- endif -%}
 
-<style>
-  #bb-sp-{{ section.id }} {
-    padding: 20px;
-    background: #faf8f4;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+                  <div class="bb-sp-review__divider" aria-hidden="true"></div>
+
+                  <footer class="bb-sp-review__author">
+                    {%- if r.author_avatar != blank -%}
+                      <img
+                        class="bb-sp-review__avatar"
+                        src="{{ r.author_avatar | image_url: width: 120 }}"
+                        alt="{{ r.author_name | default: 'Reviewer' }}"
+                        loading="lazy"
+                        width="48"
+                        height="48"
+                      >
+                    {%- endif -%}
+
+                    <div class="bb-sp-review__meta">
+                      {%- if r.author_name != blank -%}
+                        <p class="bb-sp-review__name">{{ r.author_name }}</p>
+                      {%- endif -%}
+                      {%- if r.author_location != blank -%}
+                        <p class="bb-sp-review__loc">{{ r.author_location }}</p>
+                      {%- endif -%}
+                      {%- if r.verified and r.verified_label != blank -%}
+                        <p class="bb-sp-review__verified">
+                          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="14" height="14" fill="currentColor">
+                            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.2 14.3l-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4z"/>
+                          </svg>
+                          {{ r.verified_label }}
+                        </p>
+                      {%- endif -%}
+                    </div>
+                  </footer>
+
+                  {%- if r.source_link != blank and r.source_link_label != blank -%}
+                    <a class="bb-sp-review__link" href="{{ r.source_link }}" target="_blank" rel="noopener noreferrer">
+                      {{ r.source_link_label }}
+                      <span aria-hidden="true">&rarr;</span>
+                    </a>
+                  {%- endif -%}
+                </article>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    {%- endif -%}
+
+    {%- if has_stat and s.show_stats -%}
+      <div class="bb-sp-stats">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'stat' -%}
+            {%- assign st = block.settings -%}
+            <div class="bb-sp-stat" {{ block.shopify_attributes }}>
+              <span class="bb-sp-stat__icon" aria-hidden="true">
+                {%- if st.custom_icon != blank -%}
+                  <img src="{{ st.custom_icon | image_url: width: 96 }}" alt="" width="28" height="28" loading="lazy">
+                {%- else -%}
+                  {%- case st.icon -%}
+                    {%- when 'heart' -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-9.3A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7 3.7C19 15.6 12 20 12 20z"/></svg>
+                    {%- when 'palm' -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-.5-4 .2-7 .8-9.4"/><path d="M12.8 11.6c-1.6-1.4-4-1.6-6 .2"/><path d="M12.8 11.6c1.8-1.2 4.2-1 5.8 1"/><path d="M12.8 11.6c-.8-2 0-4.4 2.4-5.6"/><path d="M12.8 11.6c-1-1.8-3.2-2.8-5.8-2.2"/></svg>
+                    {%- when 'globe' -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.3 3.7 5.3 3.7 8.5S14.4 18.2 12 20.5c-2.4-2.3-3.7-5.3-3.7-8.5S9.6 5.8 12 3.5z"/></svg>
+                    {%- when 'sparkle' -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7z"/></svg>
+                    {%- else -%}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l2.7 5.5 6 .9-4.35 4.2 1 6L12 16.9 6.65 19.6l1-6L3.3 9.4l6-.9z"/></svg>
+                  {%- endcase -%}
+                {%- endif -%}
+              </span>
+              <div class="bb-sp-stat__body">
+                {%- if st.value != blank -%}<p class="bb-sp-stat__value">{{ st.value }}</p>{%- endif -%}
+                {%- if st.label != blank -%}<p class="bb-sp-stat__label">{{ st.label }}</p>{%- endif -%}
+                {%- if st.caption != blank -%}<p class="bb-sp-stat__caption">{{ st.caption }}</p>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if s.show_footer_tag and s.footer_tag != blank -%}
+      <p class="bb-sp__footer">{{ s.footer_tag }}</p>
+    {%- endif -%}
+
+  </div>
+</bb-social-proof>
+
+{% stylesheet %}
+.bb-product-sp-section {
+  display: block;
+  background: var(--bb-sp-bg);
+  color: var(--bb-sp-text);
+  font-family: var(--bb-sp-body-font);
+  padding: var(--bb-sp-pt-m) 18px var(--bb-sp-pb-m);
+  -webkit-font-smoothing: antialiased;
+}
+.bb-product-sp-section *,
+.bb-product-sp-section *::before,
+.bb-product-sp-section *::after {
+  box-sizing: border-box;
+}
+.bb-product-sp-section .bb-sp__inner {
+  max-width: var(--bb-sp-max);
+  margin: 0 auto;
+}
+.bb-product-sp-section a:focus-visible,
+.bb-product-sp-section bb-social-proof:focus-visible {
+  outline: 2px solid var(--bb-sp-accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ---------- Header ---------- */
+.bb-product-sp-section .bb-sp__header {
+  text-align: center;
+}
+.bb-product-sp-section.bb-sp--align-left .bb-sp__header {
+  text-align: left;
+}
+.bb-product-sp-section .bb-sp__eyebrow {
+  margin: 0 0 14px;
+  color: var(--bb-sp-accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.bb-product-sp-section .bb-sp__heading {
+  margin: 0;
+  font-family: var(--bb-sp-heading-font);
+  color: var(--bb-sp-heading);
+  font-weight: 500;
+  font-size: clamp(1.85rem, 6vw, var(--bb-sp-h-size));
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.bb-product-sp-section .bb-sp__heading em { font-style: italic; }
+.bb-product-sp-section .bb-sp__heading strong { font-weight: 700; }
+.bb-product-sp-section .bb-sp__subtext {
+  margin: 16px auto 0;
+  max-width: 48ch;
+  color: var(--bb-sp-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.bb-product-sp-section.bb-sp--align-left .bb-sp__subtext { margin-inline: 0; }
+.bb-product-sp-section .bb-sp__subtext p { margin: 0; }
+.bb-product-sp-section .bb-sp__ig {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  padding-bottom: 4px;
+  color: var(--bb-sp-accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 2px solid var(--bb-sp-accent);
+  transition: opacity 0.2s ease;
+}
+.bb-product-sp-section .bb-sp__ig:hover { opacity: 0.72; }
+.bb-product-sp-section .bb-sp__ig-icon { width: 20px; height: 20px; }
+
+/* ---------- Main grid ---------- */
+.bb-product-sp-section .bb-sp__main {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.bb-product-sp-section .bb-sp__media { position: relative; }
+
+/* ---------- UGC collage ---------- */
+.bb-product-sp-section .bb-sp-ugc {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.bb-product-sp-section .bb-sp-ugc__item {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: calc(var(--bb-sp-radius) * 0.7);
+  background: var(--bb-sp-border);
+  aspect-ratio: 4 / 5;
+  text-decoration: none;
+}
+.bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item--large,
+.bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item--wide {
+  grid-column: span 2;
+  aspect-ratio: 16 / 11;
+}
+.bb-product-sp-section .bb-sp-ugc__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.bb-product-sp-section .bb-sp-ugc__item:hover .bb-sp-ugc__media { transform: scale(1.04); }
+.bb-product-sp-section .bb-sp-ugc__media--ph { display: grid; place-items: center; }
+.bb-product-sp-section .bb-sp-ugc__media--ph svg { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
+.bb-product-sp-section .bb-sp-ugc__handle {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 20px);
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(20, 18, 16, 0.42);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.bb-product-sp-section .bb-sp-ugc__handle svg { flex: 0 0 auto; }
+
+/* ---------- Badge ---------- */
+.bb-product-sp-section .bb-sp-badge {
+  position: absolute;
+  top: -10px;
+  right: 6px;
+  width: 78px;
+  height: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: 50%;
+  background: var(--bb-sp-bg);
+  border: 1px dashed var(--bb-sp-accent);
+  color: var(--bb-sp-accent);
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(42, 37, 32, 0.08);
+}
+.bb-product-sp-section .bb-sp-badge__icon { width: 22px; height: 22px; }
+.bb-product-sp-section .bb-sp-badge__text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+/* ---------- Reviews ---------- */
+.bb-product-sp-section .bb-sp__reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.bb-product-sp-section .bb-sp-review {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 26px;
+  background: var(--bb-sp-card);
+  border: 1px solid var(--bb-sp-border);
+  border-radius: var(--bb-sp-radius);
+  box-shadow: 0 10px 30px rgba(42, 37, 32, 0.05);
+}
+.bb-product-sp-section .bb-sp-review__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.bb-product-sp-section .bb-sp-stars {
+  position: relative;
+  display: inline-block;
+  font-size: 1.2rem;
+  letter-spacing: 3px;
+  line-height: 1;
+}
+.bb-product-sp-section .bb-sp-stars__row { display: block; }
+.bb-product-sp-section .bb-sp-stars__row--empty { color: var(--bb-sp-star-empty); }
+.bb-product-sp-section .bb-sp-stars__row--full {
+  position: absolute;
+  inset: 0;
+  color: var(--bb-sp-accent);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.bb-product-sp-section .bb-sp-review__source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bb-sp-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.bb-product-sp-section .bb-sp-review__source svg { color: var(--bb-sp-accent); }
+.bb-product-sp-section .bb-sp-review__source-img { max-height: 34px; width: auto; display: block; }
+.bb-product-sp-section .bb-sp-review__quote { margin: 14px 0 0; position: relative; }
+.bb-product-sp-section .bb-sp-review__mark {
+  display: block;
+  font-family: var(--bb-sp-heading-font);
+  font-size: 3rem;
+  line-height: 0.5;
+  color: var(--bb-sp-accent);
+}
+.bb-product-sp-section .bb-sp-review__text {
+  margin-top: 10px;
+  font-family: var(--bb-sp-heading-font);
+  font-style: italic;
+  font-size: 1.06rem;
+  line-height: 1.6;
+  color: var(--bb-sp-text);
+}
+.bb-product-sp-section .bb-sp-review__text p { margin: 0 0 0.5em; }
+.bb-product-sp-section .bb-sp-review__text p:last-child { margin-bottom: 0; }
+.bb-product-sp-section .bb-sp-review__divider {
+  height: 1px;
+  background: var(--bb-sp-border);
+  margin: 22px 0 16px;
+}
+.bb-product-sp-section .bb-sp-review__author {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: auto;
+}
+.bb-product-sp-section .bb-sp-review__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+.bb-product-sp-section .bb-sp-review__name {
+  margin: 0;
+  font-weight: 700;
+  color: var(--bb-sp-heading);
+}
+.bb-product-sp-section .bb-sp-review__loc {
+  margin: 2px 0 0;
+  color: var(--bb-sp-muted);
+  font-size: 0.85rem;
+}
+.bb-product-sp-section .bb-sp-review__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 5px 0 0;
+  color: var(--bb-sp-accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.bb-product-sp-section .bb-sp-review__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  color: var(--bb-sp-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.bb-product-sp-section .bb-sp-review__link:hover { text-decoration: underline; }
+
+/* ---------- Stats ---------- */
+.bb-product-sp-section .bb-sp-stats {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  background: var(--bb-sp-card);
+  border: 1px solid var(--bb-sp-border);
+  border-radius: var(--bb-sp-radius);
+  padding: 6px;
+  box-shadow: 0 10px 30px rgba(42, 37, 32, 0.04);
+}
+.bb-product-sp-section .bb-sp-stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 16px;
+}
+.bb-product-sp-section .bb-sp-stat__icon {
+  flex: 0 0 auto;
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--bb-sp-soft);
+  color: var(--bb-sp-accent);
+}
+.bb-product-sp-section .bb-sp-stat__icon svg { width: 24px; height: 24px; }
+.bb-product-sp-section .bb-sp-stat__icon img { width: 28px; height: 28px; object-fit: contain; }
+.bb-product-sp-section .bb-sp-stat__value {
+  margin: 0;
+  color: var(--bb-sp-accent);
+  font-family: var(--bb-sp-heading-font);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.bb-product-sp-section .bb-sp-stat__label {
+  margin: 6px 0 2px;
+  color: var(--bb-sp-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.bb-product-sp-section .bb-sp-stat__caption {
+  margin: 0;
+  color: var(--bb-sp-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* ---------- Footer ---------- */
+.bb-product-sp-section .bb-sp__footer {
+  margin: 26px 0 0;
+  text-align: center;
+  color: var(--bb-sp-muted);
+  font-size: 0.85rem;
+}
+
+/* ============ Tablet ============ */
+@media (min-width: 750px) {
+  .bb-product-sp-section .bb-sp-stats { grid-template-columns: repeat(4, 1fr); }
+  .bb-product-sp-section .bb-sp-stat:not(:first-child) {
+    border-left: 1px solid var(--bb-sp-border);
+  }
+}
+
+/* ============ Desktop ============ */
+@media (min-width: 990px) {
+  .bb-product-sp-section {
+    padding: var(--bb-sp-pt) 32px var(--bb-sp-pb);
+  }
+  .bb-product-sp-section .bb-sp__main {
+    margin-top: 36px;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: stretch;
   }
 
-  #bb-sp-{{ section.id }} .bb-sp__head { display: flex; flex-direction: column; gap: 3px; }
-  #bb-sp-{{ section.id }} .bb-sp__title { font-size: 0.625rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #2a2520; }
-  #bb-sp-{{ section.id }} .bb-sp__subtitle { font-size: 0.6875rem; color: #8a8077; }
-
-  /* ── UGC grid — aspect-ratio based so it scales at any width ── */
-  #bb-sp-{{ section.id }} .bb-sp__ugc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    aspect-ratio: 2 / 1.4;
-    position: relative;
+  /* Collage layout — composed for the approved 4-photo arrangement.
+     Extra photos (5th+) flow below as standard tiles. */
+  .bb-product-sp-section .bb-sp-ugc--collage {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
+    aspect-ratio: 102 / 60;
+    gap: 14px;
   }
-
-  #bb-sp-{{ section.id }} .bb-sp__ugc-tall {
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    background: #e8e4dc;
-  }
-
-  #bb-sp-{{ section.id }} .bb-sp__ugc-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  #bb-sp-{{ section.id }} .bb-sp__ugc-small {
-    flex: 1;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    background: #e8e4dc;
-    min-height: 0;
-  }
-
-  #bb-sp-{{ section.id }} .bb-sp__ugc-skeleton {
-    background: #ede9e2;
-    animation: bb-sp-pulse 1.4s ease-in-out infinite;
-  }
-
-  @keyframes bb-sp-pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.5; }
-  }
-
-  #bb-sp-{{ section.id }} .bb-sp__ugc-media {
-    width: 100%;
+  .bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item {
+    aspect-ratio: auto;
     height: 100%;
-    object-fit: cover;
-    display: block;
   }
+  .bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item:nth-child(1) { grid-column: 1 / span 2; grid-row: 1 / span 2; }
+  .bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item:nth-child(2) { grid-column: 3; grid-row: 1; }
+  .bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item:nth-child(3) { grid-column: 3; grid-row: 2; }
+  .bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item:nth-child(4) { grid-column: 4; grid-row: 1 / span 2; }
+  .bb-product-sp-section .bb-sp-ugc--collage .bb-sp-ugc__item:nth-child(n+5) { grid-column: span 1; grid-row: span 1; }
 
-  #bb-sp-{{ section.id }} .bb-sp__ugc-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(42,37,32,0.55));
-    padding: 20px 8px 7px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  /* Even grid layout — robust for any number of photos */
+  .bb-product-sp-section .bb-sp-ugc--grid { grid-template-columns: repeat(3, 1fr); }
+
+  .bb-product-sp-section .bb-sp-badge {
+    width: 92px;
+    height: 92px;
+    top: 8px;
+    right: -10px;
   }
+  .bb-product-sp-section .bb-sp-badge__text { font-size: 0.54rem; }
 
-  #bb-sp-{{ section.id }} .bb-sp__ugc-handle {
-    font-size: 0.5625rem;
-    color: #ffffff;
-    letter-spacing: 0.02em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .bb-product-sp-section .bb-sp-review { padding: 30px; }
+  .bb-product-sp-section .bb-sp-review__text { font-size: 1.1rem; }
+}
+
+/* ============ Reduced motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  .bb-product-sp-section *,
+  .bb-product-sp-section *::before,
+  .bb-product-sp-section *::after {
+    transition: none !important;
+    animation: none !important;
   }
+  .bb-product-sp-section .bb-sp-ugc__item:hover .bb-sp-ugc__media { transform: none; }
+}
+{% endstylesheet %}
 
-  #bb-sp-{{ section.id }} .bb-sp__ugc-badge {
-    position: absolute;
-    top: 7px; right: 7px;
-    width: 22px; height: 22px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #bb-sp-{{ section.id }} .bb-sp__unmute {
-    position: absolute;
-    top: 7px; left: 7px;
-    background: rgba(255,255,255,0.88);
-    border-radius: 999px;
-    padding: 2px 8px;
-    font-size: 0.5rem;
-    color: #2a2520;
-    letter-spacing: 0.04em;
-    display: none;
-    pointer-events: none;
-  }
-
-  /* ── Review pool ── */
-  #bb-sp-{{ section.id }} .bb-sp__review-pool { display: flex; flex-direction: column; }
-  #bb-sp-{{ section.id }} .bb-sp__review {
-    background: #ffffff;
-    border: 0.5px solid #e8e4dd;
-    border-radius: 8px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    cursor: pointer;
-    transition: border-color 0.15s;
-  }
-  #bb-sp-{{ section.id }} .bb-sp__review:hover { border-color: #49c6be; }
-  #bb-sp-{{ section.id }} .bb-sp__review--hidden { display: none; }
-  #bb-sp-{{ section.id }} .bb-sp__review-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  #bb-sp-{{ section.id }} .bb-sp__stars { display: flex; gap: 3px; flex-shrink: 0; }
-  #bb-sp-{{ section.id }} .bb-sp__google-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.5625rem; color: #8a8077; }
-  #bb-sp-{{ section.id }} .bb-sp__review-text { font-size: 0.6875rem; color: #3a3530; line-height: 1.65; font-style: italic; }
-  #bb-sp-{{ section.id }} .bb-sp__review-author { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
-  #bb-sp-{{ section.id }} .bb-sp__review-avatar { width: 22px; height: 22px; border-radius: 50%; background: #f0ece6; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; font-weight: 500; color: #8a8077; flex-shrink: 0; }
-  #bb-sp-{{ section.id }} .bb-sp__review-name { font-size: 0.625rem; color: #6a6560; }
-  #bb-sp-{{ section.id }} .bb-sp__verified { display: inline-flex; align-items: center; gap: 3px; font-size: 0.5625rem; color: #3a7d44; }
-
-  #bb-sp-{{ section.id }} .bb-sp__ig-link { display: inline-flex; align-items: center; gap: 5px; font-size: 0.6875rem; color: #49c6be; text-decoration: underline; text-underline-offset: 2px; transition: opacity 0.15s; align-self: flex-start; }
-  #bb-sp-{{ section.id }} .bb-sp__ig-link:hover { opacity: 0.75; }
-
-  @media (max-width: 767px) {
-    #bb-sp-{{ section.id }} { padding: 16px 14px; border-top: 0.5px solid #e8e4dd; }
-    #bb-sp-{{ section.id }} .bb-sp__ugc-grid { aspect-ratio: 1.5 / 1; }
-  }
-</style>
-
-
-<script>
+{% javascript %}
 (function () {
-  'use strict';
+  if (customElements.get('bb-social-proof')) return;
 
-  var grid = document.getElementById('bb-sp-ugc-{{ section.id }}');
-  if (!grid) return;
+  customElements.define(
+    'bb-social-proof',
+    class BBSocialProof extends HTMLElement {
+      connectedCallback() {
+        this.videos = Array.from(this.querySelectorAll('video'));
+        if (!this.videos.length) return;
 
-  var poolItems = Array.from(grid.querySelectorAll('.bb-sp__ugc-pool-item'));
+        // Enforce muted-by-default at the property level (some browsers
+        // ignore the attribute alone) and disable picture-in-picture chrome.
+        this.videos.forEach(function (v) {
+          v.muted = true;
+          v.defaultMuted = true;
+          v.setAttribute('muted', '');
+          v.playsInline = true;
+          v.disablePictureInPicture = true;
+        });
 
-  if (poolItems.length === 0) {
-    grid.style.display = 'none';
-  } else {
+        // Respect reduced-motion: leave videos paused on the poster frame.
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (reduce.matches || typeof IntersectionObserver === 'undefined') return;
 
-    function shuffle(arr) {
-      var a = arr.slice();
-      for (var i = a.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+        var self = this;
+        this.io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              var video = entry.target;
+              if (entry.isIntersecting) {
+                var p = video.play();
+                if (p && typeof p.catch === 'function') p.catch(function () {});
+              } else {
+                video.pause();
+              }
+            });
+          },
+          { threshold: 0.25 }
+        );
+        this.videos.forEach(function (v) {
+          self.io.observe(v);
+        });
       }
-      return a;
-    }
 
-    var shuffled = shuffle(poolItems).slice(0, 3);
-
-    function igSvg() {
-      return '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
-    }
-
-    function escHtml(str) {
-      return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-
-    function makeOverlay(handle) {
-      if (!handle) return null;
-      var div = document.createElement('div');
-      div.className = 'bb-sp__ugc-overlay';
-      div.innerHTML = igSvg() + '<span class="bb-sp__ugc-handle">' + escHtml(handle) + '</span>';
-      return div;
-    }
-
-    function buildVideo(data) {
-      var video         = document.createElement('video');
-      video.className   = 'bb-sp__ugc-media';
-      video.src         = data.video;
-      video.autoplay    = true;
-      video.muted       = true;
-      video.loop        = true;
-      video.playsInline = true;
-      video.setAttribute('playsinline', '');
-      video.setAttribute('muted', '');
-
-      var badge = document.createElement('div');
-      badge.className = 'bb-sp__ugc-badge';
-      badge.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-
-      var unmute = document.createElement('div');
-      unmute.className = 'bb-sp__unmute';
-      unmute.textContent = 'Tap to unmute';
-
-      var muted = true;
-      var els = [video, badge, unmute];
-      var overlay = makeOverlay(data.handle);
-      if (overlay) els.push(overlay);
-
-      video.play().catch(function () {});
-
-      return {
-        els: els,
-        clickHandler: function () {
-          muted = !muted;
-          video.muted = muted;
-          unmute.style.display = muted ? 'none' : 'block';
+      disconnectedCallback() {
+        if (this.io) {
+          this.io.disconnect();
+          this.io = null;
         }
-      };
+      }
     }
-
-    function buildImage(data) {
-      var img       = document.createElement('img');
-      img.className = 'bb-sp__ugc-media';
-      img.src       = data.image;
-      img.alt       = data.handle ? 'Photo by ' + data.handle : 'Community photo';
-      img.loading   = 'lazy';
-
-      var els = [img];
-      var overlay = makeOverlay(data.handle);
-      if (overlay) els.push(overlay);
-
-      return { els: els, clickHandler: null };
-    }
-
-    function populateSlot(slotEl, item) {
-      var data = {
-        type:   item.dataset.type,
-        video:  item.dataset.video,
-        image:  item.dataset.image,
-        handle: item.dataset.handle
-      };
-
-      slotEl.classList.remove('bb-sp__ugc-skeleton');
-
-      var built = data.type === 'video' ? buildVideo(data) : buildImage(data);
-      built.els.forEach(function (el) { slotEl.appendChild(el); });
-      if (built.clickHandler) slotEl.addEventListener('click', built.clickHandler);
-    }
-
-    var tallSlot = grid.querySelector('.bb-sp__ugc-tall');
-    var smalls   = grid.querySelectorAll('.bb-sp__ugc-small');
-
-    if (shuffled[0] && tallSlot) populateSlot(tallSlot, shuffled[0]);
-    if (shuffled[1] && smalls[0]) populateSlot(smalls[0], shuffled[1]);
-    else if (smalls[0])           smalls[0].style.display = 'none';
-    if (shuffled[2] && smalls[1]) populateSlot(smalls[1], shuffled[2]);
-    else if (smalls[1])           smalls[1].style.display = 'none';
-  }
-
-  /* ── Review random rotation ── */
-  (function () {
-    var pool = document.getElementById('bb-sp-reviews-{{ section.id }}');
-    if (!pool) return;
-
-    var reviews = pool.querySelectorAll('.bb-sp__review');
-    if (reviews.length === 0) return;
-
-    var randomIdx = Math.floor(Math.random() * reviews.length);
-    reviews.forEach(function (r, i) {
-      r.classList.toggle('bb-sp__review--hidden', i !== randomIdx);
-    });
-
-    reviews.forEach(function (r) {
-      var googleUrl = r.dataset.googleUrl || '';
-      if (!googleUrl) return;
-      r.setAttribute('role', 'link');
-      r.setAttribute('tabindex', '0');
-      r.addEventListener('click', function () {
-        window.open(googleUrl, '_blank', 'noopener,noreferrer');
-      });
-      r.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          window.open(googleUrl, '_blank', 'noopener,noreferrer');
-        }
-      });
-    });
-  })();
-
+  );
 })();
-</script>
-
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "Product social proof",
-  "tag": "div",
-  "class": "bb-product-sp-section",
+  "tag": "section",
+  "class": "bb-product-sp-wrapper",
+  "max_blocks": 25,
   "settings": [
+    { "type": "header", "content": "Layout" },
     {
-      "type": "header",
-      "content": "Section heading"
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Header alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
     },
     {
-      "type": "text",
-      "id": "sp_section_title",
-      "label": "Title",
-      "default": "As worn by our community"
+      "type": "select",
+      "id": "media_layout",
+      "label": "Photo layout (desktop)",
+      "info": "Collage is composed for 3–4 photos. Even grid works for any number.",
+      "options": [
+        { "value": "collage", "label": "Collage" },
+        { "value": "grid", "label": "Even grid" }
+      ],
+      "default": "collage"
     },
     {
-      "type": "text",
-      "id": "sp_section_subtitle",
-      "label": "Subtitle",
-      "info": "Leave blank to auto-generate from Instagram handle."
+      "type": "range",
+      "id": "content_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Max content width",
+      "default": 1360
     },
     {
-      "type": "text",
-      "id": "sp_instagram_handle",
-      "label": "Brand Instagram handle",
-      "default": "@bikinibooth"
-    }
+      "type": "range",
+      "id": "corner_radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Corner radius",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 28,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size (desktop max)",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 72
+    },
+
+    { "type": "header", "content": "Typography" },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading & review font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#49c6be" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#faf8f4" },
+    { "type": "color", "id": "card_color", "label": "Card background", "default": "#fffefb" },
+    { "type": "color", "id": "heading_color", "label": "Heading text", "default": "#2a2520" },
+    { "type": "color", "id": "text_color", "label": "Body text", "default": "#2a2520" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#8a8077" },
+    { "type": "color", "id": "border_color", "label": "Borders & dividers", "default": "#ece7df" },
+
+    { "type": "header", "content": "Header" },
+    { "type": "checkbox", "id": "show_header", "label": "Show header", "default": true },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "As worn by our community" },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Use bold / italic to mix styles.",
+      "default": "Real beach days. <strong>Real</strong> <em>Bikini Booth girls.</em>"
+    },
+    { "type": "checkbox", "id": "show_subtext", "label": "Show subtext", "default": true },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>From Koh Samui to wherever the sun takes you. Thank you for being part of the Bikini Booth community.</p>"
+    },
+    { "type": "checkbox", "id": "show_instagram", "label": "Show Instagram link", "default": true },
+    { "type": "text", "id": "instagram_label", "label": "Instagram label", "default": "Follow @bikinibooth" },
+    { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
+
+    { "type": "header", "content": "Customer photos" },
+    { "type": "checkbox", "id": "show_ugc", "label": "Show customer photos", "default": true },
+    { "type": "checkbox", "id": "show_badge", "label": "Show overlay badge", "default": true },
+    { "type": "text", "id": "badge_line_1", "label": "Badge line 1", "default": "Real girls" },
+    { "type": "text", "id": "badge_line_2", "label": "Badge line 2", "default": "Real moments" },
+
+    { "type": "header", "content": "Reviews" },
+    { "type": "checkbox", "id": "show_reviews", "label": "Show reviews", "default": true },
+
+    { "type": "header", "content": "Trust stats" },
+    { "type": "checkbox", "id": "show_stats", "label": "Show trust stats", "default": true },
+
+    { "type": "header", "content": "Footer" },
+    { "type": "checkbox", "id": "show_footer_tag", "label": "Show footer line", "default": true },
+    { "type": "text", "id": "footer_tag", "label": "Footer text", "default": "Tag @bikinibooth to be featured" }
   ],
   "blocks": [
     {
-      "type": "ugc_item",
-      "name": "UGC item",
+      "type": "ugc",
+      "name": "Customer photo",
       "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video (optional)",
+          "info": "Overrides the photo. Plays muted; the photo is used as the poster."
+        },
         {
           "type": "select",
-          "id": "media_type",
-          "label": "Media type",
+          "id": "size",
+          "label": "Collage size (desktop)",
+          "info": "Used by the Collage layout. For the approved look set photo 1 to Large and photo 4 to Tall.",
           "options": [
-            { "value": "image", "label": "Image" },
-            { "value": "video", "label": "Video" }
+            { "value": "standard", "label": "Standard" },
+            { "value": "large", "label": "Large (feature)" },
+            { "value": "tall", "label": "Tall" },
+            { "value": "wide", "label": "Wide" }
           ],
-          "default": "image"
+          "default": "standard"
         },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image",
-          "info": "Used for image type, or as video thumbnail."
-        },
-        {
-          "type": "text",
-          "id": "video_url",
-          "label": "Video URL",
-          "info": "Paste the Shopify Files URL of your .mp4 or .mov video. Go to Content → Files, upload your video, then copy its URL."
-        },
-        {
-          "type": "text",
-          "id": "instagram_handle",
-          "label": "Instagram handle",
-          "info": "e.g. @maya_k — shown as overlay on the media item."
-        }
+        { "type": "text", "id": "handle", "label": "Instagram handle", "info": "e.g. @amybeachlife" },
+        { "type": "url", "id": "link", "label": "Link (optional)" },
+        { "type": "text", "id": "alt", "label": "Alt text", "info": "Describe the photo for accessibility." }
       ]
     },
     {
       "type": "review",
-      "name": "Google review",
+      "name": "Review",
       "settings": [
-        {
-          "type": "url",
-          "id": "google_url",
-          "label": "Direct Google review URL"
-        },
         {
           "type": "range",
           "id": "rating",
-          "label": "Star rating",
-          "min": 1,
+          "min": 0,
           "max": 5,
-          "step": 1,
+          "step": 0.5,
+          "label": "Star rating",
           "default": 5
         },
         {
-          "type": "textarea",
+          "type": "richtext",
           "id": "quote",
-          "label": "Review quote",
-          "default": "The most flattering bikini I've ever owned."
+          "label": "Review text",
+          "default": "<p>The most flattering bikini I’ve ever owned. Wore it every day in Koh Samui — the fit is perfect and the fabric holds up beautifully.</p>"
         },
+        { "type": "text", "id": "author_name", "label": "Author name", "default": "Sofia P." },
+        { "type": "text", "id": "author_location", "label": "Author location", "default": "Bangkok, Thailand" },
+        { "type": "image_picker", "id": "author_avatar", "label": "Author photo" },
+        { "type": "checkbox", "id": "verified", "label": "Show verified buyer", "default": true },
+        { "type": "text", "id": "verified_label", "label": "Verified label", "default": "Verified Buyer" },
         {
           "type": "text",
-          "id": "author",
-          "label": "Reviewer name",
-          "default": "Sofia P."
+          "id": "source_label",
+          "label": "Source label",
+          "info": "Shown top-right. Upload your own review-platform badge below if you have rights to it.",
+          "default": "Google Verified Reviews"
         },
+        { "type": "image_picker", "id": "source_image", "label": "Source badge image (optional)" },
+        { "type": "url", "id": "source_link", "label": "Reviews link (optional)" },
+        { "type": "text", "id": "source_link_label", "label": "Reviews link label", "default": "Read more reviews" }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Trust stat",
+      "settings": [
         {
-          "type": "text",
-          "id": "initials",
-          "label": "Initials (avatar)",
-          "default": "SP"
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "star", "label": "Star" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "palm", "label": "Palm" },
+            { "value": "globe", "label": "Globe" },
+            { "value": "sparkle", "label": "Sparkle" }
+          ],
+          "default": "star"
         },
-        {
-          "type": "checkbox",
-          "id": "verified",
-          "label": "Show verified on Google badge",
-          "default": true
-        }
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon (optional)" },
+        { "type": "text", "id": "value", "label": "Value", "default": "4.9" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Avg rating" },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "from 200+ reviews" }
       ]
     }
   ],
@@ -524,16 +1026,26 @@
     {
       "name": "Product social proof",
       "blocks": [
+        { "type": "ugc", "settings": { "size": "large", "handle": "@amybeachlife", "alt": "Customer wearing teal bikini on the beach" } },
+        { "type": "ugc", "settings": { "size": "standard", "handle": "@islanddiaries", "alt": "Customer in white bikini and cover-up" } },
+        { "type": "ugc", "settings": { "size": "standard", "handle": "@sunkissed.sofia", "alt": "Customer relaxing in swimwear" } },
+        { "type": "ugc", "settings": { "size": "tall", "handle": "@bikinibooth.babe", "alt": "Customer in teal bikini by the sea" } },
         {
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "The most flattering bikini I've ever owned. Wore it every day in Koh Samui — the fit is perfect and the fabric holds up beautifully.",
-            "author": "Sofia P. — Bangkok",
-            "initials": "SP",
-            "verified": true
+            "author_name": "Sofia P.",
+            "author_location": "Bangkok, Thailand",
+            "verified": true,
+            "verified_label": "Verified Buyer",
+            "source_label": "Google Verified Reviews",
+            "source_link_label": "Read more reviews"
           }
-        }
+        },
+        { "type": "stat", "settings": { "icon": "star", "value": "4.9", "label": "Avg rating", "caption": "from 200+ reviews" } },
+        { "type": "stat", "settings": { "icon": "heart", "value": "200+", "label": "Real reviews", "caption": "from happy beach lovers" } },
+        { "type": "stat", "settings": { "icon": "palm", "value": "98%", "label": "Would recommend", "caption": "to their best friend" } },
+        { "type": "stat", "settings": { "icon": "globe", "value": "30+", "label": "Countries", "caption": "our bikinis have been loved in" } }
       ]
     }
   ]
