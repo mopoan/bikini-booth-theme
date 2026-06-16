@@ -1,89 +1,23 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "product_media_bgBNAz": {
       "type": "product-media",
       "name": "Product media",
       "settings": {
-        "image_ratio": "natural",
-        "enable_zoom": true
-      }
-    },
-    "product_social_proof_iNUapA": {
-      "type": "product-social-proof",
-      "blocks": {
-        "ugc_item_f4LKQ3": {
-          "type": "ugc_item",
-          "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/598913442_17929597299144912_1515259270469582253_nfull.webp",
-            "video_url": "",
-            "instagram_handle": ""
-          }
-        },
-        "ugc_item_A4wLiz": {
-          "type": "ugc_item",
-          "settings": {
-            "media_type": "video",
-            "image": "shopify://shop_images/IMG_6863.png",
-            "video_url": "",
-            "instagram_handle": ""
-          }
-        },
-        "review_FUpGYq": {
-          "type": "review",
-          "settings": {
-            "google_url": "https://maps.app.goo.gl/7GcHkXmBZQKYAzmT9",
-            "rating": 5,
-            "quote": "",
-            "author": "Sofia P. — Bangkok",
-            "initials": "SP",
-            "verified": true
-          }
-        },
-        "review_BDMaLw": {
-          "type": "review",
-          "settings": {
-            "google_url": "",
-            "rating": 5,
-            "quote": "Amazing quality and the colours are stunning. I get so many compliments every time I wear mine. Will definitely be buying more.",
-            "author": "Emma R. — London",
-            "initials": "ER",
-            "verified": true
-          }
-        },
-        "review_H6mqEB": {
-          "type": "review",
-          "settings": {
-            "google_url": "",
-            "rating": 5,
-            "quote": "Perfect for my holiday in Phuket. The sizing is great and it stayed in place all day. Highly recommend!",
-            "author": "Claire T. — Sydney",
-            "initials": "CT",
-            "verified": true
-          }
-        }
-      },
-      "block_order": [
-        "ugc_item_f4LKQ3",
-        "ugc_item_A4wLiz",
-        "review_FUpGYq",
-        "review_BDMaLw",
-        "review_H6mqEB"
-      ],
-      "name": "Product social proof",
-      "settings": {
-        "sp_section_title": "As worn by our community",
-        "sp_section_subtitle": "",
-        "sp_instagram_handle": "@bikinibooth"
+        "aspect_ratio": "9:16",
+        "image_fit": "contain",
+        "bg_color": "#f0ece6",
+        "border_radius": 0,
+        "thumb_position": "left",
+        "thumb_width": 64,
+        "thumb_height": 82,
+        "thumb_gap": 6,
+        "show_thumbs_mobile": false,
+        "sticky_gallery": true,
+        "enable_zoom": true,
+        "enable_dots": true,
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "product_info_Ute4BU": {
@@ -181,6 +115,75 @@
       ],
       "name": "Product accordions",
       "settings": {}
+    },
+    "product_social_proof_iNUapA": {
+      "type": "product-social-proof",
+      "blocks": {
+        "ugc_item_f4LKQ3": {
+          "type": "ugc_item",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/598913442_17929597299144912_1515259270469582253_nfull.webp",
+            "video_url": "",
+            "instagram_handle": ""
+          }
+        },
+        "ugc_item_A4wLiz": {
+          "type": "ugc_item",
+          "settings": {
+            "media_type": "video",
+            "image": "shopify://shop_images/IMG_6863.png",
+            "video_url": "",
+            "instagram_handle": ""
+          }
+        },
+        "review_FUpGYq": {
+          "type": "review",
+          "settings": {
+            "google_url": "https://maps.app.goo.gl/7GcHkXmBZQKYAzmT9",
+            "rating": 5,
+            "quote": "",
+            "author": "Sofia P. — Bangkok",
+            "initials": "SP",
+            "verified": true
+          }
+        },
+        "review_BDMaLw": {
+          "type": "review",
+          "settings": {
+            "google_url": "",
+            "rating": 5,
+            "quote": "Amazing quality and the colours are stunning. I get so many compliments every time I wear mine. Will definitely be buying more.",
+            "author": "Emma R. — London",
+            "initials": "ER",
+            "verified": true
+          }
+        },
+        "review_H6mqEB": {
+          "type": "review",
+          "settings": {
+            "google_url": "",
+            "rating": 5,
+            "quote": "Perfect for my holiday in Phuket. The sizing is great and it stayed in place all day. Highly recommend!",
+            "author": "Claire T. — Sydney",
+            "initials": "CT",
+            "verified": true
+          }
+        }
+      },
+      "block_order": [
+        "ugc_item_f4LKQ3",
+        "ugc_item_A4wLiz",
+        "review_FUpGYq",
+        "review_BDMaLw",
+        "review_H6mqEB"
+      ],
+      "name": "Product social proof",
+      "settings": {
+        "sp_section_title": "As worn by our community",
+        "sp_section_subtitle": "",
+        "sp_instagram_handle": "@bikinibooth"
+      }
     },
     "product_recommendations_rqQaP8": {
       "type": "product-recommendations",
@@ -312,12 +315,12 @@
   },
   "order": [
     "product_media_bgBNAz",
-    "product_social_proof_iNUapA",
     "product_info_Ute4BU",
     "product_trust_bar_wCfwLk",
     "product_fit_note_wXyHaY",
     "product_complete_the_look_wEDMHX",
     "product_accordions_M7G4Ax",
+    "product_social_proof_iNUapA",
     "product_recommendations_rqQaP8"
   ]
 }
