@@ -2,15 +2,8 @@
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
 
-  DOM order (must match product.json order):
-  1. media   — left col, rows 1–5, sticky
-  2. sp      — left col, row 6 (directly below media)
-  3. info    — right col row 1
-  4. trust   — right col row 2
-  5. fit     — right col row 3
-  6. ctl     — right col row 4
-  7. acc     — right col row 5
-  8. recs    — full width row 7
+  Social proof is moved into the media section via JS so it scrolls
+  with the gallery rather than being an independent grid item.
 {%- endcomment -%}
 
 <style>
@@ -25,7 +18,7 @@
         "media  fit"
         "media  ctl"
         "media  acc"
-        "sp     ."
+        "media  ."
         "recs   recs" !important;
       align-items: start !important;
       max-width: 1440px !important;
@@ -33,7 +26,7 @@
     }
 
     body.template-product main.content-for-layout .bb-media {
-      height: 100vh;
+      height: auto;
       display: flex;
       flex-direction: column;
     }
@@ -41,6 +34,7 @@
     body.template-product main.content-for-layout .bb-media__main {
       flex: 1;
       height: 0;
+      min-height: 100vh;
     }
   }
 
@@ -63,8 +57,7 @@
     if (window.innerWidth < 900) return;
 
     var assignments = [
-      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', height: '100vh', overflow: 'hidden', alignSelf: 'start', gridRow: '1 / 6' } },
-      { cls: 'bb-product-sp-section',    area: 'sp',    extra: { alignSelf: 'start' } },
+      { cls: 'bb-product-media-section', area: 'media', extra: { position: 'sticky', top: '0', alignSelf: 'start' } },
       { cls: 'bb-product-info-section',  area: 'info' },
       { cls: 'bb-product-trust-section', area: 'trust' },
       { cls: 'bb-product-fit-section',   area: 'fit' },
@@ -80,15 +73,34 @@
       if (item.extra) {
         if (item.extra.position)  el.style.position  = item.extra.position;
         if (item.extra.top)       el.style.top        = item.extra.top;
-        if (item.extra.height)    el.style.setProperty('height', item.extra.height, 'important');
-        if (item.extra.overflow)  el.style.overflow   = item.extra.overflow;
         if (item.extra.alignSelf) el.style.alignSelf  = item.extra.alignSelf;
-        if (item.extra.gridRow)   el.style.setProperty('grid-row', item.extra.gridRow, 'important');
       }
     });
 
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
+
+    /* Move social proof inside media section so it scrolls with the gallery */
+    moveSocialProof();
+  }
+
+  function moveSocialProof() {
+    if (window.innerWidth < 900) return;
+
+    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
+    var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
+    if (!mediaEl || !spEl) return;
+    if (spEl.parentElement === mediaEl) return; /* already moved */
+
+    /* Move sp into media wrapper, after the last child */
+    mediaEl.appendChild(spEl);
+
+    /* Reset any grid placement on sp since it's no longer a grid child */
+    spEl.style.removeProperty('grid-area');
+    spEl.style.removeProperty('grid-row');
+    spEl.style.removeProperty('align-self');
+    spEl.style.position = '';
+    spEl.style.marginTop = '';
   }
 
   if (document.readyState === 'loading') {
