@@ -2,9 +2,11 @@
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
 
-  Strategy: CSS alone cannot reliably win the specificity battle against
-  79 competing stylesheets. We set grid-area via inline styles in JS,
-  which always takes precedence over any stylesheet rule.
+  Social proof positioning: sp sits in grid row 6 col 1, but that row starts
+  far below where the media section visually ends (because rows 1-5 are sized
+  by the taller right column content). We use a negative margin-top on sp,
+  calculated in JS, to pull it up flush below the media section's actual
+  visual bottom edge.
 {%- endcomment -%}
 
 <style>
@@ -78,21 +80,51 @@
       if (props.alignSelf) el.style.alignSelf = props.alignSelf;
     });
 
-    /* Recommendations — target by content */
     var recs = document.querySelector('.shopify-section:has(product-recommendations)');
     if (recs) recs.style.setProperty('grid-area', 'recs', 'important');
+
+    /* Pull social proof up to sit directly below the media section */
+    positionSocialProof();
   }
 
-  /* Run immediately and after DOM is fully ready */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyGridAreas);
-  } else {
+  function positionSocialProof() {
+    if (window.innerWidth < 900) return;
+
+    var mediaEl = document.querySelector('.shopify-section.bb-product-media-section');
+    var spEl    = document.querySelector('.shopify-section.bb-product-sp-section');
+    if (!mediaEl || !spEl) return;
+
+    /* Reset first so measurements are clean */
+    spEl.style.marginTop = '';
+
+    var mediaBottom = mediaEl.getBoundingClientRect().bottom + window.scrollY;
+    var spTop       = spEl.getBoundingClientRect().top    + window.scrollY;
+    var gap         = spTop - mediaBottom;
+
+    if (gap > 0) {
+      spEl.style.setProperty('margin-top', '-' + gap + 'px', 'important');
+    }
+  }
+
+  function init() {
     applyGridAreas();
+    /* Re-run after images/content may have shifted layout */
+    setTimeout(positionSocialProof, 300);
+    setTimeout(positionSocialProof, 800);
   }
 
-  /* Also run after a short delay to catch any late overrides */
-  setTimeout(applyGridAreas, 100);
-  setTimeout(applyGridAreas, 500);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  /* Recalculate on resize */
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyGridAreas, 150);
+  });
 
 })();
 </script>
