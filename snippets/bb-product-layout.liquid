@@ -1,7 +1,16 @@
 {%- comment -%}
   Snippet: bb-product-layout.liquid
   Purpose: Two-column desktop layout using CSS Grid with named template areas.
-  Uses grid-template-areas for explicit, content-height-independent placement.
+
+  DOM order (must match product.json section order):
+  1. bb-product-media-section   → media (rows 1–5, col 1, sticky)
+  2. bb-product-info-section    → info  (row 1, col 2)
+  3. bb-product-trust-section   → trust (row 2, col 2)
+  4. bb-product-fit-section     → fit   (row 3, col 2)
+  5. bb-product-ctl-section     → ctl   (row 4, col 2)
+  6. bb-product-acc-section     → acc   (row 5, col 2)
+  7. bb-product-sp-section      → sp    (row 6, col 1)
+  8. product-recommendations    → recs  (row 7, full width)
 {%- endcomment -%}
 
 <style>
@@ -10,6 +19,7 @@
     body.template-product main.content-for-layout {
       display: grid !important;
       grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto auto auto auto auto;
       grid-template-areas:
         "media  info"
         "media  trust"
@@ -23,7 +33,14 @@
       margin: 0 auto;
     }
 
-    body.template-product main.content-for-layout .bb-product-media-section  { grid-area: media; position: sticky; top: 0; height: 100vh; overflow: hidden; }
+    body.template-product main.content-for-layout .bb-product-media-section {
+      grid-area: media;
+      grid-row: 1 / 6;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
     body.template-product main.content-for-layout .bb-product-info-section   { grid-area: info;  min-width: 0; }
     body.template-product main.content-for-layout .bb-product-trust-section  { grid-area: trust; min-width: 0; }
     body.template-product main.content-for-layout .bb-product-fit-section    { grid-area: fit;   min-width: 0; }
