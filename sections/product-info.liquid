@@ -67,24 +67,6 @@
       };
     </script>
 
-    <div class="bb-info__links">
-      {%- if section.settings.ask_question_url != blank -%}
-        <a href="{{ section.settings.ask_question_url }}" class="bb-info__link">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Ask a question
-        </a>
-        <span class="bb-info__link-div" aria-hidden="true"></span>
-      {%- endif -%}
-      <button
-        type="button"
-        class="bb-info__link bb-info__size-guide-trigger"
-        aria-haspopup="dialog"
-      >
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
-        Size guide
-      </button>
-    </div>
-
   </div>
 
   {%- comment -%} ── Piece toggle (bikinis only — shown by JS) ── {%- endcomment -%}
@@ -141,7 +123,7 @@
           type="button"
           class="bb-size-btn{%- if variant == current_variant %} is-active{%- endif -%}{%- unless variant.available %} is-sold-out{%- endunless -%}"
           data-variant-id="{{ variant.id }}"
-          data-variant-price="{{ variant.price | money }}"
+          data-variant-price="{{ variant.price }}"
           data-available="{{ variant.available }}"
           aria-label="{{ variant.title }}{%- unless variant.available %} — sold out{%- endunless -%}"
           {%- unless variant.available %}aria-disabled="true"{%- endunless -%}
@@ -152,7 +134,7 @@
     </div>
     <button
       type="button"
-      class="bb-info__link bb-info__size-guide-trigger"
+      class="bb-info__size-guide-trigger"
       style="margin-top: 6px;"
       aria-haspopup="dialog"
     >
@@ -255,7 +237,6 @@
     align-items: baseline;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 8px;
   }
   #bb-info-{{ section.id }} .bb-info__price {
     font-size: 1.0625rem;
@@ -265,34 +246,6 @@
   #bb-info-{{ section.id }} .bb-info__price-note {
     font-size: 0.6875rem;
     color: #49c6be;
-  }
-
-  #bb-info-{{ section.id }} .bb-info__links {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  #bb-info-{{ section.id }} .bb-info__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.6875rem;
-    color: #49c6be;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    font-family: inherit;
-    transition: opacity 0.15s;
-  }
-  #bb-info-{{ section.id }} .bb-info__link:hover { opacity: 0.75; }
-  #bb-info-{{ section.id }} .bb-info__link-div {
-    width: 0.5px;
-    height: 11px;
-    background: #d8d3cc;
   }
 
   /* Section wrapper */
@@ -334,18 +287,20 @@
     align-items: center;
     justify-content: center;
     padding: 14px 8px;
-    border: 2px solid #e0dbd3;
+    border: 1.5px solid #e0dbd3;
     border-radius: 8px;
     background: #ffffff;
     text-decoration: none;
     text-align: center;
-    transition: border-color 0.15s, background 0.15s;
     gap: 3px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  #bb-info-{{ section.id }} .bb-piece-btn:hover:not(.is-active) {
+    border-color: #49c6be;
   }
   #bb-info-{{ section.id }} .bb-piece-btn.is-active {
     border-color: #49c6be;
-    border-width: 2px;
-    background: #f0faf9;
+    background: #49c6be;
   }
   #bb-info-{{ section.id }} .bb-piece-btn__name {
     font-size: 0.8125rem;
@@ -354,13 +309,17 @@
     text-transform: uppercase;
     color: #2a2520;
   }
-  #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__name { color: #49c6be; }
+  #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__name {
+    color: #ffffff;
+  }
   #bb-info-{{ section.id }} .bb-piece-btn__price {
     font-size: 0.75rem;
     font-weight: 500;
     color: #8a8077;
   }
-  #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__price { color: #49c6be; }
+  #bb-info-{{ section.id }} .bb-piece-btn.is-active .bb-piece-btn__price {
+    color: rgba(255, 255, 255, 0.85);
+  }
 
   /* Swatches */
   #bb-info-{{ section.id }} .bb-swatches {
@@ -440,6 +399,25 @@
   #bb-info-{{ section.id }} .bb-size-btn:not(.is-sold-out):not(.is-active):hover {
     border-color: #2a2520;
   }
+
+  /* Size guide trigger */
+  #bb-info-{{ section.id }} .bb-info__size-guide-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    color: #49c6be;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+  #bb-info-{{ section.id }} .bb-info__size-guide-trigger:hover { opacity: 0.75; }
+
   #bb-info-{{ section.id }} .bb-size-error {
     font-size: 0.6875rem;
     color: #c0392b;
@@ -534,14 +512,43 @@
   var sizeButtons   = section.querySelectorAll('.bb-size-btn');
   var selectedVariantId = null;
 
-  /* Prices pre-rendered by Liquid — currency handled by Shopify Markets */
   var bbPrices = (window.BB && window.BB.prices && window.BB.prices[sid]) || {};
+
+  /* ── Price formatting — matches Shopify cart drawer currency exactly ── */
+  function formatVariantPrice(cents) {
+    if (!cents) return '';
+    var moneyFormat = (window.Shopify && window.Shopify.money_format)
+      ? window.Shopify.money_format
+      : '฿{{amount}}';
+    return formatMoneyCents(parseInt(cents, 10), moneyFormat);
+  }
+
+  function formatMoneyCents(cents, format) {
+    var amount             = (cents / 100).toFixed(2);
+    var amountNoDecimals   = Math.floor(cents / 100).toString();
+    var amountWithComma    = amountNoDecimals.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+    return format
+      .replace('{{amount}}', amount)
+      .replace('{{amount_no_decimals}}', amountNoDecimals)
+      .replace('{{amount_with_comma_separator}}', amountWithComma);
+  }
+
+  function formatShopifyMoney(price) {
+    if (!price) return '';
+    var amount   = parseFloat(price);
+    var currency = window.Shopify && window.Shopify.currency
+      ? window.Shopify.currency.active
+      : '';
+    return amount.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + (currency ? ' ' + currency : '');
+  }
 
   /* ── Auto-connect data — handle both early and late firing ── */
   function handleProductData(data) {
     if (!data) return;
 
-    /* Piece toggle */
     if (data.hasPieceToggle) {
       pieceSection.hidden = false;
 
@@ -550,8 +557,8 @@
 
       if (currentPiece === 'Top') {
         pieceTopBtn.classList.add('is-active');
-        pieceTopBtn.href            = data.url;
-        pieceTopPrc.textContent     = currentFormatted;
+        pieceTopBtn.href        = data.url;
+        pieceTopPrc.textContent = currentFormatted;
         if (data.pieceLinks['Bottom']) {
           pieceBotBtn.href = data.pieceLinks['Bottom'].url;
           if (data.pieceLinks['Bottom'].price) {
@@ -560,8 +567,8 @@
         }
       } else if (currentPiece === 'Bottom') {
         pieceBotBtn.classList.add('is-active');
-        pieceBotBtn.href            = data.url;
-        pieceBotPrc.textContent     = currentFormatted;
+        pieceBotBtn.href        = data.url;
+        pieceBotPrc.textContent = currentFormatted;
         if (data.pieceLinks['Top']) {
           pieceTopBtn.href = data.pieceLinks['Top'].url;
           if (data.pieceLinks['Top'].price) {
@@ -569,11 +576,8 @@
           }
         }
       }
-
-      /* Piece is known — remove "From" immediately */
     }
 
-    /* Color swatches */
     if (data.colorSwatches && data.colorSwatches.length > 0) {
       swatchWrap.innerHTML = '';
       if (colorNameEl && data.color) colorNameEl.textContent = data.color;
@@ -582,8 +586,8 @@
         var el       = document.createElement('a');
         el.href      = sw.url;
         el.className = 'bb-swatch' +
-          (sw.active      ? ' is-active'      : '') +
-          (!sw.available  ? ' is-unavailable' : '');
+          (sw.active     ? ' is-active'      : '') +
+          (!sw.available ? ' is-unavailable' : '');
         el.setAttribute('role', 'listitem');
         el.setAttribute('aria-label', sw.color + (!sw.available ? ' — sold out' : ''));
         el.title = sw.color;
@@ -599,7 +603,6 @@
     }
   }
 
-  /* Listen for event — also check if data already available (timing safety) */
   if (window.BB && window.BB.productData) {
     handleProductData(window.BB.productData);
   }
@@ -615,27 +618,28 @@
       btn.classList.add('is-active');
       selectedVariantId = btn.dataset.variantId;
       if (variantInput)  variantInput.value = selectedVariantId;
-      if (priceAmountEl) priceAmountEl.textContent = btn.dataset.variantPrice;
-      if (atcPriceEl)    atcPriceEl.textContent = '— ' + btn.dataset.variantPrice;
+
+      var formatted = formatVariantPrice(btn.dataset.variantPrice);
+      if (priceAmountEl) priceAmountEl.textContent = formatted;
+      if (atcPriceEl)    atcPriceEl.textContent = '— ' + formatted;
       if (sizeError)     sizeError.hidden = true;
 
       document.dispatchEvent(new CustomEvent('bb:variantChange', {
         detail: {
           variantId: selectedVariantId,
-          price:     btn.dataset.variantPrice,
+          price:     formatted,
           available: true
         }
       }));
     });
   });
 
-  /* ── ATC submit — use fetch to stay on page + open cart drawer ── */
+  /* ── ATC submit ── */
   var form = document.getElementById('bb-atc-form-' + sid);
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      /* Validate size selected */
       if (!section.querySelector('.bb-size-btn.is-active')) {
         if (sizeError) sizeError.hidden = false;
         var first = section.querySelector('.bb-size-btn:not(.is-sold-out)');
@@ -657,32 +661,39 @@
       .then(function (r) { return r.json(); })
       .then(function () {
         if (atcLabelEl) atcLabelEl.textContent = 'Added!';
-
-        /* Try every known cart drawer trigger pattern */
-        document.dispatchEvent(new CustomEvent('cart:open'));
+        /* Refresh cart state before opening drawer */
+        return fetch('/cart.js', {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+      })
+      .then(function () {
+        /* Cart confirmed updated — fire drawer triggers after short delay */
         document.dispatchEvent(new CustomEvent('cart:updated'));
-        document.dispatchEvent(new CustomEvent('cartdrawer:open'));
-        document.dispatchEvent(new CustomEvent('theme:cart:open'));
-
-        /* Also try clicking the theme's cart icon/button directly */
-        var cartTriggers = [
-          '[data-drawer-open="cart-drawer"]',
-          '[data-cart-drawer-trigger]',
-          '[data-open-drawer="cart"]',
-          '.js-cart-drawer-open',
-          '#cart-icon-bubble',
-          '.cart-icon-bubble',
-          '[aria-controls="cart-drawer"]'
-        ];
-        for (var i = 0; i < cartTriggers.length; i++) {
-          var el = document.querySelector(cartTriggers[i]);
-          if (el) { el.click(); break; }
-        }
 
         setTimeout(function () {
-          if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
-          if (atcBtn)     atcBtn.disabled = false;
-        }, 1800);
+          document.dispatchEvent(new CustomEvent('cart:open'));
+          document.dispatchEvent(new CustomEvent('cartdrawer:open'));
+          document.dispatchEvent(new CustomEvent('theme:cart:open'));
+
+          var cartTriggers = [
+            '[data-drawer-open="cart-drawer"]',
+            '[data-cart-drawer-trigger]',
+            '[data-open-drawer="cart"]',
+            '.js-cart-drawer-open',
+            '#cart-icon-bubble',
+            '.cart-icon-bubble',
+            '[aria-controls="cart-drawer"]'
+          ];
+          for (var i = 0; i < cartTriggers.length; i++) {
+            var el = document.querySelector(cartTriggers[i]);
+            if (el) { el.click(); break; }
+          }
+
+          setTimeout(function () {
+            if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
+            if (atcBtn)     atcBtn.disabled = false;
+          }, 1800);
+        }, 300);
       })
       .catch(function (err) {
         console.warn('[BB ATC] Error:', err);
@@ -707,30 +718,6 @@
     });
   }
 
-  /* ── Size guide trigger ── */
-  section.querySelectorAll('.bb-info__size-guide-trigger').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var modal = document.querySelector('.scm-overlay');
-      if (modal) {
-        modal.hidden = false;
-        document.body.style.overflow = 'hidden';
-      }
-    });
-  });
-
-  function formatShopifyMoney(price) {
-    if (!price) return '';
-    /* Shopify /products.json returns prices as decimals e.g. "1494.00" — no division needed */
-    var amount = parseFloat(price);
-    var currency = window.Shopify && window.Shopify.currency
-      ? window.Shopify.currency.active
-      : '';
-    return amount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }) + (currency ? ' ' + currency : '');
-  }
-
 })();
 </script>
 
@@ -746,11 +733,6 @@
       "id": "price_note",
       "label": "Price note",
       "default": "Top and bottom sold separately."
-    },
-    {
-      "type": "url",
-      "id": "ask_question_url",
-      "label": "Ask a question URL"
     }
   ],
   "presets": [
