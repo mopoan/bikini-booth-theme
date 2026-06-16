@@ -109,12 +109,11 @@
     background: #f0ece6;
   }
 
-  /* Gallery area — fixed full viewport height, clips image transitions */
   #bb-media-{{ section.id }} .bb-media__main {
     position: relative;
     overflow: hidden;
     background: #f0ece6;
-    height: calc(100vh - 80px);
+    /* Height set by JS using screen.height for reliability */
     min-height: 500px;
     flex-shrink: 0;
   }
@@ -283,6 +282,20 @@
   var zoomBtn   = document.getElementById('bb-media-zoom-{{ section.id }}');
   var activeIdx = 0;
 
+  /* ── Set gallery height using screen.height for reliability ── */
+  function setGalleryHeight() {
+    if (!mainEl) return;
+    if (window.innerWidth < 900) return;
+    /* Use screen.height as a reliable full-screen measurement,
+       subtract estimated header height */
+    var h = Math.max(screen.height - 120, 500);
+    mainEl.style.height = h + 'px';
+  }
+
+  setGalleryHeight();
+  window.addEventListener('resize', setGalleryHeight);
+
+  /* ── Go to slide ── */
   function goTo(idx) {
     if (idx < 0 || idx >= slides.length) return;
     slides.forEach(function (s, i) {
