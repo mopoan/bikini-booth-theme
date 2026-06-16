@@ -418,7 +418,7 @@
 /* ---------- UGC collage ---------- */
 .bb-sp .bb-sp-ugc {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 .bb-sp .bb-sp-ugc__item {
@@ -430,14 +430,13 @@
   aspect-ratio: 4 / 5;
   text-decoration: none;
 }
-/* Tablet: two-up collage (phones stay single full-width column) */
-@media (min-width: 750px) and (max-width: 989px) {
-  .bb-sp .bb-sp-ugc { grid-template-columns: repeat(2, 1fr); }
-  .bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--large,
-  .bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--wide {
-    grid-column: span 2;
-    aspect-ratio: 16 / 11;
-  }
+/* Mobile/tablet collage: large, wide and tall span the full width;
+   standard photos sit two-up. Desktop (>=990px) uses the full collage. */
+.bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--large,
+.bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--wide,
+.bb-sp .bb-sp-ugc--collage .bb-sp-ugc__item--tall {
+  grid-column: span 2;
+  aspect-ratio: 16 / 11;
 }
 .bb-sp .bb-sp-ugc__media {
   width: 100%;
