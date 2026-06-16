@@ -47,10 +47,12 @@
   assign align = s.heading_alignment
 -%}
 
-{{ s.heading_font | font_face: font_display: 'swap' }}
-{{ s.heading_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
-{{ s.heading_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
-{{ s.body_font | font_face: font_display: 'swap' }}
+<style>
+  {{ s.heading_font | font_face: font_display: 'swap' }}
+  {{ s.heading_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+  {{ s.heading_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {{ s.body_font | font_face: font_display: 'swap' }}
+</style>
 
 <bb-social-proof
   class="bb-product-sp-section bb-sp--align-{{ align }}"
