@@ -185,6 +185,9 @@
     gap: 0;
   }
 
+  /* Force the hidden attribute to win over .bb-info__section { display:flex } */
+  #bb-info-{{ section.id }} [hidden] { display: none !important; }
+
   /* Meta */
   #bb-info-{{ section.id }} .bb-info__meta {
     padding-bottom: 16px;
