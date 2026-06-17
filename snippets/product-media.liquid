@@ -15,6 +15,15 @@
 {%- assign enable_dots    = section.settings.enable_dots -%}
 {%- assign sticky         = section.settings.sticky_gallery -%}
 
+{%- comment -%} Video settings {%- endcomment -%}
+{%- assign vid_autoplay   = section.settings.video_autoplay -%}
+{%- assign vid_loop       = section.settings.video_loop -%}
+{%- assign vid_muted      = section.settings.video_muted -%}
+{%- assign vid_controls   = section.settings.video_controls -%}
+{%- assign vid_show_play  = section.settings.video_custom_playpause -%}
+{%- assign vid_show_mute  = section.settings.video_custom_mute -%}
+{%- assign vid_thumb_play = section.settings.video_thumb_play_icon -%}
+
 <div
   class="bb-media bb-media--thumbs-{{ thumb_position }}"
   id="bb-media-{{ section.id }}"
@@ -22,30 +31,42 @@
 >
 
   {%- comment -%} ── Thumbnail strip (desktop left / desktop bottom / hidden) ── {%- endcomment -%}
-  {%- if product.images.size > 1 and thumb_position != 'hidden' -%}
+  {%- if product.media.size > 1 and thumb_position != 'hidden' -%}
     <div
       class="bb-media__thumbs"
       id="bb-media-thumbs-{{ section.id }}"
       role="tablist"
-      aria-label="Product image thumbnails"
+      aria-label="Product media thumbnails"
     >
-      {%- for image in product.images -%}
+      {%- assign t_img_i = 0 -%}
+      {%- for media in product.media -%}
+        {%- assign t_is_video = false -%}
+        {%- if media.media_type == 'video' -%}{%- assign t_is_video = true -%}{%- endif -%}
         <button
           type="button"
-          class="bb-media__thumb{%- if forloop.first %} is-active{%- endif -%}"
+          class="bb-media__thumb{%- if forloop.first %} is-active{%- endif -%}{%- if t_is_video %} bb-media__thumb--video{%- endif -%}"
           role="tab"
           aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
-          aria-label="{{ image.alt | escape | default: product.title }} — image {{ forloop.index }}"
+          aria-label="{{ media.alt | escape | default: product.title }} — {% if t_is_video %}video{% else %}image{% endif %} {{ forloop.index }}"
           data-index="{{ forloop.index0 }}"
+          data-media-index="{{ forloop.index0 }}"
+          {%- unless t_is_video %} data-image-index="{{ t_img_i }}"{%- endunless %}
+          data-media-type="{{ media.media_type }}"
         >
           <img
-            src="{{ image | image_url: width: 160, height: 200, crop: 'center' }}"
-            alt="{{ image.alt | escape | default: product.title }}"
+            src="{{ media.preview_image | image_url: width: 160, height: 200, crop: 'center' }}"
+            alt="{{ media.alt | escape | default: product.title }}"
             width="{{ section.settings.thumb_width }}"
             height="{{ section.settings.thumb_height }}"
             loading="lazy"
           >
+          {%- if t_is_video and vid_thumb_play -%}
+            <span class="bb-media__thumb-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20"/></svg>
+            </span>
+          {%- endif -%}
         </button>
+        {%- unless t_is_video -%}{%- assign t_img_i = t_img_i | plus: 1 -%}{%- endunless -%}
       {%- endfor -%}
     </div>
   {%- endif -%}
@@ -58,40 +79,90 @@
       aria-label="Product images"
     >
 
-      {%- if product.images.size > 0 -%}
-        {%- for image in product.images -%}
-          <div
-            class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
-            data-index="{{ forloop.index0 }}"
-            role="img"
-            aria-label="{{ image.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.images.size }}"
-            aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
-          >
-            <img
-              src="{{ image | image_url: width: 1000 }}"
-              srcset="
-                {{ image | image_url: width: 480 }}  480w,
-                {{ image | image_url: width: 750 }}  750w,
-                {{ image | image_url: width: 1000 }} 1000w
-              "
-              sizes="(max-width: 767px) 100vw, 40vw"
-              alt="{{ image.alt | escape | default: product.title }}"
-              width="{{ image.width }}"
-              height="{{ image.height }}"
-              loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
-              class="bb-media__img"
+      {%- if product.media.size > 0 -%}
+        {%- assign img_i = 0 -%}
+        {%- for media in product.media -%}
+          {%- if media.media_type == 'video' -%}
+            <div
+              class="bb-media__slide bb-media__slide--video{%- if forloop.first %} is-active{%- endif -%}"
+              data-index="{{ forloop.index0 }}"
+              data-media-index="{{ forloop.index0 }}"
+              data-media-type="video"
+              role="group"
+              aria-label="{{ media.alt | escape | default: product.title }} — video {{ forloop.index }} of {{ product.media.size }}"
+              aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
             >
-          </div>
+              <video
+                class="bb-media__video"
+                playsinline
+                preload="metadata"
+                poster="{{ media.preview_image | image_url: width: 1000 }}"
+                {%- if vid_muted %} muted{%- endif -%}
+                {%- if vid_loop %} loop{%- endif -%}
+                {%- if vid_controls %} controls controlsList="{% if section.settings.video_hide_download %}nodownload {% endif %}{% if section.settings.video_hide_fullscreen %}nofullscreen {% endif %}{% if section.settings.video_hide_remote %}noremoteplayback{% endif %}"{%- endif -%}
+                {%- if section.settings.video_hide_remote %} disableremoteplayback{%- endif -%}
+              >
+                {%- for source in media.sources -%}
+                  {%- if source.mime_type contains 'video' -%}
+                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {%- endif -%}
+                {%- endfor -%}
+              </video>
+              {%- if vid_show_play or vid_show_mute -%}
+                <div class="bb-media__vcontrols"{%- if vid_controls %} hidden{%- endif -%}>
+                  {%- if vid_show_play -%}
+                    <button type="button" class="bb-media__vbtn bb-media__vbtn--play" aria-label="Play video">
+                      <svg class="bb-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20"/></svg>
+                      <svg class="bb-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                    </button>
+                  {%- endif -%}
+                  {%- if vid_show_mute -%}
+                    <button type="button" class="bb-media__vbtn bb-media__vbtn--mute" aria-label="{% if vid_muted %}Unmute video{% else %}Mute video{% endif %}">
+                      <svg class="bb-icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"{%- unless vid_muted %} style="display:none"{%- endunless -%}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                      <svg class="bb-icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"{%- if vid_muted %} style="display:none"{%- endif -%}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                    </button>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            <div
+              class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
+              data-index="{{ forloop.index0 }}"
+              data-media-index="{{ forloop.index0 }}"
+              data-image-index="{{ img_i }}"
+              data-media-type="image"
+              role="img"
+              aria-label="{{ media.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.media.size }}"
+              aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
+            >
+              <img
+                src="{{ media.preview_image | image_url: width: 1000 }}"
+                srcset="
+                  {{ media.preview_image | image_url: width: 480 }}  480w,
+                  {{ media.preview_image | image_url: width: 750 }}  750w,
+                  {{ media.preview_image | image_url: width: 1000 }} 1000w
+                "
+                sizes="(max-width: 767px) 100vw, 40vw"
+                alt="{{ media.alt | escape | default: product.title }}"
+                width="{{ media.preview_image.width }}"
+                height="{{ media.preview_image.height }}"
+                loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+                class="bb-media__img"
+              >
+            </div>
+            {%- assign img_i = img_i | plus: 1 -%}
+          {%- endif -%}
         {%- endfor -%}
       {%- else -%}
-        <div class="bb-media__slide is-active bb-media__no-image">
+        <div class="bb-media__slide is-active bb-media__no-image" data-media-type="none">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0b4a8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>No images</p>
+          <p>No media</p>
         </div>
       {%- endif -%}
 
-      {%- comment -%} Zoom button {%- endcomment -%}
-      {%- if enable_zoom and product.images.size > 0 -%}
+      {%- comment -%} Zoom button (images only; JS hides it on video slides) {%- endcomment -%}
+      {%- if enable_zoom and product.media.size > 0 -%}
         <button
           type="button"
           class="bb-media__zoom-btn"
@@ -105,9 +176,9 @@
       {%- endif -%}
 
       {%- comment -%} Mobile dots {%- endcomment -%}
-      {%- if enable_dots and product.images.size > 1 -%}
+      {%- if enable_dots and product.media.size > 1 -%}
         <div class="bb-media__dots" aria-hidden="true" id="bb-media-dots-{{ section.id }}">
-          {%- for image in product.images -%}
+          {%- for media in product.media -%}
             <div
               class="bb-media__dot{%- if forloop.first %} is-active{%- endif -%}"
               data-index="{{ forloop.index0 }}"
@@ -119,7 +190,7 @@
     </div>
 
     {%- comment -%} ── Prev / next arrows ── {%- endcomment -%}
-    {%- if product.images.size > 1 -%}
+    {%- if product.media.size > 1 -%}
       <button type="button" class="bb-media__arrow bb-media__arrow--prev" id="bb-media-prev-{{ section.id }}" aria-label="Previous image">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
@@ -238,6 +309,77 @@
     transform-origin: center center;
   }
 
+  /* ── Video ── */
+  #bb-media-{{ section.id }} .bb-media__slide--video {
+    background: {{ section.settings.video_bg_color }};
+  }
+  #bb-media-{{ section.id }} .bb-media__video {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.video_object_fit }};
+    object-position: center center;
+    display: block;
+    background: {{ section.settings.video_bg_color }};
+  }
+  /* Video slides never use the zoom crosshair */
+  #bb-media-{{ section.id }} .bb-media__stage.is-video { cursor: default; }
+
+  /* Custom video controls */
+  #bb-media-{{ section.id }} .bb-media__vcontrols {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 4;
+  }
+  #bb-media-{{ section.id }} .bb-media__vcontrols[hidden] { display: none; }
+  #bb-media-{{ section.id }} .bb-media__vbtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid #49c6be;
+    background: rgba(255, 255, 255, 0.85);
+    color: #49c6be;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  #bb-media-{{ section.id }} .bb-media__vbtn:hover { background: #49c6be; color: #ffffff; }
+  #bb-media-{{ section.id }} .bb-media__vbtn svg { width: 16px; height: 16px; display: block; }
+
+  /* Play icon overlay on video thumbnails */
+  #bb-media-{{ section.id }} .bb-media__thumb-play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 50%;
+    color: #ffffff;
+    pointer-events: none;
+  }
+  #bb-media-{{ section.id }} .bb-media__thumb-play svg { width: 10px; height: 10px; }
+
+  /* Visible focus states */
+  #bb-media-{{ section.id }} .bb-media__thumb:focus-visible,
+  #bb-media-{{ section.id }} .bb-media__arrow:focus-visible,
+  #bb-media-{{ section.id }} .bb-media__vbtn:focus-visible,
+  #bb-media-{{ section.id }} .bb-media__zoom-btn:focus-visible {
+    outline: 2px solid #49c6be;
+    outline-offset: 2px;
+  }
+
   /* ── Hover zoom (desktop) ── */
   @media (hover: hover) {
     #bb-media-{{ section.id }} .bb-media__stage:hover .bb-media__slide.is-active .bb-media__img {
@@ -341,6 +483,7 @@
     flex-shrink: 0;
     transition: border-color 0.15s;
     display: block;
+    position: relative;
   }
   #bb-media-{{ section.id }} .bb-media__thumb.is-active {
     border-color: #49c6be;
@@ -441,6 +584,113 @@
   var activeIdx = 0;
   var isZoomed  = false;
 
+  /* ── Video config (from theme settings) ── */
+  var cfg = {
+    autoplay:       {% if section.settings.video_autoplay %}true{% else %}false{% endif %},
+    loop:           {% if section.settings.video_loop %}true{% else %}false{% endif %},
+    muted:          {% if section.settings.video_muted %}true{% else %}false{% endif %},
+    nativeControls: {% if section.settings.video_controls %}true{% else %}false{% endif %},
+    pauseInactive:  {% if section.settings.video_pause_inactive %}true{% else %}false{% endif %},
+    resetInactive:  {% if section.settings.video_reset_inactive %}true{% else %}false{% endif %}
+  };
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var zoomEnabled  = '{{ enable_zoom }}' === 'true';
+
+  /* ── Map image-order index -> slide (media) index, so a legacy bb:requestSlide
+     that uses image indices still lands on the right slide once videos exist ── */
+  var imageIndexMap = {};
+  Array.prototype.forEach.call(slides, function (s, i) {
+    var ii = s.getAttribute('data-image-index');
+    if (ii !== null) imageIndexMap[parseInt(ii, 10)] = i;
+  });
+  function imageIndexToSlide(ii) { return (ii in imageIndexMap) ? imageIndexMap[ii] : null; }
+
+  /* ── Media-type helpers ── */
+  function slideType(i) { return slides[i] ? slides[i].getAttribute('data-media-type') : null; }
+  function activeIsImage() { return slideType(activeIdx) === 'image'; }
+  function getVideo(i) { return slides[i] ? slides[i].querySelector('.bb-media__video') : null; }
+
+  /* ── Reflect active media type on the stage (zoom only for images) ── */
+  function setStageMode() {
+    var isVid = slideType(activeIdx) === 'video';
+    stage.classList.toggle('is-video', isVid);
+    if (zoomBtn) zoomBtn.style.display = isVid ? 'none' : '';
+    if (isVid && isZoomed) setZoom(false);
+  }
+
+  /* ── Sync a video's custom control buttons to its current state ── */
+  function updateVideoButtons(v) {
+    var slide = v.closest('.bb-media__slide');
+    if (!slide) return;
+    var pb = slide.querySelector('.bb-media__vbtn--play');
+    if (pb) {
+      var playing = !v.paused;
+      pb.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
+      var ip = pb.querySelector('.bb-icon-play'), ipa = pb.querySelector('.bb-icon-pause');
+      if (ip)  ip.style.display  = playing ? 'none' : '';
+      if (ipa) ipa.style.display = playing ? '' : 'none';
+    }
+    var mb = slide.querySelector('.bb-media__vbtn--mute');
+    if (mb) {
+      mb.setAttribute('aria-label', v.muted ? 'Unmute video' : 'Mute video');
+      var im = mb.querySelector('.bb-icon-muted'), iu = mb.querySelector('.bb-icon-unmuted');
+      if (im) im.style.display = v.muted ? '' : 'none';
+      if (iu) iu.style.display = v.muted ? 'none' : '';
+    }
+  }
+
+  function tryPlay(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+
+  /* ── On slide change: pause (and optionally reset) inactive videos, play the active one ── */
+  function manageVideos(prevIdx, newIdx) {
+    var pv = getVideo(prevIdx);
+    if (pv && prevIdx !== newIdx) {
+      pv.pause();
+      if (cfg.resetInactive) { try { pv.currentTime = 0; } catch (e) {} }
+    }
+    if (cfg.pauseInactive) {
+      for (var i = 0; i < slides.length; i++) {
+        if (i === newIdx) continue;
+        var v = getVideo(i);
+        if (v && !v.paused) { v.pause(); if (cfg.resetInactive) { try { v.currentTime = 0; } catch (e) {} } }
+      }
+    }
+    var cv = getVideo(newIdx);
+    if (cv) {
+      if (cfg.autoplay && !reduceMotion) tryPlay(cv);
+      updateVideoButtons(cv);
+    }
+    setStageMode();
+  }
+
+  /* ── Slide-change broadcast (index = media/slide index; imageIndex for legacy consumers) ── */
+  function dispatchSlideChange() {
+    var s = slides[activeIdx];
+    var imgAttr = s ? s.getAttribute('data-image-index') : null;
+    document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: {
+      index: activeIdx,
+      mediaIndex: activeIdx,
+      imageIndex: imgAttr !== null ? parseInt(imgAttr, 10) : null,
+      mediaType: s ? s.getAttribute('data-media-type') : null
+    }}));
+  }
+
+  /* ── Resolve an external bb:requestSlide payload to a slide index.
+     Accepts {mediaIndex}, {imageIndex}, or legacy {index} (historically image order) ── */
+  function resolveRequestedIndex(detail) {
+    if (!detail) return null;
+    if (typeof detail.mediaIndex === 'number') return detail.mediaIndex;
+    if (typeof detail.imageIndex === 'number') {
+      var m = imageIndexToSlide(detail.imageIndex);
+      return m !== null ? m : detail.imageIndex;
+    }
+    if (typeof detail.index === 'number') {
+      var mapped = imageIndexToSlide(detail.index);   /* legacy: treat as image index */
+      return mapped !== null ? mapped : detail.index; /* fall back to direct slide index */
+    }
+    return null;
+  }
+
   /* ── Sync thumbnail + dot active state ── */
   function syncControls(oldIdx, newIdx) {
     if (thumbs[oldIdx]) { thumbs[oldIdx].classList.remove('is-active'); thumbs[oldIdx].setAttribute('aria-selected', 'false'); }
@@ -479,8 +729,9 @@
       nextSlide.classList.add('is-active');
       nextSlide.setAttribute('aria-hidden', 'false');
       syncControls(oldIdx, activeIdx);
+      manageVideos(oldIdx, activeIdx);
       if (isZoomed) setZoom(false);
-      document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: activeIdx } }));
+      dispatchSlideChange();
       return;
     }
 
@@ -501,9 +752,10 @@
 
     activeIdx = idx;
     syncControls(oldIdx, activeIdx);
+    manageVideos(oldIdx, activeIdx);
 
     if (isZoomed) setZoom(false);
-    document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: activeIdx } }));
+    dispatchSlideChange();
 
     /* Reset the outgoing slide once it has slid out of view */
     setTimeout(function () {
@@ -585,11 +837,14 @@
   stage.addEventListener('click', function (e) {
     if (e.target.closest('.bb-media__zoom-btn')) return;
     if (e.target.closest('.bb-media__dot')) return;
-    if ('{{ enable_zoom }}' === 'true') setZoom(!isZoomed);
+    if (e.target.closest('.bb-media__vbtn')) return;
+    if (e.target.closest('.bb-media__video')) return;
+    if (!activeIsImage()) return;          /* no zoom on video slides */
+    if (zoomEnabled) setZoom(!isZoomed);
   });
 
   stage.addEventListener('mousemove', function (e) {
-    if (!isZoomed) return;
+    if (!isZoomed || !activeIsImage()) return;
     var img = stage.querySelector('.bb-media__slide.is-active .bb-media__img');
     if (!img) return;
     var rect = stage.getBoundingClientRect();
@@ -598,14 +853,62 @@
       ((e.clientY - rect.top)  / rect.height * 100) + '%';
   });
 
-  document.addEventListener('keydown', function (e) {
+  /* ── Document-level listeners use named handlers so they can be removed on
+     Shopify section reload — prevents duplicate-listener stacking in the editor ── */
+  function onDocKeydown(e) {
     if (e.key === 'Escape' && isZoomed) setZoom(false);
+  }
+  function onRequestSlide(e) {
+    var idx = resolveRequestedIndex(e.detail);
+    if (idx !== null) goTo(idx);
+  }
+  document.addEventListener('keydown', onDocKeydown);
+  document.addEventListener('bb:requestSlide', onRequestSlide);
+
+  document.addEventListener('shopify:section:unload', function onUnload(e) {
+    if (!e.detail || e.detail.sectionId !== '{{ section.id }}') return;
+    document.removeEventListener('keydown', onDocKeydown);
+    document.removeEventListener('bb:requestSlide', onRequestSlide);
+    document.removeEventListener('shopify:section:unload', onUnload);  /* remove self -> no accumulation */
+    Array.prototype.forEach.call(slides, function (s) {
+      var v = s.querySelector('.bb-media__video');
+      if (v) { try { v.pause(); } catch (err) {} }
+    });
   });
 
-  /* ── Listen for external slide requests ── */
-  document.addEventListener('bb:requestSlide', function (e) {
-    if (e.detail && typeof e.detail.index === 'number') goTo(e.detail.index);
+  /* ── Wire video custom controls + keep their state in sync ── */
+  Array.prototype.forEach.call(stage.querySelectorAll('.bb-media__slide--video'), function (slide) {
+    var v = slide.querySelector('.bb-media__video');
+    if (!v) return;
+    var playBtn = slide.querySelector('.bb-media__vbtn--play');
+    var muteBtn = slide.querySelector('.bb-media__vbtn--mute');
+    if (playBtn) playBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (v.paused) tryPlay(v); else v.pause();
+    });
+    if (muteBtn) muteBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      v.muted = !v.muted;
+      updateVideoButtons(v);
+    });
+    if (!cfg.nativeControls) {
+      v.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (v.paused) tryPlay(v); else v.pause();
+      });
+    }
+    v.addEventListener('play',  function () { updateVideoButtons(v); });
+    v.addEventListener('pause', function () { updateVideoButtons(v); });
+    v.addEventListener('volumechange', function () { updateVideoButtons(v); });
+    updateVideoButtons(v);
   });
+
+  /* ── Initial active media: set stage mode, autoplay first slide if it's a video ── */
+  setStageMode();
+  (function () {
+    var v0 = getVideo(activeIdx);
+    if (v0 && cfg.autoplay && !reduceMotion) tryPlay(v0);
+  })();
 
 })();
 </script>
@@ -733,6 +1036,101 @@
       "id": "show_arrows_mobile",
       "label": "Show prev/next arrows on mobile",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay active video",
+      "info": "Autoplay only works while the video is muted, and is skipped for reduced-motion users.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Loop video",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "video_muted",
+      "label": "Mute video by default",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show native video controls",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "video_hide_fullscreen",
+      "label": "Hide fullscreen button (best-effort)",
+      "info": "Applied via controlsList on native controls; some browsers (Safari/iOS) ignore it.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_hide_download",
+      "label": "Hide download button (best-effort)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_hide_remote",
+      "label": "Hide remote playback (best-effort)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_custom_playpause",
+      "label": "Show custom play/pause button",
+      "info": "Recommended when native controls are off.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_custom_mute",
+      "label": "Show custom mute/unmute button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_thumb_play_icon",
+      "label": "Show play icon on video thumbnails",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_pause_inactive",
+      "label": "Pause inactive videos",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_reset_inactive",
+      "label": "Reset inactive videos to start",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "video_object_fit",
+      "label": "Video fit",
+      "options": [
+        { "value": "cover",   "label": "Cover (fill frame, may crop)" },
+        { "value": "contain", "label": "Contain (show full video)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "color",
+      "id": "video_bg_color",
+      "label": "Video background color",
+      "default": "#000000"
     },
     {
       "type": "header",
