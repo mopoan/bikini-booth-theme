@@ -109,36 +109,68 @@
   </div>
 
   {%- comment -%} ── Size selector ── {%- endcomment -%}
-  <div class="bb-info__section">
-    <div class="bb-info__section-label">
-      Choose your size:
-      <span class="bb-info__section-value" id="bb-size-name-{{ section.id }}"></span>
+  {%- if product.has_only_default_variant or current_variant.title == 'Default Title' -%}
+
+    {%- comment -%} One-size / no real size option ── {%- endcomment -%}
+    {%- assign one_size_icon = section.settings.one_size_icon -%}
+    <div class="bb-info__section">
+      <div class="bb-info__one-size">
+        {%- if section.settings.one_size_show_icon -%}
+          <span class="bb-info__one-size-icon" aria-hidden="true">
+            {%- case one_size_icon -%}
+              {%- when 'tag' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 12 22l-9-9V3h10l7.59 7.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              {%- when 'ruler' -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18v8H3z"/><path d="M7 8v3M11 8v4M15 8v3M19 8v4"/></svg>
+              {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            {%- endcase -%}
+          </span>
+        {%- endif -%}
+        <span class="bb-info__one-size-text">{{ section.settings.one_size_label | default: 'One Size' }}</span>
+        {%- unless current_variant.available -%}
+          <span class="bb-info__one-size-soldout">— Sold out</span>
+        {%- endunless -%}
+      </div>
+      {%- if section.settings.one_size_helper != blank -%}
+        <p class="bb-info__one-size-helper">{{ section.settings.one_size_helper }}</p>
+      {%- endif -%}
     </div>
-    <div class="bb-sizes" role="group" aria-label="Choose your size" id="bb-sizes-{{ section.id }}">
-      {%- for variant in product.variants -%}
-        <button
-          type="button"
-          class="bb-size-btn{%- if variant == current_variant %} is-active{%- endif -%}{%- unless variant.available %} is-sold-out{%- endunless -%}"
-          data-variant-id="{{ variant.id }}"
-          data-variant-price="{{ variant.price | money }}"
-          data-available="{{ variant.available }}"
-          aria-label="{{ variant.title }}{%- unless variant.available %} — sold out{%- endunless -%}"
-          {%- unless variant.available %}aria-disabled="true"{%- endunless -%}
-        >
-          {{ variant.title }}
-        </button>
-      {%- endfor -%}
+
+  {%- else -%}
+
+    <div class="bb-info__section">
+      <div class="bb-info__section-label">
+        Choose your size:
+        <span class="bb-info__section-value" id="bb-size-name-{{ section.id }}"></span>
+      </div>
+      <div class="bb-sizes" role="group" aria-label="Choose your size" id="bb-sizes-{{ section.id }}">
+        {%- for variant in product.variants -%}
+          <button
+            type="button"
+            class="bb-size-btn{%- if variant == current_variant %} is-active{%- endif -%}{%- unless variant.available %} is-sold-out{%- endunless -%}"
+            data-variant-id="{{ variant.id }}"
+            data-variant-price="{{ variant.price | money }}"
+            data-available="{{ variant.available }}"
+            aria-label="{{ variant.title }}{%- unless variant.available %} — sold out{%- endunless -%}"
+            {%- unless variant.available %}aria-disabled="true"{%- endunless -%}
+          >
+            {{ variant.title }}
+          </button>
+        {%- endfor -%}
+      </div>
+      <button
+        type="button"
+        class="bb-info__size-guide-trigger"
+        style="margin-top: 6px;"
+        aria-haspopup="dialog"
+      >
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
+        Not sure? View size guide
+      </button>
     </div>
-    <button
-      type="button"
-      class="bb-info__size-guide-trigger"
-      style="margin-top: 6px;"
-      aria-haspopup="dialog"
-    >
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"/><path d="M5 3v4M9 3v2M13 3v4M17 3v2M21 3v4"/></svg>
-      Not sure? View size guide
-    </button>
-  </div>
+
+  {%- endif -%}
 
   {%- comment -%} ── Add to cart + wishlist ── {%- endcomment -%}
   <div class="bb-info__atc-row">
@@ -409,6 +441,44 @@
     cursor: not-allowed;
   }
 
+  /* One-size display */
+  #bb-info-{{ section.id }} .bb-info__one-size {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2a2520;
+    letter-spacing: 0.01em;
+  }
+  #bb-info-{{ section.id }} .bb-info__one-size-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid #49c6be;
+    border-radius: 50%;
+    color: #49c6be;
+    flex-shrink: 0;
+  }
+  #bb-info-{{ section.id }} .bb-info__one-size-icon svg {
+    width: 12px;
+    height: 12px;
+    display: block;
+  }
+  #bb-info-{{ section.id }} .bb-info__one-size-soldout {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #c8635a;
+  }
+  #bb-info-{{ section.id }} .bb-info__one-size-helper {
+    margin: 6px 0 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #8a8077;
+  }
+
   /* Size guide trigger */
   #bb-info-{{ section.id }} .bb-info__size-guide-trigger {
     display: inline-flex;
@@ -655,7 +725,7 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      if (!section.querySelector('.bb-size-btn.is-active')) {
+      if (sizeButtons.length && !section.querySelector('.bb-size-btn.is-active')) {
         var first = section.querySelector('.bb-size-btn:not(.is-sold-out)');
         if (first) first.focus();
         return;
@@ -713,73 +783,3 @@
             '[data-drawer-open="cart-drawer"]',
             '[data-cart-drawer-trigger]',
             '[data-open-drawer="cart"]',
-            '.js-cart-drawer-open',
-            '#cart-icon-bubble',
-            '.cart-icon-bubble',
-            '[aria-controls="cart-drawer"]'
-          ];
-          for (var i = 0; i < cartTriggers.length; i++) {
-            var el = document.querySelector(cartTriggers[i]);
-            if (el) { el.click(); break; }
-          }
-        }
-
-        setTimeout(function () {
-          if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
-          if (atcBtn)     atcBtn.disabled = false;
-        }, 1800);
-      })
-      .catch(function (err) {
-        console.warn('[BB ATC] Error:', err);
-        if (atcLabelEl) atcLabelEl.textContent = 'Try again';
-        if (atcBtn)     atcBtn.disabled = false;
-      });
-    });
-  }
-
-  /* Wishlist is handled by the theme's native <wishlist-button> element. */
-
-})();
-</script>
-
-
-{% schema %}
-{
-  "name": "Product info",
-  "tag": "div",
-  "class": "bb-product-info-section",
-  "settings": [
-    {
-      "type": "text",
-      "id": "price_note",
-      "label": "Price note",
-      "default": "Top and bottom sold separately."
-    },
-    {
-      "type": "header",
-      "content": "Add to cart button — hover"
-    },
-    {
-      "type": "color",
-      "id": "atc_hover_bg",
-      "label": "Hover background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "atc_hover_text",
-      "label": "Hover text & icon",
-      "default": "#49c6be"
-    },
-    {
-      "type": "color",
-      "id": "atc_hover_border",
-      "label": "Hover border",
-      "default": "#49c6be"
-    }
-  ],
-  "presets": [
-    { "name": "Product info" }
-  ]
-}
-{% endschema %}
