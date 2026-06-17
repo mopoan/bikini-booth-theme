@@ -914,7 +914,7 @@ class wokieeSwiper extends HTMLElement {
         init: false,
         slidesPerView: this.xl,
         autoplay: autoplay,
-        rewind: true,
+        rewind: loop ? false : true,
         effect: effect,
         autoHeight: autoheight,
         allowTouchMove: allowtouchmove,
