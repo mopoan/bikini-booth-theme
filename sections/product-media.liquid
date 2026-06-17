@@ -193,8 +193,12 @@
   }
 
   /* ── Click zoom ── */
+  /* Reveal the FULL image when zoomed: switch from the cropped stage fit to
+     'contain' so nothing is cut off, then scale + pan to inspect it. */
   #bb-media-{{ section.id }} .bb-media__stage.is-zoomed .bb-media__slide.is-active .bb-media__img {
     transform: scale(1.7);
+    object-fit: contain;
+    object-position: center center;
     cursor: zoom-out;
   }
 
