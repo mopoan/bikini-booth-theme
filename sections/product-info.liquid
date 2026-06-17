@@ -783,3 +783,105 @@
             '[data-drawer-open="cart-drawer"]',
             '[data-cart-drawer-trigger]',
             '[data-open-drawer="cart"]',
+            '.js-cart-drawer-open',
+            '#cart-icon-bubble',
+            '.cart-icon-bubble',
+            '[aria-controls="cart-drawer"]'
+          ];
+          for (var i = 0; i < cartTriggers.length; i++) {
+            var el = document.querySelector(cartTriggers[i]);
+            if (el) { el.click(); break; }
+          }
+        }
+
+        setTimeout(function () {
+          if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
+          if (atcBtn)     atcBtn.disabled = false;
+        }, 1800);
+      })
+      .catch(function (err) {
+        console.warn('[BB ATC] Error:', err);
+        if (atcLabelEl) atcLabelEl.textContent = 'Try again';
+        if (atcBtn)     atcBtn.disabled = false;
+      });
+    });
+  }
+
+  /* Wishlist is handled by the theme's native <wishlist-button> element. */
+
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Product info",
+  "tag": "div",
+  "class": "bb-product-info-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Price note",
+      "default": "Top and bottom sold separately."
+    },
+    {
+      "type": "header",
+      "content": "One size products"
+    },
+    {
+      "type": "text",
+      "id": "one_size_label",
+      "label": "One-size label",
+      "default": "One Size"
+    },
+    {
+      "type": "checkbox",
+      "id": "one_size_show_icon",
+      "label": "Show one-size icon",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "one_size_icon",
+      "label": "One-size icon",
+      "options": [
+        { "value": "check", "label": "Check" },
+        { "value": "tag",   "label": "Tag" },
+        { "value": "ruler", "label": "Ruler" }
+      ],
+      "default": "check"
+    },
+    {
+      "type": "text",
+      "id": "one_size_helper",
+      "label": "One-size helper text (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Add to cart button — hover"
+    },
+    {
+      "type": "color",
+      "id": "atc_hover_bg",
+      "label": "Hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "atc_hover_text",
+      "label": "Hover text & icon",
+      "default": "#49c6be"
+    },
+    {
+      "type": "color",
+      "id": "atc_hover_border",
+      "label": "Hover border",
+      "default": "#49c6be"
+    }
+  ],
+  "presets": [
+    { "name": "Product info" }
+  ]
+}
+{% endschema %}
