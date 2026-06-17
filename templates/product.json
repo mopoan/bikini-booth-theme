@@ -86,7 +86,7 @@
       "type": "product-fit-note",
       "name": "Product fit note",
       "settings": {
-        "fit_note": "<p>Our model is 5'9.5\", wears a size S top and a size S bottom. For reference, she has a 34B bust, 24\" waist, and 34.5\" hips.</p>",
+        "fit_note": "{{ product.metafields.custom.fit_note | metafield_tag }}",
         "fit_title": "Fit note",
         "fit_icon": "star",
         "title_font_size": 16,
