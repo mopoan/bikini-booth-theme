@@ -97,7 +97,7 @@
   {%- comment -%} ── Color swatches ── {%- endcomment -%}
   <div class="bb-info__section" id="bb-color-section-{{ section.id }}" hidden>
     <div class="bb-info__section-label">
-      Choose your color
+      Choose your color:
       <span class="bb-info__section-value" id="bb-color-name-{{ section.id }}"></span>
     </div>
     <div
@@ -111,7 +111,7 @@
   {%- comment -%} ── Size selector ── {%- endcomment -%}
   <div class="bb-info__section">
     <div class="bb-info__section-label">
-      Choose your size
+      Choose your size:
       <span class="bb-info__section-value" id="bb-size-name-{{ section.id }}"></span>
     </div>
     <div class="bb-sizes" role="group" aria-label="Choose your size" id="bb-sizes-{{ section.id }}">
@@ -264,10 +264,6 @@
     letter-spacing: 0;
     font-size: 0.75rem;
     color: #2a2520;
-  }
-  /* ": " separator, shown only when a value is present (color / size) */
-  #bb-info-{{ section.id }} .bb-info__section-value:not(:empty)::before {
-    content: ": ";
   }
 
   /* Piece toggle */
