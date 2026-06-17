@@ -58,7 +58,7 @@
   }
 
   #bb-trust-{{ section.id }} .bb-trust__label {
-    font-size: 0.625rem;
+    font-size: {{ section.settings.label_font_size | default: 10 }}px;
     color: #6a6560;
     line-height: 1.35;
     letter-spacing: 0.01em;
@@ -78,7 +78,7 @@
     }
     #bb-trust-{{ section.id }} .bb-trust__label {
       text-align: left;
-      font-size: 0.6875rem;
+      font-size: {{ section.settings.label_font_size | default: 10 }}px;
     }
   }
 </style>
@@ -89,6 +89,18 @@
   "name": "Product trust bar",
   "tag": "div",
   "class": "bb-product-trust-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "label": "Label font size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
   "blocks": [
     {
       "type": "trust_item",
