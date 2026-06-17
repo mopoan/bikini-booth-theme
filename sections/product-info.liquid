@@ -324,7 +324,7 @@
   /* Swatches */
   #bb-info-{{ section.id }} .bb-swatches {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     align-items: center;
   }
@@ -350,19 +350,17 @@
     padding: 0;
     background-size: cover;
     background-position: center;
-    transition: opacity 0.15s, box-shadow 0.15s;
+    transition: opacity 0.15s, outline-offset 0.15s;
     flex-shrink: 0;
     text-decoration: none;
   }
-  /* Hover: a light teal ring hugging the swatch */
   #bb-info-{{ section.id }} .bb-swatch:hover:not(.is-active):not(.is-unavailable) {
-    box-shadow: 0 0 0 2px #49c6be !important;
-    outline: none !important;
+    outline: 2px solid #49c6be;
+    outline-offset: 3px;
   }
-  /* Selected: stronger teal ring with a white gap so it reads as chosen */
   #bb-info-{{ section.id }} .bb-swatch.is-active {
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #49c6be !important;
-    outline: none !important;
+    outline: 2px solid #49c6be;
+    outline-offset: 3px;
   }
   #bb-info-{{ section.id }} .bb-swatch.is-unavailable {
     opacity: 0.35;
@@ -396,7 +394,9 @@
     color: #ffffff;
   }
   #bb-info-{{ section.id }} .bb-size-btn.is-active {
-    border: 1.5px solid #2a2520;
+    border-color: #49c6be;
+    background: #49c6be;
+    color: #ffffff;
     font-weight: 500;
   }
   #bb-info-{{ section.id }} .bb-size-btn.is-sold-out {
