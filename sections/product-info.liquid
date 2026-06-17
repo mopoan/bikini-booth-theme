@@ -684,6 +684,15 @@
         if (cartDrawer && typeof cartDrawer.renderContents === 'function' && response.sections) {
           /* Dawn-style drawer: swap in fresh HTML and open it */
           cartDrawer.renderContents(response);
+
+          /*
+            Adding the first item to an empty cart leaves a stale "is-empty"
+            class on the <cart-drawer> wrapper (renderContents only swaps the
+            inner #CartDrawer). Clear it so the freshly-rendered items show.
+          */
+          cartDrawer.classList.remove('is-empty');
+          var drawerInner = cartDrawer.querySelector('.drawer__inner');
+          if (drawerInner) drawerInner.classList.remove('is-empty');
         } else {
           /* Fallback: notify the theme and open via known triggers */
           document.dispatchEvent(new CustomEvent('cart:updated'));
