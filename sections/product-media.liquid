@@ -117,6 +117,16 @@
       {%- endif -%}
 
     </div>
+
+    {%- comment -%} ── Prev / next arrows ── {%- endcomment -%}
+    {%- if product.images.size > 1 -%}
+      <button type="button" class="bb-media__arrow bb-media__arrow--prev" id="bb-media-prev-{{ section.id }}" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button type="button" class="bb-media__arrow bb-media__arrow--next" id="bb-media-next-{{ section.id }}" aria-label="Next image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    {%- endif -%}
   </div>
 
 </div>
@@ -138,7 +148,43 @@
   #bb-media-{{ section.id }} .bb-media__stage-wrap {
     flex: 1;
     min-width: 0;
+    position: relative;
   }
+
+  /* ── Prev / next arrows ── */
+  #bb-media-{{ section.id }} .bb-media__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid #49c6be;
+    background: rgba(255, 255, 255, 0.85);
+    color: #49c6be;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    z-index: 5;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  }
+  #bb-media-{{ section.id }} .bb-media__arrow svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+  #bb-media-{{ section.id }} .bb-media__arrow:hover {
+    background: #49c6be;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(73, 198, 190, 0.35);
+  }
+  #bb-media-{{ section.id }} .bb-media__arrow--prev { left: 12px; }
+  #bb-media-{{ section.id }} .bb-media__arrow--next { right: 12px; }
 
   /* ── Stage: enforces 9:16 aspect ratio ── */
   #bb-media-{{ section.id }} .bb-media__stage {
@@ -310,6 +356,15 @@
     display: block;
   }
 
+  /* ── Desktop: left strip matches the main image height and spreads down it ── */
+  @media (min-width: 900px) {
+    #bb-media-{{ section.id }}.bb-media--thumbs-left .bb-media__thumbs {
+      align-self: stretch;
+      max-height: none;
+      justify-content: space-between;
+    }
+  }
+
   /* ── Bottom thumbnail variant ── */
   #bb-media-{{ section.id }}.bb-media--thumbs-bottom {
     flex-direction: column !important;
@@ -354,6 +409,10 @@
 
     #bb-media-{{ section.id }} .bb-media__dots {
       display: flex;
+    }
+
+    #bb-media-{{ section.id }} .bb-media__arrow {
+      display: {% if section.settings.show_arrows_mobile %}flex{% else %}none{% endif %};
     }
   }
 
@@ -405,8 +464,7 @@
     var n = slides.length;
     if (n <= 1) return;
     var mobile = window.matchMedia('(max-width: 767px)').matches;
-    if (mobile) { idx = (idx % n + n) % n; }          /* wrap into range */
-    else if (idx < 0 || idx >= n) { return; }         /* clamp at ends */
+    idx = (idx % n + n) % n;                          /* wrap -> cycles on desktop + mobile */
     if (idx === activeIdx || isAnimating) return;
     if (dir === undefined) dir = idx > activeIdx ? 1 : -1;
 
@@ -475,6 +533,12 @@
       goTo(parseInt(dot.dataset.index, 10));
     });
   });
+
+  /* ── Prev / next arrows ── */
+  var prevBtn = document.getElementById('bb-media-prev-{{ section.id }}');
+  var nextBtn = document.getElementById('bb-media-next-{{ section.id }}');
+  if (prevBtn) prevBtn.addEventListener('click', function (e) { e.stopPropagation(); goPrev(); });
+  if (nextBtn) nextBtn.addEventListener('click', function (e) { e.stopPropagation(); goNext(); });
 
   /* ── Touch swipe ── */
   var startX = 0;
@@ -666,6 +730,12 @@
       "default": true
     },
     {
+      "type": "checkbox",
+      "id": "show_arrows_mobile",
+      "label": "Show prev/next arrows on mobile",
+      "default": false
+    },
+    {
       "type": "header",
       "content": "Spacing"
     },
@@ -676,7 +746,7 @@
       "min": 0,
       "max": 60,
       "step": 4,
-      "default": 0
+      "default": 8
     },
     {
       "type": "range",
