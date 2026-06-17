@@ -390,6 +390,9 @@
 
         pieceRow.style.display = '';
         updateTotal();
+
+        /* If a size was already chosen on the main product, apply it to this row */
+        if (lastSelectedSize) syncSize(lastSelectedSize);
       })
       .catch(function (err) {
         console.warn('[BB CTL] Could not load piece product:', err);
@@ -416,6 +419,49 @@
   function formatMoneyFromCents(cents) {
     return formatMoney(parseFloat(cents) / 100);
   }
+
+  /* ── Size sync: match every item's size <select> to the chosen product size ── */
+  var lastSelectedSize = null;
+
+  function optionSizeLabel(opt) {
+    /* Strip the " — Sold out" suffix and normalise for comparison */
+    return opt.textContent.split(' — ')[0].trim().toLowerCase();
+  }
+
+  function syncSize(size) {
+    if (!size) return;
+    var target = String(size).trim().toLowerCase();
+
+    ctl.querySelectorAll('.bb-ctl__item').forEach(function (item) {
+      var sel = item.querySelector('.bb-ctl__size-select');
+      if (!sel) return;
+
+      var matched = null;
+      for (var i = 0; i < sel.options.length; i++) {
+        if (optionSizeLabel(sel.options[i]) === target) { matched = sel.options[i]; break; }
+      }
+
+      /* No matching size, or it's sold out → leave this item on its current size */
+      if (!matched || matched.disabled) return;
+
+      sel.value              = matched.value;
+      item.dataset.variantId = matched.value;
+      if (matched.dataset.price) item.dataset.price = matched.dataset.price;
+
+      var priceEl = item.querySelector('.bb-ctl__price');
+      if (priceEl && matched.dataset.priceFormatted) {
+        priceEl.textContent = matched.dataset.priceFormatted;
+      }
+    });
+
+    updateTotal();
+  }
+
+  /* Listen for size changes broadcast by product-info.liquid */
+  document.addEventListener('bb:sizeSelected', function (e) {
+    lastSelectedSize = e.detail && e.detail.size;
+    syncSize(lastSelectedSize);
+  });
 
   /* ── Collect checked items ── */
   function getCheckedItems() {
@@ -503,6 +549,16 @@
       });
     });
   }
+
+  /* Initial sync: match other items to the current product's pre-selected size */
+  (function () {
+    var currentItem = ctl.querySelector('.bb-ctl__item.is-current');
+    var currentSel  = currentItem ? currentItem.querySelector('.bb-ctl__size-select') : null;
+    if (currentSel && currentSel.selectedIndex >= 0) {
+      lastSelectedSize = optionSizeLabel(currentSel.options[currentSel.selectedIndex]);
+      syncSize(lastSelectedSize);
+    }
+  })();
 
   updateTotal();
 })();
