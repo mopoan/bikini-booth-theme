@@ -25,6 +25,7 @@
         "sticky_gallery": true,
         "enable_zoom": true,
         "enable_dots": true,
+        "show_arrows_mobile": true,
         "padding_top": 0,
         "padding_bottom": 0
       }
@@ -98,7 +99,13 @@
       "type": "product-complete-the-look",
       "name": "Complete the look",
       "settings": {
-        "pair_label": "Resortwear"
+        "heading": "Complete the look",
+        "subheading": "Style the full set",
+        "divider_text": "Add to complete the set",
+        "this_item_label": "This item",
+        "pair_label": "Resortwear",
+        "accent_color": "#49c6be",
+        "image_width": 60
       }
     },
     "product_accordions_M7G4Ax": {
