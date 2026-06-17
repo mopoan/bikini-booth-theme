@@ -264,7 +264,7 @@
     gap: {{ section.settings.thumb_gap }}px;
     flex-shrink: 0;
     width: {{ section.settings.thumb_width }}px;
-    max-height: auto;
+    max-height: 80vh;
     overflow-y: auto;
     scrollbar-width: none;
     padding: 2px;
@@ -312,8 +312,8 @@
     height: {{ section.settings.thumb_height }}px;
   }
   #bb-media-{{ section.id }}.bb-media--thumbs-bottom .bb-media__thumb {
-    width: {{ section.settings.thumb_width }}px;
-    aspect-ratio: auto;
+    width: auto;
+    aspect-ratio: 9 / 16;
     height: 100%;
     flex-shrink: 0;
   }
