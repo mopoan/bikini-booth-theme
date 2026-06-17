@@ -265,6 +265,10 @@
     font-size: 0.75rem;
     color: #2a2520;
   }
+  /* ": " separator, shown only when a value is present (color / size) */
+  #bb-info-{{ section.id }} .bb-info__section-value:not(:empty)::before {
+    content: ": ";
+  }
 
   /* Piece toggle */
   #bb-info-{{ section.id }} .bb-piece-toggle {
