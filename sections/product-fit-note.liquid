@@ -21,10 +21,10 @@
   {%- if product.featured_image != blank -%}
     <div class="bb-fit__img">
       <img
-        src="{{ product.featured_image | image_url: width: 160, height: 200, crop: 'center' }}"
+        src="{{ product.featured_image | image_url: width: 144, height: 256, crop: 'center' }}"
         alt="{{ product.featured_image.alt | escape | default: product.title }}"
-        width="60"
-        height="75"
+        width="72"
+        height="128"
         loading="lazy"
       >
     </div>
@@ -58,7 +58,7 @@
   }
 
   #bb-fit-{{ section.id }} .bb-fit__body {
-    font-size: 0.6875rem;
+    font-size: {{ section.settings.body_font_size | default: 11 }}px;
     color: #3a6a65;
     line-height: 1.65;
   }
@@ -68,8 +68,8 @@
     flex-shrink: 0;
   }
   #bb-fit-{{ section.id }} .bb-fit__img img {
-    width: 60px;
-    height: 75px;
+    width: 72px;
+    height: 128px;
     object-fit: cover;
     border-radius: 5px;
     display: block;
@@ -95,6 +95,16 @@
       "label": "Fit note text",
       "info": "Leave blank to hide this section entirely. The product's main image is used automatically as the model photo.",
       "default": "<p>Our model is 5'9.5\", wears size S top and size S bottom. For reference, she has a 34B bust, 24\" waist and 34.5\" hips.</p>"
+    },
+    {
+      "type": "range",
+      "id": "body_font_size",
+      "label": "Fit note font size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 11
     }
   ],
   "presets": [
