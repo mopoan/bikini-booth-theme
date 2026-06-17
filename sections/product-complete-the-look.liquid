@@ -17,7 +17,7 @@
 {%- assign ctl_img_w2 = ctl_img_w | times: 2 -%}
 {%- assign ctl_img_h2 = ctl_img_h | times: 2 -%}
 
-<div class="bb-ctl" id="bb-ctl-{{ section.id }}">
+<div class="bb-ctl" id="bb-ctl-{{ section.id }}"{% if pair_product == blank %} hidden{% endif %}>
 
   <div class="bb-ctl__head">
     <p class="bb-ctl__title">{{ section.settings.heading | default: 'Complete the look' }}</p>
@@ -50,7 +50,7 @@
         {%- endif -%}
       </div>
       <div class="bb-ctl__info">
-        <a class="bb-ctl__name" href="{{ product.url }}">{{ product.title | split: ' in ' | first }}</a>
+        <span class="bb-ctl__name">{{ product.title | split: ' in ' | first }}</span>
         <p class="bb-ctl__piece bb-ctl__piece--current">{{ section.settings.this_item_label | default: 'This item' }}</p>
         <p class="bb-ctl__price">{{ current_variant.price | money }}</p>
       </div>
@@ -146,7 +146,7 @@
                 {%- endfor -%}
               </select>
               <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            {%- else -%}
+            {%- elsif pair_variant.title != 'Default Title' -%}
               <span class="bb-ctl__size-only">{{ pair_variant.title }}</span>
             {%- endif -%}
           </div>
@@ -183,6 +183,7 @@
     display: flex;
     flex-direction: column;
   }
+  #bb-ctl-{{ section.id }}[hidden] { display: none !important; }
 
   #bb-ctl-{{ section.id }} .bb-ctl__head {
     display: flex;
@@ -216,7 +217,7 @@
   #bb-ctl-{{ section.id }} .bb-ctl__item.is-current { cursor: default; }
   #bb-ctl-{{ section.id }} .bb-ctl__item:not(.is-current):hover { background: #f5f1ec; }
   #bb-ctl-{{ section.id }} .bb-ctl__item.is-checked:not(.is-current) { background: #f5f1ec; }
-  #bb-ctl-{{ section.id }} .bb-ctl__item.is-checked { box-shadow: inset 0 0 0 2px var(--bb-accent); }
+  #bb-ctl-{{ section.id }} .bb-ctl__item.is-checked { box-shadow: inset 0 0 0 1px var(--bb-accent); border-radius: 6px; }
 
   #bb-ctl-{{ section.id }} .bb-ctl__check { flex-shrink: 0; }
   #bb-ctl-{{ section.id }} .bb-ctl__chk-on {
@@ -239,7 +240,7 @@
 
   #bb-ctl-{{ section.id }} .bb-ctl__info { flex: 1; min-width: 0; }
   #bb-ctl-{{ section.id }} .bb-ctl__name {
-    display: block; text-decoration: none;
+    display: inline-block; max-width: 100%; vertical-align: top; text-decoration: none;
     font-size: 0.8125rem; font-weight: 500; color: #2a2520;
     margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
@@ -327,6 +328,10 @@
     var oppPiece = data.piece === 'Top' ? 'Bottom' : 'Top';
     var link     = data.pieceLinks[oppPiece];
     if (!link) return;
+
+    /* A matching piece exists → make sure the section is shown even if it
+       started hidden (no set-pair metafield). */
+    ctl.hidden = false;
 
     var handle = link.url.replace('/products/', '');
 
