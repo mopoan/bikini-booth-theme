@@ -639,7 +639,11 @@
     }
   }
 
-  function tryPlay(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  function tryPlay(v) {
+    if (cfg.muted) v.muted = true;   /* muted autoplay is the only reliably-allowed kind */
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  }
 
   /* ── On slide change: pause (and optionally reset) inactive videos, play the active one ── */
   function manageVideos(prevIdx, newIdx) {
@@ -1046,13 +1050,13 @@
       "id": "video_autoplay",
       "label": "Autoplay active video",
       "info": "Autoplay only works while the video is muted, and is skipped for reduced-motion users.",
-      "default": false
+      "default": true
     },
     {
       "type": "checkbox",
       "id": "video_loop",
       "label": "Loop video",
-      "default": false
+      "default": true
     },
     {
       "type": "checkbox",
