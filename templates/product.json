@@ -87,7 +87,11 @@
       "name": "Product fit note",
       "settings": {
         "fit_note": "<p>Our model is 5'9.5\", wears a size S top and a size S bottom. For reference, she has a 34B bust, 24\" waist, and 34.5\" hips.</p>",
-        "body_font_size": 14
+        "fit_title": "Fit note",
+        "fit_icon": "star",
+        "title_font_size": 10,
+        "body_font_size": 14,
+        "image_width": 58
       }
     },
     "product_complete_the_look_wEDMHX": {
