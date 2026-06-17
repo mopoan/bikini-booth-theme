@@ -285,7 +285,9 @@
   #bb-ctl-{{ section.id }} .bb-ctl__total-value { font-size: 0.9375rem; font-weight: 500; color: #2a2520; }
 
   #bb-ctl-{{ section.id }} .bb-ctl__add-btn {
-    display: inline-flex; align-items: center; gap: 6px;
+    -webkit-appearance: none; appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     background: var(--bb-accent); color: #ffffff; border: none; border-radius: 999px;
     padding: 10px 16px; font-size: 0.6875rem; font-weight: 500;
     letter-spacing: 0.06em; text-transform: uppercase;
@@ -300,6 +302,7 @@
     #bb-ctl-{{ section.id }} .bb-ctl__footer { padding: 10px 14px; }
     #bb-ctl-{{ section.id }} .bb-ctl__item { padding: 10px 14px; }
     #bb-ctl-{{ section.id }} .bb-ctl__divider { padding: 6px 14px; }
+    #bb-ctl-{{ section.id }} .bb-ctl__add-btn { min-width: 150px; }
   }
 </style>
 
