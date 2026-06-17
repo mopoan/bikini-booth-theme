@@ -110,7 +110,10 @@
 
   {%- comment -%} ── Size selector ── {%- endcomment -%}
   <div class="bb-info__section">
-    <div class="bb-info__section-label">Choose your size</div>
+    <div class="bb-info__section-label">
+      Choose your size
+      <span class="bb-info__section-value" id="bb-size-name-{{ section.id }}"></span>
+    </div>
     <div class="bb-sizes" role="group" aria-label="Choose your size" id="bb-sizes-{{ section.id }}">
       {%- for variant in product.variants -%}
         <button
@@ -353,11 +356,13 @@
   }
   /* Hover: a light teal ring hugging the swatch */
   #bb-info-{{ section.id }} .bb-swatch:hover:not(.is-active):not(.is-unavailable) {
-    box-shadow: 0 0 0 2px #49c6be;
+    box-shadow: 0 0 0 2px #49c6be !important;
+    outline: none !important;
   }
   /* Selected: stronger teal ring with a white gap so it reads as chosen */
   #bb-info-{{ section.id }} .bb-swatch.is-active {
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #49c6be;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #49c6be !important;
+    outline: none !important;
   }
   #bb-info-{{ section.id }} .bb-swatch.is-unavailable {
     opacity: 0.35;
@@ -502,6 +507,7 @@
   var pieceTopPrc   = document.getElementById('bb-piece-top-price-' + sid);
   var pieceBotPrc   = document.getElementById('bb-piece-bottom-price-' + sid);
   var wlBtn         = document.getElementById('bb-wl-btn-' + sid);
+  var sizeNameEl    = document.getElementById('bb-size-name-' + sid);
   var sizeButtons   = section.querySelectorAll('.bb-size-btn');
   var selectedVariantId = null;
 
@@ -597,6 +603,9 @@
       selectedVariantId = btn.dataset.variantId;
       if (variantInput)  variantInput.value = selectedVariantId;
 
+      var sizeLabel = btn.textContent.trim();
+      if (sizeNameEl) sizeNameEl.textContent = sizeLabel;
+
       var price = btn.dataset.variantPrice;
       if (priceAmountEl) priceAmountEl.textContent = price;
       if (atcPriceEl)    atcPriceEl.textContent = '— ' + price;
@@ -608,8 +617,17 @@
           available: true
         }
       }));
+
+      /* Broadcast the chosen size label so Complete the Look can match it */
+      document.dispatchEvent(new CustomEvent('bb:sizeSelected', {
+        detail: { size: sizeLabel }
+      }));
     });
   });
+
+  /* Initialise size label with the pre-selected (current) variant */
+  var initialSize = section.querySelector('.bb-size-btn.is-active');
+  if (sizeNameEl && initialSize) sizeNameEl.textContent = initialSize.textContent.trim();
 
   /* ── ATC submit ── */
   var form = document.getElementById('bb-atc-form-' + sid);
