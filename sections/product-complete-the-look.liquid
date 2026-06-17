@@ -12,11 +12,16 @@
 {%- assign pair_product = product.metafields.custom.set_pair_product.value -%}
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
+{%- assign ctl_img_w  = section.settings.image_width | default: 60 -%}
+{%- assign ctl_img_h  = ctl_img_w | times: 16 | divided_by: 9 -%}
+{%- assign ctl_img_w2 = ctl_img_w | times: 2 -%}
+{%- assign ctl_img_h2 = ctl_img_h | times: 2 -%}
+
 <div class="bb-ctl" id="bb-ctl-{{ section.id }}">
 
   <div class="bb-ctl__head">
-    <p class="bb-ctl__title">Complete the look</p>
-    <p class="bb-ctl__sub">Style the full set</p>
+    <p class="bb-ctl__title">{{ section.settings.heading | default: 'Complete the look' }}</p>
+    <p class="bb-ctl__sub">{{ section.settings.subheading | default: 'Style the full set' }}</p>
   </div>
 
   {%- comment -%} ── Desktop checklist ── {%- endcomment -%}
@@ -38,19 +43,19 @@
       <div class="bb-ctl__img">
         {%- if product.featured_image != blank -%}
           <img
-            src="{{ product.featured_image | image_url: width: 160, height: 200, crop: 'center' }}"
+            src="{{ product.featured_image | image_url: width: ctl_img_w2, height: ctl_img_h2, crop: 'center' }}"
             alt="{{ product.title | escape }}"
-            width="60" height="75" loading="lazy"
+            width="{{ ctl_img_w }}" height="{{ ctl_img_h }}" loading="lazy"
           >
         {%- endif -%}
       </div>
       <div class="bb-ctl__info">
-        <p class="bb-ctl__name">{{ product.title | split: ' in ' | first }}</p>
-        <p class="bb-ctl__piece bb-ctl__piece--current">This item</p>
+        <a class="bb-ctl__name" href="{{ product.url }}">{{ product.title | split: ' in ' | first }}</a>
+        <p class="bb-ctl__piece bb-ctl__piece--current">{{ section.settings.this_item_label | default: 'This item' }}</p>
         <p class="bb-ctl__price">{{ current_variant.price | money }}</p>
       </div>
       <div class="bb-ctl__right">
-        <span class="bb-ctl__this-tag">This item</span>
+        <span class="bb-ctl__this-tag">{{ section.settings.this_item_label | default: 'This item' }}</span>
         <div class="bb-ctl__size-wrap">
           {%- if product.variants.size > 1 -%}
             <select class="bb-ctl__size-select" aria-label="Size" data-item-id="{{ product.id }}">
@@ -73,7 +78,7 @@
     {%- comment -%} Divider {%- endcomment -%}
     <div class="bb-ctl__divider" aria-hidden="true">
       <div class="bb-ctl__divider-line"></div>
-      <span class="bb-ctl__divider-text">Add to complete the set</span>
+      <span class="bb-ctl__divider-text">{{ section.settings.divider_text | default: 'Add to complete the set' }}</span>
       <div class="bb-ctl__divider-line"></div>
     </div>
 
@@ -87,9 +92,9 @@
       <div class="bb-ctl__check" aria-hidden="true">
         <div class="bb-ctl__chk-off"></div>
       </div>
-      <div class="bb-ctl__img bb-ctl__img--piece" id="bb-ctl-piece-img-{{ section.id }}" style="width:60px;height:75px;"></div>
+      <div class="bb-ctl__img bb-ctl__img--piece" id="bb-ctl-piece-img-{{ section.id }}" style="width:{{ ctl_img_w }}px;height:{{ ctl_img_h }}px;"></div>
       <div class="bb-ctl__info">
-        <p class="bb-ctl__name" id="bb-ctl-piece-name-{{ section.id }}">—</p>
+        <a class="bb-ctl__name" id="bb-ctl-piece-name-{{ section.id }}" href="#">—</a>
         <p class="bb-ctl__piece" id="bb-ctl-piece-label-{{ section.id }}">—</p>
         <p class="bb-ctl__price" id="bb-ctl-piece-price-{{ section.id }}">—</p>
       </div>
@@ -114,14 +119,14 @@
         <div class="bb-ctl__img">
           {%- if pair_product.featured_image != blank -%}
             <img
-              src="{{ pair_product.featured_image | image_url: width: 160, height: 200, crop: 'center' }}"
+              src="{{ pair_product.featured_image | image_url: width: ctl_img_w2, height: ctl_img_h2, crop: 'center' }}"
               alt="{{ pair_product.title | escape }}"
-              width="60" height="75" loading="lazy"
+              width="{{ ctl_img_w }}" height="{{ ctl_img_h }}" loading="lazy"
             >
           {%- endif -%}
         </div>
         <div class="bb-ctl__info">
-          <p class="bb-ctl__name">{{ pair_product.title | split: ' in ' | first }}</p>
+          <a class="bb-ctl__name" href="{{ pair_product.url }}">{{ pair_product.title | split: ' in ' | first }}</a>
           <p class="bb-ctl__piece">{{ section.settings.pair_label | default: 'Resortwear' }}</p>
           <p class="bb-ctl__price" data-base-price="{{ pair_variant.price }}">
             {{ pair_variant.price | money }}
@@ -173,6 +178,7 @@
 
 <style>
   #bb-ctl-{{ section.id }} {
+    --bb-accent: {{ section.settings.accent_color | default: '#49c6be' }};
     background: #ffffff;
     display: flex;
     flex-direction: column;
@@ -210,11 +216,12 @@
   #bb-ctl-{{ section.id }} .bb-ctl__item.is-current { cursor: default; }
   #bb-ctl-{{ section.id }} .bb-ctl__item:not(.is-current):hover { background: #f5f1ec; }
   #bb-ctl-{{ section.id }} .bb-ctl__item.is-checked:not(.is-current) { background: #f5f1ec; }
+  #bb-ctl-{{ section.id }} .bb-ctl__item.is-checked { box-shadow: inset 0 0 0 2px var(--bb-accent); }
 
   #bb-ctl-{{ section.id }} .bb-ctl__check { flex-shrink: 0; }
   #bb-ctl-{{ section.id }} .bb-ctl__chk-on {
     width: 18px; height: 18px; border-radius: 50%;
-    background: #49c6be; border: 1.5px solid #49c6be;
+    background: var(--bb-accent); border: 1.5px solid var(--bb-accent);
     display: inline-flex; align-items: center; justify-content: center;
   }
   #bb-ctl-{{ section.id }} .bb-ctl__chk-off {
@@ -223,7 +230,7 @@
   }
 
   #bb-ctl-{{ section.id }} .bb-ctl__img {
-    width: 60px; height: 75px; border-radius: 6px;
+    width: {{ ctl_img_w }}px; height: {{ ctl_img_h }}px; border-radius: 6px;
     overflow: hidden; flex-shrink: 0; background: #f0ece6;
   }
   #bb-ctl-{{ section.id }} .bb-ctl__img img {
@@ -232,9 +239,11 @@
 
   #bb-ctl-{{ section.id }} .bb-ctl__info { flex: 1; min-width: 0; }
   #bb-ctl-{{ section.id }} .bb-ctl__name {
+    display: block; text-decoration: none;
     font-size: 0.8125rem; font-weight: 500; color: #2a2520;
     margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+  #bb-ctl-{{ section.id }} a.bb-ctl__name:hover { text-decoration: underline; }
   #bb-ctl-{{ section.id }} .bb-ctl__piece { font-size: 0.75rem; color: #8a8077; margin-bottom: 3px; }
   #bb-ctl-{{ section.id }} .bb-ctl__price { font-size: 0.75rem; color: #2a2520; }
 
@@ -243,7 +252,7 @@
   }
   #bb-ctl-{{ section.id }} .bb-ctl__this-tag {
     font-size: 0.5625rem; font-weight: 500; letter-spacing: 0.05em;
-    text-transform: uppercase; color: #49c6be;
+    text-transform: uppercase; color: var(--bb-accent);
   }
   #bb-ctl-{{ section.id }} .bb-ctl__size-wrap { position: relative; display: inline-flex; align-items: center; }
   #bb-ctl-{{ section.id }} .bb-ctl__size-select {
@@ -275,7 +284,7 @@
 
   #bb-ctl-{{ section.id }} .bb-ctl__add-btn {
     display: inline-flex; align-items: center; gap: 6px;
-    background: #49c6be; color: #ffffff; border: none; border-radius: 999px;
+    background: var(--bb-accent); color: #ffffff; border: none; border-radius: 999px;
     padding: 10px 16px; font-size: 0.6875rem; font-weight: 500;
     letter-spacing: 0.06em; text-transform: uppercase;
     cursor: pointer; font-family: inherit; white-space: nowrap; transition: opacity 0.15s;
@@ -306,6 +315,11 @@
   var addLabel = addBtn ? addBtn.querySelector('.bb-ctl__add-label') : null;
   var pieceRow = document.getElementById('bb-ctl-piece-' + sid);
 
+  var imgW  = {{ ctl_img_w }};
+  var imgH  = {{ ctl_img_h }};
+  var imgW2 = {{ ctl_img_w2 }};
+  var imgH2 = {{ ctl_img_h2 }};
+
   /* ── Populate matching piece row from auto-connect ── */
   function handleProductData(data) {
     if (!data || !data.hasPieceToggle) return;
@@ -325,27 +339,26 @@
         var imgEl   = document.getElementById('bb-ctl-piece-img-' + sid);
         var sizesEl = document.getElementById('bb-ctl-piece-sizes-' + sid);
 
-        if (nameEl)  nameEl.textContent  = p.title.split(' in ')[0];
+        if (nameEl) {
+          nameEl.textContent = p.title.split(' in ')[0];
+          nameEl.href = link.url;
+        }
         if (labelEl) labelEl.textContent = oppPiece;
         if (priceEl) priceEl.textContent = formatMoneyFromCents(p.variants[0].price);
 
-        /* Image */
-        var imgSrc = null;
-        if (p.images && p.images.length > 0) {
-          imgSrc = p.images[0].src;
-        } else if (p.featured_image) {
-          imgSrc = p.featured_image;
-        }
+        /*
+          /products/{handle}.js returns featured_image and images as URL STRINGS
+          (not objects), so the old p.images[0].src was undefined — hence no image.
+        */
+        var imgSrc = p.featured_image || (p.images && p.images[0]) || null;
 
         if (imgEl && imgSrc) {
-          /* Remove existing size params and add our own */
-          imgSrc = imgSrc.replace(/[?&](width|height)=\d+/g, '');
-          imgSrc = imgSrc + (imgSrc.indexOf('?') !== -1 ? '&' : '?') + 'width=160';
+          imgSrc = imgSrc.split('?')[0] + '?width=' + imgW2 + '&height=' + imgH2 + '&crop=center';
           var img    = document.createElement('img');
           img.src    = imgSrc;
           img.alt    = p.title;
           img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-          imgEl.style.cssText = 'width:60px;height:75px;border-radius:6px;overflow:hidden;flex-shrink:0;background:#f0ece6;';
+          imgEl.style.cssText = 'width:' + imgW + 'px;height:' + imgH + 'px;border-radius:6px;overflow:hidden;flex-shrink:0;background:#f0ece6;';
           imgEl.innerHTML = '';
           imgEl.appendChild(img);
         }
@@ -489,6 +502,7 @@
   ctl.querySelectorAll('.bb-ctl__item:not(.is-current)').forEach(function (item) {
     item.addEventListener('click', function (e) {
       if (e.target.closest('.bb-ctl__size-wrap')) return;
+      if (e.target.closest('.bb-ctl__name')) return;
       var isChecked = item.classList.toggle('is-checked');
       var chkEl     = item.querySelector('.bb-ctl__check');
       if (chkEl) {
@@ -572,11 +586,64 @@
   "class": "bb-product-ctl-section",
   "settings": [
     {
+      "type": "header",
+      "content": "Headings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete the look"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Style the full set"
+    },
+    {
+      "type": "text",
+      "id": "divider_text",
+      "label": "Divider text",
+      "default": "Add to complete the set"
+    },
+    {
+      "type": "text",
+      "id": "this_item_label",
+      "label": "Current item label",
+      "default": "This item"
+    },
+    {
       "type": "text",
       "id": "pair_label",
       "label": "Third item label",
       "default": "Resortwear",
       "info": "Label shown for the set pair product from the metafield."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "info": "Used for the selected border, checkmark, tag, and add button.",
+      "default": "#49c6be"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image width (height keeps 9:16)",
+      "min": 40,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 60
     }
   ],
   "presets": [
