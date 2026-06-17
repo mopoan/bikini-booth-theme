@@ -161,17 +161,24 @@
     cursor: crosshair;
   }
 
-  /* ── Slides ── */
+  /* ── Slides (crossfade on desktop, horizontal slide on mobile) ── */
   #bb-media-{{ section.id }} .bb-media__slide {
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: translateX(0);
+    transition: transform 0.35s ease, opacity 0.35s ease;
     pointer-events: none;
   }
   #bb-media-{{ section.id }} .bb-media__slide.is-active {
     opacity: 1;
     pointer-events: auto;
+    z-index: 2;
+  }
+  /* Outgoing slide stays opaque while it slides out (mobile) */
+  #bb-media-{{ section.id }} .bb-media__slide.is-leaving {
+    opacity: 1;
+    z-index: 1;
   }
 
   /* ── Images ── */
@@ -376,30 +383,84 @@
   var activeIdx = 0;
   var isZoomed  = false;
 
-  /* ── Navigate to slide ── */
-  function goTo(idx) {
-    if (idx < 0 || idx >= slides.length) return;
+  /* ── Sync thumbnail + dot active state ── */
+  function syncControls(oldIdx, newIdx) {
+    if (thumbs[oldIdx]) { thumbs[oldIdx].classList.remove('is-active'); thumbs[oldIdx].setAttribute('aria-selected', 'false'); }
+    if (dots[oldIdx])   dots[oldIdx].classList.remove('is-active');
+    if (thumbs[newIdx]) {
+      thumbs[newIdx].classList.add('is-active');
+      thumbs[newIdx].setAttribute('aria-selected', 'true');
+      /* Scroll thumbnail into view */
+      thumbs[newIdx].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    }
+    if (dots[newIdx]) dots[newIdx].classList.add('is-active');
+  }
 
-    slides[activeIdx].classList.remove('is-active');
-    slides[activeIdx].setAttribute('aria-hidden', 'true');
-    if (thumbs[activeIdx]) thumbs[activeIdx].classList.remove('is-active');
-    if (dots[activeIdx])   dots[activeIdx].classList.remove('is-active');
+  var isAnimating = false;
+
+  /* ── Navigate to slide ──
+     Mobile (<=767px): horizontal slide transition + wrap-around (last -> first).
+     Desktop: original crossfade, clamped at the ends. ── */
+  function goTo(idx, dir) {
+    var n = slides.length;
+    if (n <= 1) return;
+    var mobile = window.matchMedia('(max-width: 767px)').matches;
+    if (mobile) { idx = (idx % n + n) % n; }          /* wrap into range */
+    else if (idx < 0 || idx >= n) { return; }         /* clamp at ends */
+    if (idx === activeIdx || isAnimating) return;
+    if (dir === undefined) dir = idx > activeIdx ? 1 : -1;
+
+    var oldIdx    = activeIdx;
+    var prevSlide = slides[oldIdx];
+    var nextSlide = slides[idx];
+
+    if (!mobile) {
+      /* Desktop: instant crossfade (unchanged behavior) */
+      prevSlide.classList.remove('is-active');
+      prevSlide.setAttribute('aria-hidden', 'true');
+      activeIdx = idx;
+      nextSlide.classList.add('is-active');
+      nextSlide.setAttribute('aria-hidden', 'false');
+      syncControls(oldIdx, activeIdx);
+      if (isZoomed) setZoom(false);
+      document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: activeIdx } }));
+      return;
+    }
+
+    /* Mobile: slide the new image in from one side, the old one out the other */
+    isAnimating = true;
+    nextSlide.style.transition = 'none';
+    nextSlide.classList.add('is-active');
+    nextSlide.setAttribute('aria-hidden', 'false');
+    nextSlide.style.transform = 'translateX(' + (dir > 0 ? '100%' : '-100%') + ')';
+    void nextSlide.offsetWidth;                        /* force reflow before animating */
+    nextSlide.style.transition = '';
+    nextSlide.style.transform = 'translateX(0)';
+
+    prevSlide.classList.remove('is-active');
+    prevSlide.classList.add('is-leaving');
+    prevSlide.setAttribute('aria-hidden', 'true');
+    prevSlide.style.transform = 'translateX(' + (dir > 0 ? '-100%' : '100%') + ')';
 
     activeIdx = idx;
-
-    slides[activeIdx].classList.add('is-active');
-    slides[activeIdx].setAttribute('aria-hidden', 'false');
-    if (thumbs[activeIdx]) {
-      thumbs[activeIdx].classList.add('is-active');
-      thumbs[activeIdx].setAttribute('aria-selected', 'true');
-      /* Scroll thumbnail into view */
-      thumbs[activeIdx].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
-    }
-    if (dots[activeIdx]) dots[activeIdx].classList.add('is-active');
+    syncControls(oldIdx, activeIdx);
 
     if (isZoomed) setZoom(false);
     document.dispatchEvent(new CustomEvent('bb:slideChange', { detail: { index: activeIdx } }));
+
+    /* Reset the outgoing slide once it has slid out of view */
+    setTimeout(function () {
+      prevSlide.classList.remove('is-leaving');
+      prevSlide.style.transition = 'none';
+      prevSlide.style.transform = '';
+      void prevSlide.offsetWidth;
+      prevSlide.style.transition = '';
+      isAnimating = false;
+    }, 380);
   }
+
+  function goNext() { goTo(activeIdx + 1, 1); }
+  function goPrev() { goTo(activeIdx - 1, -1); }
 
   /* ── Thumbnail clicks ── */
   Array.from(thumbs).forEach(function (btn) {
@@ -423,14 +484,14 @@
   stage.addEventListener('touchend', function (e) {
     var dx = e.changedTouches[0].clientX - startX;
     if (Math.abs(dx) < 40) return;
-    goTo(dx < 0 ? activeIdx + 1 : activeIdx - 1);
+    if (dx < 0) goNext(); else goPrev();
   }, { passive: true });
 
   /* ── Keyboard navigation ── */
   stage.setAttribute('tabindex', '0');
   stage.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(activeIdx + 1); }
-    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); goTo(activeIdx - 1); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goNext(); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); goPrev(); }
   });
 
   /* ── Zoom ── */
