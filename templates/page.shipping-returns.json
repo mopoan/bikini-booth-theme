@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "bb_shipping": {
@@ -35,32 +44,121 @@
             "text": "Our customer care team is always here to help."
           }
         },
-        "ship_1": { "type": "shipping_point", "settings": { "text": "Free shipping on all orders over $250 USD." } },
-        "ship_2": { "type": "shipping_point", "settings": { "text": "Flat rate of $7 for orders within Thailand." } },
-        "ship_3": { "type": "shipping_point", "settings": { "text": "We ship worldwide from Thailand." } },
-        "ship_4": { "type": "shipping_point", "settings": { "text": "Express carriers such as DHL and UPS." } },
-        "ship_5": { "type": "shipping_point", "settings": { "text": "Tracking provided once your order ships." } },
-        "ship_6": { "type": "shipping_point", "settings": { "text": "Orders dispatch within 1–2 business days." } },
-        "ret_1": { "type": "returns_point", "settings": { "text": "30-day return window from delivery." } },
-        "ret_2": { "type": "returns_point", "settings": { "text": "Items must be unworn and in original condition." } },
-        "ret_3": { "type": "returns_point", "settings": { "text": "Hygiene liners and tags must remain attached." } },
-        "ret_4": { "type": "returns_point", "settings": { "text": "Refunds to original payment method." } },
-        "ret_5": { "type": "returns_point", "settings": { "text": "Final sale items excluded." } },
-        "trust_1": { "type": "trust", "settings": { "icon": "pin", "text": "Shipped from Thailand" } },
-        "trust_2": { "type": "trust", "settings": { "icon": "globe", "text": "We ship worldwide" } },
-        "trust_3": { "type": "trust", "settings": { "icon": "check", "text": "Secure payments" } }
+        "ship_1": {
+          "type": "shipping_point",
+          "settings": {
+            "text": "Free shipping on all orders over $250 USD."
+          }
+        },
+        "ship_2": {
+          "type": "shipping_point",
+          "settings": {
+            "text": "Flat rate of $7 for orders within Thailand."
+          }
+        },
+        "ship_3": {
+          "type": "shipping_point",
+          "settings": {
+            "text": "We ship worldwide from Thailand."
+          }
+        },
+        "ship_4": {
+          "type": "shipping_point",
+          "settings": {
+            "text": "Express carriers such as DHL and UPS."
+          }
+        },
+        "ship_5": {
+          "type": "shipping_point",
+          "settings": {
+            "text": "Tracking provided once your order ships."
+          }
+        },
+        "ship_6": {
+          "type": "shipping_point",
+          "settings": {
+            "text": "Orders dispatch within 1–2 business days."
+          }
+        },
+        "ret_1": {
+          "type": "returns_point",
+          "settings": {
+            "text": "30-day return window from delivery."
+          }
+        },
+        "ret_2": {
+          "type": "returns_point",
+          "settings": {
+            "text": "Items must be unworn and in original condition."
+          }
+        },
+        "ret_3": {
+          "type": "returns_point",
+          "settings": {
+            "text": "Hygiene liners and tags must remain attached."
+          }
+        },
+        "ret_4": {
+          "type": "returns_point",
+          "settings": {
+            "text": "Refunds to original payment method."
+          }
+        },
+        "ret_5": {
+          "type": "returns_point",
+          "settings": {
+            "text": "Final sale items excluded."
+          }
+        },
+        "trust_1": {
+          "type": "trust",
+          "settings": {
+            "icon": "pin",
+            "text": "Shipped from Thailand"
+          }
+        },
+        "trust_2": {
+          "type": "trust",
+          "settings": {
+            "icon": "globe",
+            "text": "We ship worldwide"
+          }
+        },
+        "trust_3": {
+          "type": "trust",
+          "settings": {
+            "icon": "check",
+            "text": "Secure payments"
+          }
+        }
       },
       "block_order": [
-        "feat_1", "feat_2", "feat_3", "feat_4",
-        "ship_1", "ship_2", "ship_3", "ship_4", "ship_5", "ship_6",
-        "ret_1", "ret_2", "ret_3", "ret_4", "ret_5",
-        "trust_1", "trust_2", "trust_3"
+        "feat_1",
+        "feat_2",
+        "feat_3",
+        "feat_4",
+        "ship_1",
+        "ship_2",
+        "ship_3",
+        "ship_4",
+        "ship_5",
+        "ship_6",
+        "ret_1",
+        "ret_2",
+        "ret_3",
+        "ret_4",
+        "ret_5",
+        "trust_1",
+        "trust_2",
+        "trust_3"
       ],
       "settings": {
+        "hero_image": "shopify://shop_images/modle_laying_on_the_beach.png",
         "hero_title": "Shipping & Returns",
         "hero_lead": "Simple, transparent, and designed to make shopping with confidence easy.",
         "shipping_title": "Shipping",
         "returns_title": "Returns",
+        "cta_image": "shopify://shop_images/waves-crashing-on-beach.jpg",
         "cta_title": "Ready for Your Next Escape?",
         "cta_text": "Discover swimwear designed for sunshine, salt water, and unforgettable holidays.",
         "cta_button_label": "Shop New Arrivals",
@@ -68,5 +166,7 @@
       }
     }
   },
-  "order": ["bb_shipping"]
+  "order": [
+    "bb_shipping"
+  ]
 }
