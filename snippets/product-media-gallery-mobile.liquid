@@ -76,15 +76,8 @@
            {% if colors_array != blank %}data-current-color="{{ colors_array[forloop.index0] | downcase }}"{% endif %}
            data-media-id="{{ media.id }}"
         >
-        {%- liquid
-            capture image_ratio
-            if section.settings.image_ratio == 'auto'
-            echo media.preview_image.aspect_ratio
-            else
-            echo section.settings.image_ratio
-            endif
-            endcapture
-         -%}
+        {%- comment -%} Thumbnails forced to 9:16 portrait {%- endcomment -%}
+        {%- assign image_ratio = 0.5625 -%}
         <div class="product__media__thumb">
           <div class="image-hover-box image-hover-box__small-radius">
             <div class="product__media" style="--aspect-ratio: {{ image_ratio }};">
