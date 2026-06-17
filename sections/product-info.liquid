@@ -163,17 +163,19 @@
       </button>
     </form>
 
-    <button
-      type="button"
+    {%- if settings.enable_wishlist -%}
+    <wishlist-button
       class="bb-wl-btn"
-      id="bb-wl-btn-{{ section.id }}"
-      data-wishlist-handle="{{ product.handle }}"
-      data-wishlist-product-id="{{ product.id }}"
-      aria-label="Add {{ product.title | escape }} to wishlist"
-      aria-pressed="false"
+      data-text="{{ 'wishlist.product.wishlist' | t }}"
+      data-text-active="{{ 'wishlist.product.wishlist-remove' | t }}"
+      data-id="{{ product.id }}"
+      data-product-handle="{{ product.handle }}"
+      aria-label="{{ 'wishlist.product.wishlist' | t }}"
     >
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    </button>
+      {%- render "icon-wishlist" icon_type:"normal" -%}
+      {%- render "icon-wishlist" icon_type:"added" -%}
+    </wishlist-button>
+    {%- endif -%}
   </div>
 
 </div>
@@ -485,8 +487,15 @@
     transition: border-color 0.15s;
   }
   #bb-info-{{ section.id }} .bb-wl-btn:hover { border-color: #49c6be; }
-  #bb-info-{{ section.id }} .bb-wl-btn svg { stroke: #a09890; transition: stroke 0.15s, fill 0.15s; }
-  #bb-info-{{ section.id }} .bb-wl-btn.is-active svg { stroke: #49c6be; fill: #49c6be; }
+  #bb-info-{{ section.id }} .bb-wl-btn .theme-icon { width: 18px; height: 18px; display: block; }
+  /* Show the "normal" heart by default; swap to "added" when the theme marks it active */
+  #bb-info-{{ section.id }} .bb-wl-btn .theme-icon:nth-of-type(2) { display: none; }
+  #bb-info-{{ section.id }} .bb-wl-btn.added   .theme-icon:nth-of-type(1),
+  #bb-info-{{ section.id }} .bb-wl-btn.active  .theme-icon:nth-of-type(1),
+  #bb-info-{{ section.id }} .bb-wl-btn.is-added .theme-icon:nth-of-type(1) { display: none; }
+  #bb-info-{{ section.id }} .bb-wl-btn.added   .theme-icon:nth-of-type(2),
+  #bb-info-{{ section.id }} .bb-wl-btn.active  .theme-icon:nth-of-type(2),
+  #bb-info-{{ section.id }} .bb-wl-btn.is-added .theme-icon:nth-of-type(2) { display: block; }
 
   @media (max-width: 767px) {
     #bb-info-{{ section.id }} { padding: 16px 14px 0; }
@@ -514,7 +523,7 @@
   var pieceBotBtn   = document.getElementById('bb-piece-bottom-' + sid);
   var pieceTopPrc   = document.getElementById('bb-piece-top-price-' + sid);
   var pieceBotPrc   = document.getElementById('bb-piece-bottom-price-' + sid);
-  var wlBtn         = document.getElementById('bb-wl-btn-' + sid);
+  var wlBtn         = null;
   var sizeNameEl    = document.getElementById('bb-size-name-' + sid);
   var sizeButtons   = section.querySelectorAll('.bb-size-btn');
   var selectedVariantId = null;
@@ -725,20 +734,7 @@
     });
   }
 
-  /* ── Wishlist ── */
-  if (wlBtn) {
-    wlBtn.addEventListener('click', function () {
-      var active = wlBtn.classList.toggle('is-active');
-      wlBtn.setAttribute('aria-pressed', active ? 'true' : 'false');
-      document.dispatchEvent(new CustomEvent('wishlist:toggle', {
-        detail: {
-          handle:    wlBtn.dataset.wishlistHandle,
-          productId: wlBtn.dataset.wishlistProductId,
-          active:    active
-        }
-      }));
-    });
-  }
+  /* Wishlist is handled by the theme's native <wishlist-button> element. */
 
 })();
 </script>
