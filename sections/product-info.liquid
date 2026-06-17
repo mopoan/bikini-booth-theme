@@ -436,13 +436,14 @@
   #bb-info-{{ section.id }} .bb-atc-form { flex: 1; }
   #bb-info-{{ section.id }} .bb-atc-btn {
     width: 100%;
+    box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
     background: #49c6be;
     color: #ffffff;
-    border: none;
+    border: 1.5px solid #49c6be;
     border-radius: 999px;
     padding: 13px 16px;
     font-size: 0.75rem;
@@ -451,10 +452,17 @@
     text-transform: uppercase;
     cursor: pointer;
     font-family: inherit;
-    transition: opacity 0.15s;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
     white-space: nowrap;
   }
-  #bb-info-{{ section.id }} .bb-atc-btn:hover:not(:disabled) { opacity: 0.9; }
+  #bb-info-{{ section.id }} .bb-atc-btn:hover:not(:disabled) {
+    background: {{ section.settings.atc_hover_bg | default: '#ffffff' }};
+    color: {{ section.settings.atc_hover_text | default: '#49c6be' }};
+    border-color: {{ section.settings.atc_hover_border | default: '#49c6be' }};
+  }
+  #bb-info-{{ section.id }} .bb-atc-btn:hover:not(:disabled) svg {
+    stroke: {{ section.settings.atc_hover_text | default: '#49c6be' }};
+  }
   #bb-info-{{ section.id }} .bb-atc-btn:disabled {
     background: #c8c0b8;
     cursor: not-allowed;
@@ -647,26 +655,39 @@
       var variantId = variantInput ? parseInt(variantInput.value, 10) : null;
       if (!variantId) return;
 
+      /*
+        Use the Section Rendering API so the cart drawer gets freshly-rendered
+        HTML with the new item — otherwise it opens showing its stale (empty) state.
+      */
+      var cartDrawer = document.querySelector('cart-drawer');
+      var addBody    = { id: variantId, quantity: 1 };
+
+      if (cartDrawer && typeof cartDrawer.getSectionsToRender === 'function') {
+        addBody.sections     = cartDrawer.getSectionsToRender().map(function (s) { return s.id; }).join(',');
+        addBody.sections_url = window.location.pathname;
+      }
+
       fetch('/cart/add.js', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-        body:    JSON.stringify({ id: variantId, quantity: 1 })
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body:    JSON.stringify(addBody)
       })
       .then(function (r) { return r.json(); })
-      .then(function () {
+      .then(function (response) {
+        /* Shopify returns a status field only on failure (e.g. sold out) */
+        if (response.status) {
+          throw new Error(response.description || 'Could not add to cart');
+        }
+
         if (atcLabelEl) atcLabelEl.textContent = 'Added!';
-        return fetch('/cart.js', {
-          headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        });
-      })
-      .then(function () {
-        document.dispatchEvent(new CustomEvent('cart:updated'));
 
-        setTimeout(function () {
-          document.dispatchEvent(new CustomEvent('cart:open'));
-          document.dispatchEvent(new CustomEvent('cartdrawer:open'));
-          document.dispatchEvent(new CustomEvent('theme:cart:open'));
-
+        if (cartDrawer && typeof cartDrawer.renderContents === 'function' && response.sections) {
+          /* Dawn-style drawer: swap in fresh HTML and open it */
+          cartDrawer.renderContents(response);
+        } else {
+          /* Fallback: notify the theme and open via known triggers */
+          document.dispatchEvent(new CustomEvent('cart:updated'));
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
           var cartTriggers = [
             '[data-drawer-open="cart-drawer"]',
             '[data-cart-drawer-trigger]',
@@ -680,12 +701,12 @@
             var el = document.querySelector(cartTriggers[i]);
             if (el) { el.click(); break; }
           }
+        }
 
-          setTimeout(function () {
-            if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
-            if (atcBtn)     atcBtn.disabled = false;
-          }, 1800);
-        }, 300);
+        setTimeout(function () {
+          if (atcLabelEl) atcLabelEl.textContent = 'Add to cart';
+          if (atcBtn)     atcBtn.disabled = false;
+        }, 1800);
       })
       .catch(function (err) {
         console.warn('[BB ATC] Error:', err);
@@ -725,6 +746,28 @@
       "id": "price_note",
       "label": "Price note",
       "default": "Top and bottom sold separately."
+    },
+    {
+      "type": "header",
+      "content": "Add to cart button — hover"
+    },
+    {
+      "type": "color",
+      "id": "atc_hover_bg",
+      "label": "Hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "atc_hover_text",
+      "label": "Hover text & icon",
+      "default": "#49c6be"
+    },
+    {
+      "type": "color",
+      "id": "atc_hover_border",
+      "label": "Hover border",
+      "default": "#49c6be"
     }
   ],
   "presets": [
