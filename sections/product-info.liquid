@@ -32,10 +32,18 @@
       {{- product.title | split: ' - ' | first -}}
     </h1>
 
-    {%- if product.metafields.custom.tagline != blank -%}
-      <p class="bb-info__tagline">{{ product.metafields.custom.tagline }}</p>
-    {%- elsif product.description != blank -%}
-      <p class="bb-info__tagline">{{ product.description | strip_html | truncate: 130 }}</p>
+    {%- comment -%} Branding subtitle — from product metafield custom.branding_subtitle only (no description/tagline fallback) {%- endcomment -%}
+    {%- if section.settings.show_subtitle -%}
+      {%- assign branding_subtitle = product.metafields.custom.branding_subtitle -%}
+      {%- if branding_subtitle != blank -%}
+        <div class="bb-info__tagline">
+          {%- if branding_subtitle.type == 'rich_text_field' -%}
+            {{ branding_subtitle }}
+          {%- else -%}
+            {{ branding_subtitle.value | escape | newline_to_br }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
     {%- endif -%}
 
     <div class="bb-info__meta-row">
@@ -240,11 +248,16 @@
     margin: 0 0 5px;
   }
   #bb-info-{{ section.id }} .bb-info__tagline {
-    font-size: 0.75rem;
-    color: #8a8077;
-    line-height: 1.55;
-    margin: 0 0 10px;
+    font-size: {{ section.settings.subtitle_font_size | default: 12 }}px;
+    color: {{ section.settings.subtitle_color | default: '#8a8077' }};
+    font-weight: {{ section.settings.subtitle_weight | default: 400 }};
+    line-height: {{ section.settings.subtitle_line_height | default: 1.55 }};
+    margin: {{ section.settings.subtitle_margin_top | default: 0 }}px 0 {{ section.settings.subtitle_margin_bottom | default: 10 }}px;
+    {%- if section.settings.subtitle_max_width > 0 %}
+    max-width: {{ section.settings.subtitle_max_width }}px;
+    {%- endif %}
   }
+  #bb-info-{{ section.id }} .bb-info__tagline p { margin: 0; }
   #bb-info-{{ section.id }} .bb-info__meta-row {
     margin-bottom: 6px;
   }
@@ -824,6 +837,85 @@
       "id": "price_note",
       "label": "Price note",
       "default": "Top and bottom sold separately."
+    },
+    {
+      "type": "header",
+      "content": "Branding subtitle"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle",
+      "label": "Show branding subtitle",
+      "info": "Pulled from product metafield custom.branding_subtitle. Hidden cleanly when the metafield is empty.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Text color",
+      "default": "#8a8077"
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.05,
+      "default": 1.55
+    },
+    {
+      "type": "range",
+      "id": "subtitle_margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "subtitle_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "subtitle_max_width",
+      "label": "Max width",
+      "info": "Set to 0 for no limit.",
+      "min": 0,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 0
     },
     {
       "type": "header",
