@@ -55,7 +55,6 @@
         <p class="bb-ctl__price">{{ current_variant.price | money }}</p>
       </div>
       <div class="bb-ctl__right">
-        <span class="bb-ctl__this-tag">{{ section.settings.this_item_label | default: 'This item' }}</span>
         <div class="bb-ctl__size-wrap">
           {%- if product.variants.size > 1 -%}
             <select class="bb-ctl__size-select" aria-label="Size" data-item-id="{{ product.id }}">
@@ -253,10 +252,6 @@
 
   #bb-ctl-{{ section.id }} .bb-ctl__right {
     display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;
-  }
-  #bb-ctl-{{ section.id }} .bb-ctl__this-tag {
-    font-size: 0.5625rem; font-weight: 500; letter-spacing: 0.05em;
-    text-transform: uppercase; color: var(--bb-accent);
   }
   #bb-ctl-{{ section.id }} .bb-ctl__size-wrap { position: relative; display: inline-flex; align-items: center; }
   #bb-ctl-{{ section.id }} .bb-ctl__size-select {
