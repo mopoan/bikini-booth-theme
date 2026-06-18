@@ -61,7 +61,12 @@
       <span class="bb-info__price" id="bb-price-{{ section.id }}">
         <span id="bb-price-amount-{{ section.id }}">{{ current_variant.price | money }}</span>
       </span>
-      {%- if section.settings.price_note != blank -%}
+      {%- comment -%} Price note shows only on Bikini Top / Bikini Bottom products {%- endcomment -%}
+      {%- assign bb_is_piece = false -%}
+      {%- if product.type contains 'Bikini Top' or product.type contains 'Bikini Bottom' -%}
+        {%- assign bb_is_piece = true -%}
+      {%- endif -%}
+      {%- if section.settings.price_note != blank and bb_is_piece -%}
         <span class="bb-info__price-note" id="bb-price-note-{{ section.id }}">{{ section.settings.price_note }}</span>
       {%- endif -%}
     </div>
@@ -251,7 +256,7 @@
     font-size: {{ section.settings.subtitle_font_size | default: 12 }}px;
     color: {{ section.settings.subtitle_color | default: '#8a8077' }};
     font-weight: {{ section.settings.subtitle_weight | default: 400 }};
-    line-height: {{ section.settings.subtitle_line_height | default: 1.55 }};
+    line-height: {{ section.settings.subtitle_line_height | default: 1.5 }};
     margin: {{ section.settings.subtitle_margin_top | default: 0 }}px 0 {{ section.settings.subtitle_margin_bottom | default: 10 }}px;
     {%- if section.settings.subtitle_max_width > 0 %}
     max-width: {{ section.settings.subtitle_max_width }}px;
@@ -836,6 +841,7 @@
       "type": "text",
       "id": "price_note",
       "label": "Price note",
+      "info": "Shown only on products with a Bikini Top or Bikini Bottom product type.",
       "default": "Top and bottom sold separately."
     },
     {
@@ -883,8 +889,8 @@
       "label": "Line height",
       "min": 1,
       "max": 2,
-      "step": 0.05,
-      "default": 1.55
+      "step": 0.1,
+      "default": 1.5
     },
     {
       "type": "range",
