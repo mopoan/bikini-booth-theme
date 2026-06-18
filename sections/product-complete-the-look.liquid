@@ -70,6 +70,8 @@
               {%- endfor -%}
             </select>
             <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          {%- else -%}
+            <span class="bb-ctl__size-only">One-Size</span>
           {%- endif -%}
         </div>
       </div>
@@ -127,7 +129,7 @@
         </div>
         <div class="bb-ctl__info">
           <a class="bb-ctl__name" href="{{ pair_product.url }}">{{ pair_product.title | split: ' in ' | first }}</a>
-          <p class="bb-ctl__piece">{{ section.settings.pair_label | default: 'Resortwear' }}</p>
+          <p class="bb-ctl__piece">{{ pair_product.type | default: section.settings.pair_label | default: 'Resortwear' }}</p>
           <p class="bb-ctl__price" data-base-price="{{ pair_variant.price }}">
             {{ pair_variant.price | money }}
           </p>
@@ -146,8 +148,8 @@
                 {%- endfor -%}
               </select>
               <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            {%- elsif pair_variant.title != 'Default Title' -%}
-              <span class="bb-ctl__size-only">{{ pair_variant.title }}</span>
+            {%- else -%}
+              <span class="bb-ctl__size-only">One-Size</span>
             {%- endif -%}
           </div>
         </div>
@@ -259,12 +261,21 @@
   #bb-ctl-{{ section.id }} .bb-ctl__size-wrap { position: relative; display: inline-flex; align-items: center; }
   #bb-ctl-{{ section.id }} .bb-ctl__size-select {
     appearance: none; -webkit-appearance: none;
-    background: #ffffff; border: 0.5px solid #e0dbd3; border-radius: 4px;
-    padding: 3px 20px 3px 7px; font-size: 0.625rem; color: #2a2520;
+    background: {{ section.settings.size_select_bg_color | default: '#ffffff' }};
+    border: 0.5px solid {{ section.settings.size_select_border_color | default: '#e0dbd3' }};
+    border-radius: {{ section.settings.size_select_radius | default: 5 }}px;
+    min-width: {{ section.settings.size_select_min_width | default: 64 }}px;
+    height: {{ section.settings.size_select_height | default: 30 }}px;
+    padding: 0 24px 0 9px; font-size: {{ section.settings.size_select_font_size | default: 12 }}px;
+    color: {{ section.settings.size_select_text_color | default: '#2a2520' }};
     font-family: inherit; cursor: pointer;
   }
-  #bb-ctl-{{ section.id }} .bb-ctl__size-chevron { position: absolute; right: 5px; pointer-events: none; }
-  #bb-ctl-{{ section.id }} .bb-ctl__size-only { font-size: 0.625rem; color: #8a8077; }
+  #bb-ctl-{{ section.id }} .bb-ctl__size-chevron { position: absolute; right: 7px; pointer-events: none; }
+  #bb-ctl-{{ section.id }} .bb-ctl__size-only {
+    font-size: {{ section.settings.onesize_font_size | default: 12 }}px;
+    font-weight: {{ section.settings.onesize_weight | default: 500 }};
+    color: {{ section.settings.onesize_color | default: '#8a8077' }};
+  }
 
   #bb-ctl-{{ section.id }} .bb-ctl__divider {
     display: flex; align-items: center; gap: 8px;
@@ -352,7 +363,7 @@
           nameEl.textContent = p.title.split(' in ')[0];
           nameEl.href = link.url;
         }
-        if (labelEl) labelEl.textContent = oppPiece;
+        if (labelEl) labelEl.textContent = (p.type && p.type.trim()) ? p.type : oppPiece;
         if (priceEl) priceEl.textContent = formatMoneyFromCents(p.variants[0].price);
 
         /*
@@ -403,6 +414,11 @@
               pieceRow.dataset.price     = opt.dataset.price;
               updateTotal();
             });
+          } else {
+            var onlyPiece = document.createElement('span');
+            onlyPiece.className = 'bb-ctl__size-only';
+            onlyPiece.textContent = 'One-Size';
+            sizesEl.appendChild(onlyPiece);
           }
 
           pieceRow.dataset.variantId = p.variants[0].id;
@@ -651,9 +667,9 @@
     {
       "type": "text",
       "id": "pair_label",
-      "label": "Third item label",
+      "label": "Third item label (fallback)",
       "default": "Resortwear",
-      "info": "Label shown for the set pair product from the metafield."
+      "info": "Fallback label for the set pair product, used only when its product Type is blank."
     },
     {
       "type": "header",
@@ -679,6 +695,100 @@
       "step": 2,
       "unit": "px",
       "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Size selector"
+    },
+    {
+      "type": "range",
+      "id": "size_select_min_width",
+      "label": "Selector width",
+      "min": 40,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "size_select_height",
+      "label": "Selector height",
+      "min": 20,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "size_select_font_size",
+      "label": "Selector font size",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "size_select_radius",
+      "label": "Selector border radius",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 5
+    },
+    {
+      "type": "color",
+      "id": "size_select_border_color",
+      "label": "Selector border color",
+      "default": "#e0dbd3"
+    },
+    {
+      "type": "color",
+      "id": "size_select_text_color",
+      "label": "Selector text color",
+      "default": "#2a2520"
+    },
+    {
+      "type": "color",
+      "id": "size_select_bg_color",
+      "label": "Selector background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "One-Size text"
+    },
+    {
+      "type": "range",
+      "id": "onesize_font_size",
+      "label": "One-Size font size",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "onesize_color",
+      "label": "One-Size text color",
+      "default": "#8a8077"
+    },
+    {
+      "type": "select",
+      "id": "onesize_weight",
+      "label": "One-Size font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
     }
   ],
   "presets": [
