@@ -31,12 +31,6 @@
         "media  acc"
         "sp     sp"
         "recs   recs" !important;
-      /* Rows in the gallery's span (info→ctl) are min-content so they stay at
-         their natural height and cannot be inflated when the gallery is taller
-         than the right-hand stack. The acc row is auto, so any surplus gallery
-         height collects there (below the accordion) instead of opening gaps
-         between the sections above it. */
-      grid-template-rows: min-content min-content min-content min-content auto auto auto !important;
       align-items: start !important;
       max-width: 1440px !important;
       margin: 0 auto !important;
