@@ -1,7 +1,7 @@
 {%- comment -%}
   Section: product-media.liquid
   Purpose: Product image gallery — 9:16 portrait stage, vertical thumbnail strip
-           on desktop left, dot navigation on mobile.
+           on desktop left, dot navigation on mobile. Desktop image lightbox.
   Injects: bb-product-layout snippet for two-column page grid.
 {%- endcomment -%}
 
@@ -30,7 +30,6 @@
   id="bb-media-{{ section.id }}"
   data-zoom="{{ enable_zoom }}"
 >
-
   {%- comment -%} ── Thumbnail strip (desktop left / desktop bottom / hidden) ── {%- endcomment -%}
   {%- if product.media.size > 1 and thumb_position != 'hidden' -%}
     <div
@@ -637,20 +636,21 @@
     {%- endif -%}
   }
 
-  #bb-media-{{ section.id }} .bb-lightbox {
+  #bb-lightbox-{{ section.id }} {
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 2147483646;   /* above sticky header, bars, sliders, footer */
+    isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: opacity 0.25s ease;
   }
-  #bb-media-{{ section.id }} .bb-lightbox[hidden] { display: none; }
-  #bb-media-{{ section.id }} .bb-lightbox.is-open { opacity: 1; }
+  #bb-lightbox-{{ section.id }}[hidden] { display: none; }
+  #bb-lightbox-{{ section.id }}.is-open { opacity: 1; }
 
-  #bb-media-{{ section.id }} .bb-lightbox__backdrop {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__backdrop {
     position: absolute;
     inset: 0;
     background: rgba(250, 248, 244, 0.97);
@@ -659,7 +659,7 @@
     cursor: zoom-out;
   }
 
-  #bb-media-{{ section.id }} .bb-lightbox__stage {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__stage {
     position: relative;
     z-index: 1;
     width: 100%;
@@ -672,7 +672,7 @@
     box-sizing: border-box;
   }
 
-  #bb-media-{{ section.id }} .bb-lightbox__img {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__img {
     max-width: 100%;
     max-height: 92vh;
     width: auto;
@@ -687,13 +687,13 @@
     transition: transform 0.06s linear;
     will-change: transform;
   }
-  #bb-media-{{ section.id }} .bb-lightbox.is-enlarged .bb-lightbox__img {
+  #bb-lightbox-{{ section.id }}.is-enlarged .bb-lightbox__img {
     cursor: grab;
     transition: none;
   }
 
-  #bb-media-{{ section.id }} .bb-lightbox__close,
-  #bb-media-{{ section.id }} .bb-lightbox__nav {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close,
+  #bb-lightbox-{{ section.id }} .bb-lightbox__nav {
     position: absolute;
     z-index: 2;
     display: flex;
@@ -708,39 +708,39 @@
     padding: 0;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
-  #bb-media-{{ section.id }} .bb-lightbox__close:hover,
-  #bb-media-{{ section.id }} .bb-lightbox__nav:hover {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close:hover,
+  #bb-lightbox-{{ section.id }} .bb-lightbox__nav:hover {
     background: #ffffff;
     border-color: #49c6be;
     color: #49c6be;
   }
-  #bb-media-{{ section.id }} .bb-lightbox__close:focus-visible,
-  #bb-media-{{ section.id }} .bb-lightbox__nav:focus-visible {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close:focus-visible,
+  #bb-lightbox-{{ section.id }} .bb-lightbox__nav:focus-visible {
     outline: 2px solid #49c6be;
     outline-offset: 2px;
   }
 
-  #bb-media-{{ section.id }} .bb-lightbox__close {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close {
     top: 22px;
     right: 22px;
     width: 42px;
     height: 42px;
     border-radius: 50%;
   }
-  #bb-media-{{ section.id }} .bb-lightbox__close svg { width: 18px; height: 18px; }
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close svg { width: 18px; height: 18px; }
 
-  #bb-media-{{ section.id }} .bb-lightbox__nav {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__nav {
     top: 50%;
     margin-top: -23px;
     width: 46px;
     height: 46px;
     border-radius: 50%;
   }
-  #bb-media-{{ section.id }} .bb-lightbox__nav svg { width: 20px; height: 20px; }
-  #bb-media-{{ section.id }} .bb-lightbox__nav--prev { left: 22px; }
-  #bb-media-{{ section.id }} .bb-lightbox__nav--next { right: 22px; }
+  #bb-lightbox-{{ section.id }} .bb-lightbox__nav svg { width: 20px; height: 20px; }
+  #bb-lightbox-{{ section.id }} .bb-lightbox__nav--prev { left: 22px; }
+  #bb-lightbox-{{ section.id }} .bb-lightbox__nav--next { right: 22px; }
 
-  #bb-media-{{ section.id }} .bb-lightbox__counter {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__counter {
     position: absolute;
     z-index: 2;
     bottom: 22px;
@@ -756,11 +756,11 @@
 
   /* Lightbox is desktop-only; never show it on mobile */
   @media (max-width: 767px) {
-    #bb-media-{{ section.id }} .bb-lightbox { display: none !important; }
+    #bb-lightbox-{{ section.id }} { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) {
-    #bb-media-{{ section.id }} .bb-lightbox,
-    #bb-media-{{ section.id }} .bb-lightbox__img { transition: none; }
+    #bb-lightbox-{{ section.id }},
+    #bb-lightbox-{{ section.id }} .bb-lightbox__img { transition: none; }
   }
 </style>
 
@@ -1072,6 +1072,12 @@
   var lbClose   = lb ? lb.querySelector('.bb-lightbox__close') : null;
   var lbCounter = lb ? lb.querySelector('[data-bb-lb-counter]') : null;
 
+  /* Portal the lightbox to <body> so it escapes any section-level stacking
+     context (transform / opacity / overflow / z-index on ancestor wrappers).
+     Combined with the high z-index + isolation in CSS, this lets it paint
+     above the sticky header, announcement bar, sliders, dropdowns and footer. */
+  if (lb && lb.parentNode !== document.body) { document.body.appendChild(lb); }
+
   var lbImages = [];
   (function () {
     var dataEl = document.getElementById('bb-lightbox-data-{{ section.id }}');
@@ -1233,6 +1239,7 @@
     document.removeEventListener('mousemove', onLbDocMove);
     document.removeEventListener('mouseup', onLbDocUp);
     document.body.style.overflow = '';                                 /* release scroll lock if open */
+    if (lb && lb.parentNode) { lb.parentNode.removeChild(lb); }        /* remove the portaled lightbox node */
     document.removeEventListener('shopify:section:unload', onUnload);  /* remove self -> no accumulation */
     Array.prototype.forEach.call(slides, function (s) {
       var v = s.querySelector('.bb-media__video');
