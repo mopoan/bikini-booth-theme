@@ -200,7 +200,7 @@
     {%- endif -%}
   </div>
 
-  {%- comment -%} ── Desktop image lightbox (IMAGES ONLY — videos never open it) ── {%- endcomment -%}
+  {%- comment -%} ── Desktop image lightbox — vertical scroll gallery (IMAGES ONLY — videos never appear) ── {%- endcomment -%}
   {%- if enable_lightbox -%}
     {%- assign bb_lb_count = 0 -%}
     {%- for media in product.media -%}{%- if media.media_type == 'image' -%}{%- assign bb_lb_count = bb_lb_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
@@ -219,36 +219,32 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
 
-        {%- if bb_lb_count > 1 -%}
-          <button type="button" class="bb-lightbox__nav bb-lightbox__nav--prev" data-bb-lb-prev aria-label="Previous image">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <button type="button" class="bb-lightbox__nav bb-lightbox__nav--next" data-bb-lb-next aria-label="Next image">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        {%- endif -%}
-
-        <div class="bb-lightbox__stage" data-bb-lb-stage>
-          <img class="bb-lightbox__img" id="bb-lightbox-img-{{ section.id }}" src="" alt="" draggable="false">
-        </div>
-
-        {%- if bb_lb_count > 1 -%}
-          <div class="bb-lightbox__counter" data-bb-lb-counter aria-hidden="true"></div>
-        {%- endif -%}
-      </div>
-
-      <script type="application/json" id="bb-lightbox-data-{{ section.id }}">
-        [
+        {%- comment -%} Scrollable column of all product images, in natural order ── scroll replaces prev/next {%- endcomment -%}
+        <div class="bb-lightbox__scroll" data-bb-lb-scroll tabindex="-1">
           {%- assign bb_lb_i = 0 -%}
           {%- for media in product.media -%}
             {%- if media.media_type == 'image' -%}
-              {%- if bb_lb_i > 0 -%},{%- endif -%}
-              {"mediaIndex": {{ forloop.index0 }}, "normal": {{ media.preview_image | image_url: width: 1600 | json }}, "hi": {{ media.preview_image | image_url: width: 2400 | json }}, "alt": {{ media.alt | default: product.title | json }}}
+              <figure
+                class="bb-lightbox__item"
+                data-bb-lb-item
+                data-media-index="{{ forloop.index0 }}"
+                data-image-index="{{ bb_lb_i }}"
+              >
+                <img
+                  class="bb-lightbox__img"
+                  src="{{ media.preview_image | image_url: width: 2400 }}"
+                  alt="{{ media.alt | escape | default: product.title }}"
+                  width="{{ media.preview_image.width }}"
+                  height="{{ media.preview_image.height }}"
+                  loading="lazy"
+                  draggable="false"
+                >
+              </figure>
               {%- assign bb_lb_i = bb_lb_i | plus: 1 -%}
             {%- endif -%}
           {%- endfor -%}
-        ]
-      </script>
+        </div>
+      </div>
     {%- endif -%}
   {%- endif -%}
 
@@ -641,9 +637,6 @@
     inset: 0;
     z-index: 2147483646;   /* above sticky header, bars, sliders, footer */
     isolation: isolate;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     opacity: 0;
     transition: opacity 0.25s ease;
   }
@@ -659,43 +652,51 @@
     cursor: zoom-out;
   }
 
-  #bb-lightbox-{{ section.id }} .bb-lightbox__stage {
-    position: relative;
+  /* Scrollable image column — vertical scroll replaces prev/next navigation */
+  #bb-lightbox-{{ section.id }} .bb-lightbox__scroll {
+    position: absolute;
+    inset: 0;
     z-index: 1;
-    width: 100%;
-    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 4vh 7vw;
+    gap: 20px;                 /* clean, premium separation between images */
+    padding: 24px 7vw;
     box-sizing: border-box;
+    outline: none;
+  }
+
+  #bb-lightbox-{{ section.id }} .bb-lightbox__item {
+    margin: 0;
+    width: 100%;
+    max-width: 780px;          /* large but viewable; 2400px source keeps it crisp */
+    flex-shrink: 0;
+    cursor: zoom-out;          /* click empty area / image edge to close */
   }
 
   #bb-lightbox-{{ section.id }} .bb-lightbox__img {
-    max-width: 100%;
-    max-height: 92vh;
-    width: auto;
-    height: auto;
-    object-fit: contain;
     display: block;
-    cursor: zoom-in;
+    width: 100%;
+    height: auto;              /* preserve original aspect ratio; never crop or stretch */
+    border-radius: {{ border_radius }}px;
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
-    transform-origin: center center;
-    transition: transform 0.06s linear;
-    will-change: transform;
-  }
-  #bb-lightbox-{{ section.id }}.is-enlarged .bb-lightbox__img {
-    cursor: grab;
-    transition: none;
+    cursor: default;
   }
 
-  #bb-lightbox-{{ section.id }} .bb-lightbox__close,
-  #bb-lightbox-{{ section.id }} .bb-lightbox__nav {
-    position: absolute;
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close {
+    position: absolute;        /* sits on the fixed root, so it stays visible while the column scrolls */
     z-index: 2;
+    top: 22px;
+    right: 22px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -708,59 +709,23 @@
     padding: 0;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
-  #bb-lightbox-{{ section.id }} .bb-lightbox__close:hover,
-  #bb-lightbox-{{ section.id }} .bb-lightbox__nav:hover {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close:hover {
     background: #ffffff;
     border-color: #49c6be;
     color: #49c6be;
   }
-  #bb-lightbox-{{ section.id }} .bb-lightbox__close:focus-visible,
-  #bb-lightbox-{{ section.id }} .bb-lightbox__nav:focus-visible {
+  #bb-lightbox-{{ section.id }} .bb-lightbox__close:focus-visible {
     outline: 2px solid #49c6be;
     outline-offset: 2px;
   }
-
-  #bb-lightbox-{{ section.id }} .bb-lightbox__close {
-    top: 22px;
-    right: 22px;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-  }
   #bb-lightbox-{{ section.id }} .bb-lightbox__close svg { width: 18px; height: 18px; }
-
-  #bb-lightbox-{{ section.id }} .bb-lightbox__nav {
-    top: 50%;
-    margin-top: -23px;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-  }
-  #bb-lightbox-{{ section.id }} .bb-lightbox__nav svg { width: 20px; height: 20px; }
-  #bb-lightbox-{{ section.id }} .bb-lightbox__nav--prev { left: 22px; }
-  #bb-lightbox-{{ section.id }} .bb-lightbox__nav--next { right: 22px; }
-
-  #bb-lightbox-{{ section.id }} .bb-lightbox__counter {
-    position: absolute;
-    z-index: 2;
-    bottom: 22px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: #8a8077;
-    background: rgba(255, 255, 255, 0.7);
-    padding: 4px 12px;
-    border-radius: 999px;
-  }
 
   /* Lightbox is desktop-only; never show it on mobile */
   @media (max-width: 767px) {
     #bb-lightbox-{{ section.id }} { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) {
-    #bb-lightbox-{{ section.id }},
-    #bb-lightbox-{{ section.id }} .bb-lightbox__img { transition: none; }
+    #bb-lightbox-{{ section.id }} { transition: none; }
   }
 </style>
 
@@ -1066,11 +1031,10 @@
   ────────────────────────────────────────────────────────── */
   function isDesktop() { return window.matchMedia('(min-width: 768px)').matches; }
 
-  var lb        = document.getElementById('bb-lightbox-{{ section.id }}');
-  var lbImg     = document.getElementById('bb-lightbox-img-{{ section.id }}');
-  var lbStage   = lb ? lb.querySelector('[data-bb-lb-stage]') : null;
-  var lbClose   = lb ? lb.querySelector('.bb-lightbox__close') : null;
-  var lbCounter = lb ? lb.querySelector('[data-bb-lb-counter]') : null;
+  var lb       = document.getElementById('bb-lightbox-{{ section.id }}');
+  var lbScroll = lb ? lb.querySelector('[data-bb-lb-scroll]') : null;
+  var lbClose  = lb ? lb.querySelector('.bb-lightbox__close') : null;
+  var lbItems  = lb ? lb.querySelectorAll('[data-bb-lb-item]') : [];
 
   /* Portal the lightbox to <body> so it escapes any section-level stacking
      context (transform / opacity / overflow / z-index on ancestor wrappers).
@@ -1078,75 +1042,36 @@
      above the sticky header, announcement bar, sliders, dropdowns and footer. */
   if (lb && lb.parentNode !== document.body) { document.body.appendChild(lb); }
 
-  var lbImages = [];
-  (function () {
-    var dataEl = document.getElementById('bb-lightbox-data-{{ section.id }}');
-    if (!dataEl) return;
-    try { lbImages = JSON.parse(dataEl.textContent) || []; } catch (err) { lbImages = []; }
-  })();
+  var lbOpen = false, lbLastFocus = null;
 
-  var lbOpen = false, lbIndex = 0, lbEnlarged = false, lbLastFocus = null;
-  var LB_SCALE = 2.2;
-  var lbPanX = 0, lbPanY = 0;
-  var lbDragging = false, lbMoved = false, lbStartX = 0, lbStartY = 0, lbBaseX = 0, lbBaseY = 0;
+  function lbCanOpen() { return !!(lb && lbScroll && lbItems.length); }
 
-  function lbCanOpen() { return !!(lb && lbImg && lbImages.length); }
-
-  function lbApplyTransform() {
-    lbImg.style.transform = lbEnlarged
-      ? 'translate(' + lbPanX + 'px,' + lbPanY + 'px) scale(' + LB_SCALE + ')'
-      : '';
-  }
-
-  function lbClampPan() {
-    if (!lbStage) return;
-    var sr = lbStage.getBoundingClientRect();
-    var iw = lbImg.offsetWidth  * LB_SCALE;
-    var ih = lbImg.offsetHeight * LB_SCALE;
-    var maxX = Math.max(0, (iw - sr.width)  / 2);
-    var maxY = Math.max(0, (ih - sr.height) / 2);
-    if (lbPanX >  maxX) lbPanX =  maxX;
-    if (lbPanX < -maxX) lbPanX = -maxX;
-    if (lbPanY >  maxY) lbPanY =  maxY;
-    if (lbPanY < -maxY) lbPanY = -maxY;
-  }
-
-  function lbRender() {
-    var item = lbImages[lbIndex];
+  /* Position the scroll column so the chosen image's top sits just below the
+     column's top padding. Instant (no animation) on open. */
+  function lbScrollToImage(imageIndex) {
+    if (!lbScroll || !lbItems.length) return;
+    var i = Math.max(0, Math.min(imageIndex, lbItems.length - 1));
+    var item = lbItems[i];
     if (!item) return;
-    lbImg.src = lbEnlarged ? item.hi : item.normal;
-    lbImg.alt = item.alt || '';
-    if (lbCounter) lbCounter.textContent = (lbIndex + 1) + ' / ' + lbImages.length;
-  }
-
-  function lbSetEnlarged(on) {
-    lbEnlarged = on;
-    lb.classList.toggle('is-enlarged', on);
-    lbPanX = 0; lbPanY = 0;
-    lbImg.style.cursor = on ? 'grab' : 'zoom-in';
-    lbRender();              /* swaps to hi-res when enlarged, normal otherwise */
-    lbApplyTransform();
-  }
-
-  function lbGo(delta) {
-    if (lbImages.length <= 1) return;
-    lbIndex = (lbIndex + delta + lbImages.length) % lbImages.length;  /* wrap-around */
-    lbSetEnlarged(false);                                             /* reset zoom on navigate */
+    var pad = parseFloat(getComputedStyle(lbScroll).paddingTop) || 0;
+    lbScroll.scrollTop = Math.max(0, item.offsetTop - pad);
   }
 
   function openLightbox() {
     if (!lbCanOpen()) return;
+    /* Map the active gallery slide to its image index (videos are excluded) */
     var mi = parseInt(slides[activeIdx].getAttribute('data-media-index'), 10);
-    var idx = 0;
-    for (var k = 0; k < lbImages.length; k++) { if (lbImages[k].mediaIndex === mi) { idx = k; break; } }
+    var imageIndex = 0;
+    for (var k = 0; k < lbItems.length; k++) {
+      if (parseInt(lbItems[k].getAttribute('data-media-index'), 10) === mi) { imageIndex = k; break; }
+    }
     lbLastFocus = document.activeElement;
-    lbIndex = idx;
     lbOpen = true;
     lb.hidden = false;
-    lbSetEnlarged(false);
-    void lb.offsetWidth;                 /* reflow so the fade-in runs */
+    void lb.offsetWidth;                       /* reflow so the fade-in runs + layout is ready */
     lb.classList.add('is-open');
-    document.body.style.overflow = 'hidden';   /* lock body scroll */
+    lbScrollToImage(imageIndex);               /* start at the clicked image, its top visible */
+    document.body.style.overflow = 'hidden';   /* lock the page behind the lightbox */
     if (lbClose) lbClose.focus();
   }
 
@@ -1154,7 +1079,6 @@
     if (!lbOpen) return;
     lbOpen = false;
     lb.classList.remove('is-open');
-    lbSetEnlarged(false);                /* reset zoom state on close */
     document.body.style.overflow = '';
     setTimeout(function () { if (!lbOpen) lb.hidden = true; }, 280);
     if (lbLastFocus && typeof lbLastFocus.focus === 'function') lbLastFocus.focus();  /* restore focus */
@@ -1162,57 +1086,21 @@
 
   function lbFocusables() { return lb ? lb.querySelectorAll('button:not([disabled])') : []; }
 
-  if (lb && lbImg) {
-    /* Click the image: toggle enlarged <-> normal (ignored when it was a drag) */
-    lbImg.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (lbMoved) { lbMoved = false; return; }
-      lbSetEnlarged(!lbEnlarged);
-    });
-
-    /* Drag to pan when enlarged */
-    lbImg.addEventListener('mousedown', function (e) {
-      if (!lbEnlarged) return;
-      e.preventDefault();
-      lbDragging = true; lbMoved = false;
-      lbStartX = e.clientX; lbStartY = e.clientY;
-      lbBaseX = lbPanX; lbBaseY = lbPanY;
-      lbImg.style.cursor = 'grabbing';
-    });
-
-    /* Delegated controls + backdrop / empty-stage close */
+  if (lb) {
+    /* Close on backdrop / close button, or when clicking the empty column area.
+       Clicking an image does nothing. No enlarge toggle, no pan, no prev/next. */
     lb.addEventListener('click', function (e) {
       if (e.target.closest('[data-bb-lb-close]')) { closeLightbox(); return; }
-      if (e.target.closest('[data-bb-lb-prev]'))  { lbGo(-1); return; }
-      if (e.target.closest('[data-bb-lb-next]'))  { lbGo(1);  return; }
-      if (e.target === lbStage) { closeLightbox(); }
+      if (e.target.closest('.bb-lightbox__img')) return;
+      if (e.target === lbScroll || e.target.closest('[data-bb-lb-item]')) { closeLightbox(); }
     });
   }
-
-  /* Document-level drag move/up — named so they unbind on section unload */
-  function onLbDocMove(e) {
-    if (!lbDragging) return;
-    var dx = e.clientX - lbStartX, dy = e.clientY - lbStartY;
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) lbMoved = true;
-    lbPanX = lbBaseX + dx; lbPanY = lbBaseY + dy;
-    lbClampPan();
-    lbApplyTransform();
-  }
-  function onLbDocUp() {
-    if (!lbDragging) return;
-    lbDragging = false;
-    if (lbEnlarged) lbImg.style.cursor = 'grab';
-  }
-  document.addEventListener('mousemove', onLbDocMove);
-  document.addEventListener('mouseup', onLbDocUp);
 
   /* ── Document-level listeners use named handlers so they can be removed on
      Shopify section reload — prevents duplicate-listener stacking in the editor ── */
   function onDocKeydown(e) {
     if (lbOpen) {
-      if (e.key === 'Escape')     { e.preventDefault(); closeLightbox(); return; }
-      if (e.key === 'ArrowLeft')  { e.preventDefault(); lbGo(-1); return; }
-      if (e.key === 'ArrowRight') { e.preventDefault(); lbGo(1);  return; }
+      if (e.key === 'Escape') { e.preventDefault(); closeLightbox(); return; }
       if (e.key === 'Tab') {
         var f = lbFocusables();
         if (f.length) {
@@ -1236,8 +1124,6 @@
     if (!e.detail || e.detail.sectionId !== '{{ section.id }}') return;
     document.removeEventListener('keydown', onDocKeydown);
     document.removeEventListener('bb:requestSlide', onRequestSlide);
-    document.removeEventListener('mousemove', onLbDocMove);
-    document.removeEventListener('mouseup', onLbDocUp);
     document.body.style.overflow = '';                                 /* release scroll lock if open */
     if (lb && lb.parentNode) { lb.parentNode.removeChild(lb); }        /* remove the portaled lightbox node */
     document.removeEventListener('shopify:section:unload', onUnload);  /* remove self -> no accumulation */
