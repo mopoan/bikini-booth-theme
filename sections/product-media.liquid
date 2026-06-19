@@ -12,6 +12,7 @@
 {%- assign bg_color       = section.settings.bg_color -%}
 {%- assign border_radius  = section.settings.border_radius -%}
 {%- assign enable_zoom    = section.settings.enable_zoom -%}
+{%- assign enable_lightbox = section.settings.enable_lightbox -%}
 {%- assign enable_dots    = section.settings.enable_dots -%}
 {%- assign sticky         = section.settings.sticky_gallery -%}
 
@@ -199,6 +200,58 @@
       </button>
     {%- endif -%}
   </div>
+
+  {%- comment -%} ── Desktop image lightbox (IMAGES ONLY — videos never open it) ── {%- endcomment -%}
+  {%- if enable_lightbox -%}
+    {%- assign bb_lb_count = 0 -%}
+    {%- for media in product.media -%}{%- if media.media_type == 'image' -%}{%- assign bb_lb_count = bb_lb_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+    {%- if bb_lb_count > 0 -%}
+      <div
+        class="bb-lightbox"
+        id="bb-lightbox-{{ section.id }}"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Product image viewer"
+        hidden
+      >
+        <div class="bb-lightbox__backdrop" data-bb-lb-close></div>
+
+        <button type="button" class="bb-lightbox__close" data-bb-lb-close aria-label="Close image viewer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        {%- if bb_lb_count > 1 -%}
+          <button type="button" class="bb-lightbox__nav bb-lightbox__nav--prev" data-bb-lb-prev aria-label="Previous image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button type="button" class="bb-lightbox__nav bb-lightbox__nav--next" data-bb-lb-next aria-label="Next image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        {%- endif -%}
+
+        <div class="bb-lightbox__stage" data-bb-lb-stage>
+          <img class="bb-lightbox__img" id="bb-lightbox-img-{{ section.id }}" src="" alt="" draggable="false">
+        </div>
+
+        {%- if bb_lb_count > 1 -%}
+          <div class="bb-lightbox__counter" data-bb-lb-counter aria-hidden="true"></div>
+        {%- endif -%}
+      </div>
+
+      <script type="application/json" id="bb-lightbox-data-{{ section.id }}">
+        [
+          {%- assign bb_lb_i = 0 -%}
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              {%- if bb_lb_i > 0 -%},{%- endif -%}
+              {"mediaIndex": {{ forloop.index0 }}, "normal": {{ media.preview_image | image_url: width: 1600 | json }}, "hi": {{ media.preview_image | image_url: width: 2400 | json }}, "alt": {{ media.alt | default: product.title | json }}}
+              {%- assign bb_lb_i = bb_lb_i | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        ]
+      </script>
+    {%- endif -%}
+  {%- endif -%}
 
 </div>
 
@@ -564,6 +617,151 @@
       transition: none;
     }
   }
+
+  /* ─────────────────────────────────────────────
+     Desktop image lightbox (≥768px) — replaces the
+     in-container image zoom on desktop. Mobile
+     in-container zoom and ALL video behavior are
+     left untouched.
+  ───────────────────────────────────────────── */
+  @media (min-width: 768px) {
+    /* Keep the gallery image calm on desktop: no hover scale.
+       Clicking the image opens the lightbox instead. */
+    #bb-media-{{ section.id }} .bb-media__stage:hover .bb-media__slide.is-active .bb-media__img {
+      transform: none;
+    }
+    {%- if enable_lightbox -%}
+    #bb-media-{{ section.id }} .bb-media__slide[data-media-type="image"].is-active .bb-media__img {
+      cursor: zoom-in;
+    }
+    {%- endif -%}
+  }
+
+  #bb-media-{{ section.id }} .bb-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  #bb-media-{{ section.id }} .bb-lightbox[hidden] { display: none; }
+  #bb-media-{{ section.id }} .bb-lightbox.is-open { opacity: 1; }
+
+  #bb-media-{{ section.id }} .bb-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(250, 248, 244, 0.97);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    cursor: zoom-out;
+  }
+
+  #bb-media-{{ section.id }} .bb-lightbox__stage {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 4vh 7vw;
+    box-sizing: border-box;
+  }
+
+  #bb-media-{{ section.id }} .bb-lightbox__img {
+    max-width: 100%;
+    max-height: 92vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    cursor: zoom-in;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    transform-origin: center center;
+    transition: transform 0.06s linear;
+    will-change: transform;
+  }
+  #bb-media-{{ section.id }} .bb-lightbox.is-enlarged .bb-lightbox__img {
+    cursor: grab;
+    transition: none;
+  }
+
+  #bb-media-{{ section.id }} .bb-lightbox__close,
+  #bb-media-{{ section.id }} .bb-lightbox__nav {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0.5px solid #e0dbd3;
+    background: rgba(255, 255, 255, 0.85);
+    color: #2a2520;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  #bb-media-{{ section.id }} .bb-lightbox__close:hover,
+  #bb-media-{{ section.id }} .bb-lightbox__nav:hover {
+    background: #ffffff;
+    border-color: #49c6be;
+    color: #49c6be;
+  }
+  #bb-media-{{ section.id }} .bb-lightbox__close:focus-visible,
+  #bb-media-{{ section.id }} .bb-lightbox__nav:focus-visible {
+    outline: 2px solid #49c6be;
+    outline-offset: 2px;
+  }
+
+  #bb-media-{{ section.id }} .bb-lightbox__close {
+    top: 22px;
+    right: 22px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+  }
+  #bb-media-{{ section.id }} .bb-lightbox__close svg { width: 18px; height: 18px; }
+
+  #bb-media-{{ section.id }} .bb-lightbox__nav {
+    top: 50%;
+    margin-top: -23px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+  }
+  #bb-media-{{ section.id }} .bb-lightbox__nav svg { width: 20px; height: 20px; }
+  #bb-media-{{ section.id }} .bb-lightbox__nav--prev { left: 22px; }
+  #bb-media-{{ section.id }} .bb-lightbox__nav--next { right: 22px; }
+
+  #bb-media-{{ section.id }} .bb-lightbox__counter {
+    position: absolute;
+    z-index: 2;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #8a8077;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  /* Lightbox is desktop-only; never show it on mobile */
+  @media (max-width: 767px) {
+    #bb-media-{{ section.id }} .bb-lightbox { display: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #bb-media-{{ section.id }} .bb-lightbox,
+    #bb-media-{{ section.id }} .bb-lightbox__img { transition: none; }
+  }
 </style>
 
 
@@ -595,6 +793,7 @@
   };
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var zoomEnabled  = '{{ enable_zoom }}' === 'true';
+  var lightboxOn   = '{{ enable_lightbox }}' === 'true';
 
   /* ── Map image-order index -> slide (media) index, so a legacy bb:requestSlide
      that uses image indices still lands on the right slide once videos exist ── */
@@ -834,7 +1033,9 @@
   if (zoomBtn) {
     zoomBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      setZoom(!isZoomed);
+      if (!activeIsImage()) return;                       /* never on video slides */
+      if (lightboxOn && lbCanOpen() && isDesktop()) { openLightbox(); return; }
+      setZoom(!isZoomed);                                 /* mobile: in-container zoom (unchanged) */
     });
   }
 
@@ -843,8 +1044,9 @@
     if (e.target.closest('.bb-media__dot')) return;
     if (e.target.closest('.bb-media__vbtn')) return;
     if (e.target.closest('.bb-media__video')) return;
-    if (!activeIsImage()) return;          /* no zoom on video slides */
-    if (zoomEnabled) setZoom(!isZoomed);
+    if (!activeIsImage()) return;          /* no zoom / no lightbox on video slides */
+    if (lightboxOn && lbCanOpen() && isDesktop()) { openLightbox(); return; }  /* desktop: lightbox */
+    if (zoomEnabled) setZoom(!isZoomed);   /* mobile: in-container zoom (unchanged) */
   });
 
   stage.addEventListener('mousemove', function (e) {
@@ -857,9 +1059,164 @@
       ((e.clientY - rect.top)  / rect.height * 100) + '%';
   });
 
+  /* ──────────────────────────────────────────────────────────
+     Desktop image lightbox (IMAGES ONLY — videos never open it).
+     Gated to >=768px via isDesktop(); mobile keeps the
+     in-container zoom wired above, unchanged.
+  ────────────────────────────────────────────────────────── */
+  function isDesktop() { return window.matchMedia('(min-width: 768px)').matches; }
+
+  var lb        = document.getElementById('bb-lightbox-{{ section.id }}');
+  var lbImg     = document.getElementById('bb-lightbox-img-{{ section.id }}');
+  var lbStage   = lb ? lb.querySelector('[data-bb-lb-stage]') : null;
+  var lbClose   = lb ? lb.querySelector('.bb-lightbox__close') : null;
+  var lbCounter = lb ? lb.querySelector('[data-bb-lb-counter]') : null;
+
+  var lbImages = [];
+  (function () {
+    var dataEl = document.getElementById('bb-lightbox-data-{{ section.id }}');
+    if (!dataEl) return;
+    try { lbImages = JSON.parse(dataEl.textContent) || []; } catch (err) { lbImages = []; }
+  })();
+
+  var lbOpen = false, lbIndex = 0, lbEnlarged = false, lbLastFocus = null;
+  var LB_SCALE = 2.2;
+  var lbPanX = 0, lbPanY = 0;
+  var lbDragging = false, lbMoved = false, lbStartX = 0, lbStartY = 0, lbBaseX = 0, lbBaseY = 0;
+
+  function lbCanOpen() { return !!(lb && lbImg && lbImages.length); }
+
+  function lbApplyTransform() {
+    lbImg.style.transform = lbEnlarged
+      ? 'translate(' + lbPanX + 'px,' + lbPanY + 'px) scale(' + LB_SCALE + ')'
+      : '';
+  }
+
+  function lbClampPan() {
+    if (!lbStage) return;
+    var sr = lbStage.getBoundingClientRect();
+    var iw = lbImg.offsetWidth  * LB_SCALE;
+    var ih = lbImg.offsetHeight * LB_SCALE;
+    var maxX = Math.max(0, (iw - sr.width)  / 2);
+    var maxY = Math.max(0, (ih - sr.height) / 2);
+    if (lbPanX >  maxX) lbPanX =  maxX;
+    if (lbPanX < -maxX) lbPanX = -maxX;
+    if (lbPanY >  maxY) lbPanY =  maxY;
+    if (lbPanY < -maxY) lbPanY = -maxY;
+  }
+
+  function lbRender() {
+    var item = lbImages[lbIndex];
+    if (!item) return;
+    lbImg.src = lbEnlarged ? item.hi : item.normal;
+    lbImg.alt = item.alt || '';
+    if (lbCounter) lbCounter.textContent = (lbIndex + 1) + ' / ' + lbImages.length;
+  }
+
+  function lbSetEnlarged(on) {
+    lbEnlarged = on;
+    lb.classList.toggle('is-enlarged', on);
+    lbPanX = 0; lbPanY = 0;
+    lbImg.style.cursor = on ? 'grab' : 'zoom-in';
+    lbRender();              /* swaps to hi-res when enlarged, normal otherwise */
+    lbApplyTransform();
+  }
+
+  function lbGo(delta) {
+    if (lbImages.length <= 1) return;
+    lbIndex = (lbIndex + delta + lbImages.length) % lbImages.length;  /* wrap-around */
+    lbSetEnlarged(false);                                             /* reset zoom on navigate */
+  }
+
+  function openLightbox() {
+    if (!lbCanOpen()) return;
+    var mi = parseInt(slides[activeIdx].getAttribute('data-media-index'), 10);
+    var idx = 0;
+    for (var k = 0; k < lbImages.length; k++) { if (lbImages[k].mediaIndex === mi) { idx = k; break; } }
+    lbLastFocus = document.activeElement;
+    lbIndex = idx;
+    lbOpen = true;
+    lb.hidden = false;
+    lbSetEnlarged(false);
+    void lb.offsetWidth;                 /* reflow so the fade-in runs */
+    lb.classList.add('is-open');
+    document.body.style.overflow = 'hidden';   /* lock body scroll */
+    if (lbClose) lbClose.focus();
+  }
+
+  function closeLightbox() {
+    if (!lbOpen) return;
+    lbOpen = false;
+    lb.classList.remove('is-open');
+    lbSetEnlarged(false);                /* reset zoom state on close */
+    document.body.style.overflow = '';
+    setTimeout(function () { if (!lbOpen) lb.hidden = true; }, 280);
+    if (lbLastFocus && typeof lbLastFocus.focus === 'function') lbLastFocus.focus();  /* restore focus */
+  }
+
+  function lbFocusables() { return lb ? lb.querySelectorAll('button:not([disabled])') : []; }
+
+  if (lb && lbImg) {
+    /* Click the image: toggle enlarged <-> normal (ignored when it was a drag) */
+    lbImg.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (lbMoved) { lbMoved = false; return; }
+      lbSetEnlarged(!lbEnlarged);
+    });
+
+    /* Drag to pan when enlarged */
+    lbImg.addEventListener('mousedown', function (e) {
+      if (!lbEnlarged) return;
+      e.preventDefault();
+      lbDragging = true; lbMoved = false;
+      lbStartX = e.clientX; lbStartY = e.clientY;
+      lbBaseX = lbPanX; lbBaseY = lbPanY;
+      lbImg.style.cursor = 'grabbing';
+    });
+
+    /* Delegated controls + backdrop / empty-stage close */
+    lb.addEventListener('click', function (e) {
+      if (e.target.closest('[data-bb-lb-close]')) { closeLightbox(); return; }
+      if (e.target.closest('[data-bb-lb-prev]'))  { lbGo(-1); return; }
+      if (e.target.closest('[data-bb-lb-next]'))  { lbGo(1);  return; }
+      if (e.target === lbStage) { closeLightbox(); }
+    });
+  }
+
+  /* Document-level drag move/up — named so they unbind on section unload */
+  function onLbDocMove(e) {
+    if (!lbDragging) return;
+    var dx = e.clientX - lbStartX, dy = e.clientY - lbStartY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) lbMoved = true;
+    lbPanX = lbBaseX + dx; lbPanY = lbBaseY + dy;
+    lbClampPan();
+    lbApplyTransform();
+  }
+  function onLbDocUp() {
+    if (!lbDragging) return;
+    lbDragging = false;
+    if (lbEnlarged) lbImg.style.cursor = 'grab';
+  }
+  document.addEventListener('mousemove', onLbDocMove);
+  document.addEventListener('mouseup', onLbDocUp);
+
   /* ── Document-level listeners use named handlers so they can be removed on
      Shopify section reload — prevents duplicate-listener stacking in the editor ── */
   function onDocKeydown(e) {
+    if (lbOpen) {
+      if (e.key === 'Escape')     { e.preventDefault(); closeLightbox(); return; }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); lbGo(-1); return; }
+      if (e.key === 'ArrowRight') { e.preventDefault(); lbGo(1);  return; }
+      if (e.key === 'Tab') {
+        var f = lbFocusables();
+        if (f.length) {
+          var first = f[0], last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
+      return;
+    }
     if (e.key === 'Escape' && isZoomed) setZoom(false);
   }
   function onRequestSlide(e) {
@@ -873,6 +1230,9 @@
     if (!e.detail || e.detail.sectionId !== '{{ section.id }}') return;
     document.removeEventListener('keydown', onDocKeydown);
     document.removeEventListener('bb:requestSlide', onRequestSlide);
+    document.removeEventListener('mousemove', onLbDocMove);
+    document.removeEventListener('mouseup', onLbDocUp);
+    document.body.style.overflow = '';                                 /* release scroll lock if open */
     document.removeEventListener('shopify:section:unload', onUnload);  /* remove self -> no accumulation */
     Array.prototype.forEach.call(slides, function (s) {
       var v = s.querySelector('.bb-media__video');
@@ -1027,6 +1387,14 @@
       "type": "checkbox",
       "id": "enable_zoom",
       "label": "Enable image zoom",
+      "info": "On desktop this opens the lightbox (below); on mobile it keeps the in-container zoom.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_lightbox",
+      "label": "Enable desktop image lightbox",
+      "info": "Desktop only (≥768px). Clicking a product image opens a full-screen lightbox. Images only — videos keep their normal behavior.",
       "default": true
     },
     {
@@ -1169,6 +1537,7 @@
         "thumb_width": 64,
         "sticky_gallery": true,
         "enable_zoom": true,
+        "enable_lightbox": true,
         "enable_dots": true
       }
     }
