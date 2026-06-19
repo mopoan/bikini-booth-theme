@@ -24,8 +24,23 @@
         "show_thumbs_mobile": false,
         "sticky_gallery": true,
         "enable_zoom": true,
+        "enable_lightbox": true,
         "enable_dots": true,
         "show_arrows_mobile": true,
+        "video_autoplay": true,
+        "video_loop": true,
+        "video_muted": true,
+        "video_controls": false,
+        "video_hide_fullscreen": true,
+        "video_hide_download": true,
+        "video_hide_remote": true,
+        "video_custom_playpause": true,
+        "video_custom_mute": true,
+        "video_thumb_play_icon": true,
+        "video_pause_inactive": true,
+        "video_reset_inactive": false,
+        "video_object_fit": "cover",
+        "video_bg_color": "#000000",
         "padding_top": 0,
         "padding_bottom": 0
       }
@@ -35,6 +50,18 @@
       "name": "Product info",
       "settings": {
         "price_note": "Top and bottom sold separately.",
+        "show_subtitle": true,
+        "subtitle_font_size": 12,
+        "subtitle_color": "#8a8077",
+        "subtitle_weight": "400",
+        "subtitle_line_height": 1.5,
+        "subtitle_margin_top": 0,
+        "subtitle_margin_bottom": 10,
+        "subtitle_max_width": 0,
+        "one_size_label": "One Size",
+        "one_size_show_icon": true,
+        "one_size_icon": "check",
+        "one_size_helper": "",
         "atc_hover_bg": "#ffffff",
         "atc_hover_text": "#49c6be",
         "atc_hover_border": "#49c6be"
@@ -105,7 +132,17 @@
         "this_item_label": "This item",
         "pair_label": "Resortwear",
         "accent_color": "#49c6be",
-        "image_width": 60
+        "image_width": 60,
+        "size_select_min_width": 64,
+        "size_select_height": 30,
+        "size_select_font_size": 12,
+        "size_select_radius": 5,
+        "size_select_border_color": "#e0dbd3",
+        "size_select_text_color": "#2a2520",
+        "size_select_bg_color": "#ffffff",
+        "onesize_font_size": 12,
+        "onesize_color": "#8a8077",
+        "onesize_weight": "500"
       }
     },
     "product_accordions_M7G4Ax": {
@@ -140,7 +177,12 @@
         "shipping_page_83cBqY"
       ],
       "name": "Product accordions",
-      "settings": {}
+      "settings": {
+        "content_size": "0.875rem",
+        "content_weight": "400",
+        "label_size": "0.8125rem",
+        "label_weight": "500"
+      }
     },
     "product_social_proof_JtFM97": {
       "type": "product-social-proof",
@@ -292,15 +334,15 @@
         "main_heading": "",
         "main_desc": "",
         "heading_aligment": "text-center",
-        "top_spacing": "normal",
+        "top_spacing": "none",
         "width": "default",
         "grid": "page-grid-md-4 page-grid-lg-4 page-grid-4",
         "grid_tablet": "page-grid-st-3",
         "mobile_grid": "2",
         "recommendation_type": "related",
         "swipe": true,
-        "desktop_navigation": "dots_arrows",
-        "mobile_navigation": "dots",
+        "desktop_navigation": "arrows",
+        "mobile_navigation": "none",
         "autoplay_enabled": true,
         "autoplay_time": 10,
         "image_hover": "image-hover-none",
@@ -325,7 +367,7 @@
         "enable_rating_product_card": false,
         "show_wishlist": true,
         "show_compare": false,
-        "show_quick_view": true,
+        "show_quick_view": false,
         "show_wishlist_mobile": true,
         "show_compare_mobile": false,
         "show_quick_view_mobile": false,
