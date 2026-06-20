@@ -188,7 +188,7 @@
 .bb-recs-tropic .custom-swiper-button-prev,
 .bb-recs-tropic .custom-swiper-button-next {
   position: absolute;
-  top: 40%;
+  top: calc(50% - 24px); /* center of the card row; offsets the dots bar below */
   transform: translateY(-50%);
   z-index: 5;
   width: 46px;
@@ -205,8 +205,8 @@
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
-.bb-recs-tropic .custom-swiper-button-prev { left: -8px; }
-.bb-recs-tropic .custom-swiper-button-next { right: -8px; }
+.bb-recs-tropic .custom-swiper-button-prev { left: -23px; }
+.bb-recs-tropic .custom-swiper-button-next { right: -23px; }
 /* Strip any theme pseudo-elements that create a second ring */
 .bb-recs-tropic .custom-swiper-button-prev::before,
 .bb-recs-tropic .custom-swiper-button-prev::after,
