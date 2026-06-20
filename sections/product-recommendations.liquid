@@ -248,6 +248,7 @@
     <div class="page-grid-1 no-row-gap swiper-no-mask-mobile{% if section.settings.heading_aligment == "text-center" %} justify-content-center{% endif %}">
       {%- assign data_tablet_grid_lg = section.settings.grid_tablet | split: "page-grid-st-" | last -%}
       {%- assign data_grid = section.settings.mobile_grid | append: "," | append: data_tablet_grid_lg | append: "," | append:data_grid_md | append: "," | append:data_grid_lg | append: "," | append:data_grid_xl -%}
+      <div class="bb-recs__stage">
       <swiper-slider class="swiper swiper__custom-mask"
                      data-swiper-desktop-grid="{{ data_grid_xl }}"
                      data-swiper-desktop-lg-grid="{{ data_grid_lg }}"
@@ -269,6 +270,7 @@
         <div class="custom-swiper-button-prev{% unless section.settings.desktop_navigation contains "arrows" %} hide-desktop{% endunless %}">{{- 'icon-arrow-left' | append: settings.system_icon_thickness | inline_asset_content -}}</div>
         <div class="swiper-pagination{% unless section.settings.desktop_navigation contains "dots" %} hide-desktop{% endunless %}{% unless section.settings.mobile_navigation contains "dots" %} hide-mobile-xl-st{% endunless %}"></div>
         <div class="custom-swiper-button-next{% unless section.settings.desktop_navigation contains "arrows" %} hide-desktop{% endunless %}">{{- 'icon-arrow-right' | append: settings.system_icon_thickness | inline_asset_content -}}</div>
+      </div>
       </div>
     </div>
     {%- else -%}

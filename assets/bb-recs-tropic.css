@@ -180,14 +180,16 @@
 }
 
 /* ── Slider controls ───────────────────────────────────────────────────────── */
-/* .page-grid-1 is the positioning context for the edge arrows */
-.bb-recs-tropic .page-grid-1 { position: relative; }
+/* .bb-recs__stage wraps the slider + control bar and is the guaranteed
+   positioning context for the edge arrows (page-grid-1 may be display:grid/contents) */
+.bb-recs-tropic .page-grid-1 { position: relative !important; }
+.bb-recs-tropic .bb-recs__stage { position: relative !important; }
 
 /* Edge arrows: clickable prev/next pinned to the left/right of the gallery,
    vertically centered on the image row */
 .bb-recs-tropic .custom-swiper-button-prev,
 .bb-recs-tropic .custom-swiper-button-next {
-  position: absolute;
+  position: absolute !important;
   top: calc(50% - 24px); /* center of the card row; offsets the dots bar below */
   transform: translateY(-50%);
   z-index: 5;
@@ -228,8 +230,11 @@
 .bb-recs-tropic .swiper-button-prev,
 .bb-recs-tropic .swiper-button-next { display: none !important; }
 
-/* Bottom bar: dots only, centered, a touch larger */
+/* Bottom bar: dots only, centered, a touch larger.
+   position:static so it is NOT the anchor for the absolutely-positioned arrows
+   (they must anchor to .page-grid-1, the full gallery). */
 .bb-recs-tropic .swiper-control-container {
+  position: static !important;
   margin-top: clamp(22px, 3vw, 34px);
   justify-content: center;
 }
