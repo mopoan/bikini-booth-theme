@@ -25,232 +25,6 @@
 {%- assign vid_show_mute  = section.settings.video_custom_mute -%}
 {%- assign vid_thumb_play = section.settings.video_thumb_play_icon -%}
 
-<div
-  class="bb-media bb-media--thumbs-{{ thumb_position }}"
-  id="bb-media-{{ section.id }}"
-  data-zoom="{{ enable_zoom }}"
->
-  {%- comment -%} ── Thumbnail strip (desktop left / desktop bottom / hidden) ── {%- endcomment -%}
-  {%- if product.media.size > 1 and thumb_position != 'hidden' -%}
-    <div
-      class="bb-media__thumbs"
-      id="bb-media-thumbs-{{ section.id }}"
-      role="tablist"
-      aria-label="Product media thumbnails"
-    >
-      {%- assign t_img_i = 0 -%}
-      {%- for media in product.media -%}
-        {%- assign t_is_video = false -%}
-        {%- if media.media_type == 'video' -%}{%- assign t_is_video = true -%}{%- endif -%}
-        <button
-          type="button"
-          class="bb-media__thumb{%- if forloop.first %} is-active{%- endif -%}{%- if t_is_video %} bb-media__thumb--video{%- endif -%}"
-          role="tab"
-          aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
-          aria-label="{{ media.alt | escape | default: product.title }} — {% if t_is_video %}video{% else %}image{% endif %} {{ forloop.index }}"
-          data-index="{{ forloop.index0 }}"
-          data-media-index="{{ forloop.index0 }}"
-          {%- unless t_is_video %} data-image-index="{{ t_img_i }}"{%- endunless %}
-          data-media-type="{{ media.media_type }}"
-        >
-          <img
-            src="{{ media.preview_image | image_url: width: 160, height: 200, crop: 'center' }}"
-            alt="{{ media.alt | escape | default: product.title }}"
-            width="{{ section.settings.thumb_width }}"
-            height="{{ section.settings.thumb_height }}"
-            loading="lazy"
-          >
-          {%- if t_is_video and vid_thumb_play -%}
-            <span class="bb-media__thumb-play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20"/></svg>
-            </span>
-          {%- endif -%}
-        </button>
-        {%- unless t_is_video -%}{%- assign t_img_i = t_img_i | plus: 1 -%}{%- endunless -%}
-      {%- endfor -%}
-    </div>
-  {%- endif -%}
-
-  {%- comment -%} ── Main image stage ── {%- endcomment -%}
-  <div class="bb-media__stage-wrap">
-    <div
-      class="bb-media__stage"
-      id="bb-media-stage-{{ section.id }}"
-      aria-label="Product images"
-    >
-
-      {%- if product.media.size > 0 -%}
-        {%- assign img_i = 0 -%}
-        {%- for media in product.media -%}
-          {%- if media.media_type == 'video' -%}
-            <div
-              class="bb-media__slide bb-media__slide--video{%- if forloop.first %} is-active{%- endif -%}"
-              data-index="{{ forloop.index0 }}"
-              data-media-index="{{ forloop.index0 }}"
-              data-media-type="video"
-              role="group"
-              aria-label="{{ media.alt | escape | default: product.title }} — video {{ forloop.index }} of {{ product.media.size }}"
-              aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
-            >
-              <video
-                class="bb-media__video"
-                playsinline
-                preload="metadata"
-                poster="{{ media.preview_image | image_url: width: 1000 }}"
-                {%- if vid_muted %} muted{%- endif -%}
-                {%- if vid_loop %} loop{%- endif -%}
-                {%- if vid_controls %} controls controlsList="{% if section.settings.video_hide_download %}nodownload {% endif %}{% if section.settings.video_hide_fullscreen %}nofullscreen {% endif %}{% if section.settings.video_hide_remote %}noremoteplayback{% endif %}"{%- endif -%}
-                {%- if section.settings.video_hide_remote %} disableremoteplayback{%- endif -%}
-              >
-                {%- for source in media.sources -%}
-                  {%- if source.mime_type contains 'video' -%}
-                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
-                  {%- endif -%}
-                {%- endfor -%}
-              </video>
-              {%- if vid_show_play or vid_show_mute -%}
-                <div class="bb-media__vcontrols"{%- if vid_controls %} hidden{%- endif -%}>
-                  {%- if vid_show_play -%}
-                    <button type="button" class="bb-media__vbtn bb-media__vbtn--play" aria-label="Play video">
-                      <svg class="bb-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20"/></svg>
-                      <svg class="bb-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-                    </button>
-                  {%- endif -%}
-                  {%- if vid_show_mute -%}
-                    <button type="button" class="bb-media__vbtn bb-media__vbtn--mute" aria-label="{% if vid_muted %}Unmute video{% else %}Mute video{% endif %}">
-                      <svg class="bb-icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"{%- unless vid_muted %} style="display:none"{%- endunless -%}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-                      <svg class="bb-icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"{%- if vid_muted %} style="display:none"{%- endif -%}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-                    </button>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
-            </div>
-          {%- else -%}
-            <div
-              class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
-              data-index="{{ forloop.index0 }}"
-              data-media-index="{{ forloop.index0 }}"
-              data-image-index="{{ img_i }}"
-              data-media-type="image"
-              role="img"
-              aria-label="{{ media.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.media.size }}"
-              aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
-            >
-              <img
-                src="{{ media.preview_image | image_url: width: 1000 }}"
-                srcset="
-                  {{ media.preview_image | image_url: width: 480 }}  480w,
-                  {{ media.preview_image | image_url: width: 750 }}  750w,
-                  {{ media.preview_image | image_url: width: 1000 }} 1000w
-                "
-                sizes="(max-width: 767px) 100vw, 40vw"
-                alt="{{ media.alt | escape | default: product.title }}"
-                width="{{ media.preview_image.width }}"
-                height="{{ media.preview_image.height }}"
-                loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
-                class="bb-media__img"
-              >
-            </div>
-            {%- assign img_i = img_i | plus: 1 -%}
-          {%- endif -%}
-        {%- endfor -%}
-      {%- else -%}
-        <div class="bb-media__slide is-active bb-media__no-image" data-media-type="none">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0b4a8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>No media</p>
-        </div>
-      {%- endif -%}
-
-      {%- comment -%} Zoom button (images only; JS hides it on video slides) {%- endcomment -%}
-      {%- if enable_zoom and product.media.size > 0 -%}
-        <button
-          type="button"
-          class="bb-media__zoom-btn"
-          id="bb-media-zoom-{{ section.id }}"
-          aria-label="Zoom image"
-          aria-pressed="false"
-        >
-          <svg class="bb-zoom-in" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-          <svg class="bb-zoom-out" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </button>
-      {%- endif -%}
-
-      {%- comment -%} Mobile dots {%- endcomment -%}
-      {%- if enable_dots and product.media.size > 1 -%}
-        <div class="bb-media__dots" aria-hidden="true" id="bb-media-dots-{{ section.id }}">
-          {%- for media in product.media -%}
-            <div
-              class="bb-media__dot{%- if forloop.first %} is-active{%- endif -%}"
-              data-index="{{ forloop.index0 }}"
-            ></div>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-
-    </div>
-
-    {%- comment -%} ── Prev / next arrows ── {%- endcomment -%}
-    {%- if product.media.size > 1 -%}
-      <button type="button" class="bb-media__arrow bb-media__arrow--prev" id="bb-media-prev-{{ section.id }}" aria-label="Previous image">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <button type="button" class="bb-media__arrow bb-media__arrow--next" id="bb-media-next-{{ section.id }}" aria-label="Next image">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    {%- endif -%}
-  </div>
-
-  {%- comment -%} ── Desktop image lightbox — vertical scroll gallery (IMAGES ONLY — videos never appear) ── {%- endcomment -%}
-  {%- if enable_lightbox -%}
-    {%- assign bb_lb_count = 0 -%}
-    {%- for media in product.media -%}{%- if media.media_type == 'image' -%}{%- assign bb_lb_count = bb_lb_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
-    {%- if bb_lb_count > 0 -%}
-      <div
-        class="bb-lightbox"
-        id="bb-lightbox-{{ section.id }}"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Product image viewer"
-        hidden
-      >
-        <div class="bb-lightbox__backdrop" data-bb-lb-close></div>
-
-        <button type="button" class="bb-lightbox__close" data-bb-lb-close aria-label="Close image viewer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-
-        {%- comment -%} Scrollable column of all product images, in natural order ── scroll replaces prev/next {%- endcomment -%}
-        <div class="bb-lightbox__scroll" data-bb-lb-scroll tabindex="-1">
-          {%- assign bb_lb_i = 0 -%}
-          {%- for media in product.media -%}
-            {%- if media.media_type == 'image' -%}
-              <figure
-                class="bb-lightbox__item"
-                data-bb-lb-item
-                data-media-index="{{ forloop.index0 }}"
-                data-image-index="{{ bb_lb_i }}"
-              >
-                <img
-                  class="bb-lightbox__img"
-                  src="{{ media.preview_image | image_url: width: 2400 }}"
-                  alt="{{ media.alt | escape | default: product.title }}"
-                  width="{{ media.preview_image.width }}"
-                  height="{{ media.preview_image.height }}"
-                  loading="lazy"
-                  draggable="false"
-                >
-              </figure>
-              {%- assign bb_lb_i = bb_lb_i | plus: 1 -%}
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-      </div>
-    {%- endif -%}
-  {%- endif -%}
-
-</div>
-
-
 <style>
   /* ── Section wrapper ── */
   #bb-media-{{ section.id }} {
@@ -728,6 +502,231 @@
     #bb-lightbox-{{ section.id }} { transition: none; }
   }
 </style>
+
+<div
+  class="bb-media bb-media--thumbs-{{ thumb_position }}"
+  id="bb-media-{{ section.id }}"
+  data-zoom="{{ enable_zoom }}"
+>
+  {%- comment -%} ── Thumbnail strip (desktop left / desktop bottom / hidden) ── {%- endcomment -%}
+  {%- if product.media.size > 1 and thumb_position != 'hidden' -%}
+    <div
+      class="bb-media__thumbs"
+      id="bb-media-thumbs-{{ section.id }}"
+      role="tablist"
+      aria-label="Product media thumbnails"
+    >
+      {%- assign t_img_i = 0 -%}
+      {%- for media in product.media -%}
+        {%- assign t_is_video = false -%}
+        {%- if media.media_type == 'video' -%}{%- assign t_is_video = true -%}{%- endif -%}
+        <button
+          type="button"
+          class="bb-media__thumb{%- if forloop.first %} is-active{%- endif -%}{%- if t_is_video %} bb-media__thumb--video{%- endif -%}"
+          role="tab"
+          aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
+          aria-label="{{ media.alt | escape | default: product.title }} — {% if t_is_video %}video{% else %}image{% endif %} {{ forloop.index }}"
+          data-index="{{ forloop.index0 }}"
+          data-media-index="{{ forloop.index0 }}"
+          {%- unless t_is_video %} data-image-index="{{ t_img_i }}"{%- endunless %}
+          data-media-type="{{ media.media_type }}"
+        >
+          <img
+            src="{{ media.preview_image | image_url: width: 160, height: 200, crop: 'center' }}"
+            alt="{{ media.alt | escape | default: product.title }}"
+            width="{{ section.settings.thumb_width }}"
+            height="{{ section.settings.thumb_height }}"
+            loading="lazy"
+          >
+          {%- if t_is_video and vid_thumb_play -%}
+            <span class="bb-media__thumb-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20"/></svg>
+            </span>
+          {%- endif -%}
+        </button>
+        {%- unless t_is_video -%}{%- assign t_img_i = t_img_i | plus: 1 -%}{%- endunless -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Main image stage ── {%- endcomment -%}
+  <div class="bb-media__stage-wrap">
+    <div
+      class="bb-media__stage"
+      id="bb-media-stage-{{ section.id }}"
+      aria-label="Product images"
+    >
+
+      {%- if product.media.size > 0 -%}
+        {%- assign img_i = 0 -%}
+        {%- for media in product.media -%}
+          {%- if media.media_type == 'video' -%}
+            <div
+              class="bb-media__slide bb-media__slide--video{%- if forloop.first %} is-active{%- endif -%}"
+              data-index="{{ forloop.index0 }}"
+              data-media-index="{{ forloop.index0 }}"
+              data-media-type="video"
+              role="group"
+              aria-label="{{ media.alt | escape | default: product.title }} — video {{ forloop.index }} of {{ product.media.size }}"
+              aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
+            >
+              <video
+                class="bb-media__video"
+                playsinline
+                preload="metadata"
+                poster="{{ media.preview_image | image_url: width: 1000 }}"
+                {%- if vid_muted %} muted{%- endif -%}
+                {%- if vid_loop %} loop{%- endif -%}
+                {%- if vid_controls %} controls controlsList="{% if section.settings.video_hide_download %}nodownload {% endif %}{% if section.settings.video_hide_fullscreen %}nofullscreen {% endif %}{% if section.settings.video_hide_remote %}noremoteplayback{% endif %}"{%- endif -%}
+                {%- if section.settings.video_hide_remote %} disableremoteplayback{%- endif -%}
+              >
+                {%- for source in media.sources -%}
+                  {%- if source.mime_type contains 'video' -%}
+                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {%- endif -%}
+                {%- endfor -%}
+              </video>
+              {%- if vid_show_play or vid_show_mute -%}
+                <div class="bb-media__vcontrols"{%- if vid_controls %} hidden{%- endif -%}>
+                  {%- if vid_show_play -%}
+                    <button type="button" class="bb-media__vbtn bb-media__vbtn--play" aria-label="Play video">
+                      <svg class="bb-icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20"/></svg>
+                      <svg class="bb-icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                    </button>
+                  {%- endif -%}
+                  {%- if vid_show_mute -%}
+                    <button type="button" class="bb-media__vbtn bb-media__vbtn--mute" aria-label="{% if vid_muted %}Unmute video{% else %}Mute video{% endif %}">
+                      <svg class="bb-icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"{%- unless vid_muted %} style="display:none"{%- endunless -%}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+                      <svg class="bb-icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"{%- if vid_muted %} style="display:none"{%- endif -%}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                    </button>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            <div
+              class="bb-media__slide{%- if forloop.first %} is-active{%- endif -%}"
+              data-index="{{ forloop.index0 }}"
+              data-media-index="{{ forloop.index0 }}"
+              data-image-index="{{ img_i }}"
+              data-media-type="image"
+              role="img"
+              aria-label="{{ media.alt | escape | default: product.title }} — image {{ forloop.index }} of {{ product.media.size }}"
+              aria-hidden="{%- unless forloop.first -%}true{%- else -%}false{%- endunless -%}"
+            >
+              <img
+                src="{{ media.preview_image | image_url: width: 1000 }}"
+                srcset="
+                  {{ media.preview_image | image_url: width: 480 }}  480w,
+                  {{ media.preview_image | image_url: width: 750 }}  750w,
+                  {{ media.preview_image | image_url: width: 1000 }} 1000w
+                "
+                sizes="(max-width: 767px) 100vw, 40vw"
+                alt="{{ media.alt | escape | default: product.title }}"
+                width="{{ media.preview_image.width }}"
+                height="{{ media.preview_image.height }}"
+                loading="{%- if forloop.first -%}eager{%- else -%}lazy{%- endif -%}"
+                class="bb-media__img"
+              >
+            </div>
+            {%- assign img_i = img_i | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        <div class="bb-media__slide is-active bb-media__no-image" data-media-type="none">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0b4a8" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>No media</p>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Zoom button (images only; JS hides it on video slides) {%- endcomment -%}
+      {%- if enable_zoom and product.media.size > 0 -%}
+        <button
+          type="button"
+          class="bb-media__zoom-btn"
+          id="bb-media-zoom-{{ section.id }}"
+          aria-label="Zoom image"
+          aria-pressed="false"
+        >
+          <svg class="bb-zoom-in" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          <svg class="bb-zoom-out" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+      {%- endif -%}
+
+      {%- comment -%} Mobile dots {%- endcomment -%}
+      {%- if enable_dots and product.media.size > 1 -%}
+        <div class="bb-media__dots" aria-hidden="true" id="bb-media-dots-{{ section.id }}">
+          {%- for media in product.media -%}
+            <div
+              class="bb-media__dot{%- if forloop.first %} is-active{%- endif -%}"
+              data-index="{{ forloop.index0 }}"
+            ></div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+
+    {%- comment -%} ── Prev / next arrows ── {%- endcomment -%}
+    {%- if product.media.size > 1 -%}
+      <button type="button" class="bb-media__arrow bb-media__arrow--prev" id="bb-media-prev-{{ section.id }}" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button type="button" class="bb-media__arrow bb-media__arrow--next" id="bb-media-next-{{ section.id }}" aria-label="Next image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ── Desktop image lightbox — vertical scroll gallery (IMAGES ONLY — videos never appear) ── {%- endcomment -%}
+  {%- if enable_lightbox -%}
+    {%- assign bb_lb_count = 0 -%}
+    {%- for media in product.media -%}{%- if media.media_type == 'image' -%}{%- assign bb_lb_count = bb_lb_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+    {%- if bb_lb_count > 0 -%}
+      <div
+        class="bb-lightbox"
+        id="bb-lightbox-{{ section.id }}"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Product image viewer"
+        hidden
+      >
+        <div class="bb-lightbox__backdrop" data-bb-lb-close></div>
+
+        <button type="button" class="bb-lightbox__close" data-bb-lb-close aria-label="Close image viewer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        {%- comment -%} Scrollable column of all product images, in natural order ── scroll replaces prev/next {%- endcomment -%}
+        <div class="bb-lightbox__scroll" data-bb-lb-scroll tabindex="-1">
+          {%- assign bb_lb_i = 0 -%}
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              <figure
+                class="bb-lightbox__item"
+                data-bb-lb-item
+                data-media-index="{{ forloop.index0 }}"
+                data-image-index="{{ bb_lb_i }}"
+              >
+                <img
+                  class="bb-lightbox__img"
+                  src="{{ media.preview_image | image_url: width: 2400 }}"
+                  alt="{{ media.alt | escape | default: product.title }}"
+                  width="{{ media.preview_image.width }}"
+                  height="{{ media.preview_image.height }}"
+                  loading="lazy"
+                  draggable="false"
+                >
+              </figure>
+              {%- assign bb_lb_i = bb_lb_i | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+
+</div>
 
 
 <script>
