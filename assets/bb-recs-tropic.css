@@ -179,46 +179,71 @@
   letter-spacing: 0.01em;
 }
 
-/* ── Slider controls: transparent teal circles + soft dots ─────────────────── */
-.bb-recs-tropic .swiper-control-container {
-  margin-top: clamp(22px, 3vw, 34px);
-  gap: 18px;
-}
+/* ── Slider controls ───────────────────────────────────────────────────────── */
+/* .page-grid-1 is the positioning context for the edge arrows */
+.bb-recs-tropic .page-grid-1 { position: relative; }
+
+/* Edge arrows: clickable prev/next pinned to the left/right of the gallery,
+   vertically centered on the image row */
 .bb-recs-tropic .custom-swiper-button-prev,
 .bb-recs-tropic .custom-swiper-button-next {
-  width: 44px;
-  height: 44px;
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  margin: 0 !important;
   border-radius: 50%;
   background: transparent !important;
-  border: 1.5px solid rgba(73, 198, 190, 0.55);
+  border: 1.5px solid rgba(73, 198, 190, 0.6) !important;
+  box-shadow: none !important;
   color: var(--bb-teal);
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  box-shadow: none;
+  cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
+.bb-recs-tropic .custom-swiper-button-prev { left: -8px; }
+.bb-recs-tropic .custom-swiper-button-next { right: -8px; }
+/* Strip any theme pseudo-elements that create a second ring */
+.bb-recs-tropic .custom-swiper-button-prev::before,
+.bb-recs-tropic .custom-swiper-button-prev::after,
+.bb-recs-tropic .custom-swiper-button-next::before,
+.bb-recs-tropic .custom-swiper-button-next::after { content: none !important; display: none !important; }
 .bb-recs-tropic .custom-swiper-button-prev:hover,
 .bb-recs-tropic .custom-swiper-button-next:hover {
-  background: rgba(73, 198, 190, 0.1) !important;
-  border-color: var(--bb-teal);
+  background: rgba(73, 198, 190, 0.12) !important;
+  border-color: var(--bb-teal) !important;
 }
 .bb-recs-tropic .custom-swiper-button-prev svg,
 .bb-recs-tropic .custom-swiper-button-next svg {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   fill: currentColor;
   stroke: currentColor;
 }
+/* Hide any default swiper nav that could double up with the custom buttons */
+.bb-recs-tropic .swiper-button-prev,
+.bb-recs-tropic .swiper-button-next { display: none !important; }
+
+/* Bottom bar: dots only, centered, a touch larger */
+.bb-recs-tropic .swiper-control-container {
+  margin-top: clamp(22px, 3vw, 34px);
+  justify-content: center;
+}
 .bb-recs-tropic .swiper-pagination-bullet {
-  background: rgba(42, 37, 32, 0.18);
+  background: rgba(42, 37, 32, 0.2);
   opacity: 1;
-  width: 8px;
-  height: 8px;
-  transition: background 0.2s ease;
+  width: 11px;
+  height: 11px;
+  margin: 0 5px !important;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 .bb-recs-tropic .swiper-pagination-bullet-active {
   background: var(--bb-teal);
+  transform: scale(1.15);
 }
 
 /* ── Mobile ────────────────────────────────────────────────────────────────── */
@@ -229,6 +254,9 @@
   .bb-recs-tropic .bb-recs__heart { width: 32px; height: 32px; top: 8px; right: 8px; }
   .bb-recs-tropic .bb-recs__heart svg { width: 15px; height: 15px; }
   .bb-recs-tropic .bb-recs__name { margin-top: 10px; }
+  /* Dots only on mobile — no edge arrows */
+  .bb-recs-tropic .custom-swiper-button-prev,
+  .bb-recs-tropic .custom-swiper-button-next { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
