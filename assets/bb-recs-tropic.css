@@ -1,0 +1,274 @@
+/* ============================================================================
+   bb-recs-tropic.css
+   Bikini Booth — Product Recommendations redesign (product page only)
+
+   EVERY rule is scoped to .bb-recs-tropic, the class the section already adds
+   on the product template:
+     <div id="theme-section-X" class="bb-recs-tropic ...">
+   Nothing here can affect collection pages, search, or any other product card,
+   because that class only exists on the product-page recommendations block.
+   ============================================================================ */
+
+.bb-recs-tropic {
+  --bb-teal: #49c6be;
+  --bb-cream: #faf8f4;
+  --bb-ink: #2a2520;
+  --bb-muted: #8a8077;
+  --bb-line: #e8e4dd;
+}
+
+/* ── Section frame: soft neutral ground, generous breathing room ───────────── */
+.bb-recs-tropic {
+  background: var(--bb-cream);
+  padding-block: clamp(40px, 6vw, 78px);
+}
+
+/* Keep the row from stretching edge-to-edge on very wide screens */
+.bb-recs-tropic .page-grid-1,
+.bb-recs-tropic [class*="page-grid-sp-"] {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+/* ── Heading: centered, muted teal, delicate dividers ──────────────────────── */
+.bb-recs-tropic .bb-recs__head {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto clamp(26px, 4vw, 46px);
+}
+.bb-recs-tropic .bb-recs__divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.bb-recs-tropic .bb-recs__divider-line {
+  height: 1px;
+  width: min(230px, 26vw);
+  flex: 0 1 auto;
+  background: var(--bb-line);
+}
+.bb-recs-tropic .bb-recs__divider-line:first-child {
+  background: linear-gradient(to right, rgba(224,219,211,0), var(--bb-line));
+}
+.bb-recs-tropic .bb-recs__divider-line:last-child {
+  background: linear-gradient(to left, rgba(224,219,211,0), var(--bb-line));
+}
+.bb-recs-tropic .bb-recs__spark {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  fill: var(--bb-teal);
+  opacity: 0.9;
+}
+.bb-recs-tropic .bb-recs__title {
+  margin: 18px 0 0;
+  color: var(--bb-teal);
+  font-family: inherit;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.2vw, 2.7rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+}
+.bb-recs-tropic .bb-recs__wave {
+  display: block;
+  width: 56px;
+  height: 11px;
+  margin: 12px auto 0;
+  stroke: var(--bb-teal);
+  fill: none;
+  stroke-width: 1.6;
+  opacity: 0.85;
+}
+.bb-recs-tropic .bb-recs__divider--bottom {
+  margin-top: clamp(30px, 4vw, 50px);
+}
+
+/* ── Product card: clean, minimal, no heavy frame ──────────────────────────── */
+.bb-recs-tropic .product-card {
+  box-shadow: none;
+  text-align: center;
+}
+.bb-recs-tropic .product-card__image__container {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--bb-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Uniform image proportions, no distortion */
+.bb-recs-tropic .image-hover-box__container {
+  aspect-ratio: 3 / 4 !important;
+}
+.bb-recs-tropic .image-hover-box__container img,
+.bb-recs-tropic .product-card__image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top;
+}
+
+/* ── Media buttons: heart only, top-right, always visible ──────────────────── */
+.bb-recs-tropic .product-card__media-buttons {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  left: auto;
+  bottom: auto;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  z-index: 4;
+}
+/* Remove the eye (quick view) and compare — heart stays */
+.bb-recs-tropic .product-card__media-buttons .popup-modal__opener,
+.bb-recs-tropic .product-card__media-buttons compare-button {
+  display: none !important;
+}
+/* Hide the duplicate button set the theme prints in the content/mobile area */
+.bb-recs-tropic .product-card__interface__icons,
+.bb-recs-tropic .product-card__media-buttons--mobile {
+  display: none !important;
+}
+
+/* The heart itself: soft translucent disc, muted-teal icon */
+.bb-recs-tropic wishlist-button.product-card__media-buttons__item {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(73, 198, 190, 0.35);
+  box-shadow: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+.bb-recs-tropic wishlist-button.product-card__media-buttons__item:hover {
+  background: #fff;
+  border-color: var(--bb-teal);
+  transform: translateY(-1px);
+}
+.bb-recs-tropic wishlist-button .theme-icon,
+.bb-recs-tropic wishlist-button svg {
+  width: 17px;
+  height: 17px;
+}
+/* The theme's heart SVGs use hard-coded red/black fills — recolor to teal */
+.bb-recs-tropic wishlist-button svg path {
+  fill: var(--bb-teal) !important;
+  stroke: none !important;
+}
+
+/* ── Title + price: centered, refined, price a touch more prominent ────────── */
+.bb-recs-tropic .product-card__content,
+.bb-recs-tropic .product-card__content__main {
+  text-align: center;
+}
+.bb-recs-tropic .product-card__heading {
+  margin-top: 14px;
+}
+.bb-recs-tropic .product-card__heading a {
+  color: var(--bb-ink);
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.015em;
+}
+.bb-recs-tropic [id^="price-"] {
+  margin-top: 6px;
+}
+.bb-recs-tropic .price,
+.bb-recs-tropic .price__regular .price-item,
+.bb-recs-tropic .price-item--regular,
+.bb-recs-tropic .price-item--sale {
+  color: var(--bb-teal) !important;
+  font-weight: 600;
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Slider controls: transparent teal circles (no white fill) + soft dots ─── */
+.bb-recs-tropic .swiper-control-container {
+  margin-top: clamp(22px, 3vw, 34px);
+  gap: 18px;
+}
+.bb-recs-tropic .custom-swiper-button-prev,
+.bb-recs-tropic .custom-swiper-button-next {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: transparent !important;
+  border: 1.5px solid rgba(73, 198, 190, 0.55);
+  color: var(--bb-teal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.bb-recs-tropic .custom-swiper-button-prev:hover,
+.bb-recs-tropic .custom-swiper-button-next:hover {
+  background: rgba(73, 198, 190, 0.1) !important;
+  border-color: var(--bb-teal);
+}
+.bb-recs-tropic .custom-swiper-button-prev svg,
+.bb-recs-tropic .custom-swiper-button-next svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+  stroke: currentColor;
+}
+/* Pagination dots */
+.bb-recs-tropic .swiper-pagination-bullet {
+  background: rgba(42, 37, 32, 0.18);
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+  transition: background 0.2s ease;
+}
+.bb-recs-tropic .swiper-pagination-bullet-active {
+  background: var(--bb-teal);
+}
+
+/* ── Mobile polish ─────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .bb-recs-tropic {
+    padding-block: 38px;
+  }
+  .bb-recs-tropic .bb-recs__title {
+    font-size: 1.65rem;
+  }
+  .bb-recs-tropic .bb-recs__divider-line {
+    width: 22vw;
+  }
+  .bb-recs-tropic wishlist-button.product-card__media-buttons__item {
+    width: 32px;
+    height: 32px;
+  }
+  .bb-recs-tropic wishlist-button .theme-icon,
+  .bb-recs-tropic wishlist-button svg {
+    width: 15px;
+    height: 15px;
+  }
+  .bb-recs-tropic .product-card__heading {
+    margin-top: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bb-recs-tropic wishlist-button.product-card__media-buttons__item,
+  .bb-recs-tropic .custom-swiper-button-prev,
+  .bb-recs-tropic .custom-swiper-button-next {
+    transition: none;
+  }
+}
