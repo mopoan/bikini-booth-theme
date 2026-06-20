@@ -13,7 +13,7 @@
 {{ 'component-swiper-slider.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 
-{%- if template.name == 'product' -%}{{ 'bb-recs-tropic.css' | asset_url | stylesheet_tag }}{%- endif -%}
+{{ 'bb-recs-tropic.css' | asset_url | stylesheet_tag }}
 <product-recommendations
   id="product-recommendations-{{ section.id }}"
   class="product-recommendations"
@@ -150,25 +150,21 @@
     endif
 -%}
 <div id="theme-section-{{ section.id }}"
-     class="{% if template.name == 'product' %}bb-recs-tropic {% endif %}{% if section.settings.show_lines == false or section.settings.background == 'hide' %}top-spacing-{{ section.settings.top_spacing }}{% endif %}{% if section.settings.background != 'hide' and section.settings.background_width == "fullwidth" %} section-background section-background--{{ section.settings.background_spacing }}{% endif %}"
+     class="bb-recs-tropic {% if section.settings.show_lines == false or section.settings.background == 'hide' %}top-spacing-{{ section.settings.top_spacing }}{% endif %}{% if section.settings.background != 'hide' and section.settings.background_width == "fullwidth" %} section-background section-background--{{ section.settings.background_spacing }}{% endif %}"
      data-section-name="product-recommendations">
   <div class="{{ page_width }}{% if section_settings_background %} section-background--mobile-width{% endif %}">
   {%- if section_settings_background -%}<div class="section-background section-background--{{ section.settings.background_spacing }} border__radius">{%- endif -%}
   {%- if section.settings.background != 'show' and section.settings.show_parallax -%}<div class="section-background__elements"><div class="section-background__elements__item"></div></div>{%- endif -%}
 
-    {%- if template.name == 'product' -%}
-      <div class="bb-recs__head">
-        <div class="bb-recs__divider bb-recs__divider--top">
-          <span class="bb-recs__divider-line"></span>
-          <svg class="bb-recs__spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c.4 3.1 1.9 4.6 5 5-3.1.4-4.6 1.9-5 5-.4-3.1-1.9-4.6-5-5 3.1-.4 4.6-1.9 5-5z"/></svg>
-          <span class="bb-recs__divider-line"></span>
-        </div>
-        <h2 class="bb-recs__title">{{ section.settings.main_heading | default: 'you may also like' }}</h2>
-        <svg class="bb-recs__wave" viewBox="0 0 40 10" aria-hidden="true"><path d="M2 6 Q 10 1 18 6 T 34 6"/></svg>
+    <div class="bb-recs__head">
+      <div class="bb-recs__divider bb-recs__divider--top">
+        <span class="bb-recs__divider-line"></span>
+        <svg class="bb-recs__spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c.4 3.1 1.9 4.6 5 5-3.1.4-4.6 1.9-5 5-.4-3.1-1.9-4.6-5-5 3.1-.4 4.6-1.9 5-5z"/></svg>
+        <span class="bb-recs__divider-line"></span>
       </div>
-    {%- else -%}
-      {%- render "section-heading" section:section -%}
-    {%- endif -%}
+      <h2 class="bb-recs__title">{{ section.settings.main_heading | default: 'you may also like' }}</h2>
+      <svg class="bb-recs__wave" viewBox="0 0 40 10" aria-hidden="true"><path d="M2 6 Q 10 1 18 6 T 34 6"/></svg>
+    </div>
 
     {%- assign __collection = section.settings.collection -%}
     {%- capture content -%}
@@ -283,13 +279,11 @@
     </div>
     {%- endif -%} 
     
-    {%- if template.name == 'product' -%}
     <div class="bb-recs__divider bb-recs__divider--bottom">
       <span class="bb-recs__divider-line"></span>
       <svg class="bb-recs__spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c.4 3.1 1.9 4.6 5 5-3.1.4-4.6 1.9-5 5-.4-3.1-1.9-4.6-5-5 3.1-.4 4.6-1.9 5-5z"/></svg>
       <span class="bb-recs__divider-line"></span>
     </div>
-    {%- endif -%}
 
     {% if section_settings_background %}</div>{%- endif -%}
   </div>
