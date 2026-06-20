@@ -171,36 +171,34 @@
       {%- if products != blank and products.size > 0 -%}
       {%- for product in products limit: section.settings.product_limit -%}
       {%- if section.settings.swipe -%}<div class="swiper-slide" lazy="true">{%- endif -%}
-      {%- render 'product-card',
-          customize: section.settings.customize,
-          product_card_product: product,
-          product_collection:__collection,
-          image_ratio_value: section.settings.image_ratio,
-          image_hover_type: section.settings.image_hover,
-          show_secondary_image: section.settings.image_action,
-          show_price:section.settings.show_price,
-          show_vendor:section.settings.show_vendor,
-          show_type:section.settings.show_type,
-          hover_underline:section.settings.hover_underline,
-          button_type_product: section.settings.button_type_product,
-          button_type_product_mobile: section.settings.button_type_product_mobile,
-          show_card_color_swatches: true,
-          show_quantity: section.settings.show_quantity,
-          show_badge_sold_out:section.settings.show_badge_sold_out,
-          show_badge_on_sale:section.settings.show_badge_on_sale,
-          show_badge_feature:section.settings.show_badge_feature,
-          show_countdown:section.settings.show_countdown,
-          truncate_product_name:section.settings.truncate_product_name,
-          show_wishlist: section.settings.show_wishlist,
-          show_compare: section.settings.show_compare,
-          show_quick_view: section.settings.show_quick_view,
-          show_wishlist_mobile: section.settings.show_wishlist_mobile,
-          show_compare_mobile: section.settings.show_compare_mobile,
-          show_quick_view_mobile: section.settings.show_quick_view_mobile,
-          text_aligment: section.settings.text_align,
-          show_description: section.settings.show_description,
-          enable_rating_product_card: section.settings.enable_rating_product_card
-        -%}
+      {%- comment -%} ── Bikini Booth custom recommendation card ── {%- endcomment -%}
+      <div class="bb-recs__card">
+        <div class="bb-recs__media">
+          <a class="bb-recs__media-link" href="{{ product.url | within: __collection }}" aria-label="{{ product.title | escape }}">
+            {%- if product.featured_image -%}
+            <img class="bb-recs__img"
+                 src="{{ product.featured_image | image_url: width: 600 }}"
+                 srcset="{{ product.featured_image | image_url: width: 360 }} 360w, {{ product.featured_image | image_url: width: 540 }} 540w, {{ product.featured_image | image_url: width: 720 }} 720w, {{ product.featured_image | image_url: width: 960 }} 960w"
+                 sizes="(max-width: 767px) 50vw, 23vw"
+                 alt="{{ product.featured_image.alt | escape | default: product.title | escape }}"
+                 width="{{ product.featured_image.width }}"
+                 height="{{ product.featured_image.height }}"
+                 loading="lazy">
+            {%- endif -%}
+          </a>
+          {%- if settings.enable_wishlist -%}
+          <wishlist-button class="bb-recs__heart"
+             data-id="{{ product.id }}"
+             data-product-handle="{{ product.handle }}"
+             aria-label="{{ 'wishlist.product.wishlist' | t }}">
+            {%- render "icon-wishlist" icon_type:"normal" -%}
+            {%- render "icon-wishlist" icon_type:"added" -%}
+          </wishlist-button>
+          {%- endif -%}
+        </div>
+        <a class="bb-recs__name" href="{{ product.url | within: __collection }}">{{ product.title | escape }}</a>
+        <div class="bb-recs__price">{%- render 'price', product: product, size: settings.product_card_price_size -%}</div>
+      </div>
         
       {%- if section.settings.swipe -%}</div>{%- endif -%}
       {%- endfor -%}
