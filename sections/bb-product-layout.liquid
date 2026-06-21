@@ -8,13 +8,14 @@
     media  fit
     media  ctl
     media  acc
-    sp     sp     <- social proof, full width, below the accordions
+    div    div    <- Starfish Divider, full width, below the accordions
+    sp     sp     <- social proof, full width
     recs   recs   <- recommendations, full width
 
-  Social proof is placed by grid-area (no DOM moving). For correct MOBILE
-  order, the Social Proof section should sit between Accordions and
-  Recommendations in the theme editor's section list — on mobile the grid
-  collapses to block flow and follows DOM order.
+  Social proof and the Starfish Divider are placed by grid-area (no DOM
+  moving). For correct MOBILE order, keep the section list as:
+  Accordions -> Starfish Divider -> Social Proof -> Recommendations.
+  On mobile the grid collapses to block flow and follows DOM order.
 {%- endcomment -%}
 
 <style>
@@ -29,6 +30,7 @@
         "media  fit"
         "media  ctl"
         "media  acc"
+        "div    div"
         "sp     sp"
         "recs   recs" !important;
       align-items: start !important;
@@ -36,12 +38,13 @@
       margin: 0 auto !important;
     }
 
-    body.template-product main.content-for-layout .shopify-section.bb-product-info-section  { grid-area: info  !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-trust-section { grid-area: trust !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-fit-section   { grid-area: fit   !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section   { grid-area: ctl   !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-acc-section   { grid-area: acc   !important; min-width: 0; }
-    body.template-product main.content-for-layout .shopify-section.bb-product-sp-section    { grid-area: sp    !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-info-section      { grid-area: info  !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-trust-section     { grid-area: trust !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-fit-section       { grid-area: fit   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-ctl-section       { grid-area: ctl   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-acc-section       { grid-area: acc   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-starfish-divider-section  { grid-area: div   !important; min-width: 0; }
+    body.template-product main.content-for-layout .shopify-section.bb-product-sp-section        { grid-area: sp    !important; min-width: 0; }
     body.template-product main.content-for-layout .shopify-section:has(product-recommendations) { grid-area: recs !important; }
 
   }
@@ -85,6 +88,13 @@
       mediaEl.style.setProperty('grid-area', 'media', 'important');
       mediaEl.style.minWidth = '0';
       mediaEl.style.setProperty('overflow', 'visible', 'important');
+    }
+
+    /* Starfish Divider — full-width grid row (placed by area, not moved) */
+    var dividerEl = document.querySelector('.shopify-section.bb-starfish-divider-section');
+    if (dividerEl) {
+      dividerEl.style.setProperty('grid-area', 'div', 'important');
+      dividerEl.style.minWidth = '0';
     }
 
     /* Social proof — full-width grid row (placed by area, not moved) */
