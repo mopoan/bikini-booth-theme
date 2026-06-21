@@ -454,12 +454,13 @@
     },
     "bb_starfish_divider_W9zUhr": {
       "type": "bb-starfish-divider",
-      "disabled": true,
       "name": "Starfish Divider",
       "settings": {
         "divider_color": "#49c6be",
-        "full_width": true,
+        "star_size": 36,
+        "line_thickness": 3,
         "max_width": 1280,
+        "full_bleed": true,
         "top_spacing": 56,
         "bottom_spacing": 56
       }
