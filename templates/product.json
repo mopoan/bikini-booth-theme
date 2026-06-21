@@ -458,7 +458,7 @@
       "settings": {
         "divider_color": "#49c6be",
         "full_width": true,
-        "max_width": 1980,
+        "max_width": 1280,
         "top_spacing": 56,
         "bottom_spacing": 56
       }
