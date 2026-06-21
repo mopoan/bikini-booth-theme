@@ -1,0 +1,222 @@
+{%- comment -%}
+  ============================================================
+  Section: Starfish Divider
+  File:    sections/bb-starfish-divider.liquid
+  Brand:   Bikini Booth
+  ------------------------------------------------------------
+  A standalone, reusable decorative divider.
+  - Pure inline SVG (starfish + tapered lines). No images, no libraries.
+  - All CSS scoped to this section's unique id (safe for multiple instances).
+  - Gradient ids are suffixed per-instance to avoid collisions.
+  - OS 2.0 compatible: addable anywhere via the theme editor (presets).
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign color  = section.settings.divider_color
+  assign top    = section.settings.top_spacing
+  assign bottom = section.settings.bottom_spacing
+  assign maxw   = section.settings.max_width
+  assign star   = section.settings.starfish_size
+  assign uid    = section.id
+-%}
+
+<style>
+  .bb-sfd-{{ uid }} {
+    --bb-sfd-color: {{ color }};
+    --bb-sfd-pt: {{ top }}px;
+    --bb-sfd-pb: {{ bottom }}px;
+    --bb-sfd-maxw: {{ maxw }}px;
+    --bb-sfd-star: {{ star }}px;
+    box-sizing: border-box;
+    width: 100%;
+    padding-top: var(--bb-sfd-pt);
+    padding-bottom: var(--bb-sfd-pb);
+  }
+  .bb-sfd-{{ uid }} .bb-sfd__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(6px, 1.4vw, 12px);
+    width: 100%;
+    max-width: var(--bb-sfd-maxw);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 6vw, 48px);
+    color: var(--bb-sfd-color);
+    box-sizing: border-box;
+  }
+  .bb-sfd-{{ uid }} .bb-sfd__line {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 10px;
+    display: block;
+  }
+  .bb-sfd-{{ uid }} .bb-sfd__line svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .bb-sfd-{{ uid }} .bb-sfd__line--right { transform: scaleX(-1); }
+  .bb-sfd-{{ uid }} .bb-sfd__dot {
+    flex: 0 0 auto;
+    width: clamp(3px, 0.5vw, 4px);
+    height: clamp(3px, 0.5vw, 4px);
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .bb-sfd-{{ uid }} .bb-sfd__star {
+    flex: 0 0 auto;
+    width: var(--bb-sfd-star);
+    height: var(--bb-sfd-star);
+    display: block;
+  }
+  .bb-sfd-{{ uid }} .bb-sfd__star svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  @media screen and (max-width: 749px) {
+    .bb-sfd-{{ uid }} {
+      padding-top: calc(var(--bb-sfd-pt) * 0.62);
+      padding-bottom: calc(var(--bb-sfd-pb) * 0.62);
+    }
+    .bb-sfd-{{ uid }} .bb-sfd__star {
+      width: calc(var(--bb-sfd-star) * 0.86);
+      height: calc(var(--bb-sfd-star) * 0.86);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bb-sfd-{{ uid }} * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="bb-sfd-{{ uid }}" role="presentation">
+  <div class="bb-sfd__inner">
+
+    {%- comment -%} Left tapered line: thickest near the centre, tapering + fading toward the far edge {%- endcomment -%}
+    <span class="bb-sfd__line bb-sfd__line--left" aria-hidden="true">
+      <svg viewBox="0 0 240 10" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bb-sfd-gl-{{ uid }}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0"    stop-color="currentColor" stop-opacity="0"/>
+            <stop offset="0.12" stop-color="currentColor" stop-opacity="0.85"/>
+            <stop offset="1"    stop-color="currentColor" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <path d="M 0 4.85 C 50 4.8, 84 3.62, 240 3.6 L 240 6.4 C 84 6.38, 50 5.2, 0 5.15 Z"
+              fill="url(#bb-sfd-gl-{{ uid }})"/>
+      </svg>
+    </span>
+
+    <span class="bb-sfd__dot" aria-hidden="true"></span>
+
+    {%- comment -%} Centred outlined starfish {%- endcomment -%}
+    <span class="bb-sfd__star" aria-hidden="true">
+      <svg viewBox="0 0 100 92" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <path d="M 50 8
+                 Q 56.67 16.99 61.76 33.82
+                 Q 79.33 33.45 89.94 37.02
+                 Q 83.45 46.14 69.02 56.18
+                 Q 74.81 72.79 74.7 83.98
+                 Q 64.01 80.63 50 70
+                 Q 35.99 80.63 25.3 83.98
+                 Q 25.19 72.79 30.98 56.18
+                 Q 16.55 46.14 10.06 37.02
+                 Q 20.67 33.45 38.24 33.82
+                 Q 43.33 16.99 50 8 Z"
+              stroke="currentColor" stroke-width="2.2"
+              stroke-linejoin="round" stroke-linecap="round"/>
+        <g fill="currentColor" opacity="0.5">
+          <circle cx="50" cy="50" r="1.5"/>
+          <circle cx="50" cy="34" r="1.05"/>
+          <circle cx="62" cy="46" r="1.05"/>
+          <circle cx="58" cy="60" r="1.05"/>
+          <circle cx="42" cy="60" r="1.05"/>
+          <circle cx="38" cy="46" r="1.05"/>
+        </g>
+      </svg>
+    </span>
+
+    <span class="bb-sfd__dot" aria-hidden="true"></span>
+
+    {%- comment -%} Right tapered line: mirror of the left for perfect symmetry {%- endcomment -%}
+    <span class="bb-sfd__line bb-sfd__line--right" aria-hidden="true">
+      <svg viewBox="0 0 240 10" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bb-sfd-gr-{{ uid }}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0"    stop-color="currentColor" stop-opacity="0"/>
+            <stop offset="0.12" stop-color="currentColor" stop-opacity="0.85"/>
+            <stop offset="1"    stop-color="currentColor" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <path d="M 0 4.85 C 50 4.8, 84 3.62, 240 3.6 L 240 6.4 C 84 6.38, 50 5.2, 0 5.15 Z"
+              fill="url(#bb-sfd-gr-{{ uid }})"/>
+      </svg>
+    </span>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Starfish Divider",
+  "tag": "section",
+  "class": "bb-starfish-divider-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#49c6be"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Divider max width",
+      "min": 480,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1100
+    },
+    {
+      "type": "range",
+      "id": "starfish_size",
+      "label": "Starfish size",
+      "min": 18,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "presets": [
+    {
+      "name": "Starfish Divider"
+    }
+  ]
+}
+{% endschema %}
