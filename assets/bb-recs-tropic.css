@@ -186,58 +186,11 @@
 }
 
 /* ── Slider controls ───────────────────────────────────────────────────────── */
-/* Nav arrows: centered below the cards, flanking the dots (normal flow) */
-.bb-recs-tropic .custom-swiper-button-prev,
-.bb-recs-tropic .custom-swiper-button-next {
-  position: static;
-  flex: none;
-  width: 46px;
-  height: 46px;
-  margin: 0;
-  padding: 0;
-  line-height: 0;
-  border-radius: 50%;
-  background: transparent !important;
-  border: 1.5px solid rgba(73, 198, 190, 0.6) !important;
-  box-shadow: none !important;
-  color: var(--bb-teal);
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-/* Strip any theme pseudo-elements that create a second ring */
-.bb-recs-tropic .custom-swiper-button-prev::before,
-.bb-recs-tropic .custom-swiper-button-prev::after,
-.bb-recs-tropic .custom-swiper-button-next::before,
-.bb-recs-tropic .custom-swiper-button-next::after { content: none !important; display: none !important; }
-.bb-recs-tropic .custom-swiper-button-prev:hover,
-.bb-recs-tropic .custom-swiper-button-next:hover {
-  background: rgba(73, 198, 190, 0.12) !important;
-  border-color: var(--bb-teal) !important;
-}
-.bb-recs-tropic .custom-swiper-button-prev svg,
-.bb-recs-tropic .custom-swiper-button-next svg {
-  display: block;
-  width: 17px;
-  height: 17px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-/* Hide any default swiper nav that could double up with the custom buttons */
-.bb-recs-tropic .swiper-button-prev,
-.bb-recs-tropic .swiper-button-next { display: none !important; }
+/* Arrows use the theme's native slider-button style (no overrides here) so they
+   match every other carousel on the site. */
 
-/* Bottom bar: prev | dots | next, centered below the cards */
+/* Keep breathing room between the cards and the native nav row */
 .bb-recs-tropic .swiper-control-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
   margin-top: clamp(22px, 3vw, 34px);
 }
 .bb-recs-tropic .swiper-pagination-bullet {
