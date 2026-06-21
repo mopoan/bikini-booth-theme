@@ -73,7 +73,14 @@
   margin-top: 16px;                   /* below the heading, above the cards */
 }
 .bb-recs-tropic .bb-recs__divider--heading .bb-recs__divider-line {
-  width: clamp(56px, 9.5vw, 88px);    /* refined length, ~standard × 1.25 */
+  width: clamp(100px, 17vw, 165px);   /* enlarged to balance the bigger diamond */
+  height: 1.2px;
+}
+.bb-recs-tropic .bb-recs__divider--heading .bb-recs__divider-line:first-child {
+  background: linear-gradient(to right, rgba(73, 198, 190, 0), rgba(73, 198, 190, 0.55));
+}
+.bb-recs-tropic .bb-recs__divider--heading .bb-recs__divider-line:last-child {
+  background: linear-gradient(to left, rgba(73, 198, 190, 0), rgba(73, 198, 190, 0.55));
 }
 .bb-recs-tropic .bb-recs__divider--heading .bb-recs__diamond {
   width: 16.25px;                     /* standard 13px × 1.25 */
@@ -187,6 +194,8 @@
   width: 46px;
   height: 46px;
   margin: 0;
+  padding: 0;
+  line-height: 0;
   border-radius: 50%;
   background: transparent !important;
   border: 1.5px solid rgba(73, 198, 190, 0.6) !important;
@@ -210,10 +219,14 @@
 }
 .bb-recs-tropic .custom-swiper-button-prev svg,
 .bb-recs-tropic .custom-swiper-button-next svg {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
+  display: block;
+  width: 17px;
+  height: 17px;
+  fill: none;
   stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 /* Hide any default swiper nav that could double up with the custom buttons */
 .bb-recs-tropic .swiper-button-prev,
