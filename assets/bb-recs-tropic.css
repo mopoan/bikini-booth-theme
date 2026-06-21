@@ -187,11 +187,12 @@
 
 /* Edge arrows: clickable prev/next pinned to the left/right of the gallery,
    vertically centered on the image row */
-.bb-recs-tropic .custom-swiper-button-prev,
-.bb-recs-tropic .custom-swiper-button-next {
+.bb-recs-tropic .bb-recs__stage .custom-swiper-button-prev,
+.bb-recs-tropic .bb-recs__stage .custom-swiper-button-next {
   position: absolute !important;
-  top: calc(50% - 24px); /* center of the card row; offsets the dots bar below */
-  transform: translateY(-50%);
+  top: calc(50% - 24px) !important; /* center of the card row; offsets the dots bar below */
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
   z-index: 5;
   width: 46px;
   height: 46px;
@@ -207,8 +208,8 @@
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
-.bb-recs-tropic .custom-swiper-button-prev { left: -23px; }
-.bb-recs-tropic .custom-swiper-button-next { right: -23px; }
+.bb-recs-tropic .bb-recs__stage .custom-swiper-button-prev { left: -23px !important; right: auto !important; }
+.bb-recs-tropic .bb-recs__stage .custom-swiper-button-next { right: -23px !important; left: auto !important; }
 /* Strip any theme pseudo-elements that create a second ring */
 .bb-recs-tropic .custom-swiper-button-prev::before,
 .bb-recs-tropic .custom-swiper-button-prev::after,
@@ -230,11 +231,18 @@
 .bb-recs-tropic .swiper-button-prev,
 .bb-recs-tropic .swiper-button-next { display: none !important; }
 
-/* Bottom bar: dots only, centered, a touch larger.
-   position:static so it is NOT the anchor for the absolutely-positioned arrows
-   (they must anchor to .page-grid-1, the full gallery). */
+/* Bottom bar: dots only, centered. Stripped of every containing-block trigger
+   (position/transform/filter/contain/will-change) so the absolutely-positioned
+   arrows anchor to .bb-recs__stage, not to this bar. */
 .bb-recs-tropic .swiper-control-container {
   position: static !important;
+  transform: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  backdrop-filter: none !important;
+  perspective: none !important;
+  contain: none !important;
+  will-change: auto !important;
   margin-top: clamp(22px, 3vw, 34px);
   justify-content: center;
 }
