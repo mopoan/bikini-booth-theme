@@ -186,11 +186,59 @@
 }
 
 /* ── Slider controls ───────────────────────────────────────────────────────── */
-/* Arrows use the theme's native slider-button style (no overrides here) so they
-   match every other carousel on the site. */
-
-/* Keep breathing room between the cards and the native nav row */
+/* Round teal-outline buttons. The chevron is absolutely centered so the theme's
+   own button/icon styling can't push it off-center. */
+.bb-recs-tropic .custom-swiper-button-prev,
+.bb-recs-tropic .custom-swiper-button-next {
+  position: relative;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent !important;
+  border: 1.5px solid rgba(73, 198, 190, 0.6) !important;
+  box-shadow: none !important;
+  color: var(--bb-teal);
+  display: inline-block !important;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+/* Kill any theme pseudo-element arrow that could sit alongside our chevron */
+.bb-recs-tropic .custom-swiper-button-prev::before,
+.bb-recs-tropic .custom-swiper-button-prev::after,
+.bb-recs-tropic .custom-swiper-button-next::before,
+.bb-recs-tropic .custom-swiper-button-next::after { content: none !important; display: none !important; }
+.bb-recs-tropic .custom-swiper-button-prev:hover,
+.bb-recs-tropic .custom-swiper-button-next:hover {
+  background: rgba(73, 198, 190, 0.12) !important;
+  border-color: var(--bb-teal) !important;
+}
+/* Chevron pinned to the exact centre of the button */
+.bb-recs-tropic .custom-swiper-button-prev svg,
+.bb-recs-tropic .custom-swiper-button-next svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.bb-recs-tropic .swiper-button-prev,
+.bb-recs-tropic .swiper-button-next { display: none !important; }
+/* Nav row: prev | dots | next, centered below the cards */
 .bb-recs-tropic .swiper-control-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   margin-top: clamp(22px, 3vw, 34px);
 }
 .bb-recs-tropic .swiper-pagination-bullet {
