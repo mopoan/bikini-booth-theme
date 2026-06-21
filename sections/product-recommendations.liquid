@@ -157,13 +157,12 @@
   {%- if section.settings.background != 'show' and section.settings.show_parallax -%}<div class="section-background__elements"><div class="section-background__elements__item"></div></div>{%- endif -%}
 
     <div class="bb-recs__head">
-      <div class="bb-recs__divider bb-recs__divider--top">
+      <h2 class="bb-recs__title">{{ section.settings.main_heading | default: 'you may also like' }}</h2>
+      <div class="bb-recs__divider bb-recs__divider--heading">
         <span class="bb-recs__divider-line"></span>
-        <svg class="bb-recs__spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c.4 3.1 1.9 4.6 5 5-3.1.4-4.6 1.9-5 5-.4-3.1-1.9-4.6-5-5 3.1-.4 4.6-1.9 5-5z"/></svg>
+        <svg class="bb-recs__diamond" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0 12 6 6 12 0 6Z"/></svg>
         <span class="bb-recs__divider-line"></span>
       </div>
-      <h2 class="bb-recs__title">{{ section.settings.main_heading | default: 'you may also like' }}</h2>
-      <svg class="bb-recs__wave" viewBox="0 0 40 10" aria-hidden="true"><path d="M2 6 Q 10 1 18 6 T 34 6"/></svg>
     </div>
 
     {%- assign __collection = section.settings.collection -%}
@@ -279,12 +278,6 @@
     </div>
     {%- endif -%} 
     
-    <div class="bb-recs__divider bb-recs__divider--bottom">
-      <span class="bb-recs__divider-line"></span>
-      <svg class="bb-recs__spark" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0c.4 3.1 1.9 4.6 5 5-3.1.4-4.6 1.9-5 5-.4-3.1-1.9-4.6-5-5 3.1-.4 4.6-1.9 5-5z"/></svg>
-      <span class="bb-recs__divider-line"></span>
-    </div>
-
     {% if section_settings_background %}</div>{%- endif -%}
   </div>
 </div>

@@ -50,15 +50,15 @@
 .bb-recs-tropic .bb-recs__divider-line:last-child {
   background: linear-gradient(to left, rgba(224, 219, 211, 0), var(--bb-line));
 }
-.bb-recs-tropic .bb-recs__spark {
-  width: 13px;
+.bb-recs-tropic .bb-recs__diamond {
+  width: 13px;   /* standard ornament size */
   height: 13px;
   flex: none;
   fill: var(--bb-teal);
   opacity: 0.9;
 }
 .bb-recs-tropic .bb-recs__title {
-  margin: 18px 0 0;
+  margin: 0;
   color: var(--bb-teal);
   font-family: inherit;
   font-weight: 400;
@@ -67,18 +67,17 @@
   letter-spacing: 0.01em;
   text-transform: lowercase;
 }
-.bb-recs-tropic .bb-recs__wave {
-  display: block;
-  width: 56px;
-  height: 11px;
-  margin: 12px auto 0;
-  stroke: var(--bb-teal);
-  fill: none;
-  stroke-width: 1.6;
-  opacity: 0.85;
+/* Diamond divider under the heading — 25% larger than the standard ornament */
+.bb-recs-tropic .bb-recs__divider--heading {
+  gap: 20px;                          /* standard 16px × 1.25 */
+  margin-top: 16px;                   /* below the heading, above the cards */
 }
-.bb-recs-tropic .bb-recs__divider--bottom {
-  margin-top: clamp(30px, 4vw, 50px);
+.bb-recs-tropic .bb-recs__divider--heading .bb-recs__divider-line {
+  width: clamp(56px, 9.5vw, 88px);    /* refined length, ~standard × 1.25 */
+}
+.bb-recs-tropic .bb-recs__divider--heading .bb-recs__diamond {
+  width: 16.25px;                     /* standard 13px × 1.25 */
+  height: 16.25px;
 }
 
 /* ── Custom card ───────────────────────────────────────────────────────────── */
@@ -180,23 +179,14 @@
 }
 
 /* ── Slider controls ───────────────────────────────────────────────────────── */
-/* .bb-recs__stage wraps the slider + control bar and is the guaranteed
-   positioning context for the edge arrows (page-grid-1 may be display:grid/contents) */
-.bb-recs-tropic .page-grid-1 { position: relative !important; }
-.bb-recs-tropic .bb-recs__stage { position: relative !important; }
-
-/* Edge arrows: clickable prev/next pinned to the left/right of the gallery,
-   vertically centered on the image row */
-.bb-recs-tropic .bb-recs__stage .custom-swiper-button-prev,
-.bb-recs-tropic .bb-recs__stage .custom-swiper-button-next {
-  position: absolute !important;
-  top: calc(50% - 24px) !important; /* center of the card row; offsets the dots bar below */
-  bottom: auto !important;
-  transform: translateY(-50%) !important;
-  z-index: 5;
+/* Nav arrows: centered below the cards, flanking the dots (normal flow) */
+.bb-recs-tropic .custom-swiper-button-prev,
+.bb-recs-tropic .custom-swiper-button-next {
+  position: static;
+  flex: none;
   width: 46px;
   height: 46px;
-  margin: 0 !important;
+  margin: 0;
   border-radius: 50%;
   background: transparent !important;
   border: 1.5px solid rgba(73, 198, 190, 0.6) !important;
@@ -208,8 +198,6 @@
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
-.bb-recs-tropic .bb-recs__stage .custom-swiper-button-prev { left: -23px !important; right: auto !important; }
-.bb-recs-tropic .bb-recs__stage .custom-swiper-button-next { right: -23px !important; left: auto !important; }
 /* Strip any theme pseudo-elements that create a second ring */
 .bb-recs-tropic .custom-swiper-button-prev::before,
 .bb-recs-tropic .custom-swiper-button-prev::after,
@@ -231,20 +219,13 @@
 .bb-recs-tropic .swiper-button-prev,
 .bb-recs-tropic .swiper-button-next { display: none !important; }
 
-/* Bottom bar: dots only, centered. Stripped of every containing-block trigger
-   (position/transform/filter/contain/will-change) so the absolutely-positioned
-   arrows anchor to .bb-recs__stage, not to this bar. */
+/* Bottom bar: prev | dots | next, centered below the cards */
 .bb-recs-tropic .swiper-control-container {
-  position: static !important;
-  transform: none !important;
-  filter: none !important;
-  -webkit-filter: none !important;
-  backdrop-filter: none !important;
-  perspective: none !important;
-  contain: none !important;
-  will-change: auto !important;
-  margin-top: clamp(22px, 3vw, 34px);
+  display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 16px;
+  margin-top: clamp(22px, 3vw, 34px);
 }
 .bb-recs-tropic .swiper-pagination-bullet {
   background: rgba(42, 37, 32, 0.2);
@@ -263,7 +244,6 @@
 @media (max-width: 767px) {
   .bb-recs-tropic { padding-block: 38px; }
   .bb-recs-tropic .bb-recs__title { font-size: 1.65rem; }
-  .bb-recs-tropic .bb-recs__divider-line { width: 22vw; }
   .bb-recs-tropic .bb-recs__heart { width: 32px; height: 32px; top: 8px; right: 8px; }
   .bb-recs-tropic .bb-recs__heart svg { width: 15px; height: 15px; }
   .bb-recs-tropic .bb-recs__name { margin-top: 10px; }
