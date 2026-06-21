@@ -454,6 +454,7 @@
     },
     "bb_starfish_divider_W9zUhr": {
       "type": "bb-starfish-divider",
+      "disabled": true,
       "name": "Starfish Divider",
       "settings": {
         "divider_color": "#49c6be",
