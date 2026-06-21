@@ -17,11 +17,6 @@
   assign top    = section.settings.top_spacing
   assign bottom = section.settings.bottom_spacing
   assign uid    = section.id
-  if section.settings.full_width
-    assign innermax = '100%'
-  else
-    assign innermax = section.settings.max_width | append: 'px'
-  endif
 -%}
 
 <style>
@@ -29,16 +24,24 @@
     --c: {{ color }};
     --pt: {{ top }}px;
     --pb: {{ bottom }}px;
-    --maxw: {{ innermax }};
     box-sizing: border-box;
     width: 100%;
     padding-top: var(--pt);
     padding-bottom: var(--pb);
   }
+{%- if section.settings.full_width %}
+  /* Full bleed: escape any centered, width-constrained parent and span the viewport */
+  .bb-sfd-{{ uid }} {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+{%- endif %}
   .bb-sfd-{{ uid }} .bb-sfd__art {
     display: block;
     width: 100%;
-    max-width: var(--maxw);
+    max-width: {% if section.settings.full_width %}100%{% else %}{{ section.settings.max_width }}px{% endif %};
     height: auto;
     margin-inline: auto;
     color: var(--c);
