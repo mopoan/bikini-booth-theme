@@ -457,7 +457,7 @@
       "name": "Starfish Divider",
       "settings": {
         "divider_color": "#49c6be",
-        "star_size": 36,
+        "star_size": 46,
         "line_thickness": 3,
         "max_width": 1280,
         "full_bleed": true,
