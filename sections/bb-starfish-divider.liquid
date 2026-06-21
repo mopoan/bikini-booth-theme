@@ -4,10 +4,12 @@
   File:    sections/bb-starfish-divider.liquid
   Brand:   Bikini Booth
   ------------------------------------------------------------
-  A standalone, reusable decorative divider.
-  - Pure inline SVG (starfish + tapered lines). No images, no libraries.
-  - All CSS scoped to this section's unique id (safe for multiple instances).
-  - Gradient ids are suffixed per-instance to avoid collisions.
+  Standalone, reusable decorative divider.
+  - Pure inline SVG (slender starfish + delicate tapered/fading lines).
+  - No images, no libraries.
+  - Full-width by default; fades softly at both ends.
+  - All CSS scoped to the section's unique id (safe for multiple instances).
+  - Gradient ids suffixed per-instance to avoid collisions.
   - OS 2.0 compatible: addable anywhere via the theme editor (presets).
   ============================================================
 {%- endcomment -%}
@@ -16,9 +18,14 @@
   assign color  = section.settings.divider_color
   assign top    = section.settings.top_spacing
   assign bottom = section.settings.bottom_spacing
-  assign maxw   = section.settings.max_width
   assign star   = section.settings.starfish_size
   assign uid    = section.id
+
+  if section.settings.full_width
+    assign innermax = '100%'
+  else
+    assign innermax = section.settings.max_width | append: 'px'
+  endif
 -%}
 
 <style>
@@ -26,7 +33,7 @@
     --bb-sfd-color: {{ color }};
     --bb-sfd-pt: {{ top }}px;
     --bb-sfd-pb: {{ bottom }}px;
-    --bb-sfd-maxw: {{ maxw }}px;
+    --bb-sfd-maxw: {{ innermax }};
     --bb-sfd-star: {{ star }}px;
     box-sizing: border-box;
     width: 100%;
@@ -37,18 +44,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(6px, 1.4vw, 12px);
+    gap: clamp(6px, 1.2vw, 11px);
     width: 100%;
     max-width: var(--bb-sfd-maxw);
     margin-inline: auto;
-    padding-inline: clamp(16px, 6vw, 48px);
+    padding-inline: clamp(8px, 2vw, 28px);
     color: var(--bb-sfd-color);
     box-sizing: border-box;
   }
   .bb-sfd-{{ uid }} .bb-sfd__line {
     flex: 1 1 0;
     min-width: 0;
-    height: 10px;
+    height: 8px;
     display: block;
   }
   .bb-sfd-{{ uid }} .bb-sfd__line svg {
@@ -59,8 +66,8 @@
   .bb-sfd-{{ uid }} .bb-sfd__line--right { transform: scaleX(-1); }
   .bb-sfd-{{ uid }} .bb-sfd__dot {
     flex: 0 0 auto;
-    width: clamp(3px, 0.5vw, 4px);
-    height: clamp(3px, 0.5vw, 4px);
+    width: clamp(3px, 0.45vw, 4px);
+    height: clamp(3px, 0.45vw, 4px);
     border-radius: 50%;
     background: currentColor;
   }
@@ -83,76 +90,67 @@
       padding-bottom: calc(var(--bb-sfd-pb) * 0.62);
     }
     .bb-sfd-{{ uid }} .bb-sfd__star {
-      width: calc(var(--bb-sfd-star) * 0.86);
-      height: calc(var(--bb-sfd-star) * 0.86);
+      width: calc(var(--bb-sfd-star) * 0.88);
+      height: calc(var(--bb-sfd-star) * 0.88);
     }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .bb-sfd-{{ uid }} * { animation: none !important; transition: none !important; }
   }
 </style>
 
 <div class="bb-sfd-{{ uid }}" role="presentation">
   <div class="bb-sfd__inner">
 
-    {%- comment -%} Left tapered line: thickest near the centre, tapering + fading toward the far edge {%- endcomment -%}
+    {%- comment -%} Left line: delicate hairline, slightly thicker near the centre, fading at the far end {%- endcomment -%}
     <span class="bb-sfd__line bb-sfd__line--left" aria-hidden="true">
-      <svg viewBox="0 0 240 10" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 300 8" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="bb-sfd-gl-{{ uid }}" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0"    stop-color="currentColor" stop-opacity="0"/>
-            <stop offset="0.12" stop-color="currentColor" stop-opacity="0.85"/>
+            <stop offset="0.05" stop-color="currentColor" stop-opacity="0.5"/>
+            <stop offset="0.2"  stop-color="currentColor" stop-opacity="1"/>
             <stop offset="1"    stop-color="currentColor" stop-opacity="1"/>
           </linearGradient>
         </defs>
-        <path d="M 0 4.85 C 50 4.8, 84 3.62, 240 3.6 L 240 6.4 C 84 6.38, 50 5.2, 0 5.15 Z"
+        <path d="M 0 3.85 C 130 3.78, 210 3.05, 300 3.0 L 300 5.0 C 210 4.95, 130 4.22, 0 4.15 Z"
               fill="url(#bb-sfd-gl-{{ uid }})"/>
       </svg>
     </span>
 
     <span class="bb-sfd__dot" aria-hidden="true"></span>
 
-    {%- comment -%} Centred outlined starfish {%- endcomment -%}
+    {%- comment -%} Centred slender outlined starfish {%- endcomment -%}
     <span class="bb-sfd__star" aria-hidden="true">
       <svg viewBox="0 0 100 92" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <path d="M 50 8
-                 Q 56.67 16.99 61.76 33.82
-                 Q 79.33 33.45 89.94 37.02
-                 Q 83.45 46.14 69.02 56.18
-                 Q 74.81 72.79 74.7 83.98
-                 Q 64.01 80.63 50 70
-                 Q 35.99 80.63 25.3 83.98
-                 Q 25.19 72.79 30.98 56.18
-                 Q 16.55 46.14 10.06 37.02
-                 Q 20.67 33.45 38.24 33.82
-                 Q 43.33 16.99 50 8 Z"
-              stroke="currentColor" stroke-width="2.2"
+        <path d="M 50 3
+                 L 58.23 38.67 L 94.7 35.48 L 63.31 54.33 L 77.64 88.02
+                 L 50 64 L 22.36 88.02 L 36.69 54.33 L 5.3 35.48 L 41.77 38.67 Z"
+              stroke="currentColor" stroke-width="2.4"
               stroke-linejoin="round" stroke-linecap="round"/>
-        <g fill="currentColor" opacity="0.5">
-          <circle cx="50" cy="50" r="1.5"/>
-          <circle cx="50" cy="34" r="1.05"/>
-          <circle cx="62" cy="46" r="1.05"/>
-          <circle cx="58" cy="60" r="1.05"/>
-          <circle cx="42" cy="60" r="1.05"/>
-          <circle cx="38" cy="46" r="1.05"/>
+        <g fill="currentColor" opacity="0.45">
+          <circle cx="50" cy="50" r="1"/>
+          <circle cx="50" cy="44" r="0.85"/>
+          <circle cx="53.5" cy="52" r="0.8"/>
+          <circle cx="46.5" cy="52" r="0.8"/>
+          <circle cx="50" cy="24" r="0.8"/>
+          <circle cx="66" cy="46" r="0.8"/>
+          <circle cx="34" cy="46" r="0.8"/>
         </g>
       </svg>
     </span>
 
     <span class="bb-sfd__dot" aria-hidden="true"></span>
 
-    {%- comment -%} Right tapered line: mirror of the left for perfect symmetry {%- endcomment -%}
+    {%- comment -%} Right line: mirror of the left for perfect symmetry {%- endcomment -%}
     <span class="bb-sfd__line bb-sfd__line--right" aria-hidden="true">
-      <svg viewBox="0 0 240 10" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 300 8" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="bb-sfd-gr-{{ uid }}" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0"    stop-color="currentColor" stop-opacity="0"/>
-            <stop offset="0.12" stop-color="currentColor" stop-opacity="0.85"/>
+            <stop offset="0.05" stop-color="currentColor" stop-opacity="0.5"/>
+            <stop offset="0.2"  stop-color="currentColor" stop-opacity="1"/>
             <stop offset="1"    stop-color="currentColor" stop-opacity="1"/>
           </linearGradient>
         </defs>
-        <path d="M 0 4.85 C 50 4.8, 84 3.62, 240 3.6 L 240 6.4 C 84 6.38, 50 5.2, 0 5.15 Z"
+        <path d="M 0 3.85 C 130 3.78, 210 3.05, 300 3.0 L 300 5.0 C 210 4.95, 130 4.22, 0 4.15 Z"
               fill="url(#bb-sfd-gr-{{ uid }})"/>
       </svg>
     </span>
@@ -173,11 +171,19 @@
       "default": "#49c6be"
     },
     {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "info": "Span the full width of the section. Turn off to cap the width below.",
+      "default": true
+    },
+    {
       "type": "range",
       "id": "max_width",
       "label": "Divider max width",
+      "info": "Only used when Full width is off.",
       "min": 480,
-      "max": 1600,
+      "max": 1800,
       "step": 20,
       "unit": "px",
       "default": 1100
@@ -190,7 +196,7 @@
       "max": 72,
       "step": 2,
       "unit": "px",
-      "default": 34
+      "default": 36
     },
     {
       "type": "range",
