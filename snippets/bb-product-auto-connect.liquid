@@ -12,7 +12,9 @@
     assign bb_base = bb_title_parts | first | strip
     assign bb_opp_title = nil
 
-    if bb_base == 'Top' or bb_base ends_with ' Top'
+    assign bb_base_tail = bb_base | split: ' ' | last
+
+    if bb_base_tail == 'Top'
       assign bb_paired_piece = 'Bottom'
       if bb_base == 'Top'
         assign bb_opp_title = 'Bottom in ' | append: bb_color
@@ -20,7 +22,7 @@
         assign bb_style = bb_base | remove: ' Top' | strip
         assign bb_opp_title = bb_style | append: ' Bottom in ' | append: bb_color
       endif
-    elsif bb_base == 'Bottom' or bb_base ends_with ' Bottom'
+    elsif bb_base_tail == 'Bottom'
       assign bb_paired_piece = 'Top'
       if bb_base == 'Bottom'
         assign bb_opp_title = 'Top in ' | append: bb_color
