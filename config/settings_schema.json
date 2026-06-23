@@ -4619,6 +4619,16 @@
         "id": "bb_content_shell_icon",
         "label": "Shell icon (Privacy, Terms, FAQs sidebar CTA)",
         "info": "Used on content pages and store reviews. Leave blank to use the default Bikini Booth shell SVG."
+      },
+      {
+        "type": "range",
+        "id": "bb_content_shell_icon_size",
+        "min": 32,
+        "max": 96,
+        "step": 4,
+        "unit": "px",
+        "label": "Shell icon size",
+        "default": 56
       }
     ]
   },

@@ -1,7 +1,7 @@
 {{ 'bb-shipping-returns.css' | asset_url | stylesheet_tag }}
 {{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
 
-<div class="bb-shipping-page" id="bb-shipping-{{ section.id }}">
+<div class="bb-shipping-page" id="bb-shipping-{{ section.id }}" style="--bb-ship-hero-min-height: {{ section.settings.hero_height_desktop }}px; --bb-ship-hero-min-height-mobile: {{ section.settings.hero_height_mobile }}px; --bb-ship-cta-min-height: {{ section.settings.cta_height_desktop }}px; --bb-ship-cta-min-height-mobile: {{ section.settings.cta_height_mobile }}px;">
   <div
     class="bb-shipping-hero"
     {% if section.settings.hero_image != blank %}
@@ -133,6 +133,26 @@
       "label": "Hero image"
     },
     {
+      "type": "range",
+      "id": "hero_height_desktop",
+      "min": 180,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Hero height (desktop)",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "hero_height_mobile",
+      "min": 160,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "label": "Hero height (mobile)",
+      "default": 260
+    },
+    {
       "type": "text",
       "id": "hero_title",
       "label": "Hero title",
@@ -160,6 +180,26 @@
       "type": "image_picker",
       "id": "cta_image",
       "label": "CTA background image"
+    },
+    {
+      "type": "range",
+      "id": "cta_height_desktop",
+      "min": 200,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "label": "CTA banner height (desktop)",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "cta_height_mobile",
+      "min": 180,
+      "max": 560,
+      "step": 10,
+      "unit": "px",
+      "label": "CTA banner height (mobile)",
+      "default": 300
     },
     {
       "type": "text",

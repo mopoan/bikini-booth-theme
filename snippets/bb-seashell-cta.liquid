@@ -17,30 +17,49 @@
   if bb_shell_icon == blank and settings.bb_content_shell_icon != blank
     assign bb_shell_icon = settings.bb_content_shell_icon
   endif
+
+  assign bb_shell_size = shell_size
+  if bb_shell_size == blank and section != blank and section.settings.cta_shell_icon_size != blank
+    assign bb_shell_size = section.settings.cta_shell_icon_size
+  endif
+  if bb_shell_size == blank and settings.bb_content_shell_icon_size != blank
+    assign bb_shell_size = settings.bb_content_shell_icon_size
+  endif
+  if bb_shell_size == blank
+    assign bb_shell_size = 56
+  endif
+
   assign bb_shell_default_url = 'https://cdn.shopify.com/s/files/1/0692/4022/5894/files/bb-shell.svg?v=1782080018'
+  assign bb_shell_render_width = bb_shell_size | times: 2
 -%}
-<div class="bb-seashell-cta bb-seashell-cta--{{ bb_cta_layout }}">
-  <span class="bb-seashell-cta__icon" aria-hidden="true">
-    {%- if bb_shell_icon != blank -%}
-      <img
-        src="{{ bb_shell_icon | image_url: width: 120 }}"
-        alt=""
-        width="48"
-        height="48"
-        loading="lazy"
-        class="bb-seashell-cta__icon-img"
-      >
-    {%- else -%}
-      <img
-        src="{{ bb_shell_default_url }}"
-        alt=""
-        width="48"
-        height="48"
-        loading="lazy"
-        class="bb-seashell-cta__icon-img"
-      >
-    {%- endif -%}
-  </span>
+<div
+  class="bb-seashell-cta bb-seashell-cta--{{ bb_cta_layout }}"
+  style="--bb-shell-icon-size: {{ bb_shell_size }}px;"
+>
+  <div class="bb-seashell-cta__icon-wrap" aria-hidden="true">
+    <span class="bb-seashell-cta__icon">
+      {%- if bb_shell_icon != blank -%}
+        <img
+          src="{{ bb_shell_icon | image_url: width: bb_shell_render_width }}"
+          alt=""
+          width="{{ bb_shell_size }}"
+          height="{{ bb_shell_size }}"
+          loading="lazy"
+          class="bb-seashell-cta__icon-img"
+        >
+      {%- else -%}
+        <img
+          src="{{ bb_shell_default_url }}"
+          alt=""
+          width="{{ bb_shell_size }}"
+          height="{{ bb_shell_size }}"
+          loading="lazy"
+          class="bb-seashell-cta__icon-img"
+        >
+      {%- endif -%}
+    </span>
+    <span class="bb-seashell-cta__icon-rule"></span>
+  </div>
   <div class="bb-seashell-cta__copy">
     <p class="bb-seashell-cta__eyebrow">Questions?</p>
     <p class="bb-seashell-cta__text">We're here to help.</p>
