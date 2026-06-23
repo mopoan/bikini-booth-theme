@@ -1,1 +1,155 @@
-{"name":"About page stack","type":"custom.bb_about_stack","sections":{"about_div_top":{"type":"_blocks","blocks":{"ai_gen_block_f9e42c0_4GhXrM":{"type":"ai_gen_block_f9e42c0","settings":{"divider_color":"#4ac6be","divider_height":2,"desktop_width_percent":100},"blocks":{}}},"block_order":["ai_gen_block_f9e42c0_4GhXrM"],"name":"Divider","settings":{}},"about_story":{"type":"bb-sf-split-story","name":"Our story","settings":{"image":"shopify:\/\/shop_images\/banner_2_e3b25344-af37-409a-9ff0-f3f5e89a029c.png","image_url":"","eyebrow":"About us","heading":"Not Your Average Brand","body":"<p>We're not just a swimwear and resort wear brand. We're a lifestyle brand celebrating the carefree spirit and endless possibilities of beachside living.<\/p><p>Our goal is simple: to bring joy and confidence with our vibrant and creative designs. Whether it's tropical patterns or bold cuts, every item in our lineup is crafted to stand out and encourage our customers to express themselves freely.<\/p>","button_label":"Shop swimwear","button_link":"shopify:\/\/collections\/swimwear"}},"about_beliefs":{"type":"bb-about-beliefs","name":"What we believe","settings":{"eyebrow":"What we believe","heading":"Designed for life in the sun","col1_title":"Tropical soul","col1_text":"From Phuket to Koh Phangan, Bikini Booth is rooted in island life. Sunsets, sea breeze, and prints that feel like a holiday you can wear every day.","col2_title":"Sun-ready cuts","col2_text":"Swimwear and resort wear shaped for real bodies and real plans. Flattering lines, confident fits, and pieces that move with you from beach clubs to boardwalks.","col3_title":"Own your shine","col3_text":"We’re here for color, joy, and self-expression. The carefree energy you see on our site is the same spirit we stitch into every collection."}},"about_div_mid":{"type":"_blocks","blocks":{"ai_gen_block_f9e42c0_yqDXNm":{"type":"ai_gen_block_f9e42c0","settings":{"divider_color":"#4ac6be","divider_height":2,"desktop_width_percent":100},"blocks":{}}},"block_order":["ai_gen_block_f9e42c0_yqDXNm"],"name":"Divider","settings":{}},"about_stores":{"type":"bb-sf-stores","blocks":{"st_1":{"type":"store","settings":{"image":"shopify:\/\/shop_images\/Porto_de_Phuket_new.png","image_url":"https:\/\/images.unsplash.com\/photo-1563492065599-3520f775eeed?w=600&q=80&auto=format&fit=crop","city":"Phuket","address":"504 bikini booth Porto de Phuket 19\/1-19\/6 Bandon-Cherngtalay Rd, Thalang District, Phuket","hours":"Daily · 10am – 10pm","directions_url":"https:\/\/maps.app.goo.gl\/fXZ6a2HffeQzDXzP9"}},"st_2":{"type":"store","settings":{"image":"shopify:\/\/shop_images\/fisher_man_-_reflection.png","image_url":"https:\/\/images.unsplash.com\/photo-1507525428034-b723cf961d3e?w=600&q=80&auto=format&fit=crop","city":"Koh Samui","address":"67 Fisherman's Village, Bo Put, Ko Samui, Surat Thani 84320","hours":"Daily · 11am – 10:30pm","directions_url":"https:\/\/maps.app.goo.gl\/S4xyZcd4DR8Ewr8B8"}},"st_3":{"type":"store","settings":{"image":"shopify:\/\/shop_images\/bb_kpg_realistic.png","image_url":"https:\/\/images.unsplash.com\/photo-1559827260-dc66d52bef19?w=600&q=80&auto=format&fit=crop","city":"Koh Phangan","address":"23, 2 Hin Kong, Koh Phangan, Ko Pha-ngan District, Surat Thani 84280","hours":"Daily · 11am – 9pm","directions_url":"https:\/\/maps.app.goo.gl\/6QTypTobnbvFo9bG7"}}},"block_order":["st_1","st_2","st_3"],"name":"BB - Stores","settings":{"eyebrow":"Find us","heading":"Phuket · Koh Samui · Koh Phangan"}},"about_div_bottom":{"type":"_blocks","blocks":{"ai_gen_block_f9e42c0_4GhXrM":{"type":"ai_gen_block_f9e42c0","settings":{"divider_color":"#4ac6be","divider_height":2,"desktop_width_percent":100},"blocks":{}}},"block_order":["ai_gen_block_f9e42c0_4GhXrM"],"name":"Divider","settings":{}}},"order":["about_div_top","about_story","about_beliefs","about_div_mid","about_stores","about_div_bottom"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "About page stack",
+  "type": "custom.bb_about_stack",
+  "sections": {
+    "about_div_top": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f9e42c0_4GhXrM": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#4ac6be",
+            "divider_height": 2,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f9e42c0_4GhXrM"
+      ],
+      "name": "Divider",
+      "settings": {}
+    },
+    "about_story": {
+      "type": "bb-sf-split-story",
+      "name": "Our story",
+      "settings": {
+        "image": "shopify://shop_images/banner_2_e3b25344-af37-409a-9ff0-f3f5e89a029c.png",
+        "image_url": "",
+        "eyebrow": "About us",
+        "heading": "Not Your Average Brand",
+        "body": "<p>We're not just a swimwear and resort wear brand. We're a lifestyle brand celebrating the carefree spirit and endless possibilities of beachside living.</p><p>Our goal is simple: to bring joy and confidence with our vibrant and creative designs. Whether it's tropical patterns or bold cuts, every item in our lineup is crafted to stand out and encourage our customers to express themselves freely.</p>",
+        "button_label": "Shop swimwear",
+        "button_link": "shopify://collections/swimwear"
+      }
+    },
+    "about_beliefs": {
+      "type": "bb-about-beliefs",
+      "name": "What we believe",
+      "settings": {
+        "eyebrow": "What we believe",
+        "heading": "Designed for life in the sun",
+        "col1_title": "Tropical soul",
+        "col1_text": "From Phuket to Koh Phangan, Bikini Booth is rooted in island life. Sunsets, sea breeze, and prints that feel like a holiday you can wear every day.",
+        "col2_title": "Sun-ready cuts",
+        "col2_text": "Swimwear and resort wear shaped for real bodies and real plans. Flattering lines, confident fits, and pieces that move with you from beach clubs to boardwalks.",
+        "col3_title": "Own your shine",
+        "col3_text": "We’re here for color, joy, and self-expression. The carefree energy you see on our site is the same spirit we stitch into every collection."
+      }
+    },
+    "about_div_mid": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f9e42c0_yqDXNm": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#4ac6be",
+            "divider_height": 2,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f9e42c0_yqDXNm"
+      ],
+      "name": "Divider",
+      "settings": {}
+    },
+    "about_stores": {
+      "type": "bb-sf-stores",
+      "blocks": {
+        "st_1": {
+          "type": "store",
+          "settings": {
+            "image": "shopify://shop_images/Porto_de_Phuket_new.png",
+            "image_url": "https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=600&q=80&auto=format&fit=crop",
+            "city": "Phuket",
+            "address": "504 bikini booth Porto de Phuket 19/1-19/6 Bandon-Cherngtalay Rd, Thalang District, Phuket",
+            "hours": "Daily · 10am – 10pm",
+            "directions_url": "https://maps.app.goo.gl/fXZ6a2HffeQzDXzP9"
+          }
+        },
+        "st_2": {
+          "type": "store",
+          "settings": {
+            "image": "shopify://shop_images/fisher_man_-_reflection.png",
+            "image_url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80&auto=format&fit=crop",
+            "city": "Koh Samui",
+            "address": "67 Fisherman's Village, Bo Put, Ko Samui, Surat Thani 84320",
+            "hours": "Daily · 11am – 10:30pm",
+            "directions_url": "https://maps.app.goo.gl/S4xyZcd4DR8Ewr8B8"
+          }
+        },
+        "st_3": {
+          "type": "store",
+          "settings": {
+            "image": "shopify://shop_images/bb_kpg_realistic.png",
+            "image_url": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80&auto=format&fit=crop",
+            "city": "Koh Phangan",
+            "address": "23, 2 Hin Kong, Koh Phangan, Ko Pha-ngan District, Surat Thani 84280",
+            "hours": "Daily · 11am – 9pm",
+            "directions_url": "https://maps.app.goo.gl/6QTypTobnbvFo9bG7"
+          }
+        }
+      },
+      "block_order": [
+        "st_1",
+        "st_2",
+        "st_3"
+      ],
+      "name": "BB - Stores",
+      "settings": {
+        "eyebrow": "Find us",
+        "heading": "Phuket · Koh Samui · Koh Phangan"
+      }
+    },
+    "about_div_bottom": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f9e42c0_4GhXrM": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#4ac6be",
+            "divider_height": 2,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f9e42c0_4GhXrM"
+      ],
+      "name": "Divider",
+      "settings": {}
+    }
+  },
+  "order": [
+    "about_div_top",
+    "about_story",
+    "about_beliefs",
+    "about_div_mid",
+    "about_stores",
+    "about_div_bottom"
+  ]
+}

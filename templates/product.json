@@ -1,1 +1,466 @@
-{"sections":{"product_media_bgBNAz":{"type":"product-media","name":"Product media","settings":{"aspect_ratio":"9:16","image_fit":"contain","bg_color":"#f0ece6","border_radius":0,"thumb_position":"left","thumb_width":64,"thumb_height":82,"thumb_gap":6,"show_thumbs_mobile":false,"sticky_gallery":true,"enable_zoom":true,"enable_lightbox":true,"enable_dots":true,"show_arrows_mobile":true,"video_autoplay":true,"video_loop":true,"video_muted":true,"video_controls":false,"video_hide_fullscreen":true,"video_hide_download":true,"video_hide_remote":true,"video_custom_playpause":true,"video_custom_mute":true,"video_thumb_play_icon":true,"video_pause_inactive":true,"video_reset_inactive":false,"video_object_fit":"cover","video_bg_color":"#000000","padding_top":0,"padding_bottom":0}},"product_info_Ute4BU":{"type":"product-info","name":"Product info","settings":{"price_note":"Top and bottom sold separately.","show_subtitle":true,"subtitle_font_size":12,"subtitle_color":"#8a8077","subtitle_weight":"400","subtitle_line_height":1.5,"subtitle_margin_top":0,"subtitle_margin_bottom":10,"subtitle_max_width":0,"one_size_label":"One Size","one_size_show_icon":true,"one_size_icon":"check","one_size_helper":"","atc_hover_bg":"#ffffff","atc_hover_text":"#49c6be","atc_hover_border":"#49c6be"}},"product_trust_bar_wCfwLk":{"type":"product-trust-bar","blocks":{"trust_item_MGjPQT":{"type":"trust_item","settings":{"icon":"shipping","label":"Free shipping over $250"}},"trust_item_gaYUVC":{"type":"trust_item","settings":{"icon":"location","label":"Ships from Thailand"}},"trust_item_gYnHDg":{"type":"trust_item","settings":{"icon":"returns","label":"30-day returns"}},"trust_item_YwHFf9":{"type":"trust_item","settings":{"icon":"lock","label":"Secure checkout"}}},"block_order":["trust_item_MGjPQT","trust_item_gaYUVC","trust_item_gYnHDg","trust_item_YwHFf9"],"name":"Product trust bar","settings":{"label_font_size":12}},"product_fit_note_wXyHaY":{"type":"product-fit-note","name":"Product fit note","settings":{"fit_note":"{{ product.metafields.custom.fit_note | metafield_tag }}","fit_title":"Fit note","fit_icon":"star","title_font_size":16,"body_font_size":14,"image_width":58}},"product_complete_the_look_wEDMHX":{"type":"product-complete-the-look","name":"Complete the look","settings":{"heading":"Complete the look","subheading":"Style the full set","divider_text":"Add to complete the set","this_item_label":"This item","pair_label":"Resortwear","accent_color":"#49c6be","image_width":60,"size_select_min_width":64,"size_select_height":30,"size_select_font_size":12,"size_select_radius":5,"size_select_border_color":"#e0dbd3","size_select_text_color":"#2a2520","size_select_bg_color":"#ffffff","onesize_font_size":12,"onesize_color":"#8a8077","onesize_weight":"500"}},"product_accordions_M7G4Ax":{"type":"product-accordions","blocks":{"product_description_XpQqTF":{"type":"product_description","settings":{"title":"Details","open_by_default":true}},"care_metafield_fxyyTC":{"type":"care_metafield","settings":{"title":"Care & composition","open_by_default":false}},"shipping_page_83cBqY":{"type":"shipping_page","settings":{"title":"Shipping","page_handle":"shipping-in-the-product-page","open_by_default":false}}},"block_order":["product_description_XpQqTF","care_metafield_fxyyTC","shipping_page_83cBqY"],"name":"Product accordions","settings":{"content_size":"0.875rem","content_weight":"400","label_size":"0.8125rem","label_weight":"500"}},"product_social_proof_JtFM97":{"type":"product-social-proof","blocks":{"ugc_U3aUiH":{"type":"ugc","settings":{"video":"shopify:\/\/files\/videos\/ugc-001.mov","size":"wide","handle":"@amybeachlife","link":"","alt":"Customer wearing a yellow bikini with a tropical fruit stall behind"}},"ugc_rWtHfp":{"type":"ugc","settings":{"image":"shopify:\/\/shop_images\/Mook_12_56_27.jpg","size":"standard","handle":"@islanddiaries","link":"","alt":"Customer in white bikini and cover-up"}},"ugc_CcjhiY":{"type":"ugc","settings":{"image":"shopify:\/\/shop_images\/605883750_2315759198851505_3797349508690266541_nfull.webp","size":"standard","handle":"@sunkissed.sofia","link":"","alt":"Customer relaxing in swimwear"}},"ugc_PxnpRy":{"type":"ugc","settings":{"image":"shopify:\/\/shop_images\/banner_2_e3b25344-af37-409a-9ff0-f3f5e89a029c.png","size":"tall","handle":"@bikinibooth.babe","link":"","alt":"Customer in teal bikini by the sea"}},"review_rmapHc":{"type":"review","settings":{"rating":5,"quote":"<p>Bought myself the cutest maroon bathing suit! The material and style of the costumes are beautiful! Can’t wait to visit again! ✨<\/p>","author_name":"Cleo A.","author_location":"Local Guide","author_avatar":"shopify:\/\/shop_images\/Cleo.png","verified":true,"verified_label":"Verified Buyer","source_label":"Google Verified Reviews","source_link":"https:\/\/maps.app.goo.gl\/c4GtcWZzAaKhBqv9A"}},"stat_pjte3R":{"type":"stat","settings":{"icon":"star","value":"4.9","label":"Avg rating","caption":"from 200+ reviews"}},"stat_GAAqfd":{"type":"stat","settings":{"icon":"heart","value":"200+","label":"Real reviews","caption":"from happy beach lovers"}},"stat_UNDYzq":{"type":"stat","settings":{"icon":"palm","value":"98%","label":"Would recommend","caption":"to their best friend"}},"stat_7rQBdD":{"type":"stat","settings":{"icon":"globe","value":"30+","label":"Countries","caption":"our bikinis have been loved in"}}},"block_order":["ugc_U3aUiH","ugc_rWtHfp","ugc_CcjhiY","ugc_PxnpRy","review_rmapHc","stat_pjte3R","stat_GAAqfd","stat_UNDYzq","stat_7rQBdD"],"name":"Product social proof","settings":{"heading_alignment":"center","media_layout":"collage","content_width":1360,"corner_radius":18,"heading_size":52,"padding_top":72,"padding_bottom":72,"heading_font":"playfair_display_n4","body_font":"assistant_n4","accent_color":"#49c6be","background_color":"#faf8f4","card_color":"#fffefb","heading_color":"#2a2520","text_color":"#2a2520","muted_color":"#8a8077","border_color":"#ece7df","show_header":true,"eyebrow":"As worn by our community","heading":"Real beach days. <strong>Real<\/strong> <em>Bikini Booth girls.<\/em>","show_subtext":true,"subtext":"<p>From Koh Samui to wherever the sun takes you. Thank you for being part of the Bikini Booth community.<\/p>","show_instagram":true,"instagram_label":"Follow @bikinibooth","instagram_url":"","show_ugc":true,"show_badge":true,"badge_line_1":"Real girls","badge_line_2":"Real moments","show_reviews":true,"show_stats":true,"show_footer_tag":true,"footer_tag":"Tag @bikinibooth to be featured"}},"product_recommendations_rqQaP8":{"type":"product-recommendations","name":"t:names.product_recommendations","settings":{"product":"{{ closest.product }}","main_subheading":"you may also like","main_heading":"","main_desc":"","heading_aligment":"text-center","top_spacing":"none","width":"default","grid":"page-grid-md-4 page-grid-lg-4 page-grid-4","grid_tablet":"page-grid-st-3","mobile_grid":"2","recommendation_type":"related","swipe":true,"desktop_navigation":"arrows","mobile_navigation":"none","autoplay_enabled":true,"autoplay_time":10,"image_hover":"image-hover-none","image_ratio":"auto","product_limit":12,"image_action":"gallery","customize":true,"text_align":"text-center","hover_underline":true,"show_badge_on_sale":true,"show_badge_sold_out":true,"show_badge_feature":true,"show_countdown":true,"show_vendor":false,"show_type":false,"show_price":true,"show_description":false,"truncate_product_name":false,"show_quantity":false,"button_type_product":"hide","button_type_product_mobile":false,"enable_rating_product_card":false,"show_wishlist":true,"show_compare":false,"show_quick_view":false,"show_wishlist_mobile":true,"show_compare_mobile":false,"show_quick_view_mobile":false,"show_lines":true,"lines_width":"content_width","background":"color","color_background":"rgba(0,0,0,0)","gradient":"","image_overlay_opacity":0,"image_overlay_color":"rgba(0,0,0,0)","image_overlay_opacity_mobile":0,"image_overlay_color_mobile":"rgba(0,0,0,0)","show_parallax":false,"imagealign":"center","imagesize":"cover","background_width":"fullwidth","background_spacing":"normal","remove_bottom_spacing":false,"color_base":"#fef9ee","color_accent":"#fef9ee","color_lines":"#4ac6be","color_meta_products":"rgba(0,0,0,0)","color_meta_products_hover":"rgba(0,0,0,0)","color_product_name":"rgba(0,0,0,0)","color_product_name_hover":"rgba(0,0,0,0)","color_price":"rgba(0,0,0,0)","color_save_price":"rgba(0,0,0,0)","color_old_price":"rgba(0,0,0,0)","color_card_text":"rgba(0,0,0,0)","color_save_badge":"rgba(0,0,0,0)","color_save_badge_text":"rgba(0,0,0,0)","color_featured_badge":"rgba(0,0,0,0)","color_featured_badge_text":"rgba(0,0,0,0)","color_soldout_badge":"rgba(0,0,0,0)","color_soldout_badge_text":"rgba(0,0,0,0)","color_countdown_bg":"rgba(0,0,0,0)","color_countdown_text":"rgba(0,0,0,0)","color_interface_button":"rgba(0,0,0,0)","color_interface_button_text":"rgba(0,0,0,0)","color_interface_button_hover":"rgba(0,0,0,0)","color_interface_button_text_hover":"rgba(0,0,0,0)","color_interface_button_external":"rgba(0,0,0,0)","color_interface_button_text_external":"rgba(0,0,0,0)","color_interface_button_hover_external":"rgba(0,0,0,0)","color_interface_button_text_hover_external":"rgba(0,0,0,0)","color_button_cardswatches":"rgba(0,0,0,0)","color_button_border_cardswatches":"rgba(0,0,0,0)","color_button_text_cardswatches":"rgba(0,0,0,0)","color_button_hover_cardswatches":"rgba(0,0,0,0)","color_button_border_hover_cardswatches":"rgba(0,0,0,0)","color_button_text_hover_cardswatches":"rgba(0,0,0,0)","color_button_soldout_cardswatches":"rgba(0,0,0,0)","color_button_border_soldout_cardswatches":"rgba(0,0,0,0)","color_button_text_soldout_cardswatches":"rgba(0,0,0,0)","color_input_background":"rgba(0,0,0,0)","color_input_border":"rgba(0,0,0,0)","color_input_text":"rgba(0,0,0,0)","color_input_icon":"rgba(0,0,0,0)","color_input_background_hover":"rgba(0,0,0,0)","color_input_border_hover":"rgba(0,0,0,0)","color_input_outline_hover":"rgba(0,0,0,0)","color_input_text_hover":"rgba(0,0,0,0)","color_input_icon_hover":"rgba(0,0,0,0)","show_button_bg":true,"color_button":"rgba(0,0,0,0)","color_button_gradient":"","color_button_border":"rgba(0,0,0,0)","color_button_text":"rgba(0,0,0,0)","color_button_icon_main":"rgba(0,0,0,0)","show_button_bg_hover":true,"color_button_hover":"rgba(0,0,0,0)","color_button_gradient_hover":"","color_button_border_hover":"rgba(0,0,0,0)","color_button_text_hover":"rgba(0,0,0,0)","color_button_icon_hover_main":"rgba(0,0,0,0)","show_shadow_button":true,"color_shadow_button":"rgba(0,0,0,0)","color_shadow_hover_button":"rgba(0,0,0,0)","color_media_arrows":"rgba(0,0,0,0)","color_media_dots":"rgba(0,0,0,0)","color_active_rating":"rgba(0,0,0,0)","color_base_rating":"rgba(0,0,0,0)"}}},"order":["product_media_bgBNAz","product_info_Ute4BU","product_trust_bar_wCfwLk","product_fit_note_wXyHaY","product_complete_the_look_wEDMHX","product_accordions_M7G4Ax","product_social_proof_JtFM97","product_recommendations_rqQaP8"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "product_media_bgBNAz": {
+      "type": "product-media",
+      "name": "Product media",
+      "settings": {
+        "aspect_ratio": "9:16",
+        "image_fit": "contain",
+        "bg_color": "#f0ece6",
+        "border_radius": 0,
+        "thumb_position": "left",
+        "thumb_width": 64,
+        "thumb_height": 82,
+        "thumb_gap": 6,
+        "show_thumbs_mobile": false,
+        "sticky_gallery": true,
+        "enable_zoom": true,
+        "enable_lightbox": true,
+        "enable_dots": true,
+        "show_arrows_mobile": true,
+        "video_autoplay": true,
+        "video_loop": true,
+        "video_muted": true,
+        "video_controls": false,
+        "video_hide_fullscreen": true,
+        "video_hide_download": true,
+        "video_hide_remote": true,
+        "video_custom_playpause": true,
+        "video_custom_mute": true,
+        "video_thumb_play_icon": true,
+        "video_pause_inactive": true,
+        "video_reset_inactive": false,
+        "video_object_fit": "cover",
+        "video_bg_color": "#000000",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "product_info_Ute4BU": {
+      "type": "product-info",
+      "name": "Product info",
+      "settings": {
+        "price_note": "Top and bottom sold separately.",
+        "show_subtitle": true,
+        "subtitle_font_size": 12,
+        "subtitle_color": "#8a8077",
+        "subtitle_weight": "400",
+        "subtitle_line_height": 1.5,
+        "subtitle_margin_top": 0,
+        "subtitle_margin_bottom": 10,
+        "subtitle_max_width": 0,
+        "one_size_label": "One Size",
+        "one_size_show_icon": true,
+        "one_size_icon": "check",
+        "one_size_helper": "",
+        "atc_hover_bg": "#ffffff",
+        "atc_hover_text": "#49c6be",
+        "atc_hover_border": "#49c6be"
+      }
+    },
+    "product_trust_bar_wCfwLk": {
+      "type": "product-trust-bar",
+      "blocks": {
+        "trust_item_MGjPQT": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "label": "Free shipping over $250"
+          }
+        },
+        "trust_item_gaYUVC": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "location",
+            "label": "Ships from Thailand"
+          }
+        },
+        "trust_item_gYnHDg": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "returns",
+            "label": "30-day returns"
+          }
+        },
+        "trust_item_YwHFf9": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "lock",
+            "label": "Secure checkout"
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_MGjPQT",
+        "trust_item_gaYUVC",
+        "trust_item_gYnHDg",
+        "trust_item_YwHFf9"
+      ],
+      "name": "Product trust bar",
+      "settings": {
+        "label_font_size": 12
+      }
+    },
+    "product_fit_note_wXyHaY": {
+      "type": "product-fit-note",
+      "name": "Product fit note",
+      "settings": {
+        "fit_note": "{{ product.metafields.custom.fit_note | metafield_tag }}",
+        "fit_title": "Fit note",
+        "fit_icon": "star",
+        "title_font_size": 16,
+        "body_font_size": 14,
+        "image_width": 58
+      }
+    },
+    "product_complete_the_look_wEDMHX": {
+      "type": "product-complete-the-look",
+      "name": "Complete the look",
+      "settings": {
+        "heading": "Complete the look",
+        "subheading": "Style the full set",
+        "divider_text": "Add to complete the set",
+        "this_item_label": "This item",
+        "pair_label": "Resortwear",
+        "accent_color": "#49c6be",
+        "image_width": 60,
+        "size_select_min_width": 64,
+        "size_select_height": 30,
+        "size_select_font_size": 12,
+        "size_select_radius": 5,
+        "size_select_border_color": "#e0dbd3",
+        "size_select_text_color": "#2a2520",
+        "size_select_bg_color": "#ffffff",
+        "onesize_font_size": 12,
+        "onesize_color": "#8a8077",
+        "onesize_weight": "500"
+      }
+    },
+    "product_accordions_M7G4Ax": {
+      "type": "product-accordions",
+      "blocks": {
+        "product_description_XpQqTF": {
+          "type": "product_description",
+          "settings": {
+            "title": "Details",
+            "open_by_default": true
+          }
+        },
+        "care_metafield_fxyyTC": {
+          "type": "care_metafield",
+          "settings": {
+            "title": "Care & composition",
+            "open_by_default": false
+          }
+        },
+        "shipping_page_83cBqY": {
+          "type": "shipping_page",
+          "settings": {
+            "title": "Shipping",
+            "page_handle": "shipping-in-the-product-page",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "product_description_XpQqTF",
+        "care_metafield_fxyyTC",
+        "shipping_page_83cBqY"
+      ],
+      "name": "Product accordions",
+      "settings": {
+        "content_size": "0.875rem",
+        "content_weight": "400",
+        "label_size": "0.8125rem",
+        "label_weight": "500"
+      }
+    },
+    "product_social_proof_JtFM97": {
+      "type": "product-social-proof",
+      "blocks": {
+        "ugc_U3aUiH": {
+          "type": "ugc",
+          "settings": {
+            "video": "shopify://files/videos/ugc-001.mov",
+            "size": "wide",
+            "handle": "@amybeachlife",
+            "link": "",
+            "alt": "Customer wearing a yellow bikini with a tropical fruit stall behind"
+          }
+        },
+        "ugc_rWtHfp": {
+          "type": "ugc",
+          "settings": {
+            "image": "shopify://shop_images/Mook_12_56_27.jpg",
+            "size": "standard",
+            "handle": "@islanddiaries",
+            "link": "",
+            "alt": "Customer in white bikini and cover-up"
+          }
+        },
+        "ugc_CcjhiY": {
+          "type": "ugc",
+          "settings": {
+            "image": "shopify://shop_images/605883750_2315759198851505_3797349508690266541_nfull.webp",
+            "size": "standard",
+            "handle": "@sunkissed.sofia",
+            "link": "",
+            "alt": "Customer relaxing in swimwear"
+          }
+        },
+        "ugc_PxnpRy": {
+          "type": "ugc",
+          "settings": {
+            "image": "shopify://shop_images/banner_2_e3b25344-af37-409a-9ff0-f3f5e89a029c.png",
+            "size": "tall",
+            "handle": "@bikinibooth.babe",
+            "link": "",
+            "alt": "Customer in teal bikini by the sea"
+          }
+        },
+        "review_rmapHc": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "<p>Bought myself the cutest maroon bathing suit! The material and style of the costumes are beautiful! Can’t wait to visit again! ✨</p>",
+            "author_name": "Cleo A.",
+            "author_location": "Local Guide",
+            "author_avatar": "shopify://shop_images/Cleo.png",
+            "verified": true,
+            "verified_label": "Verified Buyer",
+            "source_label": "Google Verified Reviews",
+            "source_link": "https://maps.app.goo.gl/c4GtcWZzAaKhBqv9A"
+          }
+        },
+        "stat_pjte3R": {
+          "type": "stat",
+          "settings": {
+            "icon": "star",
+            "value": "4.9",
+            "label": "Avg rating",
+            "caption": "from 200+ reviews"
+          }
+        },
+        "stat_GAAqfd": {
+          "type": "stat",
+          "settings": {
+            "icon": "heart",
+            "value": "200+",
+            "label": "Real reviews",
+            "caption": "from happy beach lovers"
+          }
+        },
+        "stat_UNDYzq": {
+          "type": "stat",
+          "settings": {
+            "icon": "palm",
+            "value": "98%",
+            "label": "Would recommend",
+            "caption": "to their best friend"
+          }
+        },
+        "stat_7rQBdD": {
+          "type": "stat",
+          "settings": {
+            "icon": "globe",
+            "value": "30+",
+            "label": "Countries",
+            "caption": "our bikinis have been loved in"
+          }
+        }
+      },
+      "block_order": [
+        "ugc_U3aUiH",
+        "ugc_rWtHfp",
+        "ugc_CcjhiY",
+        "ugc_PxnpRy",
+        "review_rmapHc",
+        "stat_pjte3R",
+        "stat_GAAqfd",
+        "stat_UNDYzq",
+        "stat_7rQBdD"
+      ],
+      "name": "Product social proof",
+      "settings": {
+        "heading_alignment": "center",
+        "media_layout": "collage",
+        "content_width": 1360,
+        "corner_radius": 18,
+        "heading_size": 52,
+        "padding_top": 72,
+        "padding_bottom": 72,
+        "heading_font": "playfair_display_n4",
+        "body_font": "assistant_n4",
+        "accent_color": "#49c6be",
+        "background_color": "#faf8f4",
+        "card_color": "#fffefb",
+        "heading_color": "#2a2520",
+        "text_color": "#2a2520",
+        "muted_color": "#8a8077",
+        "border_color": "#ece7df",
+        "show_header": true,
+        "eyebrow": "As worn by our community",
+        "heading": "Real beach days. <strong>Real</strong> <em>Bikini Booth girls.</em>",
+        "show_subtext": true,
+        "subtext": "<p>From Koh Samui to wherever the sun takes you. Thank you for being part of the Bikini Booth community.</p>",
+        "show_instagram": true,
+        "instagram_label": "Follow @bikinibooth",
+        "instagram_url": "",
+        "show_ugc": true,
+        "show_badge": true,
+        "badge_line_1": "Real girls",
+        "badge_line_2": "Real moments",
+        "show_reviews": true,
+        "show_stats": true,
+        "show_footer_tag": true,
+        "footer_tag": "Tag @bikinibooth to be featured"
+      }
+    },
+    "product_recommendations_rqQaP8": {
+      "type": "product-recommendations",
+      "name": "t:names.product_recommendations",
+      "settings": {
+        "product": "{{ closest.product }}",
+        "main_subheading": "you may also like",
+        "main_heading": "",
+        "main_desc": "",
+        "heading_aligment": "text-center",
+        "top_spacing": "none",
+        "width": "default",
+        "grid": "page-grid-md-4 page-grid-lg-4 page-grid-4",
+        "grid_tablet": "page-grid-st-3",
+        "mobile_grid": "2",
+        "recommendation_type": "related",
+        "swipe": true,
+        "desktop_navigation": "arrows",
+        "mobile_navigation": "none",
+        "autoplay_enabled": true,
+        "autoplay_time": 10,
+        "image_hover": "image-hover-none",
+        "image_ratio": "auto",
+        "product_limit": 12,
+        "image_action": "gallery",
+        "customize": true,
+        "text_align": "text-center",
+        "hover_underline": true,
+        "show_badge_on_sale": true,
+        "show_badge_sold_out": true,
+        "show_badge_feature": true,
+        "show_countdown": true,
+        "show_vendor": false,
+        "show_type": false,
+        "show_price": true,
+        "show_description": false,
+        "truncate_product_name": false,
+        "show_quantity": false,
+        "button_type_product": "hide",
+        "button_type_product_mobile": false,
+        "enable_rating_product_card": false,
+        "show_wishlist": true,
+        "show_compare": false,
+        "show_quick_view": false,
+        "show_wishlist_mobile": true,
+        "show_compare_mobile": false,
+        "show_quick_view_mobile": false,
+        "show_lines": true,
+        "lines_width": "content_width",
+        "background": "color",
+        "color_background": "rgba(0,0,0,0)",
+        "gradient": "",
+        "image_overlay_opacity": 0,
+        "image_overlay_color": "rgba(0,0,0,0)",
+        "image_overlay_opacity_mobile": 0,
+        "image_overlay_color_mobile": "rgba(0,0,0,0)",
+        "show_parallax": false,
+        "imagealign": "center",
+        "imagesize": "cover",
+        "background_width": "fullwidth",
+        "background_spacing": "normal",
+        "remove_bottom_spacing": false,
+        "color_base": "#fef9ee",
+        "color_accent": "#fef9ee",
+        "color_lines": "#4ac6be",
+        "color_meta_products": "rgba(0,0,0,0)",
+        "color_meta_products_hover": "rgba(0,0,0,0)",
+        "color_product_name": "rgba(0,0,0,0)",
+        "color_product_name_hover": "rgba(0,0,0,0)",
+        "color_price": "rgba(0,0,0,0)",
+        "color_save_price": "rgba(0,0,0,0)",
+        "color_old_price": "rgba(0,0,0,0)",
+        "color_card_text": "rgba(0,0,0,0)",
+        "color_save_badge": "rgba(0,0,0,0)",
+        "color_save_badge_text": "rgba(0,0,0,0)",
+        "color_featured_badge": "rgba(0,0,0,0)",
+        "color_featured_badge_text": "rgba(0,0,0,0)",
+        "color_soldout_badge": "rgba(0,0,0,0)",
+        "color_soldout_badge_text": "rgba(0,0,0,0)",
+        "color_countdown_bg": "rgba(0,0,0,0)",
+        "color_countdown_text": "rgba(0,0,0,0)",
+        "color_interface_button": "rgba(0,0,0,0)",
+        "color_interface_button_text": "rgba(0,0,0,0)",
+        "color_interface_button_hover": "rgba(0,0,0,0)",
+        "color_interface_button_text_hover": "rgba(0,0,0,0)",
+        "color_interface_button_external": "rgba(0,0,0,0)",
+        "color_interface_button_text_external": "rgba(0,0,0,0)",
+        "color_interface_button_hover_external": "rgba(0,0,0,0)",
+        "color_interface_button_text_hover_external": "rgba(0,0,0,0)",
+        "color_button_cardswatches": "rgba(0,0,0,0)",
+        "color_button_border_cardswatches": "rgba(0,0,0,0)",
+        "color_button_text_cardswatches": "rgba(0,0,0,0)",
+        "color_button_hover_cardswatches": "rgba(0,0,0,0)",
+        "color_button_border_hover_cardswatches": "rgba(0,0,0,0)",
+        "color_button_text_hover_cardswatches": "rgba(0,0,0,0)",
+        "color_button_soldout_cardswatches": "rgba(0,0,0,0)",
+        "color_button_border_soldout_cardswatches": "rgba(0,0,0,0)",
+        "color_button_text_soldout_cardswatches": "rgba(0,0,0,0)",
+        "color_input_background": "rgba(0,0,0,0)",
+        "color_input_border": "rgba(0,0,0,0)",
+        "color_input_text": "rgba(0,0,0,0)",
+        "color_input_icon": "rgba(0,0,0,0)",
+        "color_input_background_hover": "rgba(0,0,0,0)",
+        "color_input_border_hover": "rgba(0,0,0,0)",
+        "color_input_outline_hover": "rgba(0,0,0,0)",
+        "color_input_text_hover": "rgba(0,0,0,0)",
+        "color_input_icon_hover": "rgba(0,0,0,0)",
+        "show_button_bg": true,
+        "color_button": "rgba(0,0,0,0)",
+        "color_button_gradient": "",
+        "color_button_border": "rgba(0,0,0,0)",
+        "color_button_text": "rgba(0,0,0,0)",
+        "color_button_icon_main": "rgba(0,0,0,0)",
+        "show_button_bg_hover": true,
+        "color_button_hover": "rgba(0,0,0,0)",
+        "color_button_gradient_hover": "",
+        "color_button_border_hover": "rgba(0,0,0,0)",
+        "color_button_text_hover": "rgba(0,0,0,0)",
+        "color_button_icon_hover_main": "rgba(0,0,0,0)",
+        "show_shadow_button": true,
+        "color_shadow_button": "rgba(0,0,0,0)",
+        "color_shadow_hover_button": "rgba(0,0,0,0)",
+        "color_media_arrows": "rgba(0,0,0,0)",
+        "color_media_dots": "rgba(0,0,0,0)",
+        "color_active_rating": "rgba(0,0,0,0)",
+        "color_base_rating": "rgba(0,0,0,0)"
+      }
+    }
+  },
+  "order": [
+    "product_media_bgBNAz",
+    "product_info_Ute4BU",
+    "product_trust_bar_wCfwLk",
+    "product_fit_note_wXyHaY",
+    "product_complete_the_look_wEDMHX",
+    "product_accordions_M7G4Ax",
+    "product_social_proof_JtFM97",
+    "product_recommendations_rqQaP8"
+  ]
+}
