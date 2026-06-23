@@ -440,17 +440,16 @@
     handleProductData(e.detail);
   });
 
-  /* ── Format money — Shopify product APIs return decimal prices e.g. "1494.00" ── */
-  function formatMoney(price) {
-    var amount   = parseFloat(price);
-    var currency = window.Shopify && window.Shopify.currency ? window.Shopify.currency.active : '';
-    return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
-      (currency ? ' ' + currency : '');
+  /* ── Format money from shop-currency cents (/products/{handle}.js) ── */
+  function formatMoneyFromCents(cents) {
+    if (window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
+      return window.BB.formatPresentmentMoney(cents);
+    }
+    return String(parseFloat(cents) / 100);
   }
 
-  /* ── Format money from Liquid cents e.g. 149400 → 1,494.00 ── */
-  function formatMoneyFromCents(cents) {
-    return formatMoney(parseFloat(cents) / 100);
+  function formatMoney(price) {
+    return formatMoneyFromCents(Math.round(parseFloat(price) * 100));
   }
 
   /* ── Size sync: match every item's size <select> to the chosen product size ── */

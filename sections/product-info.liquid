@@ -637,17 +637,13 @@
 
   var bbPrices = (window.BB && window.BB.prices && window.BB.prices[sid]) || {};
 
-  /* ── Price formatting for opposite piece (from /products.json decimal prices) ── */
+  /* ── Price formatting for opposite piece (from /products.json shop-currency decimals) ── */
   function formatShopifyMoney(price) {
     if (!price) return '';
-    var amount   = parseFloat(price);
-    var currency = window.Shopify && window.Shopify.currency
-      ? window.Shopify.currency.active
-      : '';
-    return amount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }) + (currency ? ' ' + currency : '');
+    if (window.BB && typeof window.BB.formatPresentmentMoneyFromDecimal === 'function') {
+      return window.BB.formatPresentmentMoneyFromDecimal(price);
+    }
+    return String(price);
   }
 
   /* ── Auto-connect data ── */

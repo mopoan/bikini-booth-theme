@@ -28,6 +28,29 @@
 (function () {
   'use strict';
 
+  window.BB = window.BB || {};
+  window.BB.moneyFormat = {{ shop.money_format | json }};
+
+  /* Shop-currency cents (or /products.json decimal) → active presentment currency */
+  window.BB.formatPresentmentMoney = function (shopCurrencyCents) {
+    var cents = Math.round(parseFloat(shopCurrencyCents) || 0);
+    var rate = window.Shopify && window.Shopify.currency && window.Shopify.currency.rate
+      ? window.Shopify.currency.rate
+      : 1;
+    cents = Math.round(cents * rate);
+    var fmt = (window.theme && window.theme.moneyFormat) || window.BB.moneyFormat || '{{amount}}';
+    if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+      return window.Shopify.formatMoney(cents, fmt);
+    }
+    return (cents / 100).toFixed(2);
+  };
+
+  window.BB.formatPresentmentMoneyFromDecimal = function (decimalPrice) {
+    var amount = parseFloat(decimalPrice);
+    if (isNaN(amount)) return '';
+    return window.BB.formatPresentmentMoney(Math.round(amount * 100));
+  };
+
   var PRODUCT_TITLE  = {{ product.title | json }};
   var PRODUCT_HANDLE = {{ product.handle | json }};
   var PRODUCT_URL    = {{ product.url | json }};
