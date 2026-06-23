@@ -11,18 +11,15 @@
 
 {%- assign pair_product = product.metafields.custom.set_pair_product.value -%}
 {%- assign current_variant = product.selected_or_first_available_variant -%}
-{%- render 'bb-paired-piece' -%}
-{%- assign bb_paired_variant = nil -%}
-{%- if bb_paired_product != blank -%}
-  {%- assign bb_paired_variant = bb_paired_product.selected_or_first_available_variant -%}
-{%- endif -%}
+{%- capture bb_has_paired_piece -%}{%- render 'bb-paired-piece', product: product, ctl_flag_only: true -%}{%- endcapture -%}
+{%- assign bb_has_paired_piece = bb_has_paired_piece | strip -%}
 
 {%- assign ctl_img_w  = section.settings.image_width | default: 60 -%}
 {%- assign ctl_img_h  = ctl_img_w | times: 16 | divided_by: 9 -%}
 {%- assign ctl_img_w2 = ctl_img_w | times: 2 -%}
 {%- assign ctl_img_h2 = ctl_img_h | times: 2 -%}
 
-<div class="bb-ctl" id="bb-ctl-{{ section.id }}"{% if pair_product == blank and bb_paired_product == blank %} hidden{% endif %}>
+<div class="bb-ctl" id="bb-ctl-{{ section.id }}"{% if pair_product == blank and bb_has_paired_piece != 'true' %} hidden{% endif %}>
 
   <div class="bb-ctl__head">
     <p class="bb-ctl__title">{{ section.settings.heading | default: 'Complete the look' }}</p>
@@ -58,7 +55,7 @@
       <div class="bb-ctl__info">
         <span class="bb-ctl__name">{{ product.title | split: ' in ' | first }}</span>
         <p class="bb-ctl__piece bb-ctl__piece--current">{{ section.settings.this_item_label | default: 'This item' }}</p>
-        <p class="bb-ctl__price">{{ current_variant.price | money }}</p>
+        <p class="bb-ctl__price">{{ current_variant.price | money | strip_html }}</p>
       </div>
       <div class="bb-ctl__right">
         <div class="bb-ctl__size-wrap">
@@ -68,7 +65,8 @@
                 <option
                   value="{{ variant.id }}"
                   data-price="{{ variant.price }}"
-                  data-price-formatted="{{ variant.price | money }}"
+                  data-price-unit="presentment"
+                  data-price-formatted="{{ variant.price | money | strip_html | escape }}"
                   {%- if variant == current_variant %} selected{%- endif -%}
                   {%- unless variant.available %} disabled{%- endunless -%}
                 >{{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}</option>
@@ -89,76 +87,16 @@
       <div class="bb-ctl__divider-line"></div>
     </div>
 
-    {%- comment -%} Item 2: Matching piece — Liquid (presentment prices) {%- endcomment -%}
-    {%- if bb_paired_product != blank -%}
-      <div
-        class="bb-ctl__item bb-ctl__item--piece"
-        id="bb-ctl-piece-{{ section.id }}"
-        data-product-id="{{ bb_paired_product.id }}"
-        data-variant-id="{{ bb_paired_variant.id }}"
-        data-price="{{ bb_paired_variant.price }}"
-        data-price-unit="presentment"
-        data-slot="piece"
-      >
-        <div class="bb-ctl__check" aria-hidden="true">
-          <div class="bb-ctl__chk-off"></div>
-        </div>
-        <div class="bb-ctl__img">
-          {%- if bb_paired_product.featured_image != blank -%}
-            <img
-              src="{{ bb_paired_product.featured_image | image_url: width: ctl_img_w2, height: ctl_img_h2, crop: 'center' }}"
-              alt="{{ bb_paired_product.title | escape }}"
-              width="{{ ctl_img_w }}" height="{{ ctl_img_h }}" loading="lazy"
-            >
-          {%- endif -%}
-        </div>
-        <div class="bb-ctl__info">
-          <a class="bb-ctl__name" href="{{ bb_paired_product.url }}">{{ bb_paired_product.title | split: ' in ' | first }}</a>
-          <p class="bb-ctl__piece">{{ bb_paired_product.type | default: bb_paired_piece }}</p>
-          <p class="bb-ctl__price">{{ bb_paired_variant.price | money }}</p>
-        </div>
-        <div class="bb-ctl__right">
-          <div class="bb-ctl__size-wrap">
-            {%- if bb_paired_product.variants.size > 1 -%}
-              <select class="bb-ctl__size-select" aria-label="Size for {{ bb_paired_product.title | escape }}" data-item-id="{{ bb_paired_product.id }}">
-                {%- for variant in bb_paired_product.variants -%}
-                  <option
-                    value="{{ variant.id }}"
-                    data-price="{{ variant.price }}"
-                    data-price-formatted="{{ variant.price | money }}"
-                    {%- if variant == bb_paired_variant %} selected{%- endif -%}
-                    {%- unless variant.available %} disabled{%- endunless -%}
-                  >{{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}</option>
-                {%- endfor -%}
-              </select>
-              <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            {%- else -%}
-              <span class="bb-ctl__size-only">One-Size</span>
-            {%- endif -%}
-          </div>
-        </div>
-      </div>
-    {%- else -%}
-      <div
-        class="bb-ctl__item bb-ctl__item--piece"
-        id="bb-ctl-piece-{{ section.id }}"
-        data-slot="piece"
-        style="display: none;"
-      >
-        <div class="bb-ctl__check" aria-hidden="true">
-          <div class="bb-ctl__chk-off"></div>
-        </div>
-        <div class="bb-ctl__img bb-ctl__img--piece" id="bb-ctl-piece-img-{{ section.id }}" style="width:{{ ctl_img_w }}px;height:{{ ctl_img_h }}px;"></div>
-        <div class="bb-ctl__info">
-          <a class="bb-ctl__name" id="bb-ctl-piece-name-{{ section.id }}" href="#">—</a>
-          <p class="bb-ctl__piece" id="bb-ctl-piece-label-{{ section.id }}">—</p>
-          <p class="bb-ctl__price" id="bb-ctl-piece-price-{{ section.id }}">—</p>
-        </div>
-        <div class="bb-ctl__right">
-          <div class="bb-ctl__size-wrap" id="bb-ctl-piece-sizes-{{ section.id }}"></div>
-        </div>
-      </div>
-    {%- endif -%}
+    {%- comment -%} Item 2: Matching piece — rendered inside snippet (scoped Liquid prices) {%- endcomment -%}
+    {%- render 'bb-paired-piece',
+      product: product,
+      render_ctl_piece: true,
+      section: section,
+      ctl_img_w: ctl_img_w,
+      ctl_img_h: ctl_img_h,
+      ctl_img_w2: ctl_img_w2,
+      ctl_img_h2: ctl_img_h2
+    -%}
 
     {%- comment -%} Item 3: Set pair from metafield {%- endcomment -%}
     {%- if pair_product != blank -%}
@@ -187,7 +125,7 @@
           <a class="bb-ctl__name" href="{{ pair_product.url }}">{{ pair_product.title | split: ' in ' | first }}</a>
           <p class="bb-ctl__piece">{{ pair_product.type | default: section.settings.pair_label | default: 'Resortwear' }}</p>
           <p class="bb-ctl__price" data-base-price="{{ pair_variant.price }}">
-            {{ pair_variant.price | money }}
+            {{ pair_variant.price | money | strip_html }}
           </p>
         </div>
         <div class="bb-ctl__right">
@@ -198,7 +136,8 @@
                   <option
                     value="{{ variant.id }}"
                     data-price="{{ variant.price }}"
-                    data-price-formatted="{{ variant.price | money }}"
+                    data-price-unit="presentment"
+                    data-price-formatted="{{ variant.price | money | strip_html | escape }}"
                     {%- unless variant.available %} disabled{%- endunless -%}
                   >{{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}</option>
                 {%- endfor -%}
@@ -382,7 +321,7 @@
   var addBtn   = document.getElementById('bb-ctl-add-' + sid);
   var addLabel = addBtn ? addBtn.querySelector('.bb-ctl__add-label') : null;
   var pieceRow = document.getElementById('bb-ctl-piece-' + sid);
-  var pieceRowIsLiquid = {% if bb_paired_product != blank %}true{% else %}false{% endif %};
+  var pieceRowIsLiquid = pieceRow && pieceRow.dataset.liquidPiece === 'true';
 
   var imgW  = {{ ctl_img_w }};
   var imgH  = {{ ctl_img_h }};
@@ -576,8 +515,12 @@
       }
 
       var priceEl = item.querySelector('.bb-ctl__price');
-      if (priceEl && matched.dataset.priceFormatted) {
-        priceEl.textContent = matched.dataset.priceFormatted;
+      if (priceEl) {
+        var formatted = matched.dataset.priceFormatted;
+        if (!formatted && matched.dataset.price) {
+          formatted = formatPresentmentCents(parseInt(matched.dataset.price, 10));
+        }
+        if (formatted) priceEl.textContent = formatted;
       }
     });
 
@@ -633,7 +576,13 @@
         item.dataset.price     = opt.dataset.price || '0';
         item.dataset.priceUnit = opt.dataset.priceUnit || item.dataset.priceUnit || 'presentment';
         var priceEl = item.querySelector('.bb-ctl__price');
-        if (priceEl) priceEl.textContent = opt.dataset.priceFormatted || '';
+        if (priceEl) {
+          var formatted = opt.dataset.priceFormatted;
+          if (!formatted && opt.dataset.price) {
+            formatted = formatPresentmentCents(parseInt(opt.dataset.price, 10));
+          }
+          if (formatted) priceEl.textContent = formatted;
+        }
         updateTotal();
       });
     }

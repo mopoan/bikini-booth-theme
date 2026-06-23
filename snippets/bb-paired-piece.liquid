@@ -1,10 +1,15 @@
 {%- comment -%}
   Resolves the opposite bikini Top/Bottom for the current product.
-  Sets: bb_paired_product, bb_paired_piece, bb_active_money_format
+
+  Params:
+    render_ctl_piece  — output Complete-the-look item 2 markup
+    ctl_flag_only     — output "true"/"false" whether a paired piece exists
+    section, ctl_img_w, ctl_img_h, ctl_img_w2, ctl_img_h2 — for CTL row
 {%- endcomment -%}
 {%- liquid
   assign bb_paired_product = nil
   assign bb_paired_piece = nil
+  assign bb_paired_variant = nil
 
   assign bb_title_parts = product.title | split: ' in '
   if bb_title_parts.size >= 2
@@ -52,6 +57,10 @@
     endif
   endif
 
+  if bb_paired_product != blank
+    assign bb_paired_variant = bb_paired_product.selected_or_first_available_variant
+  endif
+
   case cart.currency.iso_code
     when 'EUR'
       assign bb_active_money_format = '€{{amount_with_comma_separator}}'
@@ -61,3 +70,79 @@
       assign bb_active_money_format = shop.money_format
   endcase
 -%}
+
+{%- if ctl_flag_only -%}
+  {%- if bb_paired_product != blank -%}true{%- else -%}false{%- endif -%}
+{%- elsif render_ctl_piece -%}
+  {%- if bb_paired_product != blank and bb_paired_variant != blank -%}
+    <div
+      class="bb-ctl__item bb-ctl__item--piece"
+      id="bb-ctl-piece-{{ section.id }}"
+      data-product-id="{{ bb_paired_product.id }}"
+      data-variant-id="{{ bb_paired_variant.id }}"
+      data-price="{{ bb_paired_variant.price }}"
+      data-price-unit="presentment"
+      data-slot="piece"
+      data-liquid-piece="true"
+    >
+      <div class="bb-ctl__check" aria-hidden="true">
+        <div class="bb-ctl__chk-off"></div>
+      </div>
+      <div class="bb-ctl__img">
+        {%- if bb_paired_product.featured_image != blank -%}
+          <img
+            src="{{ bb_paired_product.featured_image | image_url: width: ctl_img_w2, height: ctl_img_h2, crop: 'center' }}"
+            alt="{{ bb_paired_product.title | escape }}"
+            width="{{ ctl_img_w }}" height="{{ ctl_img_h }}" loading="lazy"
+          >
+        {%- endif -%}
+      </div>
+      <div class="bb-ctl__info">
+        <a class="bb-ctl__name" href="{{ bb_paired_product.url }}">{{ bb_paired_product.title | split: ' in ' | first }}</a>
+        <p class="bb-ctl__piece">{{ bb_paired_product.type | default: bb_paired_piece }}</p>
+        <p class="bb-ctl__price">{{ bb_paired_variant.price | money | strip_html }}</p>
+      </div>
+      <div class="bb-ctl__right">
+        <div class="bb-ctl__size-wrap">
+          {%- if bb_paired_product.variants.size > 1 -%}
+            <select class="bb-ctl__size-select" aria-label="Size for {{ bb_paired_product.title | escape }}" data-item-id="{{ bb_paired_product.id }}">
+              {%- for variant in bb_paired_product.variants -%}
+                <option
+                  value="{{ variant.id }}"
+                  data-price="{{ variant.price }}"
+                  data-price-unit="presentment"
+                  data-price-formatted="{{ variant.price | money | strip_html | escape }}"
+                  {%- if variant == bb_paired_variant %} selected{%- endif -%}
+                  {%- unless variant.available %} disabled{%- endunless -%}
+                >{{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}</option>
+              {%- endfor -%}
+            </select>
+            <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          {%- else -%}
+            <span class="bb-ctl__size-only">One-Size</span>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- else -%}
+    <div
+      class="bb-ctl__item bb-ctl__item--piece"
+      id="bb-ctl-piece-{{ section.id }}"
+      data-slot="piece"
+      style="display: none;"
+    >
+      <div class="bb-ctl__check" aria-hidden="true">
+        <div class="bb-ctl__chk-off"></div>
+      </div>
+      <div class="bb-ctl__img bb-ctl__img--piece" id="bb-ctl-piece-img-{{ section.id }}" style="width:{{ ctl_img_w }}px;height:{{ ctl_img_h }}px;"></div>
+      <div class="bb-ctl__info">
+        <a class="bb-ctl__name" id="bb-ctl-piece-name-{{ section.id }}" href="#">—</a>
+        <p class="bb-ctl__piece" id="bb-ctl-piece-label-{{ section.id }}">—</p>
+        <p class="bb-ctl__price" id="bb-ctl-piece-price-{{ section.id }}">—</p>
+      </div>
+      <div class="bb-ctl__right">
+        <div class="bb-ctl__size-wrap" id="bb-ctl-piece-sizes-{{ section.id }}"></div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}
