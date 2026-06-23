@@ -64,15 +64,11 @@
       hidden.value = v.id;
       hidden.removeAttribute('data-unavailable');
       if (note) note.hidden = true;
-      if (priceEl && typeof v.price === 'number' && window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+      if (priceEl && typeof v.price === 'number' && window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
+        priceEl.textContent = window.BB.formatPresentmentMoney(v.price);
+      } else if (priceEl && typeof v.price === 'number' && window.Shopify && typeof window.Shopify.formatMoney === 'function') {
         var fmt = (window.theme && window.theme.moneyFormat) || (window.BB && window.BB.moneyFormat) || '{{amount}}';
-        var cents = v.price;
-        if (window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
-          priceEl.textContent = window.BB.formatPresentmentMoney(cents);
-        } else {
-          var rate = window.Shopify && window.Shopify.currency && window.Shopify.currency.rate ? window.Shopify.currency.rate : 1;
-          priceEl.textContent = window.Shopify.formatMoney(Math.round(cents * rate), fmt);
-        }
+        priceEl.textContent = window.Shopify.formatMoney(v.price, fmt);
       }
     } else {
       hidden.value = '';
@@ -249,12 +245,11 @@
     if (!variant) return;
     var fmt = (window.theme && window.theme.moneyFormat) || '{{amount}}';
     var priceEl = root.querySelector('[data-bb-main-item-price]');
-    if (priceEl && window.Shopify && typeof window.Shopify.formatMoney === 'function' && typeof variant.price === 'number') {
+    if (priceEl && typeof variant.price === 'number') {
       if (window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
         priceEl.textContent = window.BB.formatPresentmentMoney(variant.price);
-      } else {
-        var rate = window.Shopify && window.Shopify.currency && window.Shopify.currency.rate ? window.Shopify.currency.rate : 1;
-        priceEl.textContent = window.Shopify.formatMoney(Math.round(variant.price * rate), fmt);
+      } else if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+        priceEl.textContent = window.Shopify.formatMoney(variant.price, fmt);
       }
     }
   }

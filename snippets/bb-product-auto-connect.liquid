@@ -30,14 +30,21 @@
 
   window.BB = window.BB || {};
   window.BB.moneyFormat = {{ shop.money_format | json }};
+  window.BB.shopCurrency = {{ shop.currency | json }};
 
-  /* Shop-currency cents (or /products.json decimal) → active presentment currency */
+  function bbCurrencyRate() {
+    var active = window.Shopify && window.Shopify.currency && window.Shopify.currency.active;
+    if (!active || !window.BB.shopCurrency || active === window.BB.shopCurrency) {
+      return 1;
+    }
+    return window.Shopify.currency.rate || 1;
+  }
+
+  /* Shop-currency cents → active presentment currency */
   window.BB.formatPresentmentMoney = function (shopCurrencyCents) {
     var cents = Math.round(parseFloat(shopCurrencyCents) || 0);
-    var rate = window.Shopify && window.Shopify.currency && window.Shopify.currency.rate
-      ? window.Shopify.currency.rate
-      : 1;
-    cents = Math.round(cents * rate);
+    if (!cents) return '';
+    cents = Math.round(cents * bbCurrencyRate());
     var fmt = (window.theme && window.theme.moneyFormat) || window.BB.moneyFormat || '{{amount}}';
     if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
       return window.Shopify.formatMoney(cents, fmt);
@@ -50,6 +57,16 @@
     if (isNaN(amount)) return '';
     return window.BB.formatPresentmentMoney(Math.round(amount * 100));
   };
+
+  function fetchProductCents(handle) {
+    var root = (window.routes && window.routes.root_url) || '/';
+    return fetch(root + 'products/' + handle + '.js')
+      .then(function (r) { return r.json(); })
+      .then(function (p) {
+        return p.variants && p.variants[0] ? p.variants[0].price : null;
+      })
+      .catch(function () { return null; });
+  }
 
   var PRODUCT_TITLE  = {{ product.title | json }};
   var PRODUCT_HANDLE = {{ product.handle | json }};
@@ -195,9 +212,11 @@
 
       if (isOpposite) {
         pieceLinks[parsed.piece] = {
-          url:   '/products/' + p.handle,
-          title: p.title,
-          price: p.variants && p.variants[0] ? p.variants[0].price : null
+          url:    '/products/' + p.handle,
+          handle: p.handle,
+          title:  p.title,
+          price:  p.variants && p.variants[0] ? p.variants[0].price : null,
+          priceCents: null
         };
       }
     });
@@ -232,8 +251,18 @@
       );
     }
 
-    /* Emit immediately — swatches render as hex right away, nothing blocks on images */
+    /* Emit immediately — swatches + piece links (prices load async below) */
     emit();
+
+    var pieceKeys = Object.keys(pieceLinks);
+    if (pieceKeys.length) {
+      Promise.all(pieceKeys.map(function (piece) {
+        var link = pieceLinks[piece];
+        return fetchProductCents(link.handle).then(function (cents) {
+          if (cents != null) link.priceCents = cents;
+        });
+      })).then(function () { emit(); });
+    }
 
     /* Probe swatch images in the background; re-emit once to upgrade ONLY if any exist */
     if (colorSwatches.length) {

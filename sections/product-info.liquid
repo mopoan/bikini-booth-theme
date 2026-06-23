@@ -637,13 +637,16 @@
 
   var bbPrices = (window.BB && window.BB.prices && window.BB.prices[sid]) || {};
 
-  /* ── Price formatting for opposite piece (from /products.json shop-currency decimals) ── */
-  function formatShopifyMoney(price) {
-    if (!price) return '';
-    if (window.BB && typeof window.BB.formatPresentmentMoneyFromDecimal === 'function') {
-      return window.BB.formatPresentmentMoneyFromDecimal(price);
+  /* ── Price formatting for opposite piece ── */
+  function formatPiecePrice(link) {
+    if (!link) return '';
+    if (link.priceCents != null && window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
+      return window.BB.formatPresentmentMoney(link.priceCents);
     }
-    return String(price);
+    if (link.price && window.BB && typeof window.BB.formatPresentmentMoneyFromDecimal === 'function') {
+      return window.BB.formatPresentmentMoneyFromDecimal(link.price);
+    }
+    return '';
   }
 
   /* ── Auto-connect data ── */
@@ -662,9 +665,7 @@
         pieceTopPrc.textContent = currentFormatted;
         if (data.pieceLinks['Bottom']) {
           pieceBotBtn.href = data.pieceLinks['Bottom'].url;
-          if (data.pieceLinks['Bottom'].price) {
-            pieceBotPrc.textContent = formatShopifyMoney(data.pieceLinks['Bottom'].price);
-          }
+          pieceBotPrc.textContent = formatPiecePrice(data.pieceLinks['Bottom']);
         }
       } else if (currentPiece === 'Bottom') {
         pieceBotBtn.classList.add('is-active');
@@ -672,9 +673,7 @@
         pieceBotPrc.textContent = currentFormatted;
         if (data.pieceLinks['Top']) {
           pieceTopBtn.href = data.pieceLinks['Top'].url;
-          if (data.pieceLinks['Top'].price) {
-            pieceTopPrc.textContent = formatShopifyMoney(data.pieceLinks['Top'].price);
-          }
+          pieceTopPrc.textContent = formatPiecePrice(data.pieceLinks['Top']);
         }
       }
     }
