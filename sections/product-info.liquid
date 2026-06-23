@@ -637,14 +637,14 @@
 
   var bbPrices = (window.BB && window.BB.prices && window.BB.prices[sid]) || {};
 
-  /* ── Price formatting for opposite piece ── */
-  function formatPiecePrice(link) {
-    if (!link) return '';
-    if (link.priceCents != null && window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
-      return window.BB.formatPresentmentMoney(link.priceCents);
+  /* ── Opposite piece price: Liquid presentment first, then /products/{handle}.js cents ── */
+  function oppositePiecePrice(pieceKey, link) {
+    var liq = window.BB && window.BB.pairedPieceLiquid;
+    if (liq && liq.piece === pieceKey && liq.priceFormatted) {
+      return liq.priceFormatted;
     }
-    if (link.price && window.BB && typeof window.BB.formatPresentmentMoneyFromDecimal === 'function') {
-      return window.BB.formatPresentmentMoneyFromDecimal(link.price);
+    if (link && link.priceCents != null && window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
+      return window.BB.formatPresentmentMoney(link.priceCents);
     }
     return '';
   }
@@ -665,7 +665,7 @@
         pieceTopPrc.textContent = currentFormatted;
         if (data.pieceLinks['Bottom']) {
           pieceBotBtn.href = data.pieceLinks['Bottom'].url;
-          pieceBotPrc.textContent = formatPiecePrice(data.pieceLinks['Bottom']);
+          pieceBotPrc.textContent = oppositePiecePrice('Bottom', data.pieceLinks['Bottom']);
         }
       } else if (currentPiece === 'Bottom') {
         pieceBotBtn.classList.add('is-active');
@@ -673,7 +673,7 @@
         pieceBotPrc.textContent = currentFormatted;
         if (data.pieceLinks['Top']) {
           pieceTopBtn.href = data.pieceLinks['Top'].url;
-          pieceTopPrc.textContent = formatPiecePrice(data.pieceLinks['Top']);
+          pieceTopPrc.textContent = oppositePiecePrice('Top', data.pieceLinks['Top']);
         }
       }
     }

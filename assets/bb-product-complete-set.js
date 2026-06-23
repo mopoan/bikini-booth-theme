@@ -66,6 +66,9 @@
       if (note) note.hidden = true;
       if (priceEl && typeof v.price === 'number' && window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
         priceEl.textContent = window.BB.formatPresentmentMoney(v.price);
+      } else if (priceEl && typeof v.price === 'number' && window.BB && typeof window.BB.formatMoney === 'function') {
+        var fmt = (window.theme && window.theme.moneyFormat) || (window.BB && window.BB.moneyFormat) || '{{amount}}';
+        priceEl.textContent = window.BB.formatMoney(v.price, fmt);
       } else if (priceEl && typeof v.price === 'number' && window.Shopify && typeof window.Shopify.formatMoney === 'function') {
         var fmt = (window.theme && window.theme.moneyFormat) || (window.BB && window.BB.moneyFormat) || '{{amount}}';
         priceEl.textContent = window.Shopify.formatMoney(v.price, fmt);
@@ -248,6 +251,8 @@
     if (priceEl && typeof variant.price === 'number') {
       if (window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
         priceEl.textContent = window.BB.formatPresentmentMoney(variant.price);
+      } else if (window.BB && typeof window.BB.formatMoney === 'function') {
+        priceEl.textContent = window.BB.formatMoney(variant.price, fmt);
       } else if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
         priceEl.textContent = window.Shopify.formatMoney(variant.price, fmt);
       }

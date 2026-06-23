@@ -1,4 +1,66 @@
 {%- comment -%}
+  Resolve the opposite bikini piece server-side so its price uses Liquid | money
+  (correct presentment currency). /products.json prices are unreliable with Markets.
+{%- endcomment -%}
+{%- liquid
+  assign bb_paired_product = nil
+  assign bb_paired_piece = nil
+
+  assign bb_title_parts = product.title | split: ' in '
+  if bb_title_parts.size >= 2
+    assign bb_color = bb_title_parts | last | strip
+    assign bb_base = bb_title_parts | first | strip
+    assign bb_opp_title = nil
+
+    if bb_base == 'Top' or bb_base ends_with ' Top'
+      assign bb_paired_piece = 'Bottom'
+      if bb_base == 'Top'
+        assign bb_opp_title = 'Bottom in ' | append: bb_color
+      else
+        assign bb_style = bb_base | remove: ' Top' | strip
+        assign bb_opp_title = bb_style | append: ' Bottom in ' | append: bb_color
+      endif
+    elsif bb_base == 'Bottom' or bb_base ends_with ' Bottom'
+      assign bb_paired_piece = 'Top'
+      if bb_base == 'Bottom'
+        assign bb_opp_title = 'Top in ' | append: bb_color
+      else
+        assign bb_style = bb_base | remove: ' Bottom' | strip
+        assign bb_opp_title = bb_style | append: ' Top in ' | append: bb_color
+      endif
+    endif
+
+    if bb_opp_title != blank
+      if product.handle contains '-top-'
+        assign bb_opp_handle = product.handle | replace: '-top-', '-bottom-'
+        assign bb_paired_product = all_products[bb_opp_handle]
+      elsif product.handle contains '-bottom-'
+        assign bb_opp_handle = product.handle | replace: '-bottom-', '-top-'
+        assign bb_paired_product = all_products[bb_opp_handle]
+      endif
+
+      if bb_paired_product == blank
+        for p in collections.all.products
+          if p.title == bb_opp_title
+            assign bb_paired_product = p
+            break
+          endif
+        endfor
+      endif
+    endif
+  endif
+
+  case cart.currency.iso_code
+    when 'EUR'
+      assign bb_active_money_format = '€{{amount_with_comma_separator}}'
+    when 'THB'
+      assign bb_active_money_format = '{{amount}} ฿'
+    else
+      assign bb_active_money_format = shop.money_format
+  endcase
+-%}
+
+{%- comment -%}
   Snippet: bb-product-auto-connect.liquid
   Purpose: Auto-connects related products by name convention.
 
@@ -29,8 +91,19 @@
   'use strict';
 
   window.BB = window.BB || {};
-  window.BB.moneyFormat = {{ shop.money_format | json }};
+  window.BB.moneyFormat = {{ bb_active_money_format | json }};
   window.BB.shopCurrency = {{ shop.currency | json }};
+  window.BB.presentmentCurrency = {{ cart.currency.iso_code | json }};
+
+  {%- if bb_paired_product != blank and bb_paired_piece != blank -%}
+  window.BB.pairedPieceLiquid = {
+    piece: {{ bb_paired_piece | json }},
+    url: {{ bb_paired_product.url | json }},
+    priceFormatted: {{ bb_paired_product.selected_or_first_available_variant.price | money | json }}
+  };
+  {%- else -%}
+  window.BB.pairedPieceLiquid = null;
+  {%- endif -%}
 
   function bbCurrencyRate() {
     var active = window.Shopify && window.Shopify.currency && window.Shopify.currency.active;
@@ -40,7 +113,44 @@
     return window.Shopify.currency.rate || 1;
   }
 
-  /* Shop-currency cents → active presentment currency */
+  /* Shopify-format helper (shopify_common.js may not be loaded on this theme) */
+  window.BB.formatMoney = function (cents, format) {
+    if (typeof cents === 'string') cents = cents.replace('.', '');
+    var formatString = format || window.BB.moneyFormat || '{{amount}}';
+    var placeholder = /\{\{\s*(\w+)\s*\}\}/;
+
+    function withDelimiters(number, precision, thousands, decimal) {
+      var n = (number / 100.0).toFixed(precision);
+      var parts = n.split('.');
+      parts[0] = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
+      return parts[1] ? parts[0] + decimal + parts[1] : parts[0];
+    }
+
+    var match = formatString.match(placeholder);
+    var token = match ? match[1] : 'amount';
+    var value;
+
+    switch (token) {
+      case 'amount_no_decimals':
+        value = withDelimiters(cents, 0, ',', '.');
+        break;
+      case 'amount_with_comma_separator':
+        value = withDelimiters(cents, 2, '.', ',');
+        break;
+      case 'amount_no_decimals_with_comma_separator':
+        value = withDelimiters(cents, 0, '.', ',');
+        break;
+      case 'amount_with_apostrophe_separator':
+        value = withDelimiters(cents, 2, "'", '.');
+        break;
+      default:
+        value = withDelimiters(cents, 2, ',', '.');
+    }
+
+    return formatString.replace(placeholder, value);
+  };
+
+  /* Shop-currency cents (/products/{handle}.js) → active presentment currency */
   window.BB.formatPresentmentMoney = function (shopCurrencyCents) {
     var cents = Math.round(parseFloat(shopCurrencyCents) || 0);
     if (!cents) return '';
@@ -49,13 +159,7 @@
     if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
       return window.Shopify.formatMoney(cents, fmt);
     }
-    return (cents / 100).toFixed(2);
-  };
-
-  window.BB.formatPresentmentMoneyFromDecimal = function (decimalPrice) {
-    var amount = parseFloat(decimalPrice);
-    if (isNaN(amount)) return '';
-    return window.BB.formatPresentmentMoney(Math.round(amount * 100));
+    return window.BB.formatMoney(cents, fmt);
   };
 
   function fetchProductCents(handle) {
@@ -72,7 +176,7 @@
   var PRODUCT_HANDLE = {{ product.handle | json }};
   var PRODUCT_URL    = {{ product.url | json }};
 
-  var CACHE_KEY = 'bb_all_products';
+  var CACHE_KEY = 'bb_all_products_v2';
 
   var colorMap = {
     'orange':    '#e8892a',
@@ -215,7 +319,6 @@
           url:    '/products/' + p.handle,
           handle: p.handle,
           title:  p.title,
-          price:  p.variants && p.variants[0] ? p.variants[0].price : null,
           priceCents: null
         };
       }

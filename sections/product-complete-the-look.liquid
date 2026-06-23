@@ -359,7 +359,14 @@
           nameEl.href = link.url;
         }
         if (labelEl) labelEl.textContent = (p.type && p.type.trim()) ? p.type : oppPiece;
-        if (priceEl) priceEl.textContent = formatMoneyFromCents(p.variants[0].price);
+        if (priceEl) {
+          var liq = window.BB && window.BB.pairedPieceLiquid;
+          if (liq && liq.piece === oppPiece && liq.priceFormatted) {
+            priceEl.textContent = liq.priceFormatted;
+          } else {
+            priceEl.textContent = formatMoneyFromCents(p.variants[0].price);
+          }
+        }
 
         /*
           /products/{handle}.js returns featured_image and images as URL STRINGS
@@ -445,11 +452,11 @@
     if (window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
       return window.BB.formatPresentmentMoney(cents);
     }
+    if (window.BB && typeof window.BB.formatMoney === 'function') {
+      var fmt = (window.theme && window.theme.moneyFormat) || (window.BB && window.BB.moneyFormat) || '{{amount}}';
+      return window.BB.formatMoney(cents, fmt);
+    }
     return String(parseFloat(cents) / 100);
-  }
-
-  function formatMoney(price) {
-    return formatMoneyFromCents(Math.round(parseFloat(price) * 100));
   }
 
   /* ── Size sync: match every item's size <select> to the chosen product size ── */
