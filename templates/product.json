@@ -166,7 +166,7 @@
           "type": "shipping_page",
           "settings": {
             "title": "Shipping",
-            "page_handle": "shipping-in-the-product-page",
+            "page_handle": "shipping-in-product-page",
             "open_by_default": false
           }
         }
@@ -210,7 +210,6 @@
         "ugc_CcjhiY": {
           "type": "ugc",
           "settings": {
-            "image": "shopify://shop_images/605883750_2315759198851505_3797349508690266541_nfull.webp",
             "size": "standard",
             "handle": "@sunkissed.sofia",
             "link": "",
@@ -231,7 +230,7 @@
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "<p>Bought myself the cutest maroon bathing suit! The material and style of the costumes are beautiful! Can\u2019t wait to visit again! \u2728</p>",
+            "quote": "<p>Bought myself the cutest maroon bathing suit! The material and style of the costumes are beautiful! Can’t wait to visit again! ✨</p>",
             "author_name": "Cleo A.",
             "author_location": "Local Guide",
             "author_avatar": "shopify://shop_images/Cleo.png",
