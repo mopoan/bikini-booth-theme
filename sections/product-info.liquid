@@ -32,11 +32,25 @@
       {{- product.title | split: ' - ' | first -}}
     </h1>
 
-    {%- comment -%} Branding subtitle — from product metafield custom.branding_subtitle only (no description/tagline fallback) {%- endcomment -%}
+    {%- comment -%} Product tagline — custom.tagline (original product-page field) {%- endcomment -%}
+    {%- if section.settings.show_tagline -%}
+      {%- assign product_tagline = product.metafields.custom.tagline -%}
+      {%- if product_tagline != blank -%}
+        <div class="bb-info__tagline">
+          {%- if product_tagline.type == 'rich_text_field' -%}
+            {{ product_tagline }}
+          {%- else -%}
+            {{ product_tagline.value | default: product_tagline | escape | newline_to_br }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} Branding subtitle — separate from tagline; custom.branding_subtitle only {%- endcomment -%}
     {%- if section.settings.show_subtitle -%}
       {%- assign branding_subtitle = product.metafields.custom.branding_subtitle -%}
       {%- if branding_subtitle != blank -%}
-        <div class="bb-info__tagline">
+        <div class="bb-info__branding-subtitle">
           {%- if branding_subtitle.type == 'rich_text_field' -%}
             {{ branding_subtitle }}
           {%- else -%}
@@ -252,7 +266,8 @@
     color: #2a2520;
     margin: 0 0 5px;
   }
-  #bb-info-{{ section.id }} .bb-info__tagline {
+  #bb-info-{{ section.id }} .bb-info__tagline,
+  #bb-info-{{ section.id }} .bb-info__branding-subtitle {
     font-size: {{ section.settings.subtitle_font_size | default: 12 }}px;
     color: {{ section.settings.subtitle_color | default: '#8a8077' }};
     font-weight: {{ section.settings.subtitle_weight | default: 400 }};
@@ -262,7 +277,8 @@
     max-width: {{ section.settings.subtitle_max_width }}px;
     {%- endif %}
   }
-  #bb-info-{{ section.id }} .bb-info__tagline p { margin: 0; }
+  #bb-info-{{ section.id }} .bb-info__tagline p,
+  #bb-info-{{ section.id }} .bb-info__branding-subtitle p { margin: 0; }
   #bb-info-{{ section.id }} .bb-info__meta-row {
     margin-bottom: 6px;
   }
@@ -846,13 +862,24 @@
     },
     {
       "type": "header",
+      "content": "Tagline"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tagline",
+      "label": "Show tagline",
+      "info": "Pulled from product metafield custom.tagline. Hidden when empty.",
+      "default": true
+    },
+    {
+      "type": "header",
       "content": "Branding subtitle"
     },
     {
       "type": "checkbox",
       "id": "show_subtitle",
       "label": "Show branding subtitle",
-      "info": "Pulled from product metafield custom.branding_subtitle. Hidden cleanly when the metafield is empty.",
+      "info": "Pulled from product metafield custom.branding_subtitle. Separate from tagline; hidden when empty.",
       "default": true
     },
     {
