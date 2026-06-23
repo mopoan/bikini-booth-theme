@@ -245,16 +245,16 @@
           "type": "stat",
           "settings": {
             "icon": "star",
-            "value": "4.9",
+            "value": "5.0",
             "label": "Avg rating",
-            "caption": "from 200+ reviews"
+            "caption": "from 300+ reviews"
           }
         },
         "stat_GAAqfd": {
           "type": "stat",
           "settings": {
             "icon": "heart",
-            "value": "200+",
+            "value": "300+",
             "label": "Real reviews",
             "caption": "from happy beach lovers"
           }
