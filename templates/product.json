@@ -210,6 +210,7 @@
         "ugc_CcjhiY": {
           "type": "ugc",
           "settings": {
+            "image": "shopify://shop_images/pic_3.jpg",
             "size": "standard",
             "handle": "@sunkissed.sofia",
             "link": "",
