@@ -1,0 +1,317 @@
+{{ 'bb-content-page.css' | asset_url | stylesheet_tag }}
+{{ 'bb-store-reviews-page.css' | asset_url | stylesheet_tag }}
+{{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
+
+<div class="bb-store-reviews-page" id="bb-store-reviews-{{ section.id }}">
+  <div
+    class="bb-store-reviews-hero"
+    {% if section.settings.hero_image != blank %}
+      style="background-image: url('{{ section.settings.hero_image | image_url: width: 1800 }}');"
+    {% endif %}
+  >
+    <div class="bb-store-reviews-hero__overlay" aria-hidden="true"></div>
+    <div class="bb-store-reviews-hero__inner page-width">
+      <div class="bb-store-reviews-hero__card">
+        {%- if section.settings.hero_eyebrow != blank -%}
+          <p class="bb-store-reviews-hero__eyebrow">{{ section.settings.hero_eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.hero_title != blank -%}
+          <h1 class="bb-store-reviews-hero__title">{{ section.settings.hero_title | escape }}</h1>
+        {%- endif -%}
+        {%- if section.settings.hero_intro != blank -%}
+          <div class="bb-store-reviews-hero__intro">{{ section.settings.hero_intro }}</div>
+        {%- endif -%}
+        {%- render 'bb-star-divider' -%}
+      </div>
+    </div>
+  </div>
+
+  <div class="bb-store-reviews-body page-width">
+    <div class="bb-store-reviews-summary">
+      <div class="bb-store-reviews-summary__score">
+        {%- if section.settings.rating_value != blank -%}
+          <span class="bb-store-reviews-summary__value">{{ section.settings.rating_value | escape }}</span>
+        {%- endif -%}
+        <div class="bb-store-reviews-summary__stars" aria-hidden="true">
+          {%- for i in (1..5) -%}
+            <svg class="bb-store-reviews-star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          {%- endfor -%}
+        </div>
+        {%- if section.settings.rating_blurb != blank -%}
+          <p class="bb-store-reviews-summary__blurb">{{ section.settings.rating_blurb | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.summary_text != blank -%}
+        <p class="bb-store-reviews-summary__text">{{ section.settings.summary_text | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.external_reviews_url != blank and section.settings.external_reviews_label != blank -%}
+        <a
+          class="bb-store-reviews-summary__link"
+          href="{{ section.settings.external_reviews_url | escape }}"
+          {% if section.settings.external_reviews_url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}
+        >
+          {{ section.settings.external_reviews_label | escape }}
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.main_lead != blank -%}
+      <p class="bb-store-reviews-lead">{{ section.settings.main_lead | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="bb-store-reviews-grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'review' -%}
+            <article class="bb-store-reviews-card" {{ block.shopify_attributes }}>
+              <div class="bb-store-reviews-card__stars" aria-label="{{ block.settings.stars | default: 5 }} out of 5 stars">
+                {%- assign star_count = block.settings.stars | default: 5 -%}
+                {%- for i in (1..5) -%}
+                  <svg class="bb-store-reviews-star{% if i > star_count %} bb-store-reviews-star--muted{% endif %}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                {%- endfor -%}
+              </div>
+              {%- if block.settings.quote != blank -%}
+                <blockquote class="bb-store-reviews-card__quote">&ldquo;{{ block.settings.quote | escape }}&rdquo;</blockquote>
+              {%- endif -%}
+              <footer class="bb-store-reviews-card__footer">
+                <div class="bb-store-reviews-card__avatar" style="background: {{ block.settings.avatar_color | default: '#0a2e2e' }};">
+                  {{ block.settings.initials | escape }}
+                </div>
+                <div class="bb-store-reviews-card__meta">
+                  {%- if block.settings.author != blank -%}
+                    <p class="bb-store-reviews-card__name">{{ block.settings.author | escape }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.meta != blank -%}
+                    <p class="bb-store-reviews-card__detail">{{ block.settings.meta | escape }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.store != blank -%}
+                    <p class="bb-store-reviews-card__store">{{ block.settings.store | escape }}</p>
+                  {%- endif -%}
+                </div>
+              </footer>
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="bb-store-reviews-bottom">
+      {%- render 'bb-seashell-cta', label: section.settings.cta_label, url: section.settings.cta_link, layout: 'bar', section: section -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "BB Store Reviews Page",
+  "tag": "section",
+  "class": "bb-store-reviews-page-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero eyebrow",
+      "default": "Welcome to Bikini Booth"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Store Reviews"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_intro",
+      "label": "Hero intro",
+      "default": "<p>Real feedback from customers who have visited our stores and shopped with us online. We are proud of the experience we create in Phuket, Koh Samui, and Koh Phangan.</p>"
+    },
+    {
+      "type": "text",
+      "id": "rating_value",
+      "label": "Average rating",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "rating_blurb",
+      "label": "Rating subtext",
+      "default": "Based on reviews across our stores"
+    },
+    {
+      "type": "textarea",
+      "id": "summary_text",
+      "label": "Summary paragraph",
+      "default": "Every review helps us refine fit, fabric, and the in-store experience. Thank you to everyone who has shared their Bikini Booth moment with us."
+    },
+    {
+      "type": "url",
+      "id": "external_reviews_url",
+      "label": "External reviews link",
+      "info": "Optional Google or Trustpilot URL for “read all reviews”."
+    },
+    {
+      "type": "text",
+      "id": "external_reviews_label",
+      "label": "External reviews button label",
+      "default": "Read all reviews on Google"
+    },
+    {
+      "type": "textarea",
+      "id": "main_lead",
+      "label": "Intro above review grid",
+      "default": "A selection of recent customer reviews from our island stores and online shoppers."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Bottom CTA label",
+      "default": "FIND OUR STORES"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Bottom CTA link"
+    },
+    {
+      "type": "image_picker",
+      "id": "cta_shell_icon",
+      "label": "Bottom shell icon",
+      "info": "Optional. Overrides Theme settings → Content pages shell icon."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Stars",
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Absolutely gorgeous swimwear. The quality is incredible and the fit is perfect."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name",
+          "default": "Sarah L."
+        },
+        {
+          "type": "text",
+          "id": "initials",
+          "label": "Avatar initials",
+          "default": "SL"
+        },
+        {
+          "type": "color",
+          "id": "avatar_color",
+          "label": "Avatar color",
+          "default": "#0a2e2e"
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta line",
+          "default": "Verified customer · 2 weeks ago"
+        },
+        {
+          "type": "text",
+          "id": "store",
+          "label": "Store location",
+          "default": "Phuket"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB Store Reviews Page",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "quote": "The team in Phuket helped me find the perfect fit. Beautiful fabrics and such a calm, welcoming store.",
+            "author": "Sarah L.",
+            "initials": "SL",
+            "avatar_color": "#0a2e2e",
+            "meta": "Verified customer · 2 weeks ago",
+            "store": "Phuket"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Fisherman's Village store is stunning. I left with two sets and already want to go back on my next trip.",
+            "author": "Emma M.",
+            "initials": "EM",
+            "avatar_color": "#0d9488",
+            "meta": "Verified customer · 1 month ago",
+            "store": "Koh Samui"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Finally found swimwear that actually supports and flatters. The one piece is so well constructed.",
+            "author": "Jessica R.",
+            "initials": "JR",
+            "avatar_color": "#8b7355",
+            "meta": "Verified customer · 3 weeks ago",
+            "store": "Online"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Such a lovely experience in Koh Phangan. Helpful styling advice and pieces I still wear every holiday.",
+            "author": "Amara K.",
+            "initials": "AK",
+            "avatar_color": "#6b3a3a",
+            "meta": "Verified customer · 1 month ago",
+            "store": "Koh Phangan"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "The resort sarong is a dream. Fabric feels luxurious and the palm print is even better in person.",
+            "author": "Lucy P.",
+            "initials": "LP",
+            "avatar_color": "#1e5654",
+            "meta": "Verified customer · 5 weeks ago",
+            "store": "Phuket"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "quote": "Quick delivery and the bikini fit exactly as described. Will order again before my next beach trip.",
+            "author": "Hannah W.",
+            "initials": "HW",
+            "avatar_color": "#4a6fa5",
+            "meta": "Verified customer · 6 weeks ago",
+            "store": "Online"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

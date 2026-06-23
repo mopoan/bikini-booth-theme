@@ -7,27 +7,64 @@
 
 {%- liquid
   assign bb_footer_show_additional = false
-  if section.settings.additional_info_heading != blank
-    assign bb_footer_show_additional = true
+  if section.settings.use_preset_quick_links == false
+    if section.settings.additional_info_heading != blank
+      assign bb_footer_show_additional = true
+    endif
+    unless section.settings.additional_info_line_1 == blank and section.settings.additional_info_line_2 == blank and section.settings.additional_info_line_3 == blank and section.settings.additional_info_line_4 == blank and section.settings.additional_info_line_5 == blank and section.settings.additional_info_line_6 == blank
+      assign bb_footer_show_additional = true
+    endunless
   endif
-  unless section.settings.additional_info_line_1 == blank and section.settings.additional_info_line_2 == blank and section.settings.additional_info_line_3 == blank and section.settings.additional_info_line_4 == blank and section.settings.additional_info_line_5 == blank and section.settings.additional_info_line_6 == blank
-    assign bb_footer_show_additional = true
-  endunless
-  assign bb_footer_grid_cols = 2
-  if bb_footer_show_additional
-    assign bb_footer_grid_cols = bb_footer_grid_cols | plus: 1
-  endif
-  if section.settings.show_newsletter
-    assign bb_footer_grid_cols = bb_footer_grid_cols | plus: 1
+
+  assign bb_footer_use_five_col = section.settings.use_preset_quick_links
+  if bb_footer_use_five_col
+    assign bb_footer_grid_cols = 4
+    if section.settings.show_newsletter
+      assign bb_footer_grid_cols = 5
+    endif
+  else
+    assign bb_footer_grid_cols = 2
+    if bb_footer_show_additional
+      assign bb_footer_grid_cols = bb_footer_grid_cols | plus: 1
+    endif
+    if section.settings.show_newsletter
+      assign bb_footer_grid_cols = bb_footer_grid_cols | plus: 1
+    endif
   endif
 
   assign bb_footer_about_page = section.settings.about_page
   if bb_footer_about_page == blank
     assign bb_footer_about_page = pages['about-us']
   endif
-  assign bb_footer_about_href = section.settings.ql_path_about
-  if bb_footer_about_page != blank
+  assign bb_footer_about_href = section.settings.about_path_about_us
+  if bb_footer_about_href == blank
+    assign bb_footer_about_href = section.settings.ql_path_about
+  endif
+  if bb_footer_about_page != blank and bb_footer_about_href == blank
     assign bb_footer_about_href = bb_footer_about_page.url
+  endif
+
+  assign bb_footer_privacy_href = section.settings.privacy_path
+  if bb_footer_privacy_href == blank
+    if pages.privacy != blank
+      assign bb_footer_privacy_href = pages.privacy.url
+    elsif pages['privacy-policy'] != blank
+      assign bb_footer_privacy_href = pages['privacy-policy'].url
+    else
+      assign bb_footer_privacy_href = '/pages/privacy'
+    endif
+  endif
+  assign bb_footer_terms_href = section.settings.terms_path
+  if bb_footer_terms_href == blank
+    if pages.terms != blank
+      assign bb_footer_terms_href = pages.terms.url
+    elsif pages['terms-and-conditions'] != blank
+      assign bb_footer_terms_href = pages['terms-and-conditions'].url
+    else
+      assign bb_footer_terms_href = '/pages/terms'
+    endif
+  elsif bb_footer_terms_href == '/pages/terms-and-conditions' and pages.terms != blank
+    assign bb_footer_terms_href = pages.terms.url
   endif
 -%}
 
@@ -55,6 +92,54 @@
     align-items: start;
   }
 
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five {
+    column-gap: clamp(2rem, 3.5vw, 3.25rem);
+    row-gap: 2rem;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .bb-sf-clean-card {
+    padding: 0;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .bb-sf-clean-card .ai-footer-heading-{{ ai_gen_id }},
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .bb-sf-card__title--loop {
+    margin: 0 0 1rem;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    font-size: max(0.8125rem, {{ section.settings.heading_size | minus: 2 }}px);
+    font-weight: 700;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: {{ section.settings.heading_color }};
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .ai-footer-menu-{{ ai_gen_id }} a {
+    color: {{ section.settings.heading_color }};
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    font-weight: 400;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .ai-footer-menu-{{ ai_gen_id }} a:hover {
+    color: {{ section.settings.link_hover_color }};
+    opacity: 0.85;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .ai-footer-tagline-{{ ai_gen_id }} {
+    color: #1e5654;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    opacity: 1;
+    max-width: 18.5rem;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .bb-sf-card__sub {
+    margin: 0 0 1.125rem;
+    max-width: 17.5rem;
+    line-height: 1.55;
+    color: {{ section.settings.heading_color }};
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    opacity: 0.92;
+  }
+
   .ai-footer-{{ ai_gen_id }} .bb-sf-clean-card {
     box-sizing: border-box;
     min-height: 100%;
@@ -78,6 +163,17 @@
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .ai-footer-{{ ai_gen_id }} ul.bb-footer-primary__social.bb-sf-social-rows:not(.bb-sf-social-rows--labeled) {
+    margin-top: 2rem;
+  }
+
+  .ai-footer-{{ ai_gen_id }} ul.bb-footer-primary__social.bb-sf-social-rows.bb-sf-social-rows--labeled {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
@@ -126,8 +222,33 @@
     color: rgba(64, 64, 64, 0.92);
   }
 
+  .ai-footer-{{ ai_gen_id }} ul.bb-footer-primary__social.bb-sf-social-rows:not(.bb-sf-social-rows--labeled) .bb-sf-social-row__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .ai-footer-{{ ai_gen_id }} ul.bb-footer-primary__social.bb-sf-social-rows:not(.bb-sf-social-rows--labeled) .bb-sf-social-row__link {
+    color: #1e5654;
+  }
+
+  .ai-footer-{{ ai_gen_id }} ul.bb-footer-primary__social.bb-sf-social-rows:not(.bb-sf-social-rows--labeled) .bb-sf-social-row__link:hover {
+    color: {{ section.settings.link_hover_color }};
+    opacity: 1;
+  }
+
   .ai-footer-{{ ai_gen_id }} .bb-sf-clean-card--follow .ai-footer-logo-inline-{{ ai_gen_id }} + .ai-footer-heading-{{ ai_gen_id }} {
     margin-top: 0;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .ai-footer-menu-{{ ai_gen_id }} {
+    gap: 0.7rem;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-clean-card .ai-footer-menu-{{ ai_gen_id }} a {
@@ -135,14 +256,18 @@
     font-weight: 400;
   }
 
-  .ai-footer-{{ ai_gen_id }} .bb-sf-clean-card .ai-footer-menu-{{ ai_gen_id }} a:hover {
+  .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .bb-sf-clean-card .ai-footer-menu-{{ ai_gen_id }} a {
     color: {{ section.settings.heading_color }};
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-clean-card .ai-footer-menu-{{ ai_gen_id }} a:hover {
+    color: {{ section.settings.link_hover_color }};
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-rule {
     width: 100%;
     height: 1px;
-    margin: 2.5rem 0 1.5rem;
+    margin: 3rem 0 1.25rem;
     border: none;
     background: rgba(120, 189, 186, 0.35);
   }
@@ -152,7 +277,7 @@
   }
 
   .ai-footer-{{ ai_gen_id }} .ai-footer-logo-inline-{{ ai_gen_id }} {
-    margin: 0 0 0.875rem;
+    margin: 0 0 1rem;
     text-align: left;
   }
 
@@ -160,7 +285,8 @@
     display: block;
     width: auto;
     height: auto;
-    max-width: min(180px, 55vw);
+    max-width: min(150px, 50vw);
+    max-height: 3.5rem;
   }
 
   .ai-footer-{{ ai_gen_id }} .ai-footer-logo-link-{{ ai_gen_id }} {
@@ -169,8 +295,15 @@
   }
 
   .ai-footer-{{ ai_gen_id }} .ai-footer-tagline-{{ ai_gen_id }} {
-    margin-top: 0.75rem;
-    max-width: 22rem;
+    margin: 0;
+    max-width: 14.5rem;
+    font-size: max(0.8125rem, {{ section.settings.text_size | minus: 1 }}px);
+    line-height: 1.55;
+    color: rgba(64, 64, 64, 0.88);
+  }
+
+  .ai-footer-{{ ai_gen_id }} .ai-footer-tagline-{{ ai_gen_id }} p {
+    margin: 0;
   }
 
   .ai-footer-{{ ai_gen_id }} .ai-footer-heading-sub-{{ ai_gen_id }} {
@@ -204,33 +337,41 @@
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-row {
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    gap: 0.35rem;
     width: 100%;
     max-width: 100%;
+    padding: 0.3rem 0.3rem 0.3rem 0;
+    background: #ffffff;
+    border: 1px solid rgba(74, 198, 190, 0.45);
+    border-radius: 10px;
+    overflow: hidden;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-input {
     box-sizing: border-box;
     flex: 1 1 auto;
     min-width: 0;
-    height: 2.25rem;
-    padding: 0 0.75rem;
+    height: 2.5rem;
+    padding: 0 0.75rem 0 1rem;
     font-size: 0.875rem;
     line-height: 1.4;
     color: #0a2e2e;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    border-right-width: 0;
-    border-radius: 0.375rem 0 0 0.375rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
     font-family: inherit;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: box-shadow 0.15s ease;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-input:focus {
     outline: none;
+    box-shadow: none;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-row:focus-within {
     border-color: {{ section.settings.heading_color }};
-    box-shadow: inset 0 0 0 1px {{ section.settings.heading_color }};
-    z-index: 1;
+    box-shadow: 0 0 0 1px {{ section.settings.heading_color }};
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-input::placeholder {
@@ -243,25 +384,27 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 2.25rem;
-    padding: 0 1rem;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    color: {{ section.settings.heading_color }};
-    background: #ffffff;
-    border: 1px solid {{ section.settings.heading_color }};
-    border-radius: 0 0.375rem 0.375rem 0;
+    width: 2.35rem;
+    height: 2.35rem;
+    padding: 0;
+    color: #ffffff;
+    background: #1a5f5b;
+    border: none;
+    border-radius: 7px;
     cursor: pointer;
     font-family: inherit;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition: opacity 0.15s ease, background 0.15s ease;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-btn:hover {
-    background: {{ section.settings.heading_color }};
-    color: #ffffff;
+    opacity: 0.92;
+    background: #154947;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-btn svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    display: block;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-subframe-newsletter--follow-box .bb-subframe-newsletter__errors {
@@ -284,9 +427,11 @@
 
   .ai-footer-{{ ai_gen_id }} .ai-footer-heading-{{ ai_gen_id }} {
     color: {{ section.settings.heading_color }};
-    font-size: {{ section.settings.heading_size }}px;
+    font-size: max(0.8125rem, {{ section.settings.heading_size | minus: 2 }}px);
     margin: 0;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
   .ai-footer-{{ ai_gen_id }} .ai-footer-text-{{ ai_gen_id }} {
@@ -414,15 +559,92 @@
     fill: currentColor;
   }
 
+  .ai-footer-{{ ai_gen_id }} .bb-sf-currency-row-{{ ai_gen_id }} {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.85rem 0 0.35rem;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-currency-inner-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-footer-currency__field {
+    margin: 0;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-footer-currency__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: {{ section.settings.heading_color }};
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-footer-currency__trigger:hover {
+    opacity: 0.85;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-bottom-bar-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    max-width: 1280px;
+    margin: 1.25rem auto 0;
+    padding: 0;
+  }
+
   .ai-footer-{{ ai_gen_id }} .bb-sf-copyright {
     margin: 0;
     padding: 0;
-    margin-top: 1.25rem;
-    text-align: center;
+    text-align: left;
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
     font-size: 0.75rem;
     line-height: 1.5;
-    color: rgba(100, 100, 100, 0.75);
+    color: {{ section.settings.heading_color }};
     font-weight: 400;
+    opacity: 0.9;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} a {
+    color: {{ section.settings.heading_color }};
+    font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-sep {
+    color: {{ section.settings.heading_color }};
+    opacity: 0.45;
+    user-select: none;
   }
 
   @media screen and (max-width: 767px) {
@@ -473,7 +695,30 @@
 
     .ai-footer-{{ ai_gen_id }} ul.bb-footer-primary__social.bb-sf-social-rows {
       align-items: center;
+      justify-content: center;
       width: 100%;
+    }
+
+    .ai-footer-{{ ai_gen_id }} ul.bb-footer-primary__social.bb-sf-social-rows:not(.bb-sf-social-rows--labeled) {
+      margin-top: 1.75rem;
+    }
+
+    .ai-footer-{{ ai_gen_id }} .bb-sf-bottom-bar-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .ai-footer-{{ ai_gen_id }} .bb-sf-currency-row-{{ ai_gen_id }} {
+      text-align: center;
+    }
+
+    .ai-footer-{{ ai_gen_id }} .bb-sf-currency-inner-{{ ai_gen_id }} {
+      justify-content: center;
+    }
+
+    .ai-footer-{{ ai_gen_id }} .bb-sf-copyright {
+      text-align: center;
     }
 
     .ai-footer-{{ ai_gen_id }} .ai-footer-menu-{{ ai_gen_id }} {
@@ -498,6 +743,24 @@
       text-align: center;
     }
 
+    .ai-footer-{{ ai_gen_id }} .ai-footer-col-newsletter-{{ ai_gen_id }} {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ai-footer-{{ ai_gen_id }} .bb-subframe-newsletter--follow-box .bb-sf-card__title--loop,
+    .ai-footer-{{ ai_gen_id }} .bb-subframe-newsletter--follow-box .bb-sf-card__sub,
+    .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .bb-subframe-newsletter--follow-box .bb-sf-card__sub {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five .bb-subframe-newsletter--follow-box .bb-sf-card__sub {
+      max-width: min(17.5rem, 100%);
+    }
+
     .ai-footer-{{ ai_gen_id }} .bb-sf-subscribe-row {
       max-width: 22rem;
       margin-left: auto;
@@ -505,8 +768,20 @@
     }
   }
 
+  @media screen and (min-width: 990px) {
+    .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five {
+      grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)) minmax(0, 1.4fr);
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}.ai-footer-container--five {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   @media screen and (min-width: 750px) and (max-width: 1024px) {
-    .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }} {
+    .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }}:not(.ai-footer-container--five) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
@@ -517,7 +792,7 @@
   {% if bb_footer_about_page != blank %}data-bb-about-page-url="{{ bb_footer_about_page.url | escape }}"{% endif %}
   {{ section.shopify_attributes }}
 >
-  <div class="ai-footer-container-{{ ai_gen_id }}">
+  <div class="ai-footer-container-{{ ai_gen_id }}{% if bb_footer_use_five_col %} ai-footer-container--five{% endif %}">
     {%- comment -%} Column 1: Subframe “Follow us” card — social links hard-coded (theme Social settings are not reliable for this section). {%- endcomment -%}
     <div class="ai-footer-column-{{ ai_gen_id }} ai-footer-col-brand-{{ ai_gen_id }}">
       <div class="bb-sf-clean-card bb-sf-clean-card--follow">
@@ -553,8 +828,8 @@
             </div>
           {%- endif -%}
         {%- endunless -%}
-        {%- if section.settings.column_1_heading != blank -%}
-          <h3 class="ai-footer-heading-{{ ai_gen_id }}">{{ section.settings.column_1_heading }}</h3>
+        {%- if section.settings.column_1_content != blank -%}
+          <div class="ai-footer-text-{{ ai_gen_id }} ai-footer-tagline-{{ ai_gen_id }}">{{ section.settings.column_1_content }}</div>
         {%- endif -%}
         {%- comment -%} Only explicit Theme Editor "off" hides social (legacy JSON may omit the checkbox). {%- endcomment -%}
         {%- unless section.settings.show_social_icons == false -%}
@@ -570,12 +845,16 @@
               assign bb_footer_social_fb = 'facebook'
               assign bb_footer_social_tt = 'tiktok'
             endif
+            assign bb_footer_social_class = 'bb-footer-primary__social bb-sf-social-rows'
+            unless bb_footer_use_five_col
+              assign bb_footer_social_class = bb_footer_social_class | append: ' bb-sf-social-rows--labeled'
+            endunless
           -%}
           {%- capture bb_footer_icon_ig -%}{%- render 'icons-list-social', icon_name: bb_footer_social_ig -%}{%- endcapture -%}
           {%- capture bb_footer_icon_pi -%}{%- render 'icons-list-social', icon_name: bb_footer_social_pi -%}{%- endcapture -%}
           {%- capture bb_footer_icon_fb -%}{%- render 'icons-list-social', icon_name: bb_footer_social_fb -%}{%- endcapture -%}
           {%- capture bb_footer_icon_tt -%}{%- render 'icons-list-social', icon_name: bb_footer_social_tt -%}{%- endcapture -%}
-          <ul class="bb-footer-primary__social bb-sf-social-rows" role="list">
+          <ul class="{{ bb_footer_social_class }}" role="list">
             <li>
               <a href="https://www.instagram.com/bikinibooth_official/" class="bb-sf-social-row__link" rel="noopener noreferrer" target="_blank">
                 <span class="bb-sf-social-row__icon" aria-hidden="true">{{ bb_footer_icon_ig | strip }}</span>
@@ -583,15 +862,15 @@
               </a>
             </li>
             <li>
-              <a href="https://uk.pinterest.com/bikinibooth_official/" class="bb-sf-social-row__link" rel="noopener noreferrer" target="_blank">
-                <span class="bb-sf-social-row__icon" aria-hidden="true">{{ bb_footer_icon_pi | strip }}</span>
-                <span class="bb-sf-social-row__label">Pinterest</span>
-              </a>
-            </li>
-            <li>
               <a href="https://www.facebook.com/bikiniboothofficial/" class="bb-sf-social-row__link" rel="noopener noreferrer" target="_blank">
                 <span class="bb-sf-social-row__icon" aria-hidden="true">{{ bb_footer_icon_fb | strip }}</span>
                 <span class="bb-sf-social-row__label">Facebook</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://uk.pinterest.com/bikinibooth_official/" class="bb-sf-social-row__link" rel="noopener noreferrer" target="_blank">
+                <span class="bb-sf-social-row__icon" aria-hidden="true">{{ bb_footer_icon_pi | strip }}</span>
+                <span class="bb-sf-social-row__label">Pinterest</span>
               </a>
             </li>
             <li>
@@ -602,14 +881,14 @@
             </li>
           </ul>
         {%- endunless -%}
-        {%- if section.settings.column_1_content != blank -%}
-          <div class="ai-footer-text-{{ ai_gen_id }} ai-footer-tagline-{{ ai_gen_id }}">{{ section.settings.column_1_content }}</div>
+        {%- if bb_footer_use_five_col == false and section.settings.column_1_heading != blank -%}
+          <h3 class="ai-footer-heading-{{ ai_gen_id }}">{{ section.settings.column_1_heading }}</h3>
         {%- endif -%}
       </div>
     </div>
 
-    {%- comment -%} Column 2: Subframe “Quick links” card {%- endcomment -%}
-    <div class="ai-footer-column-{{ ai_gen_id }} ai-footer-col-links-{{ ai_gen_id }}">
+    {%- comment -%} Column 2: Shop {%- endcomment -%}
+    <div class="ai-footer-column-{{ ai_gen_id }} ai-footer-col-shop-{{ ai_gen_id }}">
       <div class="bb-sf-clean-card">
         {%- if section.settings.column_2_heading != blank -%}
           <h3 class="ai-footer-heading-{{ ai_gen_id }}">{{ section.settings.column_2_heading }}</h3>
@@ -634,12 +913,6 @@
             {%- if section.settings.ql_path_accessories != blank -%}
               <li><a href="{{ section.settings.ql_path_accessories | escape }}">{{ section.settings.ql_label_accessories | default: 'Accessories' | escape }}</a></li>
             {%- endif -%}
-            {%- if bb_footer_about_href != blank -%}
-              <li><a href="{{ bb_footer_about_href | escape }}">{{ section.settings.ql_label_about | default: 'About Us' | escape }}</a></li>
-            {%- endif -%}
-            {%- if section.settings.ql_path_contact != blank -%}
-              <li><a href="{{ section.settings.ql_path_contact | escape }}">{{ section.settings.ql_label_contact | default: 'Contact Us' | escape }}</a></li>
-            {%- endif -%}
           </ul>
         {%- elsif section.settings.column_2_menu != blank -%}
           <ul class="ai-footer-menu-{{ ai_gen_id }}">
@@ -648,7 +921,7 @@
             {%- endfor -%}
           </ul>
         {%- endif -%}
-        {%- if section.settings.column_3_menu != blank -%}
+        {%- if bb_footer_use_five_col == false and section.settings.column_3_menu != blank -%}
           {%- if section.settings.column_3_heading != blank -%}
             <h3 class="ai-footer-heading-{{ ai_gen_id }} ai-footer-heading-sub-{{ ai_gen_id }}">{{ section.settings.column_3_heading }}</h3>
           {%- endif -%}
@@ -660,6 +933,51 @@
         {%- endif -%}
       </div>
     </div>
+
+    {%- if bb_footer_use_five_col -%}
+      {%- comment -%} Column 3: Customer Care {%- endcomment -%}
+      <div class="ai-footer-column-{{ ai_gen_id }} ai-footer-col-care-{{ ai_gen_id }}">
+        <div class="bb-sf-clean-card">
+          {%- if section.settings.column_cc_heading != blank -%}
+            <h3 class="ai-footer-heading-{{ ai_gen_id }}">{{ section.settings.column_cc_heading }}</h3>
+          {%- endif -%}
+          <ul class="ai-footer-menu-{{ ai_gen_id }}">
+            {%- if section.settings.cc_path_contact != blank -%}
+              <li><a href="{{ section.settings.cc_path_contact | escape }}">{{ section.settings.cc_label_contact | default: 'Contact' | escape }}</a></li>
+            {%- endif -%}
+            {%- if section.settings.cc_path_shipping != blank -%}
+              <li><a href="{{ section.settings.cc_path_shipping | escape }}">{{ section.settings.cc_label_shipping | default: 'Shipping & Returns' | escape }}</a></li>
+            {%- endif -%}
+            {%- if section.settings.cc_path_faqs != blank -%}
+              <li><a href="{{ section.settings.cc_path_faqs | escape }}">{{ section.settings.cc_label_faqs | default: "FAQ's" | escape }}</a></li>
+            {%- endif -%}
+            {%- if section.settings.cc_path_size_guide != blank -%}
+              <li><a href="{{ section.settings.cc_path_size_guide | escape }}">{{ section.settings.cc_label_size_guide | default: 'Size Guide' | escape }}</a></li>
+            {%- endif -%}
+          </ul>
+        </div>
+      </div>
+
+      {%- comment -%} Column 4: About {%- endcomment -%}
+      <div class="ai-footer-column-{{ ai_gen_id }} ai-footer-col-about-{{ ai_gen_id }}">
+        <div class="bb-sf-clean-card">
+          {%- if section.settings.column_about_heading != blank -%}
+            <h3 class="ai-footer-heading-{{ ai_gen_id }}">{{ section.settings.column_about_heading }}</h3>
+          {%- endif -%}
+          <ul class="ai-footer-menu-{{ ai_gen_id }}">
+            {%- if bb_footer_about_href != blank -%}
+              <li><a href="{{ bb_footer_about_href | escape }}">{{ section.settings.about_label_about_us | default: 'About Us' | escape }}</a></li>
+            {%- endif -%}
+            {%- if section.settings.about_path_stores != blank -%}
+              <li><a href="{{ section.settings.about_path_stores | escape }}">{{ section.settings.about_label_stores | default: 'Our Stores' | escape }}</a></li>
+            {%- endif -%}
+            {%- if section.settings.about_path_reviews != blank -%}
+              <li><a href="{{ section.settings.about_path_reviews | escape }}" rel="noopener noreferrer"{% if section.settings.about_path_reviews contains 'http' %} target="_blank"{% endif %}>{{ section.settings.about_label_reviews | default: 'Store Reviews' | escape }}</a></li>
+            {%- endif -%}
+          </ul>
+        </div>
+      </div>
+    {%- endif -%}
 
     {%- if bb_footer_show_additional -%}
       {%- comment -%} Column: Additional information (between quick links and newsletter). {%- endcomment -%}
@@ -722,8 +1040,8 @@
                   placeholder="{{ section.settings.newsletter_placeholder | default: 'Your email' }}"
                   required
                 >
-                <button type="submit" class="bb-sf-subscribe-btn bb-subframe-newsletter__submit" name="commit">
-                  <span class="bb-subframe-newsletter__submit-text">{{ section.settings.newsletter_button_label | default: 'Subscribe' }}</span>
+                <button type="submit" class="bb-sf-subscribe-btn bb-subframe-newsletter__submit" name="commit" aria-label="{{ section.settings.newsletter_button_label | default: 'Subscribe' | escape }}">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h12M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
               </div>
               {%- if form.posted_successfully? -%}
@@ -743,14 +1061,24 @@
         assign bb_show_contact = true
       endif
     endif
+    assign bb_show_currency = false
+    if section.settings.show_currency_row and localization.available_countries.size > 1
+      assign bb_show_currency = true
+    endif
+    assign bb_show_policy_links = false
+    if section.settings.show_policy_links
+      if bb_footer_privacy_href != blank or bb_footer_terms_href != blank
+        assign bb_show_policy_links = true
+      endif
+    endif
     assign bb_show_bottom = false
-    if bb_show_contact or section.settings.show_copyright_bar
+    if bb_show_contact or bb_show_currency or section.settings.show_copyright_bar or bb_show_policy_links
       assign bb_show_bottom = true
     endif
   -%}
   {%- if bb_show_bottom -%}
-    <hr class="bb-sf-rule" role="presentation">
     {%- if bb_show_contact -%}
+      <hr class="bb-sf-rule" role="presentation">
       <div class="ai-footer-contact-{{ ai_gen_id }}">
         <div class="ai-footer-contact-inner-{{ ai_gen_id }}">
           {%- if section.settings.contact_phone != blank -%}
@@ -775,15 +1103,49 @@
         </div>
       </div>
     {%- endif -%}
-    <hr class="bb-sf-rule bb-sf-rule--tight" role="presentation">
-    {%- if section.settings.show_copyright_bar -%}
-      <p class="bb-sf-copyright">
-        {%- if section.settings.copyright_text != blank -%}
-          {{ section.settings.copyright_text }}
-        {%- else -%}
-          © {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+    {%- if bb_show_currency -%}
+      {%- unless bb_show_contact -%}
+        <hr class="bb-sf-rule" role="presentation">
+      {%- endunless -%}
+      {%- if bb_show_contact -%}
+        <hr class="bb-sf-rule bb-sf-rule--tight" role="presentation">
+      {%- endif -%}
+      <div class="bb-sf-currency-row-{{ ai_gen_id }}">
+        <div class="bb-sf-currency-inner-{{ ai_gen_id }}">
+          {%- render 'bb-footer-currency-selector' -%}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if section.settings.show_copyright_bar or bb_show_policy_links -%}
+      {%- if bb_show_contact or bb_show_currency -%}
+        <hr class="bb-sf-rule bb-sf-rule--tight" role="presentation">
+      {%- else -%}
+        <hr class="bb-sf-rule" role="presentation">
+      {%- endif -%}
+      <div class="bb-sf-bottom-bar-{{ ai_gen_id }}">
+        {%- if section.settings.show_copyright_bar -%}
+          <p class="bb-sf-copyright">
+            {%- if section.settings.copyright_text != blank -%}
+              {{ section.settings.copyright_text }}
+            {%- else -%}
+              © {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+            {%- endif -%}
+          </p>
         {%- endif -%}
-      </p>
+        {%- if bb_show_policy_links -%}
+          <ul class="bb-sf-policy-links-{{ ai_gen_id }}">
+            {%- if bb_footer_privacy_href != blank -%}
+              <li><a href="{{ bb_footer_privacy_href | escape }}">{{ section.settings.privacy_label | default: 'Privacy Policy' | escape }}</a></li>
+            {%- endif -%}
+            {%- if bb_footer_privacy_href != blank and bb_footer_terms_href != blank -%}
+              <li class="bb-sf-policy-sep" aria-hidden="true">|</li>
+            {%- endif -%}
+            {%- if bb_footer_terms_href != blank -%}
+              <li><a href="{{ bb_footer_terms_href | escape }}">{{ section.settings.terms_label | default: 'Terms of Service' | escape }}</a></li>
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+      </div>
     {%- endif -%}
   {%- endif -%}
 </div>
@@ -819,12 +1181,14 @@
       "type": "inline_richtext",
       "id": "column_1_heading",
       "label": "Heading",
-      "default": "Follow us"
+      "default": "Follow us",
+      "info": "Hidden when preset 5-column layout is enabled."
     },
     {
       "type": "richtext",
       "id": "column_1_content",
-      "label": "Content"
+      "label": "Content",
+      "default": "<p>Designed in Thailand. Inspired by sun,<br>sea and endless escapes.</p>"
     },
     {
       "type": "link_list",
@@ -845,7 +1209,7 @@
       "type": "inline_richtext",
       "id": "column_2_heading",
       "label": "Heading",
-      "default": "Quick links"
+      "default": "Shop"
     },
     {
       "type": "richtext",
@@ -951,6 +1315,110 @@
       "id": "ql_label_contact",
       "label": "Contact Us — label",
       "default": "Contact Us"
+    },
+    {
+      "type": "header",
+      "content": "Customer Care column"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "column_cc_heading",
+      "label": "Heading",
+      "default": "Customer Care"
+    },
+    {
+      "type": "text",
+      "id": "cc_path_contact",
+      "label": "Contact — path",
+      "default": "/pages/contact"
+    },
+    {
+      "type": "text",
+      "id": "cc_label_contact",
+      "label": "Contact — label",
+      "default": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "cc_path_shipping",
+      "label": "Shipping & Returns — path",
+      "default": "/pages/shipping-returns"
+    },
+    {
+      "type": "text",
+      "id": "cc_label_shipping",
+      "label": "Shipping & Returns — label",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "text",
+      "id": "cc_path_faqs",
+      "label": "FAQ's — path",
+      "default": "/pages/faqs"
+    },
+    {
+      "type": "text",
+      "id": "cc_label_faqs",
+      "label": "FAQ's — label",
+      "default": "FAQ's"
+    },
+    {
+      "type": "text",
+      "id": "cc_path_size_guide",
+      "label": "Size Guide — path",
+      "default": "/pages/size-guide"
+    },
+    {
+      "type": "text",
+      "id": "cc_label_size_guide",
+      "label": "Size Guide — label",
+      "default": "Size Guide"
+    },
+    {
+      "type": "header",
+      "content": "About column"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "column_about_heading",
+      "label": "Heading",
+      "default": "About"
+    },
+    {
+      "type": "text",
+      "id": "about_path_about_us",
+      "label": "About Us — path",
+      "default": "/pages/about-us"
+    },
+    {
+      "type": "text",
+      "id": "about_label_about_us",
+      "label": "About Us — label",
+      "default": "About Us"
+    },
+    {
+      "type": "text",
+      "id": "about_path_stores",
+      "label": "Our Stores — path",
+      "default": "/pages/contact#find-us"
+    },
+    {
+      "type": "text",
+      "id": "about_label_stores",
+      "label": "Our Stores — label",
+      "default": "Our Stores"
+    },
+    {
+      "type": "url",
+      "id": "about_path_reviews",
+      "label": "Store Reviews — page or external URL",
+      "info": "Use /pages/store-reviews for the on-site reviews page, or paste a Google/Trustpilot URL."
+    },
+    {
+      "type": "text",
+      "id": "about_label_reviews",
+      "label": "Store Reviews — label",
+      "default": "Store Reviews"
     },
     {
       "type": "header",
@@ -1080,19 +1548,19 @@
       "type": "inline_richtext",
       "id": "newsletter_heading",
       "label": "Newsletter heading",
-      "default": "STAY IN THE LOOP"
+      "default": "JOIN OUR ESCAPE"
     },
     {
       "type": "text",
       "id": "newsletter_subtext",
       "label": "Newsletter subtext",
-      "default": "Subscribe for new arrivals and exclusive offers."
+      "default": "Sign up for sun-soaked updates, early access and special offers."
     },
     {
       "type": "text",
       "id": "newsletter_placeholder",
       "label": "Email placeholder",
-      "default": "Your email"
+      "default": "Enter your email"
     },
     {
       "type": "text",
@@ -1108,6 +1576,12 @@
       "type": "checkbox",
       "id": "show_contact_row",
       "label": "Show phone, email & location",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_row",
+      "label": "Show country/currency selector",
       "default": true
     },
     {
@@ -1159,6 +1633,40 @@
       "id": "social_label_tiktok",
       "label": "TikTok label",
       "info": "Optional. Leave blank to use the hostname word."
+    },
+    {
+      "type": "header",
+      "content": "Policy links"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policy_links",
+      "label": "Show Privacy Policy and Terms links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "privacy_path",
+      "label": "Privacy Policy — path",
+      "default": "/pages/privacy"
+    },
+    {
+      "type": "text",
+      "id": "privacy_label",
+      "label": "Privacy Policy — label",
+      "default": "Privacy Policy"
+    },
+    {
+      "type": "text",
+      "id": "terms_path",
+      "label": "Terms of Service — path",
+      "default": "/pages/terms"
+    },
+    {
+      "type": "text",
+      "id": "terms_label",
+      "label": "Terms of Service — label",
+      "default": "Terms & Conditions"
     },
     {
       "type": "header",
@@ -1302,13 +1810,13 @@
       "type": "color",
       "id": "background_color",
       "label": "Background",
-      "default": "#FEF9EE"
+      "default": "#FDF9F0"
     },
     {
       "type": "color",
       "id": "heading_color",
       "label": "Accent (headings, icons, contact)",
-      "default": "#78bdba"
+      "default": "#4ac6be"
     },
     {
       "type": "color",
@@ -1320,13 +1828,13 @@
       "type": "color",
       "id": "link_color",
       "label": "Link",
-      "default": "#404040"
+      "default": "#4ac6be"
     },
     {
       "type": "color",
       "id": "link_hover_color",
       "label": "Link hover",
-      "default": "#5aa8a5"
+      "default": "#3db0a8"
     },
     {
       "type": "header",

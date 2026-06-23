@@ -1,0 +1,36 @@
+{%- comment -%}
+  Minimal wishlist card for BB tropic wishlist page.
+  Requires product_card_product.
+{%- endcomment -%}
+<div class="bb-wishlist-card product-card" data-item="{{ product_card_product.handle }}">
+  <a href="{{ product_card_product.url }}" class="bb-wishlist-card__media">
+    {%- if product_card_product.featured_media != blank -%}
+      <img
+        src="{{ product_card_product.featured_media | image_url: width: 480 }}"
+        srcset="{{ product_card_product.featured_media | image_url: width: 240 }} 240w, {{ product_card_product.featured_media | image_url: width: 360 }} 360w, {{ product_card_product.featured_media | image_url: width: 480 }} 480w, {{ product_card_product.featured_media | image_url: width: 600 }} 600w"
+        sizes="(min-width: 1200px) 15vw, (min-width: 990px) 20vw, (min-width: 750px) 33vw, 50vw"
+        alt="{{ product_card_product.featured_media.alt | default: product_card_product.title | escape }}"
+        loading="lazy"
+        width="480"
+        height="640"
+      >
+    {%- else -%}
+      {{ 'product-apparel-1' | placeholder_svg_tag: 'bb-wishlist-card__placeholder' }}
+    {%- endif -%}
+  </a>
+  <div class="bb-wishlist-card__body">
+    <a href="{{ product_card_product.url }}" class="bb-wishlist-card__title">{{ product_card_product.title | escape }}</a>
+    {%- if settings.enable_wishlist -%}
+      <wishlist-button
+        class="bb-wishlist-card__remove delete-item-button"
+        data-text="Remove"
+        data-text-active="Remove"
+        data-id="{{ product_card_product.id }}"
+        aria-label="{{ 'wishlist.product.wishlist-remove' | t }}"
+      >Remove</wishlist-button>
+    {%- endif -%}
+    <div class="bb-wishlist-card__price">
+      {%- render 'price', product: product_card_product, price_class: 'bb-wishlist-card__price-inner', show_compare_at_price: false -%}
+    </div>
+  </div>
+</div>

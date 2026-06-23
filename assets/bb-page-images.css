@@ -1,0 +1,116 @@
+/**
+ * Bikini Booth — editorial page image slots (match Page Photos mockup proportions).
+ * Loaded on bb-page-modern templates via theme.liquid.
+ */
+
+/* --- Contact: 50/50 split, portrait storefront (~4:5 crop in left column) --- */
+.bb-contact-hero {
+  align-items: stretch;
+  min-height: auto;
+}
+
+.bb-contact-hero__image {
+  min-height: 16rem;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 990px) {
+  .bb-contact-hero {
+    min-height: 31.25rem;
+    max-height: 33.75rem;
+  }
+
+  .bb-contact-hero__image {
+    min-height: 100%;
+  }
+}
+
+/* Find Us gallery: wide landscape tiles (mockup horizontal row) */
+@media (min-width: 990px) {
+  .bb-contact-store__img {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+/* --- Content pages (FAQ, Privacy, Terms): wide hero band + left card --- */
+.bb-content-hero,
+.bb-store-reviews-hero {
+  min-height: 18.75rem;
+  max-height: 21.25rem;
+  background-size: cover;
+  background-position: center 38%;
+  background-repeat: no-repeat;
+}
+
+.bb-content-hero__inner,
+.bb-store-reviews-hero__inner {
+  min-height: 18.75rem;
+  max-height: 21.25rem;
+  padding: 2rem 1.5rem;
+}
+
+.bb-content-hero__card,
+.bb-store-reviews-hero__card {
+  max-width: 23rem;
+}
+
+/* --- Shipping: short wide hero + panoramic CTA (full bleed; height via min-height only) --- */
+.bb-shipping-hero {
+  width: 100%;
+  max-width: 100%;
+  min-height: clamp(12rem, 18vw, 13.75rem);
+  max-height: none;
+  aspect-ratio: unset;
+  background-size: cover;
+  background-position: center 42%;
+  background-repeat: no-repeat;
+}
+
+.bb-shipping-cta {
+  width: 100%;
+  max-width: 100%;
+  min-height: clamp(14rem, 22vw, 16.25rem);
+  max-height: none;
+  aspect-ratio: unset;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 989px) {
+  .bb-contact-hero__image {
+    min-height: 17.5rem;
+    aspect-ratio: 16 / 10;
+  }
+
+  .bb-contact-hero__image img {
+    object-position: center 35%;
+  }
+
+  .bb-content-hero,
+  .bb-content-hero__inner {
+    min-height: 14rem;
+    max-height: none;
+  }
+}
+
+@media (max-width: 749px) {
+  .bb-content-hero,
+  .bb-content-hero__inner {
+    min-height: 13rem;
+  }
+
+  .bb-shipping-hero {
+    min-height: 16.5rem;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
+  .bb-shipping-cta {
+    min-height: 18rem;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+}

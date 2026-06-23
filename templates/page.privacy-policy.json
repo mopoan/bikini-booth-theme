@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "main": {
+      "type": "bb-content-page",
+      "blocks": {
+        "p1": { "type": "section", "settings": { "heading": "Overview", "body": "<p>This Privacy Policy explains how Bikini Booth collects, uses, and protects your personal information when you visit our website, shop online, or visit our stores.</p>" }},
+        "p2": { "type": "section", "settings": { "heading": "Information We Collect", "body": "<p>We may collect information you provide directly, such as your name, email address, shipping address, phone number, and payment details when you place an order or contact us.</p><p>We also collect technical data such as IP address, browser type, and browsing behaviour through cookies and similar technologies.</p>" }},
+        "p3": { "type": "section", "settings": { "heading": "Order & Contact Details", "body": "<p>Order information is used to process purchases, arrange delivery, handle returns, and provide customer support. Contact details allow us to respond to enquiries and send service-related communications.</p>" }},
+        "p4": { "type": "section", "settings": { "heading": "How We Use Your Information", "body": "<p>We use personal information to fulfil orders, improve our website and services, prevent fraud, comply with legal obligations, and communicate with you about your account or purchases.</p>" }},
+        "p5": { "type": "section", "settings": { "heading": "Marketing Communications", "body": "<p>With your consent, we may send promotional emails about new arrivals, offers, and events. You can unsubscribe at any time using the link in our emails or by contacting us.</p>" }},
+        "p6": { "type": "section", "settings": { "heading": "Cookies & Analytics", "body": "<p>We use cookies and analytics tools to understand how visitors use our site, remember preferences, and improve performance. You can manage cookie preferences through your browser settings.</p>" }},
+        "p7": { "type": "section", "settings": { "heading": "Sharing with Service Providers", "body": "<p>We share data with trusted partners who help us operate our business, such as payment processors, shipping carriers, email platforms, and website hosts. They may only use data as needed to perform services for us.</p>" }},
+        "p8": { "type": "section", "settings": { "heading": "International Transfers", "body": "<p>As we operate from Thailand and ship internationally, your information may be processed in countries other than your own. We take steps to ensure appropriate safeguards are in place.</p>" }},
+        "p9": { "type": "section", "settings": { "heading": "Data Retention", "body": "<p>We retain personal information only as long as necessary for the purposes described in this policy, including legal, accounting, and reporting requirements.</p>" }},
+        "p10": { "type": "section", "settings": { "heading": "Security", "body": "<p>We implement reasonable technical and organisational measures to protect your information. No method of transmission over the internet is completely secure, but we work to safeguard your data.</p>" }},
+        "p11": { "type": "section", "settings": { "heading": "Your Rights", "body": "<p>Depending on your location, you may have rights to access, correct, delete, or restrict use of your personal information. Contact us to exercise these rights.</p>" }},
+        "p12": { "type": "section", "settings": { "heading": "Third-Party Links", "body": "<p>Our website may contain links to third-party sites. We are not responsible for their privacy practices and encourage you to review their policies.</p>" }},
+        "p13": { "type": "section", "settings": { "heading": "Children's Privacy", "body": "<p>Our services are not directed at children under 16, and we do not knowingly collect personal information from children.</p>" }},
+        "p14": { "type": "section", "settings": { "heading": "Updates to This Policy", "body": "<p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated date.</p>" }},
+        "p15": { "type": "section", "settings": { "heading": "Contact Us", "body": "<p>If you have questions about this Privacy Policy or how we handle your data, please <a href=\"/pages/contact\">contact us</a>.</p>" }}
+      },
+      "block_order": ["p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11","p12","p13","p14","p15"],
+      "settings": {
+        "hero_image": "shopify://shop_images/bb_phuket_polished.png",
+        "hero_eyebrow": "Welcome to Bikini Booth",
+        "hero_title": "Privacy Policy",
+        "hero_date": "Last updated: 20 May 2026",
+        "hero_intro": "<p>We respect your privacy and are committed to protecting the personal information you share with us. This policy explains how we collect, use, and safeguard your information.</p>",
+        "main_lead": "Your privacy is important to us. Please read this Privacy Policy carefully to understand how we handle your personal information.",
+        "cta_label": "CONTACT US",
+        "cta_link": "shopify://pages/contact"
+      }
+    }
+  },
+  "order": ["main"]
+}

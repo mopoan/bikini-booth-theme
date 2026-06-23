@@ -1,0 +1,77 @@
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'bb-wishlist-page.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'bb-wishlist-page.js' | asset_url }}" defer="defer"></script>
+
+{%- assign data_settings = 'tropic' -%}
+
+<div class="bb-wishlist-page">
+  <wishlist-page
+    id="theme-section-{{ section.id }}"
+    class="display-block"
+    data-view="wishlist_tropic"
+    data-settings="{{ data_settings }}"
+  >
+    <div class="wishlist-content">
+      <div class="bb-wishlist-hero">
+        <div class="bb-wishlist-hero__palm bb-wishlist-hero__palm--left" aria-hidden="true"></div>
+        <div class="bb-wishlist-hero__palm bb-wishlist-hero__palm--right" aria-hidden="true"></div>
+        <div class="bb-wishlist-hero__inner page-width">
+          <h1 class="bb-wishlist-hero__title">{{ section.settings.heading | default: 'Your Wishlist' | escape }}</h1>
+          <p class="bb-wishlist-hero__subtitle">{{ section.settings.subheading | default: "Pieces you've saved for your next escape." | escape }}</p>
+          {%- render 'bb-star-divider' -%}
+          <span class="bb-wishlist-hero__pill">
+            <svg class="bb-wishlist-hero__pill-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2c-2 4-6 6-6 10a4 4 0 0 0 8 0c0-4-4-6-8-10z" fill="currentColor"/>
+              <path d="M12 2v3M10 4.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span data-bb-wishlist-count>0</span> {{ section.settings.count_suffix | default: 'ITEMS SAVED' | escape }}
+          </span>
+        </div>
+      </div>
+
+      <div class="bb-wishlist-toolbar page-width">
+        <span class="bb-wishlist-toolbar__count" data-bb-wishlist-count-label>0 items saved</span>
+        <label class="bb-wishlist-toolbar__sort">
+          Sort by:
+          <select data-bb-wishlist-sort aria-label="Sort wishlist">
+            <option value="recent">Recently Added</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="bb-wishlist-body page-width">
+        <div class="bb-wishlist-empty" data-bb-wishlist-empty>
+          <p class="bb-wishlist-empty__eyebrow">{{ section.settings.empty_heading | default: 'Your wishlist is empty' | escape }}</p>
+          <p class="bb-wishlist-empty__text">{{ section.settings.empty_text | default: 'Save pieces you love and find them here anytime.' | escape }}</p>
+          <a href="{% if section.settings.cta_link != blank %}{{ section.settings.cta_link }}{% else %}{{ routes.all_products_collection_url }}{% endif %}" class="bb-wishlist-cta__btn">{{ section.settings.empty_button | default: 'CONTINUE SHOPPING' | escape }}</a>
+        </div>
+        <div class="bb-wishlist-grid wishlist-ajax-content"></div>
+      </div>
+    </div>
+  </wishlist-page>
+
+  <div class="page-width">
+    {% render 'bb-wishlist-escape-cta', section: section %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "BB Wishlist Page",
+  "tag": "section",
+  "class": "bb-wishlist-page-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your Wishlist" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Pieces you've saved for your next escape." },
+    { "type": "text", "id": "count_suffix", "label": "Count pill suffix", "default": "ITEMS SAVED" },
+    { "type": "textarea", "id": "cta_text", "label": "Bottom banner text", "default": "Ready to make it yours? Add your favorites to the bag or continue exploring." },
+    { "type": "url", "id": "cta_link", "label": "Continue shopping link" },
+    { "type": "text", "id": "cta_button", "label": "Continue shopping label", "default": "CONTINUE SHOPPING" },
+    { "type": "text", "id": "empty_heading", "label": "Empty heading", "default": "Your wishlist is empty" },
+    { "type": "textarea", "id": "empty_text", "label": "Empty text", "default": "Save pieces you love and find them here anytime." },
+    { "type": "text", "id": "empty_button", "label": "Empty button", "default": "CONTINUE SHOPPING" }
+  ],
+  "presets": [{ "name": "BB Wishlist Page" }]
+}
+{% endschema %}

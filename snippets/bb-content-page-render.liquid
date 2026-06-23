@@ -1,0 +1,191 @@
+{%- liquid
+  assign bb_cp_preset = blank
+  if content_section.blocks.size == 0
+    if page.handle == 'privacy' or page.handle == 'privacy-policy'
+      assign bb_cp_preset = 'privacy'
+    elsif page.handle == 'terms-and-conditions' or page.handle == 'terms'
+      assign bb_cp_preset = 'terms'
+    endif
+  endif
+
+  assign bb_cp_hero_eyebrow = content_section.settings.hero_eyebrow
+  assign bb_cp_hero_title = content_section.settings.hero_title
+  assign bb_cp_hero_date = content_section.settings.hero_date
+  assign bb_cp_hero_intro = content_section.settings.hero_intro
+  assign bb_cp_main_lead = content_section.settings.main_lead
+  assign bb_cp_cta_label = content_section.settings.cta_label
+  assign bb_cp_cta_link = content_section.settings.cta_link
+  assign bb_cp_hero_image = content_section.settings.hero_image
+
+  if bb_cp_preset == 'privacy'
+    if bb_cp_hero_title == blank
+      assign bb_cp_hero_title = 'Privacy Policy'
+    endif
+    if bb_cp_hero_date == blank
+      assign bb_cp_hero_date = 'Last updated: 20 May 2026'
+    endif
+    if bb_cp_hero_intro == blank
+      assign bb_cp_hero_intro = '<p>We respect your privacy and are committed to protecting the personal information you share with us. This policy explains how we collect, use, and safeguard your information.</p>'
+    endif
+    if bb_cp_main_lead == blank
+      assign bb_cp_main_lead = 'Your privacy is important to us. Please read this Privacy Policy carefully to understand how we handle your personal information.'
+    endif
+  elsif bb_cp_preset == 'terms'
+    if bb_cp_hero_title == blank
+      assign bb_cp_hero_title = 'Terms & Conditions'
+    endif
+    if bb_cp_hero_date == blank
+      assign bb_cp_hero_date = 'Last updated: 20 May 2026'
+    endif
+    if bb_cp_hero_intro == blank
+      assign bb_cp_hero_intro = '<p>Welcome to Bikini Booth. These Terms &amp; Conditions set out the rules for using our website and purchasing our products. Please read them carefully.</p>'
+    endif
+    if bb_cp_main_lead == blank
+      assign bb_cp_main_lead = 'By accessing our website or placing an order with us, you agree to the terms below. Please read them carefully.'
+    endif
+  endif
+
+  if bb_cp_hero_eyebrow == blank
+    assign bb_cp_hero_eyebrow = 'Welcome to Bikini Booth'
+  endif
+  if bb_cp_cta_label == blank
+    assign bb_cp_cta_label = 'CONTACT US'
+  endif
+  if bb_cp_cta_link == blank
+    if pages.contact != blank
+      assign bb_cp_cta_link = pages.contact.url
+    else
+      assign bb_cp_cta_link = '/pages/contact'
+    endif
+  endif
+-%}
+
+<div class="bb-content-page" id="bb-content-page-{{ content_section.id }}">
+  <div
+    class="bb-content-hero"
+    {% if bb_cp_hero_image != blank %}
+      style="background-image: url('{{ bb_cp_hero_image | image_url: width: 1800 }}');"
+    {% endif %}
+  >
+    <div class="bb-content-hero__overlay" aria-hidden="true"></div>
+    <div class="bb-content-hero__inner page-width">
+      <div class="bb-content-hero__card">
+        <p class="bb-content-hero__eyebrow">{{ bb_cp_hero_eyebrow | escape }}</p>
+        {%- if bb_cp_hero_title != blank -%}
+          <h1 class="bb-content-hero__title">{{ bb_cp_hero_title | escape }}</h1>
+        {%- endif -%}
+        {%- if bb_cp_hero_date != blank -%}
+          <p class="bb-content-hero__date">{{ bb_cp_hero_date | escape }}</p>
+        {%- endif -%}
+        {%- if bb_cp_hero_intro != blank -%}
+          <div class="bb-content-hero__intro">{{ bb_cp_hero_intro }}</div>
+        {%- endif -%}
+        {%- render 'bb-star-divider' -%}
+      </div>
+    </div>
+  </div>
+
+  <div class="bb-content-body page-width">
+    <nav class="bb-content-mobile-nav" aria-label="On this page">
+      <p class="bb-content-mobile-nav__head">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        On this page
+      </p>
+      <ol class="bb-content-mobile-nav__grid">
+        {%- if bb_cp_preset != blank -%}
+          {%- render 'bb-content-page-static', preset: bb_cp_preset, context: 'nav-mobile' -%}
+        {%- else -%}
+          {%- for block in content_section.blocks -%}
+            {%- if block.settings.heading != blank -%}
+              <li>
+                <a href="#bb-accordion-{{ block.id }}">{{ forloop.index }}. {{ block.settings.heading | strip_html | escape }}</a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </ol>
+    </nav>
+
+    {%- if bb_cp_main_lead != blank -%}
+      <p class="bb-content-mobile-lead">{{ bb_cp_main_lead | escape }}</p>
+    {%- endif -%}
+
+    <div class="bb-content-body__grid">
+      <aside class="bb-content-sidebar">
+        <p class="bb-content-sidebar__label">On this page</p>
+        <div class="bb-content-sidebar__nav-box">
+          <ol class="bb-content-sidebar__nav">
+            {%- if bb_cp_preset != blank -%}
+              {%- render 'bb-content-page-static', preset: bb_cp_preset, context: 'nav-desktop' -%}
+            {%- else -%}
+              {%- for block in content_section.blocks -%}
+                {%- if block.settings.heading != blank -%}
+                  <li>
+                    <a href="#bb-section-{{ block.id }}">{{ forloop.index }}. {{ block.settings.heading | strip_html | escape }}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </ol>
+        </div>
+        <div class="bb-content-sidebar__cta">
+          {%- render 'bb-seashell-cta', label: bb_cp_cta_label, url: bb_cp_cta_link, section: content_section -%}
+        </div>
+      </aside>
+
+      <div class="bb-content-main">
+        {%- if bb_cp_main_lead != blank -%}
+          <p class="bb-content-main__lead">{{ bb_cp_main_lead | escape }}</p>
+        {%- endif -%}
+
+        {%- if bb_cp_preset != blank -%}
+          {%- render 'bb-content-page-static', preset: bb_cp_preset, context: 'main' -%}
+        {%- else -%}
+          {%- for block in content_section.blocks -%}
+            <section
+              id="bb-section-{{ block.id }}"
+              class="bb-content-section"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.heading != blank -%}
+                <h2 class="bb-content-section__heading">{{ forloop.index }}. {{ block.settings.heading | escape }}</h2>
+              {%- endif -%}
+              {%- if block.settings.body != blank -%}
+                <div class="bb-content-section__body">{{ block.settings.body }}</div>
+              {%- endif -%}
+            </section>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="bb-content-accordion" role="region" aria-label="Page sections">
+      {%- if bb_cp_preset != blank -%}
+        {%- render 'bb-content-page-static', preset: bb_cp_preset, context: 'accordion' -%}
+      {%- else -%}
+        {%- for block in content_section.blocks -%}
+          <div id="bb-accordion-{{ block.id }}" class="bb-content-accordion__item">
+            <button
+              type="button"
+              class="bb-content-accordion__trigger"
+              aria-expanded="false"
+              aria-controls="bb-accordion-panel-{{ block.id }}"
+            >
+              <span class="bb-content-accordion__title">{{ forloop.index }}. {{ block.settings.heading | escape }}</span>
+              <span class="bb-content-accordion__icon" aria-hidden="true">+</span>
+            </button>
+            <div id="bb-accordion-panel-{{ block.id }}" class="bb-content-accordion__panel">
+              {%- if block.settings.body != blank -%}
+                <div class="bb-content-section__body">{{ block.settings.body }}</div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    <div class="bb-content-mobile-cta">
+      {%- render 'bb-seashell-cta', label: bb_cp_cta_label, url: bb_cp_cta_link, layout: 'bar', section: content_section -%}
+    </div>
+  </div>
+</div>

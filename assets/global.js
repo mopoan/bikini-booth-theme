@@ -2936,14 +2936,28 @@ class wishlistPage extends HTMLElement {
   init(e){
     let isbutton_remove = e&&e.detail.target.className.indexOf('delete-item-button')>-1;
     const existingData = localStorage.getItem('productDataWishlist');
+    const isTropic = this.getAttribute('data-view') === 'wishlist_tropic';
     if (existingData) {
-      this.empty.classList.add('hide');
+      if (this.empty) this.empty.classList.add('hide');
       !isbutton_remove&&this.createpage();
-      this.main.classList.remove('hide');
+      if (this.main) this.main.classList.remove('hide');
+      if (isTropic) {
+        const inlineEmpty = this.querySelector('[data-bb-wishlist-empty]');
+        if (inlineEmpty) inlineEmpty.classList.add('hide');
+      }
     }
     else{
-      this.empty.classList.remove('hide');
-      this.main.classList.add('hide');
+      if (isTropic) {
+        if (this.empty) this.empty.classList.add('hide');
+        if (this.main) this.main.classList.remove('hide');
+        const inlineEmpty = this.querySelector('[data-bb-wishlist-empty]');
+        if (inlineEmpty) inlineEmpty.classList.remove('hide');
+        const grid = this.querySelector('.wishlist-ajax-content');
+        if (grid) grid.innerHTML = '';
+      } else {
+        if (this.empty) this.empty.classList.remove('hide');
+        if (this.main) this.main.classList.add('hide');
+      }
     }
   }
   createpage(){
@@ -2961,7 +2975,7 @@ class wishlistPage extends HTMLElement {
   }
   load(handle){
     var _this = this;
-    fetch(`${window.routes.all_products_collection_url}?view=wishlist_ajax&sort_by=${handle+this.settings}`)
+    fetch(`${window.routes.all_products_collection_url}?view=${this.getAttribute('data-view') || 'wishlist_ajax'}&sort_by=${handle+this.settings}`)
       .then((response) => response.text())
       .then((responseText) => {
         _this.querySelector('.wishlist-ajax-content').innerHTML = responseText;

@@ -1,10 +1,11 @@
 {{ 'bb-shipping-returns.css' | asset_url | stylesheet_tag }}
+{{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
 
 <div class="bb-shipping-page" id="bb-shipping-{{ section.id }}">
   <div
     class="bb-shipping-hero"
     {% if section.settings.hero_image != blank %}
-      style="background-image: url('{{ section.settings.hero_image | image_url: width: 2400 }}');"
+      style="background-image: url('{{ section.settings.hero_image | image_url: width: 1600 }}');"
     {% endif %}
   >
     <div class="bb-shipping-hero__overlay" aria-hidden="true"></div>
@@ -46,7 +47,8 @@
     {%- endfor -%}
   </div>
 
-  <div class="bb-shipping-details">
+  <div class="bb-shipping-details-wrap">
+    <div class="bb-shipping-details page-width">
     <div class="bb-shipping-details__col">
       {%- if section.settings.shipping_title != blank -%}
         <h2 class="bb-shipping-details__title">{{ section.settings.shipping_title | escape }}</h2>
@@ -77,12 +79,13 @@
         {%- endfor -%}
       </ul>
     </div>
+    </div>
   </div>
 
   <div
     class="bb-shipping-cta"
     {% if section.settings.cta_image != blank %}
-      style="background-image: url('{{ section.settings.cta_image | image_url: width: 2400 }}');"
+      style="background-image: url('{{ section.settings.cta_image | image_url: width: 1800 }}');"
     {% endif %}
   >
     <div class="bb-shipping-cta__overlay" aria-hidden="true"></div>

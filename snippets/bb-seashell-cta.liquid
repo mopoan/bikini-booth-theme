@@ -1,0 +1,49 @@
+{%- liquid
+  assign bb_cta_label = label | default: 'CONTACT US'
+  assign bb_cta_url = url
+  if bb_cta_url == blank
+    if pages.contact != blank
+      assign bb_cta_url = pages.contact.url
+    else
+      assign bb_cta_url = '/pages/contact'
+    endif
+  endif
+  assign bb_cta_layout = layout | default: 'box'
+
+  assign bb_shell_icon = icon
+  if bb_shell_icon == blank and section != blank and section.settings.cta_shell_icon != blank
+    assign bb_shell_icon = section.settings.cta_shell_icon
+  endif
+  if bb_shell_icon == blank and settings.bb_content_shell_icon != blank
+    assign bb_shell_icon = settings.bb_content_shell_icon
+  endif
+  assign bb_shell_default_url = 'https://cdn.shopify.com/s/files/1/0692/4022/5894/files/bb-shell.svg?v=1782080018'
+-%}
+<div class="bb-seashell-cta bb-seashell-cta--{{ bb_cta_layout }}">
+  <span class="bb-seashell-cta__icon" aria-hidden="true">
+    {%- if bb_shell_icon != blank -%}
+      <img
+        src="{{ bb_shell_icon | image_url: width: 120 }}"
+        alt=""
+        width="48"
+        height="48"
+        loading="lazy"
+        class="bb-seashell-cta__icon-img"
+      >
+    {%- else -%}
+      <img
+        src="{{ bb_shell_default_url }}"
+        alt=""
+        width="48"
+        height="48"
+        loading="lazy"
+        class="bb-seashell-cta__icon-img"
+      >
+    {%- endif -%}
+  </span>
+  <div class="bb-seashell-cta__copy">
+    <p class="bb-seashell-cta__eyebrow">Questions?</p>
+    <p class="bb-seashell-cta__text">We're here to help.</p>
+  </div>
+  <a class="bb-seashell-cta__btn" href="{{ bb_cta_url | escape }}">{{ bb_cta_label | escape }}</a>
+</div>

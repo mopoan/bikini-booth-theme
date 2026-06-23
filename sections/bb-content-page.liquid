@@ -1,0 +1,89 @@
+{{ 'bb-content-page.css' | asset_url | stylesheet_tag }}
+{{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'bb-content-page.js' | asset_url }}" defer="defer"></script>
+
+{%- render 'bb-content-page-render', content_section: section -%}
+
+{% schema %}
+{
+  "name": "BB Content Page",
+  "tag": "section",
+  "class": "bb-content-page-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero eyebrow",
+      "default": "Welcome to Bikini Booth"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title"
+    },
+    {
+      "type": "text",
+      "id": "hero_date",
+      "label": "Last updated",
+      "default": "Last updated: 20 May 2026"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_intro",
+      "label": "Hero intro"
+    },
+    {
+      "type": "textarea",
+      "id": "main_lead",
+      "label": "Main lead sentence"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Contact CTA label",
+      "default": "CONTACT US"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Contact CTA link"
+    },
+    {
+      "type": "image_picker",
+      "id": "cta_shell_icon",
+      "label": "Sidebar shell icon",
+      "info": "Optional. Overrides Theme settings → Content pages shell icon on this page."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "section",
+      "name": "Content section",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Section heading"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>Add section content here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB Content Page"
+    }
+  ]
+}
+{% endschema %}

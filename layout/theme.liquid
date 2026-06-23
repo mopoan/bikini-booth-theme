@@ -283,7 +283,7 @@
     </script>
   </head>
 
-  <body class="bb-root{% if template.directory == 'customers' %} bb-customer-pages{% endif %} template-{{ template.name }}{% if template.name == 'page' and template.suffix == 'wishlist' %} bb-wishlist-page{% endif %}{% if template.name == 'collection' or template.name == 'search' %} bb-collection-tropic{% endif %}{% if template.name == 'page' and template.suffix == 'contact-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' %} bb-contact-tropic{% endif %}{% if template.name == 'page' and template.suffix == 'about-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'about-us' or template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' %} bb-page-modern{% endif %}{% if template.name == 'page' and template.suffix == 'faqs' or template.name == 'page' and page.handle == 'faqs' or template.name == 'page' and page.handle == 'faq' %} bb-faq-page bb-page-modern{% endif %}{% if settings.system_icon_thickness == "-thin.svg" %} icons-are-thin{% endif %}"{% if request.design_mode %} data-supportcode="{{ settings.supportcode }}"{% endif %}>
+  <body class="bb-root{% if template.directory == 'customers' %} bb-customer-pages{% endif %} template-{{ template.name }}{% if template.name == 'page' and template.suffix == 'wishlist' %} bb-wishlist-page{% endif %}{% if template.name == 'page' and template.suffix == 'wish-list' or template.name == 'page' and page.handle == 'wish-list' %} bb-wishlist-page{% endif %}{% if template.name == 'collection' or template.name == 'search' %} bb-collection-tropic{% endif %}{% if template.name == 'page' and template.suffix == 'contact-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' %} bb-contact-tropic{% endif %}{% if template.name == 'page' and template.suffix == 'about-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and template.suffix == 'faqs' or template.name == 'page' and template.suffix == 'privacy' or template.name == 'page' and template.suffix == 'privacy-policy' or template.name == 'page' and template.suffix == 'terms-and-conditions' or template.name == 'page' and template.suffix == 'terms' or template.name == 'page' and template.suffix == 'shipping-returns' or template.name == 'page' and template.suffix == 'store-reviews' or template.name == 'page' and template.suffix == 'wishlist' or template.name == 'page' and page.handle == 'about-us' or template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' or template.name == 'page' and page.handle == 'faqs' or template.name == 'page' and page.handle == 'faq' or template.name == 'page' and page.handle == 'privacy' or template.name == 'page' and page.handle == 'privacy-policy' or template.name == 'page' and page.handle == 'terms-and-conditions' or template.name == 'page' and page.handle == 'terms' or template.name == 'page' and page.handle == 'shipping-returns' or template.name == 'page' and page.handle == 'store-reviews' %} bb-page-modern{% endif %}{% if settings.system_icon_thickness == "-thin.svg" %} icons-are-thin{% endif %}"{% if request.design_mode %} data-supportcode="{{ settings.supportcode }}"{% endif %}>
     {%- comment -%}
       Index: component-fixed-header.css (injected with the header) forces transparent desktop chrome until sticky; bb-root overrides
       live in that asset so they load after head. Inline styles below only adjust which logo variant shows first paint.
@@ -339,6 +339,10 @@
           endif
           unless template.suffix != blank
             if page.handle == 'contact' or page.handle == 'contact-us'
+              comment
+                Contact page still on Default page — render bb-contact-page stack (split hero + Find Us).
+                Assign Theme template contact on the page for direct section editing in the theme editor.
+              endcomment
               assign bb_inject_contact_stack = true
             endif
           endunless
@@ -462,16 +466,10 @@
     {%- endif -%}
     {{ 'bb-product-card-brand.css' | asset_url | stylesheet_tag }}
     {{ 'bb-footer-universal.css' | asset_url | stylesheet_tag }}
-    {%- if template.name == 'page' and template.suffix == 'about-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'about-us' or template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' -%}
+    {%- if template.name == 'page' and template.suffix == 'about-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and template.suffix == 'faqs' or template.name == 'page' and template.suffix == 'privacy' or template.name == 'page' and template.suffix == 'privacy-policy' or template.name == 'page' and template.suffix == 'terms-and-conditions' or template.name == 'page' and template.suffix == 'terms' or template.name == 'page' and template.suffix == 'shipping-returns' or template.name == 'page' and template.suffix == 'wishlist' or template.name == 'page' and page.handle == 'about-us' or template.name == 'page' and page.handle == 'about' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' or template.name == 'page' and page.handle == 'faqs' or template.name == 'page' and page.handle == 'faq' or template.name == 'page' and page.handle == 'privacy' or template.name == 'page' and page.handle == 'privacy-policy' or template.name == 'page' and page.handle == 'terms-and-conditions' or template.name == 'page' and page.handle == 'terms' or template.name == 'page' and page.handle == 'shipping-returns' -%}
       {{ 'bb-subframe-homepage.css' | asset_url | stylesheet_tag }}
       {{ 'bikini-booth-homepage-modern.css' | asset_url | stylesheet_tag }}
       {{ 'bb-pages-modern.css' | asset_url | stylesheet_tag }}
-    {%- endif -%}
-    {%- if template.name == 'page' and template.suffix == 'contact-us' or template.name == 'page' and template.suffix == 'contact' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'contact-us' -%}
-      {{ 'bb-contact-tropic.css' | asset_url | stylesheet_tag }}
-    {%- endif -%}
-    {%- if template.name == 'page' and template.suffix == 'faqs' or template.name == 'page' and page.handle == 'faqs' or template.name == 'page' and page.handle == 'faq' -%}
-      {{ 'bb-faq-page.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
     {{ 'bb-brand-ui-overrides.css' | asset_url | stylesheet_tag }}
   </body>

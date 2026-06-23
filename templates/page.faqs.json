@@ -1,133 +1,105 @@
 {
   "sections": {
-    "faq_hero": {
-      "type": "bb-hero",
-      "name": "FAQ hero",
-      "settings": {
-        "image": "shopify://shop_images/bb_phuket_polished.png",
-        "fallback_asset": "bb-hero-main.jpg",
-        "eyebrow": "FAQ's",
-        "heading": "Let's answer some questions",
-        "subheading": "<p>Find answers about our collection, sizing, shipping, returns, and customer care.</p>",
-        "button_label": "",
-        "button_link": "",
-        "content_horizontal": "center",
-        "content_vertical": "center",
-        "overlay_opacity": 55,
-        "desktop_min_height": 480,
-        "mobile_min_height": 360,
-        "eyebrow_font_size": 11,
-        "heading_font_size": 44,
-        "heading_font_size_mobile": 30,
-        "subheading_font_size": 16,
-        "eyebrow_color": "#4ac6be",
-        "heading_color": "#ffffff",
-        "subheading_color": "#ffffff"
-      }
-    },
-    "accordion_faq": {
-      "type": "accordion",
+    "main": {
+      "type": "bb-content-page",
       "blocks": {
-        "text_BdHH4c": {
-          "type": "text",
+        "s1": {
+          "type": "section",
           "settings": {
-            "heading_text": "Frequently asked question",
-            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
-            "button_name": "Button",
-            "url": ""
+            "heading": "Sizing",
+            "body": "<p>Our swimwear runs true to size. If you are between sizes, we recommend sizing up for comfort. Each product page includes detailed measurements — compare your bust, waist, and hip to find your best fit.</p><p>For personalised sizing advice, contact our team before you order.</p>"
           }
         },
-        "text_8MfzQW": {
-          "type": "text",
+        "s2": {
+          "type": "section",
           "settings": {
-            "heading_text": "Frequently asked question",
-            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
-            "button_name": "Button",
-            "url": ""
+            "heading": "Product Availability",
+            "body": "<p>We release new collections throughout the year. Popular styles and colours can sell out quickly, especially during peak season.</p><p>If an item is out of stock online, it may still be available in one of our stores. Contact us and we will check for you.</p>"
           }
         },
-        "text_gbhApD": {
-          "type": "text",
+        "s3": {
+          "type": "section",
           "settings": {
-            "heading_text": "Frequently asked question",
-            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
-            "button_name": "Button",
-            "url": ""
+            "heading": "Orders",
+            "body": "<p>Once your order is placed, you will receive a confirmation email with your order number and details. Please review your order carefully — if you notice an error, contact us as soon as possible.</p><p>We begin processing orders promptly. Changes or cancellations may not be possible once fulfilment has started.</p>"
           }
         },
-        "text_XDmkJ9": {
-          "type": "text",
-          "disabled": true,
+        "s4": {
+          "type": "section",
           "settings": {
-            "heading_text": "Frequently asked question",
-            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
-            "button_name": "Button",
-            "url": ""
+            "heading": "Payment Methods",
+            "body": "<p>We accept major credit and debit cards, PayPal, and other payment methods shown at checkout. All transactions are processed securely.</p><p>Your card will be charged when your order is placed. For pre-order items, payment may be captured at the time of purchase or when the item ships, as stated on the product page.</p>"
           }
         },
-        "text_jmRzyU": {
-          "type": "text",
-          "disabled": true,
+        "s5": {
+          "type": "section",
           "settings": {
-            "heading_text": "Frequently asked question",
-            "description": "<p>Use this text to answer questions in as much detail as possible for your customers.</p>",
-            "button_name": "Button",
-            "url": ""
+            "heading": "Shipping",
+            "body": "<p>We ship worldwide from Thailand. Free shipping applies to qualifying orders. Domestic and international delivery times vary by destination and carrier.</p><p>For full shipping rates, carriers, and dispatch times, visit our <a href=\"/pages/shipping-returns\">Shipping &amp; Returns</a> page.</p>"
+          }
+        },
+        "s6": {
+          "type": "section",
+          "settings": {
+            "heading": "Tracking My Order",
+            "body": "<p>When your order ships, you will receive an email with tracking information. Use the link provided to follow your parcel with the carrier.</p><p>If you have not received tracking within the expected dispatch window, contact us with your order number and we will assist you.</p>"
+          }
+        },
+        "s7": {
+          "type": "section",
+          "settings": {
+            "heading": "Returns & Exchanges",
+            "body": "<p>Eligible unworn items in original condition may be returned within 30 days of delivery. Hygiene liners and tags must remain attached.</p><p>Sale items are final sale unless required by law. See our <a href=\"/pages/shipping-returns\">Shipping &amp; Returns</a> page for the full policy.</p>"
+          }
+        },
+        "s8": {
+          "type": "section",
+          "settings": {
+            "heading": "Swimwear Care",
+            "body": "<p>Rinse swimwear in cold water after wear, especially after contact with chlorine, salt water, or sunscreen. Hand wash with mild detergent and lay flat to dry in the shade.</p><p>Avoid wringing, tumble drying, and rough surfaces that can snag delicate fabrics.</p>"
+          }
+        },
+        "s9": {
+          "type": "section",
+          "settings": {
+            "heading": "In-Store Shopping",
+            "body": "<p>Visit us in Phuket, Koh Samui, or Koh Phangan for the full Bikini Booth experience. Our teams can help with sizing, styling, and in-store availability.</p><p>Store hours and locations are listed on our <a href=\"/pages/contact#find-us\">Contact</a> page.</p>"
+          }
+        },
+        "s10": {
+          "type": "section",
+          "settings": {
+            "heading": "Gift Cards",
+            "body": "<p>Gift cards are available online and in store. They are delivered by email and can be redeemed at checkout on bikinibooth.com.</p><p>Gift cards cannot be exchanged for cash and are non-refundable except where required by law.</p>"
+          }
+        },
+        "s11": {
+          "type": "section",
+          "settings": {
+            "heading": "Promotions",
+            "body": "<p>Promotional codes must be entered at checkout and cannot be applied retroactively. Only one code may be used per order unless stated otherwise.</p><p>Promotions cannot be combined with other offers unless explicitly permitted. We reserve the right to modify or end promotions at any time.</p>"
+          }
+        },
+        "s12": {
+          "type": "section",
+          "settings": {
+            "heading": "Contact Us",
+            "body": "<p>Still have questions? Our customer care team is happy to help with orders, sizing, store visits, and anything else you need.</p><p>Reach us via our <a href=\"/pages/contact\">Contact</a> page — we aim to respond as quickly as possible.</p>"
           }
         }
       },
-      "block_order": ["text_BdHH4c", "text_8MfzQW", "text_gbhApD", "text_XDmkJ9", "text_jmRzyU"],
-      "name": "t:names.accordion",
+      "block_order": ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "s12"],
       "settings": {
-        "show_all_text_in_admin": false,
-        "open_first_item_by_default": true,
-        "main_subheading": "",
-        "main_heading": "",
-        "main_desc": "",
-        "heading_aligment": "text-center",
-        "top_spacing": "medium",
-        "width": "default",
-        "show_image": "hide",
-        "image_hover": "default",
-        "image_ratio": "auto",
-        "align_content": "center",
-        "row_reverse": false,
-        "text_content_width": 50,
-        "text_content_padding": 40,
-        "disable_accordion": false,
-        "show_lines": false,
-        "lines_width": "fullwidth",
-        "background": "hide",
-        "color_background": "rgba(0,0,0,0)",
-        "gradient": "",
-        "image_overlay_opacity": 0,
-        "image_overlay_color": "rgba(0,0,0,0)",
-        "image_overlay_opacity_mobile": 0,
-        "image_overlay_color_mobile": "rgba(0,0,0,0)",
-        "show_parallax": false,
-        "imagealign": "center",
-        "imagesize": "cover",
-        "background_width": "fullwidth",
-        "background_spacing": "normal",
-        "remove_bottom_spacing": false,
-        "color_base": "rgba(0,0,0,0)",
-        "color_accent": "#4ac6be",
-        "color_lines": "rgba(10, 46, 46, 0.12)",
-        "show_button_bg": false,
-        "color_button": "rgba(0,0,0,0)",
-        "color_button_gradient": "",
-        "color_button_border": "rgba(0,0,0,0)",
-        "color_button_text": "rgba(0,0,0,0)",
-        "show_button_bg_hover": false,
-        "color_button_hover": "rgba(0,0,0,0)",
-        "color_button_gradient_hover": "",
-        "color_button_border_hover": "rgba(0,0,0,0)",
-        "color_button_text_hover": "rgba(0,0,0,0)",
-        "show_shadow_button": false,
-        "color_shadow_button": "rgba(0,0,0,0)",
-        "color_shadow_hover_button": "rgba(0,0,0,0)"
+        "hero_image": "shopify://shop_images/bb_phuket_polished.png",
+        "hero_eyebrow": "Welcome to Bikini Booth",
+        "hero_title": "Frequently Asked Questions",
+        "hero_date": "Last updated: 20 May 2026",
+        "hero_intro": "<p>Find quick answers about orders, sizing, shipping, returns, and caring for your Bikini Booth pieces. We want your shopping experience to feel smooth and easy.</p>",
+        "main_lead": "Need a little help? Here are answers to the questions we hear most often. If you still need assistance, our team is happy to help.",
+        "cta_label": "CONTACT US",
+        "cta_link": "shopify://pages/contact"
       }
     }
   },
-  "order": ["faq_hero", "accordion_faq"]
+  "order": ["main"]
 }

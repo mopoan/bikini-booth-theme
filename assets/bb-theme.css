@@ -10,7 +10,26 @@
     --bb-brand-dark: #0c1a6c;
     --bb-text-on-dark: #ffffff;
     --bb-radius-button: 30px;
-    /* Primary UI font stack: bb-futura-fonts.css (Futura LT Pro) */
+    /* Editorial / marketing page tokens */
+    --bb-page-cream: #fdf9f0;
+    --bb-page-cream-band: #fcf9f2;
+    --bb-page-nav-bg: #f5f0e8;
+    --bb-page-cta-bg: #e6f4f4;
+    --bb-page-accent: #4ac6be;
+    --bb-page-accent-hover: #3db0a8;
+    --bb-page-ink: #0a2e2e;
+    --bb-page-body: #545454;
+    --bb-page-heading: #111111;
+    --bb-page-serif: "Cormorant Garamond", Garamond, Georgia, "Times New Roman", serif;
+    --bb-page-sans: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    --bb-page-btn-radius: 4px;
+    /* Editorial image slots (see bb-page-images.css) */
+    --bb-img-hero-wide: 4.75 / 1;
+    --bb-img-hero-content-h: 21.25rem;
+    --bb-img-contact-split-h: 33.75rem;
+    --bb-img-store-gallery: 3 / 2;
+    --bb-img-shipping-cta: 3.25 / 1;
+    --bb-img-product-card: 3 / 4;
   }
 
   .bb-root {

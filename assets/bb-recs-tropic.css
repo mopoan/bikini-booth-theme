@@ -186,26 +186,28 @@
 }
 
 /* ── Slider controls ───────────────────────────────────────────────────────── */
-/* Round teal-outline buttons. The chevron is absolutely centered so the theme's
-   own button/icon styling can't push it off-center. */
+/* Nav arrows: centered below the cards, flanking the dots (normal flow) */
 .bb-recs-tropic .custom-swiper-button-prev,
 .bb-recs-tropic .custom-swiper-button-next {
-  position: relative;
+  position: static;
   flex: none;
   width: 46px;
   height: 46px;
   margin: 0;
   padding: 0;
+  line-height: 0;
   border-radius: 50%;
   background: transparent !important;
   border: 1.5px solid rgba(73, 198, 190, 0.6) !important;
   box-shadow: none !important;
   color: var(--bb-teal);
-  display: inline-block !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
-/* Kill any theme pseudo-element arrow that could sit alongside our chevron */
+/* Strip any theme pseudo-elements that create a second ring */
 .bb-recs-tropic .custom-swiper-button-prev::before,
 .bb-recs-tropic .custom-swiper-button-prev::after,
 .bb-recs-tropic .custom-swiper-button-next::before,
@@ -215,14 +217,9 @@
   background: rgba(73, 198, 190, 0.12) !important;
   border-color: var(--bb-teal) !important;
 }
-/* Chevron pinned to the exact centre of the button */
 .bb-recs-tropic .custom-swiper-button-prev svg,
 .bb-recs-tropic .custom-swiper-button-next svg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0;
+  display: block;
   width: 17px;
   height: 17px;
   fill: none;
@@ -231,9 +228,11 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Hide any default swiper nav that could double up with the custom buttons */
 .bb-recs-tropic .swiper-button-prev,
 .bb-recs-tropic .swiper-button-next { display: none !important; }
-/* Nav row: prev | dots | next, centered below the cards */
+
+/* Bottom bar: prev | dots | next, centered below the cards */
 .bb-recs-tropic .swiper-control-container {
   display: flex;
   align-items: center;

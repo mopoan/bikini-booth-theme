@@ -1,0 +1,97 @@
+{
+  "sections": {
+    "main": {
+      "type": "bb-store-reviews-page",
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "The team in Phuket helped me find the perfect fit. Beautiful fabrics and such a calm, welcoming store.",
+            "author": "Sarah L.",
+            "initials": "SL",
+            "avatar_color": "#0a2e2e",
+            "meta": "Verified customer · 2 weeks ago",
+            "store": "Phuket"
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "Fisherman's Village store is stunning. I left with two sets and already want to go back on my next trip.",
+            "author": "Emma M.",
+            "initials": "EM",
+            "avatar_color": "#0d9488",
+            "meta": "Verified customer · 1 month ago",
+            "store": "Koh Samui"
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "Finally found swimwear that actually supports and flatters. The one piece is so well constructed.",
+            "author": "Jessica R.",
+            "initials": "JR",
+            "avatar_color": "#8b7355",
+            "meta": "Verified customer · 3 weeks ago",
+            "store": "Online"
+          }
+        },
+        "r4": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "Such a lovely experience in Koh Phangan. Helpful styling advice and pieces I still wear every holiday.",
+            "author": "Amara K.",
+            "initials": "AK",
+            "avatar_color": "#6b3a3a",
+            "meta": "Verified customer · 1 month ago",
+            "store": "Koh Phangan"
+          }
+        },
+        "r5": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "The resort sarong is a dream. Fabric feels luxurious and the palm print is even better in person.",
+            "author": "Lucy P.",
+            "initials": "LP",
+            "avatar_color": "#1e5654",
+            "meta": "Verified customer · 5 weeks ago",
+            "store": "Phuket"
+          }
+        },
+        "r6": {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "quote": "Quick delivery and the bikini fit exactly as described. Will order again before my next beach trip.",
+            "author": "Hannah W.",
+            "initials": "HW",
+            "avatar_color": "#4a6fa5",
+            "meta": "Verified customer · 6 weeks ago",
+            "store": "Online"
+          }
+        }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5", "r6"],
+      "settings": {
+        "hero_image": "shopify://shop_images/bb_phuket_polished.png",
+        "hero_eyebrow": "Welcome to Bikini Booth",
+        "hero_title": "Store Reviews",
+        "hero_intro": "<p>Real feedback from customers who have visited our stores and shopped with us online. We are proud of the experience we create in Phuket, Koh Samui, and Koh Phangan.</p>",
+        "rating_value": "4.9",
+        "rating_blurb": "Based on reviews across our stores",
+        "summary_text": "Every review helps us refine fit, fabric, and the in-store experience. Thank you to everyone who has shared their Bikini Booth moment with us.",
+        "external_reviews_url": "",
+        "external_reviews_label": "Read all reviews on Google",
+        "main_lead": "A selection of recent customer reviews from our island stores and online shoppers.",
+        "cta_label": "FIND OUR STORES",
+        "cta_link": "/pages/contact#find-us"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -3,19 +3,13 @@
  * Editorial canvas + spacing aligned with homepage Subframe sections.
  */
 .bb-root.bb-page-modern.template-page #MainContent {
-  background: #ffffff !important;
+  background: var(--bb-page-cream, #fdf9f0) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .bb-root.bb-page-modern.template-page #MainContent .content-for-layout {
-  background: #ffffff !important;
-}
-
-/* Contact + modern: page canvas matches form band (overrides white above) */
-.bb-root.bb-page-modern.bb-contact-tropic.template-page #MainContent,
-.bb-root.bb-page-modern.bb-contact-tropic.template-page #MainContent .content-for-layout {
-  background: #fdfaf5 !important;
+  background: var(--bb-page-cream, #fdf9f0) !important;
 }
 
 /* Contain full-bleed sections to the same readable width as index */

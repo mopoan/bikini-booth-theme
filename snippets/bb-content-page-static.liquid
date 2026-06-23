@@ -1,0 +1,72 @@
+{%- comment -%}
+  Fallback content when Privacy/Terms pages still use the default page template.
+  preset: 'privacy' | 'terms'
+{%- endcomment -%}
+
+{%- if preset == 'privacy' -%}
+  {%- assign bb_static_sections = "Overview|Information We Collect|Order & Contact Details|How We Use Your Information|Marketing Communications|Cookies & Analytics|Sharing with Service Providers|International Transfers|Data Retention|Security|Your Rights|Third-Party Links|Children's Privacy|Updates to This Policy|Contact Us" | split: "|" -%}
+  {%- capture bb_static_bodies -%}
+    <p>This Privacy Policy explains how Bikini Booth collects, uses, and protects your personal information when you visit our website, shop online, or visit our stores.</p>|||
+    <p>We may collect information you provide directly, such as your name, email address, shipping address, phone number, and payment details when you place an order or contact us.</p><p>We also collect technical data such as IP address, browser type, and browsing behaviour through cookies and similar technologies.</p>|||
+    <p>Order information is used to process purchases, arrange delivery, handle returns, and provide customer support. Contact details allow us to respond to enquiries and send service-related communications.</p>|||
+    <p>We use personal information to fulfil orders, improve our website and services, prevent fraud, comply with legal obligations, and communicate with you about your account or purchases.</p>|||
+    <p>With your consent, we may send promotional emails about new arrivals, offers, and events. You can unsubscribe at any time using the link in our emails or by contacting us.</p>|||
+    <p>We use cookies and analytics tools to understand how visitors use our site, remember preferences, and improve performance. You can manage cookie preferences through your browser settings.</p>|||
+    <p>We share data with trusted partners who help us operate our business, such as payment processors, shipping carriers, email platforms, and website hosts. They may only use data as needed to perform services for us.</p>|||
+    <p>As we operate from Thailand and ship internationally, your information may be processed in countries other than your own. We take steps to ensure appropriate safeguards are in place.</p>|||
+    <p>We retain personal information only as long as necessary for the purposes described in this policy, including legal, accounting, and reporting requirements.</p>|||
+    <p>We implement reasonable technical and organisational measures to protect your information. No method of transmission over the internet is completely secure, but we work to safeguard your data.</p>|||
+    <p>Depending on your location, you may have rights to access, correct, delete, or restrict use of your personal information. Contact us to exercise these rights.</p>|||
+    <p>Our website may contain links to third-party sites. We are not responsible for their privacy practices and encourage you to review their policies.</p>|||
+    <p>Our services are not directed at children under 16, and we do not knowingly collect personal information from children.</p>|||
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated date.</p>|||
+    <p>If you have questions about this Privacy Policy or how we handle your data, please <a href="/pages/contact">contact us</a>.</p>
+  {%- endcapture -%}
+{%- elsif preset == 'terms' -%}
+  {%- assign bb_static_sections = "About Us|Our Products|Pricing & Payments|Orders|Shipping|Returns & Exchanges|In-Store Purchases|Intellectual Property|Liability|Use of Our Website|Privacy|Governing Law|Updates to These Terms|Contact Us" | split: "|" -%}
+  {%- capture bb_static_bodies -%}
+    <p>Bikini Booth is a swimwear and resortwear brand designed in Thailand, inspired by sun, sea, and endless escapes. These Terms &amp; Conditions govern your use of our website and purchase of our products.</p>|||
+    <p>We strive to display products and colours as accurately as possible. Minor variations may occur due to photography, screen settings, or manufacturing. Product descriptions and prices are subject to change without notice.</p>|||
+    <p>All prices are shown in the currency selected at checkout unless stated otherwise. Payment must be received in full before orders are dispatched. We reserve the right to refuse or cancel orders in cases of pricing errors or suspected fraud.</p>|||
+    <p>Placing an order constitutes an offer to purchase. We will confirm acceptance by sending an order confirmation email. We may decline orders due to stock availability, errors, or other legitimate reasons.</p>|||
+    <p>Shipping terms, costs, and delivery estimates are described on our <a href="/pages/shipping-returns">Shipping &amp; Returns</a> page. Risk of loss passes to you upon delivery to the carrier unless otherwise required by law.</p>|||
+    <p>Returns and exchanges are subject to our returns policy. Items must be unworn, unwashed, and in original condition with tags and hygiene liners attached. Sale items may be final sale.</p>|||
+    <p>Purchases made in our physical stores are subject to these terms where applicable, along with any in-store policies communicated at the time of purchase.</p>|||
+    <p>All content on this website — including logos, images, text, and designs — is owned by or licensed to Bikini Booth and protected by intellectual property laws. You may not reproduce or use our content without permission.</p>|||
+    <p>To the fullest extent permitted by law, Bikini Booth is not liable for indirect, incidental, or consequential damages arising from use of our website or products. Our liability is limited to the amount you paid for the relevant product or service.</p>|||
+    <p>You agree not to misuse our website, attempt unauthorised access, interfere with security, or use our services for unlawful purposes. We may suspend access if these terms are violated.</p>|||
+    <p>Your use of our website is also governed by our <a href="/pages/privacy">Privacy Policy</a>, which explains how we collect and use personal information.</p>|||
+    <p>These terms are governed by the laws of Thailand, without regard to conflict of law principles. Disputes shall be subject to the exclusive jurisdiction of the courts of Thailand, unless mandatory consumer laws provide otherwise.</p>|||
+    <p>We may revise these Terms &amp; Conditions at any time. Updated terms will be posted on this page with a revised date. Continued use of the website after changes constitutes acceptance.</p>|||
+    <p>Questions about these terms? Please <a href="/pages/contact">contact us</a> and we will be happy to help.</p>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- assign bb_static_body_list = bb_static_bodies | split: '|||' -%}
+
+{%- for heading in bb_static_sections -%}
+  {%- assign bb_static_index = forloop.index -%}
+  {%- assign bb_static_id = preset | append: '-' | append: bb_static_index -%}
+  {%- assign bb_static_body = bb_static_body_list[forloop.index0] -%}
+
+  {%- if context == 'nav-mobile' -%}
+    <li><a href="#bb-accordion-{{ bb_static_id }}">{{ bb_static_index }}. {{ heading | escape }}</a></li>
+  {%- elsif context == 'nav-desktop' -%}
+    <li><a href="#bb-section-{{ bb_static_id }}">{{ bb_static_index }}. {{ heading | escape }}</a></li>
+  {%- elsif context == 'main' -%}
+    <section id="bb-section-{{ bb_static_id }}" class="bb-content-section">
+      <h2 class="bb-content-section__heading">{{ bb_static_index }}. {{ heading | escape }}</h2>
+      <div class="bb-content-section__body">{{ bb_static_body }}</div>
+    </section>
+  {%- elsif context == 'accordion' -%}
+    <div id="bb-accordion-{{ bb_static_id }}" class="bb-content-accordion__item">
+      <button type="button" class="bb-content-accordion__trigger" aria-expanded="false" aria-controls="bb-accordion-panel-{{ bb_static_id }}">
+        <span class="bb-content-accordion__title">{{ bb_static_index }}. {{ heading | escape }}</span>
+        <span class="bb-content-accordion__icon" aria-hidden="true">+</span>
+      </button>
+      <div id="bb-accordion-panel-{{ bb_static_id }}" class="bb-content-accordion__panel">
+        <div class="bb-content-section__body">{{ bb_static_body }}</div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endfor -%}

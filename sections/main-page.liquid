@@ -1,3 +1,16 @@
+{%- liquid
+  assign bb_use_content_page = false
+  if page.handle == 'privacy' or page.handle == 'privacy-policy' or page.handle == 'terms-and-conditions' or page.handle == 'terms'
+    assign bb_use_content_page = true
+  endif
+-%}
+
+{%- if bb_use_content_page -%}
+  {{ 'bb-content-page.css' | asset_url | stylesheet_tag }}
+  {{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'bb-content-page.js' | asset_url }}" defer="defer"></script>
+  {%- render 'bb-content-page-render', content_section: section -%}
+{%- else -%}
 {%- render "section-css-background", section:section -%}
 {%- capture page_width -%}{%- if section.settings.width != "default" %}{{ section.settings.width }}{%- else -%}{{ settings.page_width_main }}{%- endif -%}{%- endcapture -%}
 {%- assign section_settings_background = false -%}{%- if section.settings.background != 'hide' and section.settings.background_width == "content_width" -%}{%- assign section_settings_background = true -%}{%- endif -%}
@@ -17,6 +30,7 @@
     </div>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
