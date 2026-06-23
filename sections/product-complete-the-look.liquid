@@ -11,13 +11,18 @@
 
 {%- assign pair_product = product.metafields.custom.set_pair_product.value -%}
 {%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- render 'bb-paired-piece' -%}
+{%- assign bb_paired_variant = nil -%}
+{%- if bb_paired_product != blank -%}
+  {%- assign bb_paired_variant = bb_paired_product.selected_or_first_available_variant -%}
+{%- endif -%}
 
 {%- assign ctl_img_w  = section.settings.image_width | default: 60 -%}
 {%- assign ctl_img_h  = ctl_img_w | times: 16 | divided_by: 9 -%}
 {%- assign ctl_img_w2 = ctl_img_w | times: 2 -%}
 {%- assign ctl_img_h2 = ctl_img_h | times: 2 -%}
 
-<div class="bb-ctl" id="bb-ctl-{{ section.id }}"{% if pair_product == blank %} hidden{% endif %}>
+<div class="bb-ctl" id="bb-ctl-{{ section.id }}"{% if pair_product == blank and bb_paired_product == blank %} hidden{% endif %}>
 
   <div class="bb-ctl__head">
     <p class="bb-ctl__title">{{ section.settings.heading | default: 'Complete the look' }}</p>
@@ -33,6 +38,7 @@
       data-product-id="{{ product.id }}"
       data-variant-id="{{ current_variant.id }}"
       data-price="{{ current_variant.price }}"
+      data-price-unit="presentment"
       data-slot="current"
     >
       <div class="bb-ctl__check" aria-hidden="true">
@@ -83,26 +89,76 @@
       <div class="bb-ctl__divider-line"></div>
     </div>
 
-    {%- comment -%} Item 2: Matching piece — populated by JS from auto-connect {%- endcomment -%}
-    <div
-      class="bb-ctl__item bb-ctl__item--piece"
-      id="bb-ctl-piece-{{ section.id }}"
-      data-slot="piece"
-      style="display: none;"
-    >
-      <div class="bb-ctl__check" aria-hidden="true">
-        <div class="bb-ctl__chk-off"></div>
+    {%- comment -%} Item 2: Matching piece — Liquid (presentment prices) {%- endcomment -%}
+    {%- if bb_paired_product != blank -%}
+      <div
+        class="bb-ctl__item bb-ctl__item--piece"
+        id="bb-ctl-piece-{{ section.id }}"
+        data-product-id="{{ bb_paired_product.id }}"
+        data-variant-id="{{ bb_paired_variant.id }}"
+        data-price="{{ bb_paired_variant.price }}"
+        data-price-unit="presentment"
+        data-slot="piece"
+      >
+        <div class="bb-ctl__check" aria-hidden="true">
+          <div class="bb-ctl__chk-off"></div>
+        </div>
+        <div class="bb-ctl__img">
+          {%- if bb_paired_product.featured_image != blank -%}
+            <img
+              src="{{ bb_paired_product.featured_image | image_url: width: ctl_img_w2, height: ctl_img_h2, crop: 'center' }}"
+              alt="{{ bb_paired_product.title | escape }}"
+              width="{{ ctl_img_w }}" height="{{ ctl_img_h }}" loading="lazy"
+            >
+          {%- endif -%}
+        </div>
+        <div class="bb-ctl__info">
+          <a class="bb-ctl__name" href="{{ bb_paired_product.url }}">{{ bb_paired_product.title | split: ' in ' | first }}</a>
+          <p class="bb-ctl__piece">{{ bb_paired_product.type | default: bb_paired_piece }}</p>
+          <p class="bb-ctl__price">{{ bb_paired_variant.price | money }}</p>
+        </div>
+        <div class="bb-ctl__right">
+          <div class="bb-ctl__size-wrap">
+            {%- if bb_paired_product.variants.size > 1 -%}
+              <select class="bb-ctl__size-select" aria-label="Size for {{ bb_paired_product.title | escape }}" data-item-id="{{ bb_paired_product.id }}">
+                {%- for variant in bb_paired_product.variants -%}
+                  <option
+                    value="{{ variant.id }}"
+                    data-price="{{ variant.price }}"
+                    data-price-formatted="{{ variant.price | money }}"
+                    {%- if variant == bb_paired_variant %} selected{%- endif -%}
+                    {%- unless variant.available %} disabled{%- endunless -%}
+                  >{{ variant.title }}{%- unless variant.available %} — Sold out{%- endunless -%}</option>
+                {%- endfor -%}
+              </select>
+              <svg class="bb-ctl__size-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            {%- else -%}
+              <span class="bb-ctl__size-only">One-Size</span>
+            {%- endif -%}
+          </div>
+        </div>
       </div>
-      <div class="bb-ctl__img bb-ctl__img--piece" id="bb-ctl-piece-img-{{ section.id }}" style="width:{{ ctl_img_w }}px;height:{{ ctl_img_h }}px;"></div>
-      <div class="bb-ctl__info">
-        <a class="bb-ctl__name" id="bb-ctl-piece-name-{{ section.id }}" href="#">—</a>
-        <p class="bb-ctl__piece" id="bb-ctl-piece-label-{{ section.id }}">—</p>
-        <p class="bb-ctl__price" id="bb-ctl-piece-price-{{ section.id }}">—</p>
+    {%- else -%}
+      <div
+        class="bb-ctl__item bb-ctl__item--piece"
+        id="bb-ctl-piece-{{ section.id }}"
+        data-slot="piece"
+        style="display: none;"
+      >
+        <div class="bb-ctl__check" aria-hidden="true">
+          <div class="bb-ctl__chk-off"></div>
+        </div>
+        <div class="bb-ctl__img bb-ctl__img--piece" id="bb-ctl-piece-img-{{ section.id }}" style="width:{{ ctl_img_w }}px;height:{{ ctl_img_h }}px;"></div>
+        <div class="bb-ctl__info">
+          <a class="bb-ctl__name" id="bb-ctl-piece-name-{{ section.id }}" href="#">—</a>
+          <p class="bb-ctl__piece" id="bb-ctl-piece-label-{{ section.id }}">—</p>
+          <p class="bb-ctl__price" id="bb-ctl-piece-price-{{ section.id }}">—</p>
+        </div>
+        <div class="bb-ctl__right">
+          <div class="bb-ctl__size-wrap" id="bb-ctl-piece-sizes-{{ section.id }}"></div>
+        </div>
       </div>
-      <div class="bb-ctl__right">
-        <div class="bb-ctl__size-wrap" id="bb-ctl-piece-sizes-{{ section.id }}"></div>
-      </div>
-    </div>
+    {%- endif -%}
 
     {%- comment -%} Item 3: Set pair from metafield {%- endcomment -%}
     {%- if pair_product != blank -%}
@@ -112,6 +168,7 @@
         data-product-id="{{ pair_product.id }}"
         data-variant-id="{{ pair_variant.id }}"
         data-price="{{ pair_variant.price }}"
+        data-price-unit="presentment"
         data-slot="pair"
       >
         <div class="bb-ctl__check" aria-hidden="true">
@@ -325,14 +382,16 @@
   var addBtn   = document.getElementById('bb-ctl-add-' + sid);
   var addLabel = addBtn ? addBtn.querySelector('.bb-ctl__add-label') : null;
   var pieceRow = document.getElementById('bb-ctl-piece-' + sid);
+  var pieceRowIsLiquid = {% if bb_paired_product != blank %}true{% else %}false{% endif %};
 
   var imgW  = {{ ctl_img_w }};
   var imgH  = {{ ctl_img_h }};
   var imgW2 = {{ ctl_img_w2 }};
   var imgH2 = {{ ctl_img_h2 }};
 
-  /* ── Populate matching piece row from auto-connect ── */
+  /* ── Populate matching piece row from auto-connect (JS fallback only) ── */
   function handleProductData(data) {
+    if (pieceRowIsLiquid) return;
     if (!data || !data.hasPieceToggle) return;
 
     var oppPiece = data.piece === 'Top' ? 'Bottom' : 'Top';
@@ -360,12 +419,7 @@
         }
         if (labelEl) labelEl.textContent = (p.type && p.type.trim()) ? p.type : oppPiece;
         if (priceEl) {
-          var liq = window.BB && window.BB.pairedPieceLiquid;
-          if (liq && liq.piece === oppPiece && liq.priceFormatted) {
-            priceEl.textContent = liq.priceFormatted;
-          } else {
-            priceEl.textContent = formatMoneyFromCents(p.variants[0].price);
-          }
+          priceEl.textContent = formatShopMoneyFromCents(p.variants[0].price);
         }
 
         /*
@@ -398,7 +452,8 @@
               var opt = document.createElement('option');
               opt.value                  = v.id;
               opt.dataset.price          = v.price;
-              opt.dataset.priceFormatted = formatMoneyFromCents(v.price);
+              opt.dataset.priceUnit      = 'shop';
+              opt.dataset.priceFormatted = formatShopMoneyFromCents(v.price);
               opt.textContent            = v.title + (v.available ? '' : ' — Sold out');
               if (!v.available) opt.disabled = true;
               sel.appendChild(opt);
@@ -414,6 +469,9 @@
               var opt = sel.options[sel.selectedIndex];
               pieceRow.dataset.variantId = opt.value;
               pieceRow.dataset.price     = opt.dataset.price;
+              pieceRow.dataset.priceUnit = opt.dataset.priceUnit || 'shop';
+              var priceEl = pieceRow.querySelector('.bb-ctl__price');
+              if (priceEl) priceEl.textContent = opt.dataset.priceFormatted || '';
               updateTotal();
             });
           } else {
@@ -425,6 +483,7 @@
 
           pieceRow.dataset.variantId = p.variants[0].id;
           pieceRow.dataset.price     = p.variants[0].price;
+          pieceRow.dataset.priceUnit = 'shop';
           pieceRow.dataset.productId = p.id;
         }
 
@@ -447,16 +506,42 @@
     handleProductData(e.detail);
   });
 
-  /* ── Format money from shop-currency cents (/products/{handle}.js) ── */
-  function formatMoneyFromCents(cents) {
-    if (window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
-      return window.BB.formatPresentmentMoney(cents);
+  /* ── Money helpers ── */
+  function formatPresentmentCents(cents) {
+    if (window.BB && typeof window.BB.formatPresentmentCents === 'function') {
+      return window.BB.formatPresentmentCents(cents);
     }
     if (window.BB && typeof window.BB.formatMoney === 'function') {
       var fmt = (window.theme && window.theme.moneyFormat) || (window.BB && window.BB.moneyFormat) || '{{amount}}';
       return window.BB.formatMoney(cents, fmt);
     }
     return String(parseFloat(cents) / 100);
+  }
+
+  function formatShopMoneyFromCents(shopCents) {
+    if (window.BB && typeof window.BB.formatPresentmentMoney === 'function') {
+      return window.BB.formatPresentmentMoney(shopCents);
+    }
+    return formatPresentmentCents(shopCents);
+  }
+
+  function bbCurrencyRate() {
+    var active = window.Shopify && window.Shopify.currency && window.Shopify.currency.active;
+    var shop   = window.BB && window.BB.shopCurrency;
+    if (!active || !shop || active === shop) return 1;
+    return window.Shopify.currency.rate || 1;
+  }
+
+  function itemPresentmentCents(item, sel) {
+    var opt = sel ? sel.options[sel.selectedIndex] : null;
+    var raw = opt
+      ? parseInt(opt.dataset.price || '0', 10)
+      : parseInt(item.dataset.price || '0', 10);
+    var unit = (opt && opt.dataset.priceUnit) || item.dataset.priceUnit || 'presentment';
+    if (unit === 'shop') {
+      return Math.round(raw * bbCurrencyRate());
+    }
+    return raw;
   }
 
   /* ── Size sync: match every item's size <select> to the chosen product size ── */
@@ -485,7 +570,10 @@
 
       sel.value              = matched.value;
       item.dataset.variantId = matched.value;
-      if (matched.dataset.price) item.dataset.price = matched.dataset.price;
+      if (matched.dataset.price) {
+        item.dataset.price     = matched.dataset.price;
+        item.dataset.priceUnit = matched.dataset.priceUnit || item.dataset.priceUnit || 'presentment';
+      }
 
       var priceEl = item.querySelector('.bb-ctl__price');
       if (priceEl && matched.dataset.priceFormatted) {
@@ -508,9 +596,7 @@
     ctl.querySelectorAll('.bb-ctl__item.is-checked').forEach(function (item) {
       var sel       = item.querySelector('.bb-ctl__size-select');
       var variantId = sel ? sel.value : item.dataset.variantId;
-      var price     = sel
-        ? parseInt(sel.options[sel.selectedIndex].dataset.price || '0', 10)
-        : parseInt(item.dataset.price || '0', 10);
+      var price     = itemPresentmentCents(item, sel);
       if (variantId) checked.push({ variantId: variantId, price: price });
     });
     return checked;
@@ -521,7 +607,7 @@
     var items = getCheckedItems();
     var total = 0;
     items.forEach(function (i) { total += i.price; });
-    if (totalEl) totalEl.textContent = total > 0 ? formatMoneyFromCents(total) : '—';
+    if (totalEl) totalEl.textContent = total > 0 ? formatPresentmentCents(total) : '—';
   }
 
   /* ── Row click toggles check ── */
@@ -545,6 +631,7 @@
         var opt = sel.options[sel.selectedIndex];
         item.dataset.variantId = opt.value;
         item.dataset.price     = opt.dataset.price || '0';
+        item.dataset.priceUnit = opt.dataset.priceUnit || item.dataset.priceUnit || 'presentment';
         var priceEl = item.querySelector('.bb-ctl__price');
         if (priceEl) priceEl.textContent = opt.dataset.priceFormatted || '';
         updateTotal();
