@@ -512,11 +512,6 @@ section.bb-subframe-hero--centered-nav .bb-subframe-hero__spacer {
   margin: 0;
 }
 
-/* Reviews block only: keep editorial serif on the main headline (body UI stays Futura) */
-.bb-subframe-reviews .bb-subframe-title {
-  font-family: Georgia, "Times New Roman", Times, serif;
-}
-
 @media (max-width: 749px) {
   .bb-subframe-title {
     font-size: 28px;

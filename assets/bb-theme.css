@@ -20,8 +20,8 @@
     --bb-page-ink: #0a2e2e;
     --bb-page-body: #545454;
     --bb-page-heading: #111111;
-    --bb-page-serif: "Cormorant Garamond", Garamond, Georgia, "Times New Roman", serif;
     --bb-page-sans: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", sans-serif);
+    --bb-page-serif: var(--bb-page-sans);
     --bb-page-btn-radius: 4px;
     /* Editorial image slots (see bb-page-images.css) */
     --bb-img-hero-wide: 4.75 / 1;

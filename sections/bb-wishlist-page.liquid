@@ -1,10 +1,11 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'bb-palm-leaves.css' | asset_url | stylesheet_tag }}
 {{ 'bb-wishlist-page.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'bb-wishlist-page.js' | asset_url }}" defer="defer"></script>
 
 {%- assign data_settings = 'tropic' -%}
 
-{%- assign bb_palm_stem_url = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/plam_-_straight_stem.svg?v=1782336449' -%}
+{%- render 'bb-palm-leaves-assign' -%}
 
 <div class="bb-wishlist-page">
   <wishlist-page
@@ -16,20 +17,20 @@
     <div class="wishlist-content">
       <div class="bb-wishlist-hero">
         <img
-          class="bb-wishlist-hero__palm bb-wishlist-hero__palm--left"
-          src="{{ bb_palm_stem_url }}"
+          class="bb-palm-leaves bb-palm-leaves--shadow bb-wishlist-hero__palm bb-wishlist-hero__palm--left"
+          src="{{ bb_palm_leaves_url }}"
           alt=""
-          width="160"
-          height="224"
+          width="140"
+          height="85"
           loading="lazy"
           aria-hidden="true"
         >
         <img
-          class="bb-wishlist-hero__palm bb-wishlist-hero__palm--right"
-          src="{{ bb_palm_stem_url }}"
+          class="bb-palm-leaves bb-palm-leaves--shadow bb-wishlist-hero__palm bb-wishlist-hero__palm--right"
+          src="{{ bb_palm_leaves_url }}"
           alt=""
-          width="160"
-          height="224"
+          width="140"
+          height="85"
           loading="lazy"
           aria-hidden="true"
         >
@@ -38,15 +39,7 @@
           <p class="bb-wishlist-hero__subtitle">{{ section.settings.subheading | default: "Pieces you've saved for your next escape." | escape }}</p>
           {%- render 'bb-star-divider' -%}
           <span class="bb-wishlist-hero__pill">
-            <img
-              class="bb-wishlist-hero__pill-icon"
-              src="{{ bb_palm_stem_url }}"
-              alt=""
-              width="14"
-              height="20"
-              loading="lazy"
-              aria-hidden="true"
-            >
+            {%- render 'bb-palm-leaf-icon' -%}
             <span data-bb-wishlist-count>0</span> {{ section.settings.count_suffix | default: 'ITEMS SAVED' | escape }}
           </span>
         </div>
@@ -54,15 +47,7 @@
 
       <div class="bb-wishlist-toolbar page-width">
         <span class="bb-wishlist-toolbar__count" data-bb-wishlist-count-label>
-          <img
-            class="bb-wishlist-toolbar__count-icon"
-            src="{{ bb_palm_stem_url }}"
-            alt=""
-            width="14"
-            height="20"
-            loading="lazy"
-            aria-hidden="true"
-          >
+          {%- render 'bb-palm-leaf-icon' -%}
           <span class="bb-wishlist-toolbar__count-text">0 items saved</span>
         </span>
         <label class="bb-wishlist-toolbar__sort">

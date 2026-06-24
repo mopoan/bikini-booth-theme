@@ -1,0 +1,44 @@
+/**
+ * Palm decorations — crop the Shopify frond SVG to the crown only (no trunk).
+ * Source: plam_-_straight_stem.svg (leaves occupy the top ~52% of the artwork).
+ */
+.bb-palm-leaves {
+  display: block;
+  object-fit: cover;
+  object-position: top center;
+  clip-path: inset(0 0 48% 0);
+  pointer-events: none;
+  user-select: none;
+}
+
+.bb-palm-leaves--shadow {
+  opacity: 0.11;
+  filter: blur(5px) brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
+}
+
+.bb-palm-leaves--decor {
+  opacity: 0.15;
+  filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
+}
+
+.bb-palm-leaves--icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  clip-path: inset(0 0 50% 0);
+  opacity: 0.9;
+  filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
+}
+
+.bb-palm-leaf-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--bb-page-accent, #4ac6be);
+}
+
+.bb-palm-leaf-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

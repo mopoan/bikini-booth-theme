@@ -6,8 +6,8 @@
   --bb-cp-cream: var(--bb-page-cream, #fdf9f0);
   --bb-cp-nav-bg: var(--bb-page-cream, #fdf9f0);
   --bb-cp-cta-bg: var(--bb-page-cta-bg, #e6f4f4);
-  --bb-cp-serif: var(--bb-page-serif, "Cormorant Garamond", Garamond, Georgia, serif);
-  --bb-cp-sans: var(--bb-page-sans, var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif));
+  --bb-cp-serif: var(--bb-page-sans);
+  --bb-cp-sans: var(--bb-page-sans);
   background: #fff;
   color: var(--bb-cp-ink);
 }
@@ -43,7 +43,7 @@
   max-width: 23rem;
   padding: 2.25rem 2rem;
   background: #fff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .bb-content-hero__eyebrow {
@@ -440,17 +440,31 @@
   }
 
   .bb-content-page--faqs .bb-content-hero,
-  .bb-content-page--faq .bb-content-hero,
+  .bb-content-page--faq .bb-content-hero {
+    min-height: 16rem;
+    max-height: none;
+    overflow: visible;
+  }
+
   .bb-content-page--faqs .bb-content-hero__inner,
   .bb-content-page--faq .bb-content-hero__inner {
     min-height: 16rem;
-    max-height: 18.5rem;
+    max-height: none;
+    align-items: flex-start;
+    padding-top: calc(var(--header-height, 5.5rem) + 1.25rem);
+    padding-bottom: 2rem;
   }
 
   .bb-content-page--faqs .bb-content-hero__card,
   .bb-content-page--faq .bb-content-hero__card {
     padding-top: 1.35rem;
     padding-bottom: 1.35rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .bb-content-page--faqs .bb-content-body,
+  .bb-content-page--faq .bb-content-body {
+    padding-top: 2.25rem;
   }
 
   .bb-content-page--privacy .bb-content-hero,
@@ -554,6 +568,7 @@
     border-radius: 10px;
     position: relative;
     z-index: 2;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   }
 
   .bb-content-hero__eyebrow,

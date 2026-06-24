@@ -3,8 +3,8 @@
   --bb-sr-ink: var(--bb-page-ink, #0a2e2e);
   --bb-sr-body: var(--bb-page-body, #545454);
   --bb-sr-cream: var(--bb-page-cream, #fdf9f0);
-  --bb-sr-serif: var(--bb-page-serif, "Cormorant Garamond", Garamond, Georgia, serif);
-  --bb-sr-sans: var(--bb-page-sans, var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif));
+  --bb-sr-serif: var(--bb-page-sans);
+  --bb-sr-sans: var(--bb-page-sans);
   --bb-sr-star: #e8a317;
   background: #fff;
   color: var(--bb-sr-body);

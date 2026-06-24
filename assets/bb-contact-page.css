@@ -1,10 +1,12 @@
 .bb-contact-page {
   --bb-contact-accent: var(--bb-page-accent, #4ac6be);
-  --bb-contact-ink: var(--bb-page-heading, #333333);
+  --bb-contact-ink: var(--bb-page-ink, #0a2e2e);
   --bb-contact-muted: var(--bb-page-body, #545454);
   --bb-contact-cream: var(--bb-page-cream, #fdf9f0);
-  --bb-contact-serif: var(--bb-page-serif, "Cormorant Garamond", Garamond, Georgia, serif);
-  --bb-contact-sans: var(--bb-page-sans, var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif));
+  --bb-contact-card: #faf8f4;
+  --bb-contact-field-border: #e3ddd3;
+  --bb-contact-serif: var(--bb-page-sans);
+  --bb-contact-sans: var(--bb-page-sans);
   background: var(--bb-contact-cream);
 }
 
@@ -34,42 +36,37 @@
   justify-content: center;
   padding: 3.5rem 2.75rem;
   background: var(--bb-contact-cream);
-  overflow: hidden;
-}
-
-.bb-contact-form__palm {
-  position: absolute;
-  pointer-events: none;
-  object-fit: contain;
-  opacity: 0.14;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
-}
-
-.bb-contact-form__palm--hero {
-  top: -1.5rem;
-  right: -1.25rem;
-  width: clamp(9rem, 18vw, 13rem);
-  height: auto;
-  transform: rotate(8deg);
-}
-
-.bb-contact-form__palm--submit {
-  position: relative;
-  top: auto;
-  right: auto;
-  flex: 0 0 auto;
-  width: clamp(5.5rem, 10vw, 7.5rem);
-  height: auto;
-  margin-left: 0.35rem;
-  transform: rotate(10deg);
-  opacity: 0.12;
+  overflow: visible;
 }
 
 .bb-contact-form-panel {
+  position: relative;
+  z-index: 2;
   width: 100%;
   max-width: 28rem;
   margin: 0 auto;
   text-align: center;
+}
+
+.bb-contact-form__palm {
+  position: absolute;
+  z-index: 0;
+}
+
+.bb-contact-form__palm--hero {
+  top: 0.5rem;
+  right: 0;
+  width: clamp(8rem, 16vw, 11rem);
+  height: clamp(5rem, 10vw, 7rem);
+  transform: rotate(14deg);
+}
+
+.bb-contact-form__palm--submit {
+  right: -0.25rem;
+  bottom: -0.35rem;
+  width: clamp(4.25rem, 8vw, 5.75rem);
+  height: clamp(2.75rem, 5vw, 3.75rem);
+  transform: rotate(14deg);
 }
 
 .bb-contact-form-panel__title {
@@ -109,7 +106,7 @@
   font-family: var(--bb-contact-sans);
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--bb-contact-muted);
+  color: var(--bb-contact-accent);
 }
 
 .bb-contact-form {
@@ -123,12 +120,13 @@
 .bb-contact-form .field-with-icon .field__input,
 .bb-contact-form .field--comment .field__input {
   min-height: 3rem;
-  border-radius: 6px;
-  border: 1px solid #d8d3c8;
+  border-radius: 8px;
+  border: 1px solid var(--bb-contact-field-border);
   background: #fff;
   color: var(--bb-contact-ink);
   font-family: var(--bb-contact-sans);
   font-size: 0.875rem;
+  box-shadow: none;
 }
 
 .bb-contact-form .field-with-icon .field__input {
@@ -179,23 +177,25 @@
 }
 
 .bb-contact-form__submit-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.25rem;
-  margin-top: 1.25rem;
-  padding-right: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  padding: 0 clamp(3.5rem, 10vw, 5rem) 0 0;
 }
 
 .bb-contact-form__submit {
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 6.5rem;
-  min-height: 2.625rem;
-  padding: 0 1.75rem;
+  min-height: 2.75rem;
+  padding: 0 1.85rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-family: var(--bb-contact-sans);
   font-size: 0.75rem;
   font-weight: 700;
@@ -205,6 +205,7 @@
   background: var(--bb-contact-accent);
   cursor: pointer;
   transition: opacity 0.2s ease;
+  box-shadow: none;
 }
 
 .bb-contact-form__submit:hover {
@@ -302,8 +303,9 @@
   position: relative;
   border-radius: 10px;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--bb-contact-field-border);
+  background: var(--bb-contact-card);
+  box-shadow: none;
 }
 
 .bb-contact-store__img {
@@ -323,7 +325,7 @@
   flex-direction: column;
   flex: 1;
   padding: 1.15rem 1.1rem 1.35rem;
-  background: #fff;
+  background: var(--bb-contact-card);
 }
 
 .bb-contact-store__main {
@@ -347,13 +349,14 @@
 .bb-contact-store__body::after {
   content: "";
   position: absolute;
-  right: 0.35rem;
-  bottom: 0.15rem;
-  width: 4.5rem;
-  height: 4.5rem;
+  right: 0.25rem;
+  bottom: 0.1rem;
+  width: 3.75rem;
+  height: 2.5rem;
   pointer-events: none;
-  opacity: 0.14;
-  background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/plam_-_straight_stem.svg?v=1782336449") center / contain no-repeat;
+  opacity: 0.15;
+  background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/plam_-_straight_stem.svg?v=1782336449") top center / cover no-repeat;
+  clip-path: inset(0 0 48% 0);
   filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
   transform: rotate(12deg);
 }
@@ -422,11 +425,14 @@
 
   .bb-contact-form__submit-wrap {
     justify-content: center;
-    padding-right: 0;
+    padding: 0;
   }
 
   .bb-contact-form__palm--submit {
-    display: none;
+    right: 0.5rem;
+    bottom: -0.15rem;
+    width: 4rem;
+    height: 2.5rem;
   }
 
   .bb-contact-stores__grid {

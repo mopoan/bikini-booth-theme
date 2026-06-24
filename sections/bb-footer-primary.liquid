@@ -566,6 +566,16 @@
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} .bb-footer-currency__field {
     margin: 0;
+    position: relative;
+    overflow: visible;
+  }
+
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} .bb-footer-currency__panel {
+    bottom: 100%;
+    top: auto;
+    left: 0;
+    transform: translateY(-10px);
+    z-index: 30;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} .bb-footer-currency__trigger {
@@ -598,6 +608,7 @@
     max-width: 1280px;
     margin: 1.25rem auto 0;
     padding: 0;
+    overflow: visible;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-copyright {
@@ -622,6 +633,7 @@
     list-style: none;
     font-size: 0.75rem;
     line-height: 1.5;
+    overflow: visible;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} a {

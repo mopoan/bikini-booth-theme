@@ -3,21 +3,36 @@
   Requires product_card_product.
 {%- endcomment -%}
 <div class="bb-wishlist-card product-card" data-item="{{ product_card_product.handle }}">
-  <a href="{{ product_card_product.url }}" class="bb-wishlist-card__media">
-    {%- if product_card_product.featured_media != blank -%}
-      <img
-        src="{{ product_card_product.featured_media | image_url: width: 480 }}"
-        srcset="{{ product_card_product.featured_media | image_url: width: 240 }} 240w, {{ product_card_product.featured_media | image_url: width: 360 }} 360w, {{ product_card_product.featured_media | image_url: width: 480 }} 480w, {{ product_card_product.featured_media | image_url: width: 600 }} 600w"
-        sizes="(min-width: 1200px) 15vw, (min-width: 990px) 20vw, (min-width: 750px) 33vw, 50vw"
-        alt="{{ product_card_product.featured_media.alt | default: product_card_product.title | escape }}"
-        loading="lazy"
-        width="480"
-        height="640"
+  <div class="bb-wishlist-card__media-wrap">
+    <a href="{{ product_card_product.url }}" class="bb-wishlist-card__media">
+      {%- if product_card_product.featured_media != blank -%}
+        <img
+          src="{{ product_card_product.featured_media | image_url: width: 600 }}"
+          srcset="{{ product_card_product.featured_media | image_url: width: 320 }} 320w, {{ product_card_product.featured_media | image_url: width: 480 }} 480w, {{ product_card_product.featured_media | image_url: width: 600 }} 600w, {{ product_card_product.featured_media | image_url: width: 720 }} 720w"
+          sizes="(min-width: 990px) calc((min(1280px, 100vw - 3rem) - 3.75rem) / 4), (min-width: 750px) 30vw, 46vw"
+          alt="{{ product_card_product.featured_media.alt | default: product_card_product.title | escape }}"
+          loading="lazy"
+          width="600"
+          height="1067"
+        >
+      {%- else -%}
+        {{ 'product-apparel-1' | placeholder_svg_tag: 'bb-wishlist-card__placeholder' }}
+      {%- endif -%}
+    </a>
+    {%- if settings.enable_wishlist -%}
+      <wishlist-button
+        class="bb-wishlist-card__heart delete-item-button active"
+        data-text="{{ 'wishlist.product.wishlist-remove' | t }}"
+        data-text-active="{{ 'wishlist.product.wishlist-remove' | t }}"
+        data-id="{{ product_card_product.id }}"
+        data-product-handle="{{ product_card_product.handle }}"
+        aria-label="{{ 'wishlist.product.wishlist-remove' | t }}"
       >
-    {%- else -%}
-      {{ 'product-apparel-1' | placeholder_svg_tag: 'bb-wishlist-card__placeholder' }}
+        {%- render 'icon-wishlist', icon_type: 'normal' -%}
+        {%- render 'icon-wishlist', icon_type: 'added' -%}
+      </wishlist-button>
     {%- endif -%}
-  </a>
+  </div>
   <div class="bb-wishlist-card__body">
     <a href="{{ product_card_product.url }}" class="bb-wishlist-card__title">{{ product_card_product.title | escape }}</a>
     {%- if settings.enable_wishlist -%}
@@ -26,6 +41,7 @@
         data-text="Remove"
         data-text-active="Remove"
         data-id="{{ product_card_product.id }}"
+        data-product-handle="{{ product_card_product.handle }}"
         aria-label="{{ 'wishlist.product.wishlist-remove' | t }}"
       >Remove</wishlist-button>
     {%- endif -%}

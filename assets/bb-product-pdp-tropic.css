@@ -340,7 +340,7 @@
   border: 0;
   background: transparent;
   box-shadow: none;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
   font-size: 13px;
   font-style: italic;
   font-weight: 400;
@@ -540,7 +540,7 @@
   align-items: center;
   gap: 0.35rem;
   margin-top: 0.65rem;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
   font-size: 13px;
   font-style: italic;
   font-weight: 400;
@@ -1305,7 +1305,7 @@
 }
 
 .template-product [data-section-name="product-recently-viewed"].bb-recently-viewed-tropic .section-heading-text {
-  font-family: "Cormorant Garamond", Garamond, Georgia, serif;
+  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
   font-weight: 400;
   font-size: clamp(1.65rem, 3.5vw, 2.1rem);
   letter-spacing: -0.02em;
