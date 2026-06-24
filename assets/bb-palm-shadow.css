@@ -20,38 +20,43 @@
   overflow: hidden;
 }
 
+/* Top-right: anchor stem to corner, fronds fan upward/inward (match mockup) */
 .bb-palm-shadow--contact-tr {
-  top: -0.5rem;
-  right: -2.5rem;
-  width: clamp(8rem, 24vw, 12.5rem);
+  top: 0;
+  right: -1.25rem;
+  width: clamp(7.5rem, 20vw, 10.5rem);
   height: auto;
   opacity: 0.18;
+  object-position: bottom right;
+  transform: scaleY(-1) rotate(10deg);
+  transform-origin: bottom right;
 }
 
+/* Top-left mirror (desktop); shifts beside fields on mobile */
 .bb-palm-shadow--contact-bl {
-  display: none;
-  top: 42%;
-  left: -3rem;
-  width: clamp(6rem, 20vw, 9rem);
+  top: 0;
+  left: -1.25rem;
+  width: clamp(6.5rem, 16vw, 8.5rem);
   height: auto;
-  opacity: 0.12;
-  transform: rotate(-8deg);
+  opacity: 0.14;
+  object-position: bottom left;
+  transform: scaleY(-1) scaleX(-1) rotate(10deg);
+  transform-origin: bottom left;
 }
 
 @media (max-width: 989px) {
   .bb-palm-shadow--contact-tr {
-    top: 0;
-    right: -1.75rem;
-    width: clamp(7.5rem, 34vw, 10rem);
+    top: 0.25rem;
+    right: -1rem;
+    width: clamp(7rem, 30vw, 9.5rem);
     opacity: 0.16;
   }
 
   .bb-palm-shadow--contact-bl {
-    display: block;
-    top: 36%;
-    left: -2.25rem;
-    width: clamp(5.5rem, 28vw, 7.5rem);
-    opacity: 0.1;
+    top: 34%;
+    left: -1.75rem;
+    width: clamp(5.5rem, 26vw, 7.25rem);
+    opacity: 0.12;
   }
 }
 
@@ -66,6 +71,8 @@
   pointer-events: none;
   opacity: 0.2;
   background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leaf.png?v=1782343118") right bottom / contain no-repeat;
+  transform: scaleY(-1);
+  transform-origin: bottom right;
 }
 
 /* --- Wishlist hero --- */
@@ -134,7 +141,9 @@
   width: clamp(9rem, 16vw, 13rem);
   height: auto;
   opacity: 0.38;
-  transform: rotate(-6deg);
+  object-position: bottom left;
+  transform: scaleY(-1) rotate(-8deg);
+  transform-origin: bottom left;
 }
 
 @media (max-width: 749px) {

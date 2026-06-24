@@ -61,7 +61,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  margin: 0.75rem 0 1.25rem;
+  margin: 0.75rem 0 1.5rem;
   color: var(--bb-contact-accent);
 }
 
@@ -80,11 +80,11 @@
 }
 
 .bb-contact-form-panel__intro {
-  margin: 0 0 1.75rem;
+  margin: 0.75rem 0 1.75rem;
   font-family: var(--bb-contact-sans);
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--bb-contact-accent);
+  color: var(--bb-contact-ink);
 }
 
 .bb-contact-form {
@@ -148,6 +148,19 @@
 .bb-contact-form .field__icon {
   left: 0.85rem;
   color: var(--bb-contact-accent);
+}
+
+.bb-contact-form .field__icon svg path {
+  fill: var(--bb-contact-accent);
+}
+
+.bb-contact-form .field-with-icon:has(.field__input:-webkit-autofill:focus) svg path,
+.bb-contact-form .field-with-icon:has(.field__input:-webkit-autofill:hover) svg path,
+.bb-contact-form .field-with-icon:has(.field__input:-webkit-autofill) svg path,
+.bb-contact-form .field-with-icon:has(.field__input:active) svg path,
+.bb-contact-form .field-with-icon:has(.field__input:focus) svg path,
+.bb-contact-form .field:hover svg path {
+  fill: var(--bb-contact-accent);
 }
 
 .bb-contact-form .field__icon--comment {
