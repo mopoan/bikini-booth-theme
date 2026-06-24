@@ -673,6 +673,25 @@
         "button_label": "Subscribe"
       }
     },
+    "blocks_znyhy7": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f9e42c0_X7zinL": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#49C6BE",
+            "divider_height": 2,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f9e42c0_X7zinL"
+      ],
+      "name": "Divider",
+      "settings": {}
+    },
     "blocks_JTytAp": {
       "type": "_blocks",
       "blocks": {
@@ -802,6 +821,7 @@
     "bb_sf_stores",
     "blocks_LmPmAa",
     "bb_sf_newsletter",
+    "blocks_znyhy7",
     "blocks_JTytAp",
     "blocks_MEPj6U",
     "177721900106975441",
