@@ -643,13 +643,32 @@
         "heading": "Phuket ?? Koh Samui ?? Koh Phangan"
       }
     },
+    "blocks_LmPmAa": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f9e42c0_eVRECC": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#d9d9d9",
+            "divider_height": 1,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f9e42c0_eVRECC"
+      ],
+      "name": "Divider",
+      "settings": {}
+    },
     "bb_sf_newsletter": {
       "type": "bb-sf-newsletter",
       "name": "BB - Newsletter",
       "settings": {
         "show_on_all_pages": false,
-        "heading": "Stay in the loop",
-        "subtext": "Subscribe for new arrivals and exclusive offers.",
+        "heading": "JOIN OUR ESCAPE",
+        "subtext": "Sign up for sun-soaked updates, early access, and special offers.",
         "placeholder": "Your email",
         "button_label": "Subscribe"
       }
@@ -768,25 +787,6 @@
     },
     "1778997588d6c656d9": {
       "type": "_blocks",
-      "settings": {}
-    },
-    "blocks_LmPmAa": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_f9e42c0_eVRECC": {
-          "type": "ai_gen_block_f9e42c0",
-          "settings": {
-            "divider_color": "#D9D9D9",
-            "divider_height": 1,
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_f9e42c0_eVRECC"
-      ],
-      "name": "Divider",
       "settings": {}
     }
   },
