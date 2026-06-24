@@ -23,11 +23,11 @@
     </div>
     <div class="bb-contact-hero__form-wrap">
       <img
-        class="bb-palm-leaves bb-palm-leaves--shadow bb-contact-form__palm bb-contact-form__palm--hero"
+        class="bb-palm-leaves bb-palm-leaves--shadow bb-palm-leaves--corner bb-contact-form__palm bb-contact-form__palm--hero"
         src="{{ bb_palm_leaves_url }}"
         alt=""
-        width="200"
-        height="120"
+        width="120"
+        height="160"
         loading="lazy"
         aria-hidden="true"
       >
@@ -78,9 +78,9 @@
             <div class="field__icon">{{- 'icon-mail' | append: settings.system_icon_thickness | inline_asset_content -}}</div>
           </div>
 
-          <div class="field field-with-icon field--comment">
+          <div class="field field-with-icon field--comment field--text-area">
             <textarea
-              class="field__input"
+              class="field__input text-area"
               id="ContactForm-body-{{ section.id }}"
               name="contact[{{ 'templates.contact.form.comment' | t }}]"
               placeholder="{{ 'templates.contact.form.comment' | t }}"

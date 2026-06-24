@@ -36,7 +36,7 @@
   justify-content: center;
   padding: 3.5rem 2.75rem;
   background: var(--bb-contact-cream);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .bb-contact-form-panel {
@@ -54,19 +54,22 @@
 }
 
 .bb-contact-form__palm--hero {
-  top: 0.5rem;
-  right: 0;
-  width: clamp(8rem, 16vw, 11rem);
-  height: clamp(5rem, 10vw, 7rem);
-  transform: rotate(14deg);
+  top: -1.5rem;
+  right: -2.25rem;
+  width: clamp(5.5rem, 10vw, 7rem);
+  height: auto;
+  max-height: clamp(7rem, 13vw, 9rem);
+  transform: rotate(10deg);
 }
 
 .bb-contact-form__palm--submit {
-  right: -0.25rem;
-  bottom: -0.35rem;
-  width: clamp(4.25rem, 8vw, 5.75rem);
-  height: clamp(2.75rem, 5vw, 3.75rem);
-  transform: rotate(14deg);
+  position: static;
+  flex: 0 0 auto;
+  width: clamp(2.75rem, 5vw, 3.25rem);
+  height: auto;
+  max-height: 2.5rem;
+  margin-left: 0.35rem;
+  transform: rotate(12deg);
 }
 
 .bb-contact-form-panel__title {
@@ -117,6 +120,12 @@
   margin-bottom: 0.85rem;
 }
 
+.bb-contact-form .field--comment {
+  height: auto;
+  min-height: 0;
+  align-items: stretch;
+}
+
 .bb-contact-form .field-with-icon .field__input,
 .bb-contact-form .field--comment .field__input {
   min-height: 3rem;
@@ -133,16 +142,16 @@
   padding-left: 2.75rem;
 }
 
-.bb-contact-form .field--comment.field-with-icon .field__input {
+.bb-contact-form .field--comment.field-with-icon .field__input,
+.bb-contact-form .field--comment .field__input.text-area {
   min-height: 8.5rem;
+  height: auto;
   padding: 0.85rem 1rem 0.85rem 2.75rem;
   resize: vertical;
 }
 
-.bb-contact-form .field--comment .field__input {
-  min-height: 8.5rem;
-  padding: 0.85rem 1rem;
-  resize: vertical;
+.bb-contact-form .field--comment .field__input.text-area {
+  padding-left: 1rem;
 }
 
 .bb-contact-form .field__label {
@@ -177,17 +186,16 @@
 }
 
 .bb-contact-form__submit-wrap {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 1.5rem;
-  padding: 0 clamp(3.5rem, 10vw, 5rem) 0 0;
+  padding: 0;
 }
 
 .bb-contact-form__submit {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -349,16 +357,15 @@
 .bb-contact-store__body::after {
   content: "";
   position: absolute;
-  right: 0.25rem;
-  bottom: 0.1rem;
-  width: 3.75rem;
-  height: 2.5rem;
+  right: 0.15rem;
+  bottom: 0.15rem;
+  width: 3rem;
+  height: 3.5rem;
   pointer-events: none;
-  opacity: 0.15;
-  background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/plam_-_straight_stem.svg?v=1782336449") top center / cover no-repeat;
-  clip-path: inset(0 0 48% 0);
+  opacity: 0.12;
+  background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/plam_-_straight_stem.svg?v=1782336449") right bottom / contain no-repeat;
   filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
-  transform: rotate(12deg);
+  transform: rotate(10deg);
 }
 
 .bb-contact-store__city {
@@ -429,10 +436,9 @@
   }
 
   .bb-contact-form__palm--submit {
-    right: 0.5rem;
-    bottom: -0.15rem;
-    width: 4rem;
-    height: 2.5rem;
+    width: 2.75rem;
+    max-height: 2.25rem;
+    margin-left: 0.25rem;
   }
 
   .bb-contact-stores__grid {

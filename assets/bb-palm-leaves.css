@@ -12,12 +12,22 @@
 }
 
 .bb-palm-leaves--shadow {
-  opacity: 0.11;
-  filter: blur(5px) brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
+  opacity: 0.1;
+  filter: blur(6px) brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
+}
+
+/* Soft corner watermark — show a partial frond, not a zoomed leaf crown */
+.bb-palm-leaves--corner {
+  clip-path: none;
+  object-fit: contain;
+  object-position: top right;
 }
 
 .bb-palm-leaves--decor {
-  opacity: 0.15;
+  clip-path: none;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0.18;
   filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
 }
 
