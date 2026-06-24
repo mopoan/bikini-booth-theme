@@ -18,7 +18,7 @@
 
 .bb-contact-hero__form-wrap {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .bb-contact-hero__palms {
@@ -26,46 +26,31 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  overflow: visible;
+  overflow: hidden;
 }
 
-/* Top-right — large leaf anchored to corner (Contact.png mockup) */
+/* Single top-right leaf — Contact.png mockup (stem in corner, fronds hang inward) */
 .bb-palm-shadow--contact-tr {
-  top: 0;
-  right: 0;
-  width: clamp(9rem, 25vw, 12.5rem);
+  top: -0.15rem;
+  right: -0.35rem;
+  width: clamp(8.5rem, 22vw, 11.5rem);
   height: auto;
-  opacity: 0.17;
-  transform: rotate(22deg);
+  opacity: 0.15;
+  transform: rotate(16deg);
   transform-origin: top right;
 }
 
-/* Top-left mirror */
 .bb-palm-shadow--contact-tl {
-  top: 0.25rem;
-  left: 0;
-  width: clamp(7.5rem, 19vw, 10rem);
-  height: auto;
-  opacity: 0.14;
-  transform: scaleX(-1) rotate(22deg);
-  transform-origin: top left;
+  display: none !important;
 }
 
 @media (max-width: 989px) {
   .bb-palm-shadow--contact-tr {
     top: 0;
     right: -0.25rem;
-    width: clamp(7.5rem, 30vw, 10rem);
-    opacity: 0.16;
-    transform: rotate(18deg);
-  }
-
-  .bb-palm-shadow--contact-tl {
-    top: 0.25rem;
-    left: -0.25rem;
-    width: clamp(6.5rem, 26vw, 8.75rem);
-    opacity: 0.13;
-    transform: scaleX(-1) rotate(18deg);
+    width: clamp(7rem, 28vw, 9.5rem);
+    opacity: 0.14;
+    transform: rotate(14deg);
   }
 }
 

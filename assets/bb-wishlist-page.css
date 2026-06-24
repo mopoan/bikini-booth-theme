@@ -106,14 +106,18 @@
   align-items: center;
   justify-content: center;
   width: 0.875rem;
-  height: 0.875rem;
+  height: 1rem;
   color: var(--bb-wl-accent);
 }
 
-.bb-wishlist-hero__pill .bb-palm-leaf-icon svg {
+.bb-wishlist-hero__pill .bb-palm-leaf-icon img {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0.85;
+  transform: rotate(-18deg);
 }
 
 .bb-wishlist-toolbar__count {
