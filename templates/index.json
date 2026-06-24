@@ -680,7 +680,7 @@
           "type": "ai_gen_block_f9e42c0",
           "settings": {
             "divider_color": "#49C6BE",
-            "divider_height": 2,
+            "divider_height": 3,
             "desktop_width_percent": 100
           },
           "blocks": {}
