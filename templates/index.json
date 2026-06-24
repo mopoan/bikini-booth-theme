@@ -421,7 +421,7 @@
         "grid_tablet": "page-grid-st-3",
         "swipe": true,
         "swipe_edges": false,
-        "desktop_navigation": "dots_arrows",
+        "desktop_navigation": "dots",
         "mobile_navigation": "dots",
         "video_slide_mode": "autoplay_muted",
         "video_overlay_opacity": 30,
@@ -769,6 +769,25 @@
     "1778997588d6c656d9": {
       "type": "_blocks",
       "settings": {}
+    },
+    "blocks_LmPmAa": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f9e42c0_eVRECC": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#D9D9D9",
+            "divider_height": 1,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f9e42c0_eVRECC"
+      ],
+      "name": "Divider",
+      "settings": {}
     }
   },
   "order": [
@@ -787,6 +806,7 @@
     "blocks_tkcFxg",
     "bb_sf_product_scroller_KqQzTx",
     "bb_sf_stores",
+    "blocks_LmPmAa",
     "bb_sf_newsletter",
     "blocks_JTytAp",
     "blocks_MEPj6U",
