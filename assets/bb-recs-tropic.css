@@ -188,8 +188,10 @@
 /* ── Slider controls ───────────────────────────────────────────────────────── */
 /* Nav arrows: centered below the cards, flanking the dots (normal flow) */
 .bb-recs-tropic .custom-swiper-button-prev,
-.bb-recs-tropic .custom-swiper-button-next {
-  position: static;
+.bb-recs-tropic .custom-swiper-button-next,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next {
+  position: static !important;
   flex: none;
   width: 46px;
   height: 46px;
@@ -201,32 +203,57 @@
   border: 1.5px solid rgba(73, 198, 190, 0.6) !important;
   box-shadow: none !important;
   color: var(--bb-teal);
+  opacity: 1 !important;
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
-/* Strip any theme pseudo-elements that create a second ring */
+/* Strip theme pseudo-elements and offset hacks from component-swiper-slider.css */
 .bb-recs-tropic .custom-swiper-button-prev::before,
 .bb-recs-tropic .custom-swiper-button-prev::after,
 .bb-recs-tropic .custom-swiper-button-next::before,
-.bb-recs-tropic .custom-swiper-button-next::after { content: none !important; display: none !important; }
+.bb-recs-tropic .custom-swiper-button-next::after,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev::before,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next::before {
+  content: none !important;
+  display: none !important;
+}
 .bb-recs-tropic .custom-swiper-button-prev:hover,
-.bb-recs-tropic .custom-swiper-button-next:hover {
+.bb-recs-tropic .custom-swiper-button-next:hover,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev:hover,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next:hover {
   background: rgba(73, 198, 190, 0.12) !important;
   border-color: var(--bb-teal) !important;
 }
 .bb-recs-tropic .custom-swiper-button-prev svg,
-.bb-recs-tropic .custom-swiper-button-next svg {
-  display: block;
-  width: 17px;
-  height: 17px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.bb-recs-tropic .custom-swiper-button-next svg,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev svg,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next svg {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+  pointer-events: none;
+}
+.bb-recs-tropic .custom-swiper-button-prev svg path,
+.bb-recs-tropic .custom-swiper-button-next svg path,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev svg path,
+#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next svg path {
+  fill: var(--bb-teal) !important;
+  stroke: none !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  .bb-recs-tropic .custom-swiper-button-prev:hover svg path,
+  .bb-recs-tropic .custom-swiper-button-next:hover svg path,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev:hover svg path,
+  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next:hover svg path {
+    fill: #0a5c56 !important;
+  }
 }
 /* Hide any default swiper nav that could double up with the custom buttons */
 .bb-recs-tropic .swiper-button-prev,

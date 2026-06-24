@@ -17,111 +17,56 @@
 }
 
 .bb-contact-hero__form-wrap {
-  overflow: hidden;
+  position: relative;
+  overflow: visible;
 }
 
-/* Top-right: anchor stem to corner, fronds fan upward/inward (match mockup) */
+.bb-contact-hero__palms {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Top-right — stem in corner, fronds hang inward (Contact.png mockup) */
 .bb-palm-shadow--contact-tr {
-  top: 0;
-  right: -1.25rem;
-  width: clamp(7.5rem, 20vw, 10.5rem);
+  top: -0.35rem;
+  right: -0.5rem;
+  width: clamp(8rem, 23vw, 11.5rem);
   height: auto;
-  opacity: 0.18;
-  object-position: bottom right;
-  transform: scaleY(-1) rotate(10deg);
-  transform-origin: bottom right;
+  opacity: 0.17;
+  transform: rotate(14deg);
+  transform-origin: top right;
 }
 
-/* Top-left mirror (desktop); shifts beside fields on mobile */
-.bb-palm-shadow--contact-bl {
-  top: 0;
-  left: -1.25rem;
-  width: clamp(6.5rem, 16vw, 8.5rem);
+/* Top-left mirror */
+.bb-palm-shadow--contact-tl {
+  top: -0.35rem;
+  left: -0.5rem;
+  width: clamp(7rem, 19vw, 10rem);
   height: auto;
-  opacity: 0.14;
-  object-position: bottom left;
-  transform: scaleY(-1) scaleX(-1) rotate(10deg);
-  transform-origin: bottom left;
+  opacity: 0.15;
+  transform: scaleX(-1) rotate(14deg);
+  transform-origin: top left;
 }
 
 @media (max-width: 989px) {
   .bb-palm-shadow--contact-tr {
-    top: 0.25rem;
-    right: -1rem;
-    width: clamp(7rem, 30vw, 9.5rem);
+    top: 0;
+    right: -0.35rem;
+    width: clamp(7rem, 28vw, 9.5rem);
     opacity: 0.16;
+    transform: rotate(12deg);
   }
 
-  .bb-palm-shadow--contact-bl {
-    top: 34%;
-    left: -1.75rem;
-    width: clamp(5.5rem, 26vw, 7.25rem);
-    opacity: 0.12;
+  .bb-palm-shadow--contact-tl {
+    top: 0;
+    left: -0.35rem;
+    width: clamp(6.25rem, 24vw, 8.5rem);
+    opacity: 0.14;
+    transform: scaleX(-1) rotate(12deg);
   }
-}
-
-/* --- Contact store cards --- */
-.bb-contact-store__body::after {
-  content: "";
-  position: absolute;
-  right: 0.35rem;
-  bottom: 0.35rem;
-  width: 3.25rem;
-  height: 4rem;
-  pointer-events: none;
-  opacity: 0.2;
-  background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leaf.png?v=1782343118") right bottom / contain no-repeat;
-  transform: scaleY(-1);
-  transform-origin: bottom right;
-}
-
-/* --- Wishlist hero --- */
-.bb-wishlist-hero {
-  overflow: hidden;
-}
-
-.bb-palm-shadow--wishlist-tl {
-  top: -0.75rem;
-  left: -2.5rem;
-  width: clamp(7rem, 14vw, 10.5rem);
-  height: auto;
-  opacity: 0.34;
-  transform: rotate(-12deg);
-}
-
-.bb-palm-shadow--wishlist-tr {
-  top: -0.75rem;
-  right: -2.5rem;
-  width: clamp(7rem, 14vw, 10.5rem);
-  height: auto;
-  opacity: 0.34;
-  transform: rotate(12deg) scaleX(-1);
-}
-
-@media (max-width: 749px) {
-  .bb-palm-shadow--wishlist-tl {
-    left: -2rem;
-    width: clamp(5.5rem, 22vw, 7.5rem);
-    opacity: 0.28;
-  }
-
-  .bb-palm-shadow--wishlist-tr {
-    right: -2rem;
-    width: clamp(5.5rem, 22vw, 7.5rem);
-    opacity: 0.28;
-  }
-}
-
-/* --- Wishlist bottom CTA --- */
-.bb-wishlist-cta__shadow {
-  position: absolute;
-  right: -0.5rem;
-  bottom: -0.75rem;
-  width: clamp(4.5rem, 10vw, 6.5rem);
-  height: auto;
-  pointer-events: none;
-  opacity: 0.4;
-  z-index: 0;
 }
 
 /* --- Footer --- */

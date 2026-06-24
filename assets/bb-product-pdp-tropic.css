@@ -1130,40 +1130,7 @@
   margin-top: 1rem;
 }
 
-/* “You may also like”: nav matches wishlist / quick-view chips (bb-product-card-brand.css). */
-.template-product .bb-recs-tropic .custom-swiper-button-prev,
-.template-product .bb-recs-tropic .custom-swiper-button-next,
-#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-prev,
-#MainContent [data-section-name="product-recommendations"].bb-recs-tropic .custom-swiper-button-next {
-  opacity: 1 !important;
-}
-
-.template-product .bb-recs-tropic [class*="custom-swiper-button"]:before,
-#MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"]:before {
-  background: rgba(74, 198, 190, 0.14) !important;
-  background-color: rgba(74, 198, 190, 0.14) !important;
-  box-shadow: 0 0 0 1px rgba(74, 198, 190, 0.9), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  opacity: 1 !important;
-}
-
-.template-product .bb-recs-tropic [class*="custom-swiper-button"] svg path,
-#MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"] svg path {
-  fill: #0a5c56 !important;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .template-product .bb-recs-tropic [class*="custom-swiper-button"]:hover:before,
-  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"]:hover:before {
-    background: rgba(74, 198, 190, 0.28) !important;
-    background-color: rgba(74, 198, 190, 0.28) !important;
-    box-shadow: 0 0 0 1px #4ac6be, 0 2px 10px rgba(0, 0, 0, 0.12) !important;
-  }
-
-  .template-product .bb-recs-tropic [class*="custom-swiper-button"]:hover svg path,
-  #MainContent [data-section-name="product-recommendations"].bb-recs-tropic [class*="custom-swiper-button"]:hover svg path {
-    fill: #063d3a !important;
-  }
-}
+/* Recs nav styling lives in bb-recs-tropic.css — avoid duplicate :before rings here. */
 
 /* Per-card image swiper arrows — same chip language as media buttons */
 .template-product .bb-recs-tropic .product-card .internal-swiper-button-prev,

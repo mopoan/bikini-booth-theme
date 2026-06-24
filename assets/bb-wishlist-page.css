@@ -337,6 +337,17 @@
   overflow: hidden;
 }
 
+.bb-wishlist-cta__shadow {
+  position: absolute;
+  right: -0.5rem;
+  bottom: -0.75rem;
+  width: clamp(4.5rem, 10vw, 6.5rem);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.4;
+  z-index: 0;
+}
+
 .bb-wishlist-cta__copy {
   display: flex;
   align-items: center;

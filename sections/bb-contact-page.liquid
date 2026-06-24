@@ -20,8 +20,10 @@
       {%- endif -%}
     </div>
     <div class="bb-contact-hero__form-wrap">
-      {%- render 'bb-palm-shadow', modifier: 'contact-tr', width: 250, height: 320 -%}
-      {%- render 'bb-palm-shadow', modifier: 'contact-bl', width: 200, height: 260 -%}
+      <div class="bb-contact-hero__palms" aria-hidden="true">
+        {%- render 'bb-palm-shadow', modifier: 'contact-tr', width: 250, height: 320 -%}
+        {%- render 'bb-palm-shadow', modifier: 'contact-tl', width: 220, height: 300 -%}
+      </div>
       <div class="bb-contact-form-panel">
         {%- if section.settings.form_heading != blank -%}
           <h1 class="bb-contact-form-panel__title">{{ section.settings.form_heading | escape }}</h1>

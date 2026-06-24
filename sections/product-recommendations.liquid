@@ -266,9 +266,9 @@
         </div>
       </swiper-slider>
       <div class="swiper-control-container{% if section.settings.heading_aligment == "text-center" %} justify-content-center{% endif %}">
-        <div class="custom-swiper-button-prev{% unless section.settings.desktop_navigation contains "arrows" %} hide-desktop{% endunless %}"><svg class="bb-recs__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6 9 12l6 6"/></svg></div>
+        <div class="custom-swiper-button-prev{% unless section.settings.desktop_navigation contains "arrows" %} hide-desktop{% endunless %}">{{- 'icon-arrow-left' | append: settings.system_icon_thickness | inline_asset_content -}}</div>
         <div class="swiper-pagination{% unless section.settings.desktop_navigation contains "dots" %} hide-desktop{% endunless %}{% unless section.settings.mobile_navigation contains "dots" %} hide-mobile-xl-st{% endunless %}"></div>
-        <div class="custom-swiper-button-next{% unless section.settings.desktop_navigation contains "arrows" %} hide-desktop{% endunless %}"><svg class="bb-recs__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6 15 12l-6 6"/></svg></div>
+        <div class="custom-swiper-button-next{% unless section.settings.desktop_navigation contains "arrows" %} hide-desktop{% endunless %}">{{- 'icon-arrow-right' | append: settings.system_icon_thickness | inline_asset_content -}}</div>
       </div>
       </div>
     </div>

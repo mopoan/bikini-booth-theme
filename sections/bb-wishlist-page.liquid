@@ -1,5 +1,4 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
-{{ 'bb-palm-shadow.css' | asset_url | stylesheet_tag }}
 {{ 'bb-wishlist-page.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'bb-wishlist-page.js' | asset_url }}" defer="defer"></script>
 
@@ -14,8 +13,6 @@
   >
     <div class="wishlist-content">
       <div class="bb-wishlist-hero">
-        {%- render 'bb-palm-shadow', modifier: 'wishlist-tl', width: 220, height: 300 -%}
-        {%- render 'bb-palm-shadow', modifier: 'wishlist-tr', width: 220, height: 300 -%}
         <div class="bb-wishlist-hero__inner page-width">
           <h1 class="bb-wishlist-hero__title">{{ section.settings.heading | default: 'Your Wishlist' | escape }}</h1>
           <p class="bb-wishlist-hero__subtitle">{{ section.settings.subheading | default: "Pieces you've saved for your next escape." | escape }}</p>
