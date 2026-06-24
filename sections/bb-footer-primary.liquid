@@ -559,26 +559,19 @@
     fill: currentColor;
   }
 
-  .ai-footer-{{ ai_gen_id }} .bb-sf-currency-row-{{ ai_gen_id }} {
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0.85rem 0 0.35rem;
-  }
-
-  .ai-footer-{{ ai_gen_id }} .bb-sf-currency-inner-{{ ai_gen_id }} {
-    display: flex;
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} .bb-footer-currency {
+    display: inline-flex;
     align-items: center;
   }
 
-  .ai-footer-{{ ai_gen_id }} .bb-footer-currency__field {
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} .bb-footer-currency__field {
     margin: 0;
   }
 
-  .ai-footer-{{ ai_gen_id }} .bb-footer-currency__trigger {
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} .bb-footer-currency__trigger {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0;
     padding: 0;
     border: none;
     background: transparent;
@@ -586,11 +579,14 @@
     font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
     font-size: 0.75rem;
     letter-spacing: 0.02em;
+    line-height: 1.5;
     cursor: pointer;
   }
 
-  .ai-footer-{{ ai_gen_id }} .bb-footer-currency__trigger:hover {
-    opacity: 0.85;
+  .ai-footer-{{ ai_gen_id }} .bb-sf-policy-links-{{ ai_gen_id }} .bb-footer-currency__trigger:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .ai-footer-{{ ai_gen_id }} .bb-sf-bottom-bar-{{ ai_gen_id }} {
@@ -707,14 +703,6 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-    }
-
-    .ai-footer-{{ ai_gen_id }} .bb-sf-currency-row-{{ ai_gen_id }} {
-      text-align: center;
-    }
-
-    .ai-footer-{{ ai_gen_id }} .bb-sf-currency-inner-{{ ai_gen_id }} {
-      justify-content: center;
     }
 
     .ai-footer-{{ ai_gen_id }} .bb-sf-copyright {
@@ -1061,9 +1049,9 @@
         assign bb_show_contact = true
       endif
     endif
-    assign bb_show_currency = false
+    assign bb_show_currency_inline = false
     if section.settings.show_currency_row and localization.available_countries.size > 1
-      assign bb_show_currency = true
+      assign bb_show_currency_inline = true
     endif
     assign bb_show_policy_links = false
     if section.settings.show_policy_links
@@ -1072,7 +1060,7 @@
       endif
     endif
     assign bb_show_bottom = false
-    if bb_show_contact or bb_show_currency or section.settings.show_copyright_bar or bb_show_policy_links
+    if bb_show_contact or section.settings.show_copyright_bar or bb_show_policy_links or bb_show_currency_inline
       assign bb_show_bottom = true
     endif
   -%}
@@ -1103,21 +1091,8 @@
         </div>
       </div>
     {%- endif -%}
-    {%- if bb_show_currency -%}
-      {%- unless bb_show_contact -%}
-        <hr class="bb-sf-rule" role="presentation">
-      {%- endunless -%}
+    {%- if section.settings.show_copyright_bar or bb_show_policy_links or bb_show_currency_inline -%}
       {%- if bb_show_contact -%}
-        <hr class="bb-sf-rule bb-sf-rule--tight" role="presentation">
-      {%- endif -%}
-      <div class="bb-sf-currency-row-{{ ai_gen_id }}">
-        <div class="bb-sf-currency-inner-{{ ai_gen_id }}">
-          {%- render 'bb-footer-currency-selector' -%}
-        </div>
-      </div>
-    {%- endif -%}
-    {%- if section.settings.show_copyright_bar or bb_show_policy_links -%}
-      {%- if bb_show_contact or bb_show_currency -%}
         <hr class="bb-sf-rule bb-sf-rule--tight" role="presentation">
       {%- else -%}
         <hr class="bb-sf-rule" role="presentation">
@@ -1132,8 +1107,16 @@
             {%- endif -%}
           </p>
         {%- endif -%}
-        {%- if bb_show_policy_links -%}
+        {%- if bb_show_policy_links or bb_show_currency_inline -%}
           <ul class="bb-sf-policy-links-{{ ai_gen_id }}">
+            {%- if bb_show_currency_inline -%}
+              <li class="bb-sf-policy-currency">
+                {%- render 'bb-footer-currency-selector' -%}
+              </li>
+              {%- if bb_show_policy_links -%}
+                <li class="bb-sf-policy-sep" aria-hidden="true">|</li>
+              {%- endif -%}
+            {%- endif -%}
             {%- if bb_footer_privacy_href != blank -%}
               <li><a href="{{ bb_footer_privacy_href | escape }}">{{ section.settings.privacy_label | default: 'Privacy Policy' | escape }}</a></li>
             {%- endif -%}

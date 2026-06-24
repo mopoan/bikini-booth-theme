@@ -60,7 +60,7 @@
   endif
 -%}
 
-<div class="bb-content-page" id="bb-content-page-{{ content_section.id }}">
+<div class="bb-content-page bb-content-page--{{ page.handle | default: 'page' }}" id="bb-content-page-{{ content_section.id }}">
   <div
     class="bb-content-hero"
     {% if bb_cp_hero_image != blank %}

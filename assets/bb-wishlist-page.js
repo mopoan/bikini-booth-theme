@@ -19,7 +19,13 @@
       el.textContent = String(count);
     });
     root.querySelectorAll('[data-bb-wishlist-count-label]').forEach(function (el) {
-      el.textContent = count === 1 ? '1 item saved' : count + ' items saved';
+      var text = count === 1 ? '1 item saved' : count + ' items saved';
+      var textEl = el.querySelector('.bb-wishlist-toolbar__count-text');
+      if (textEl) {
+        textEl.textContent = text;
+      } else {
+        el.textContent = text;
+      }
     });
     var cta = root.querySelector('[data-bb-wishlist-cta]');
     if (cta) {

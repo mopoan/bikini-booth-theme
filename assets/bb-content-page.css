@@ -231,6 +231,8 @@
 
 .bb-seashell-cta__btn:hover {
   opacity: 0.9;
+  color: #fff !important;
+  text-decoration: none !important;
 }
 
 .bb-content-main__lead {
@@ -425,6 +427,56 @@
   width: auto;
   margin-left: auto;
   margin-top: 0;
+}
+
+@media (min-width: 990px) {
+  .bb-seashell-cta--bar .bb-seashell-cta__text {
+    margin: 0;
+    font-family: var(--bb-cp-sans);
+    font-size: 1.3125rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--bb-cp-ink);
+  }
+
+  .bb-content-page--faqs .bb-content-hero,
+  .bb-content-page--faq .bb-content-hero,
+  .bb-content-page--faqs .bb-content-hero__inner,
+  .bb-content-page--faq .bb-content-hero__inner {
+    min-height: 16rem;
+    max-height: 18.5rem;
+  }
+
+  .bb-content-page--faqs .bb-content-hero__card,
+  .bb-content-page--faq .bb-content-hero__card {
+    padding-top: 1.35rem;
+    padding-bottom: 1.35rem;
+  }
+
+  .bb-content-page--privacy .bb-content-hero,
+  .bb-content-page--privacy-policy .bb-content-hero,
+  .bb-content-page--privacy .bb-content-hero__inner,
+  .bb-content-page--privacy-policy .bb-content-hero__inner {
+    min-height: 22.5rem;
+    max-height: 26rem;
+  }
+
+  .bb-content-page--privacy .bb-content-hero__inner,
+  .bb-content-page--privacy-policy .bb-content-hero__inner {
+    align-items: stretch;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .bb-content-page--privacy .bb-content-hero__card,
+  .bb-content-page--privacy-policy .bb-content-hero__card {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 1.85rem;
+    padding-bottom: 1.85rem;
+  }
 }
 
 .bb-star-divider {

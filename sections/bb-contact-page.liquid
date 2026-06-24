@@ -2,6 +2,8 @@
 {{ 'bb-contact-page.css' | asset_url | stylesheet_tag }}
 {{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
 
+{%- assign bb_palm_stem_url = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/plam_-_straight_stem.svg?v=1782336449' -%}
+
 <div class="bb-contact-page" id="bb-contact-page-{{ section.id }}">
   <div class="bb-contact-hero">
     <div class="bb-contact-hero__image">
@@ -19,6 +21,15 @@
       {%- endif -%}
     </div>
     <div class="bb-contact-hero__form-wrap">
+      <img
+        class="bb-contact-form__palm bb-contact-form__palm--hero"
+        src="{{ bb_palm_stem_url }}"
+        alt=""
+        width="200"
+        height="280"
+        loading="lazy"
+        aria-hidden="true"
+      >
       <div class="bb-contact-form-panel">
         {%- if section.settings.form_heading != blank -%}
           <h1 class="bb-contact-form-panel__title">{{ section.settings.form_heading | escape }}</h1>
@@ -83,6 +94,15 @@
 
           <div class="bb-contact-form__submit-wrap">
             <button type="submit" class="bb-contact-form__submit">{{ section.settings.submit_label | default: 'SEND' | escape }}</button>
+            <img
+              class="bb-contact-form__palm bb-contact-form__palm--submit"
+              src="{{ bb_palm_stem_url }}"
+              alt=""
+              width="120"
+              height="168"
+              loading="lazy"
+              aria-hidden="true"
+            >
           </div>
         {%- endform -%}
       </div>

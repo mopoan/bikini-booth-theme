@@ -44,7 +44,7 @@
           "enable_accordion": true,
           "enable_country_selector": false,
           "enable_language_selector": true,
-          "payment_enable": true,
+          "payment_enable": false,
           "show_policy": false,
           "show_lines": true,
           "show_lines_bottom": false,

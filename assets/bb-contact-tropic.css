@@ -4,7 +4,7 @@
  */
 .bb-contact-tropic.template-page #MainContent,
 .bb-contact-tropic.template-page #MainContent .content-for-layout {
-  background: #fdfaf5 !important;
+  background: var(--bb-page-cream, #fdf9f0) !important;
 }
 
 .bb-contact-tropic [data-section-name="contact-form"] .page-width .page-width-half,
