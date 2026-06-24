@@ -646,6 +646,15 @@
     "blocks_LmPmAa": {
       "type": "_blocks",
       "blocks": {
+        "ai_gen_block_f9e42c0_9dCFEN": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#4ac6be",
+            "divider_height": 2,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        },
         "ai_gen_block_f9e42c0_eVRECC": {
           "type": "ai_gen_block_f9e42c0",
           "settings": {
@@ -657,8 +666,10 @@
         }
       },
       "block_order": [
+        "ai_gen_block_f9e42c0_9dCFEN",
         "ai_gen_block_f9e42c0_eVRECC"
       ],
+      "disabled": true,
       "name": "Divider",
       "settings": {}
     },
@@ -676,15 +687,6 @@
     "blocks_JTytAp": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_f9e42c0_f6LR7H": {
-          "type": "ai_gen_block_f9e42c0",
-          "settings": {
-            "divider_color": "#4ac6be",
-            "divider_height": 2,
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
-        },
         "megamenu_banner_eCeMzL": {
           "type": "megamenu-banner",
           "name": "Video banner",
@@ -751,7 +753,6 @@
         }
       },
       "block_order": [
-        "ai_gen_block_f9e42c0_f6LR7H",
         "megamenu_banner_eCeMzL",
         "ai_gen_block_f9e42c0_pdUnhx"
       ],
@@ -788,6 +789,10 @@
     "1778997588d6c656d9": {
       "type": "_blocks",
       "settings": {}
+    },
+    "17823199512967c343": {
+      "type": "_blocks",
+      "settings": {}
     }
   },
   "order": [
@@ -812,6 +817,7 @@
     "blocks_MEPj6U",
     "177721900106975441",
     "1777383497bdd1dcd7",
-    "1778997588d6c656d9"
+    "1778997588d6c656d9",
+    "17823199512967c343"
   ]
 }
