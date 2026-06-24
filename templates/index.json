@@ -654,22 +654,11 @@
             "desktop_width_percent": 100
           },
           "blocks": {}
-        },
-        "ai_gen_block_f9e42c0_eVRECC": {
-          "type": "ai_gen_block_f9e42c0",
-          "settings": {
-            "divider_color": "#d9d9d9",
-            "divider_height": 1,
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_f9e42c0_9dCFEN",
-        "ai_gen_block_f9e42c0_eVRECC"
+        "ai_gen_block_f9e42c0_9dCFEN"
       ],
-      "disabled": true,
       "name": "Divider",
       "settings": {}
     },
