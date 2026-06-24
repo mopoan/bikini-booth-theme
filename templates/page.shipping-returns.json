@@ -154,19 +154,43 @@
       ],
       "settings": {
         "hero_image": "shopify://shop_images/model_on_the_pool_edge_2.jpg",
+        "hero_height_desktop": 360,
+        "hero_height_mobile": 260,
         "hero_title": "Shipping & Returns",
         "hero_lead": "Simple, transparent, and designed to make shopping with confidence easy.",
         "shipping_title": "Shipping",
         "returns_title": "Returns",
         "cta_image": "shopify://shop_images/waves-crashing-on-beach.jpg",
+        "cta_height_desktop": 400,
+        "cta_height_mobile": 300,
         "cta_title": "Ready for Your Next Escape?",
         "cta_text": "Discover swimwear designed for sunshine, salt water, and unforgettable holidays.",
         "cta_button_label": "Shop New Arrivals",
         "cta_button_link": "shopify://collections/all"
       }
+    },
+    "blocks_fYxiTj": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f9e42c0_yiCw4B": {
+          "type": "ai_gen_block_f9e42c0",
+          "settings": {
+            "divider_color": "#D9D9D9",
+            "divider_height": 1,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f9e42c0_yiCw4B"
+      ],
+      "name": "Divider",
+      "settings": {}
     }
   },
   "order": [
-    "bb_shipping"
+    "bb_shipping",
+    "blocks_fYxiTj"
   ]
 }
