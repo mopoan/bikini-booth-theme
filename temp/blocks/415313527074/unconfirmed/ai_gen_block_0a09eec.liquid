@@ -1,0 +1,58 @@
+{% doc %}
+  @prompt
+    Create a full-width divider section with settings to customize the divider line color and thickness (height/width). The divider should span the full width of the page and be configurable via theme editor settings.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-divider-container-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-divider-line-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.divider_thickness }}px;
+    background-color: {{ block.settings.divider_color }};
+    border: none;
+    margin: 0;
+  }
+{% endstyle %}
+
+<divider-block-{{ ai_gen_id }}
+  class="ai-divider-container-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <hr class="ai-divider-line-{{ ai_gen_id }}" aria-hidden="true">
+</divider-block-{{ ai_gen_id }}>
+
+{% schema %}
+{
+  "name": "Divider",
+  "settings": [
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Color",
+      "default": "#D9D9D9"
+    },
+    {
+      "type": "range",
+      "id": "divider_thickness",
+      "label": "Thickness",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Divider"
+    }
+  ]
+}
+{% endschema %}
