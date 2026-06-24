@@ -1,0 +1,140 @@
+/**
+ * Palm leaf shadow overlays — palm_leaf.png (Shopify Files).
+ */
+.bb-palm-shadow {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;
+  opacity: 0.42;
+}
+
+/* --- Contact form column --- */
+.bb-contact-hero__form-wrap {
+  overflow: hidden;
+}
+
+.bb-palm-shadow--contact-tr {
+  top: -0.5rem;
+  right: -2.5rem;
+  width: clamp(8rem, 24vw, 12.5rem);
+  height: auto;
+}
+
+.bb-palm-shadow--contact-bl {
+  display: none;
+  top: 42%;
+  left: -3rem;
+  width: clamp(6rem, 20vw, 9rem);
+  height: auto;
+  opacity: 0.32;
+  transform: rotate(-8deg);
+}
+
+@media (max-width: 989px) {
+  .bb-palm-shadow--contact-tr {
+    top: 0;
+    right: -1.75rem;
+    width: clamp(7.5rem, 34vw, 10rem);
+  }
+
+  .bb-palm-shadow--contact-bl {
+    display: block;
+    top: 36%;
+    left: -2.25rem;
+    width: clamp(5.5rem, 28vw, 7.5rem);
+  }
+}
+
+/* --- Contact store cards --- */
+.bb-contact-store__body::after {
+  content: "";
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  width: 3.25rem;
+  height: 4rem;
+  pointer-events: none;
+  opacity: 0.38;
+  background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leaf.png?v=1782343118") right bottom / contain no-repeat;
+}
+
+/* --- Wishlist hero --- */
+.bb-wishlist-hero {
+  overflow: hidden;
+}
+
+.bb-palm-shadow--wishlist-tl {
+  top: -0.75rem;
+  left: -2.5rem;
+  width: clamp(7rem, 14vw, 10.5rem);
+  height: auto;
+  opacity: 0.34;
+  transform: rotate(-12deg);
+}
+
+.bb-palm-shadow--wishlist-tr {
+  top: -0.75rem;
+  right: -2.5rem;
+  width: clamp(7rem, 14vw, 10.5rem);
+  height: auto;
+  opacity: 0.34;
+  transform: rotate(12deg) scaleX(-1);
+}
+
+@media (max-width: 749px) {
+  .bb-palm-shadow--wishlist-tl {
+    left: -2rem;
+    width: clamp(5.5rem, 22vw, 7.5rem);
+    opacity: 0.28;
+  }
+
+  .bb-palm-shadow--wishlist-tr {
+    right: -2rem;
+    width: clamp(5.5rem, 22vw, 7.5rem);
+    opacity: 0.28;
+  }
+}
+
+/* --- Wishlist bottom CTA --- */
+.bb-wishlist-cta__shadow {
+  position: absolute;
+  right: -0.5rem;
+  bottom: -0.75rem;
+  width: clamp(4.5rem, 10vw, 6.5rem);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+/* --- Footer --- */
+.bb-footer-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.bb-footer-primary > *:not(.bb-palm-shadow) {
+  position: relative;
+  z-index: 1;
+}
+
+.bb-palm-shadow--footer-bl {
+  bottom: -2.5rem;
+  left: -3.5rem;
+  width: clamp(9rem, 16vw, 13rem);
+  height: auto;
+  opacity: 0.38;
+  transform: rotate(-6deg);
+}
+
+@media (max-width: 749px) {
+  .bb-palm-shadow--footer-bl {
+    bottom: -1.5rem;
+    left: -2.5rem;
+    width: clamp(7rem, 28vw, 9.5rem);
+    opacity: 0.32;
+  }
+}

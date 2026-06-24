@@ -1,0 +1,16 @@
+{%- liquid
+  render 'bb-palm-shadow-url'
+  assign palm_mod = modifier | default: 'default'
+  assign palm_width = width | default: 200
+  assign palm_height = height | default: 280
+-%}
+<img
+  class="bb-palm-shadow bb-palm-shadow--{{ palm_mod }}"
+  src="{{ bb_palm_shadow_url }}"
+  alt=""
+  width="{{ palm_width }}"
+  height="{{ palm_height }}"
+  loading="lazy"
+  decoding="async"
+  aria-hidden="true"
+>

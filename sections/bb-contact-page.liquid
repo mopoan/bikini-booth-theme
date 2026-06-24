@@ -1,9 +1,7 @@
 {{ 'component-inputs.css' | asset_url | stylesheet_tag }}
-{{ 'bb-palm-leaves.css' | asset_url | stylesheet_tag }}
+{{ 'bb-palm-shadow.css' | asset_url | stylesheet_tag }}
 {{ 'bb-contact-page.css' | asset_url | stylesheet_tag }}
 {{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
-
-{%- render 'bb-palm-leaves-assign' -%}
 
 <div class="bb-contact-page" id="bb-contact-page-{{ section.id }}">
   <div class="bb-contact-hero">
@@ -22,15 +20,8 @@
       {%- endif -%}
     </div>
     <div class="bb-contact-hero__form-wrap">
-      <img
-        class="bb-palm-leaves bb-palm-leaves--shadow bb-palm-leaves--corner bb-contact-form__palm bb-contact-form__palm--hero"
-        src="{{ bb_palm_leaves_url }}"
-        alt=""
-        width="120"
-        height="160"
-        loading="lazy"
-        aria-hidden="true"
-      >
+      {%- render 'bb-palm-shadow', modifier: 'contact-tr', width: 250, height: 320 -%}
+      {%- render 'bb-palm-shadow', modifier: 'contact-bl', width: 200, height: 260 -%}
       <div class="bb-contact-form-panel">
         {%- if section.settings.form_heading != blank -%}
           <h1 class="bb-contact-form-panel__title">{{ section.settings.form_heading | escape }}</h1>
@@ -88,22 +79,11 @@
               required
             >{{- form.body -}}</textarea>
             <label class="field__label" for="ContactForm-body-{{ section.id }}">{{ 'templates.contact.form.comment' | t }}</label>
-            <div class="field__icon field__icon--comment" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            </div>
+            <div class="field__icon field__icon--comment">{{- 'icon-chat' | append: settings.system_icon_thickness | inline_asset_content -}}</div>
           </div>
 
           <div class="bb-contact-form__submit-wrap">
             <button type="submit" class="bb-contact-form__submit">{{ section.settings.submit_label | default: 'SEND' | escape }}</button>
-            <img
-              class="bb-palm-leaves bb-palm-leaves--decor bb-contact-form__palm bb-contact-form__palm--submit"
-              src="{{ bb_palm_leaves_url }}"
-              alt=""
-              width="100"
-              height="70"
-              loading="lazy"
-              aria-hidden="true"
-            >
           </div>
         {%- endform -%}
       </div>

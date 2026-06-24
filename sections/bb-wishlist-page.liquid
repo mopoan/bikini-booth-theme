@@ -1,11 +1,9 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
-{{ 'bb-palm-leaves.css' | asset_url | stylesheet_tag }}
+{{ 'bb-palm-shadow.css' | asset_url | stylesheet_tag }}
 {{ 'bb-wishlist-page.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'bb-wishlist-page.js' | asset_url }}" defer="defer"></script>
 
 {%- assign data_settings = 'tropic' -%}
-
-{%- render 'bb-palm-leaves-assign' -%}
 
 <div class="bb-wishlist-page">
   <wishlist-page
@@ -16,24 +14,8 @@
   >
     <div class="wishlist-content">
       <div class="bb-wishlist-hero">
-        <img
-          class="bb-palm-leaves bb-palm-leaves--shadow bb-wishlist-hero__palm bb-wishlist-hero__palm--left"
-          src="{{ bb_palm_leaves_url }}"
-          alt=""
-          width="140"
-          height="85"
-          loading="lazy"
-          aria-hidden="true"
-        >
-        <img
-          class="bb-palm-leaves bb-palm-leaves--shadow bb-wishlist-hero__palm bb-wishlist-hero__palm--right"
-          src="{{ bb_palm_leaves_url }}"
-          alt=""
-          width="140"
-          height="85"
-          loading="lazy"
-          aria-hidden="true"
-        >
+        {%- render 'bb-palm-shadow', modifier: 'wishlist-tl', width: 220, height: 300 -%}
+        {%- render 'bb-palm-shadow', modifier: 'wishlist-tr', width: 220, height: 300 -%}
         <div class="bb-wishlist-hero__inner page-width">
           <h1 class="bb-wishlist-hero__title">{{ section.settings.heading | default: 'Your Wishlist' | escape }}</h1>
           <p class="bb-wishlist-hero__subtitle">{{ section.settings.subheading | default: "Pieces you've saved for your next escape." | escape }}</p>
@@ -47,7 +29,6 @@
 
       <div class="bb-wishlist-toolbar page-width">
         <span class="bb-wishlist-toolbar__count" data-bb-wishlist-count-label>
-          {%- render 'bb-palm-leaf-icon' -%}
           <span class="bb-wishlist-toolbar__count-text">0 items saved</span>
         </span>
         <label class="bb-wishlist-toolbar__sort">

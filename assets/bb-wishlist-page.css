@@ -27,30 +27,6 @@
   position: relative;
   padding: clamp(2.5rem, 5vw, 3.5rem) 0 2rem;
   text-align: center;
-  overflow: hidden;
-}
-
-.bb-wishlist-hero::before {
-  display: none;
-}
-
-.bb-wishlist-hero__palm {
-  position: absolute;
-  width: clamp(6.5rem, 12vw, 9.5rem);
-  height: clamp(4rem, 7vw, 5.75rem);
-  pointer-events: none;
-}
-
-.bb-wishlist-hero__palm--left {
-  top: 0.25rem;
-  left: 0;
-  transform: rotate(-16deg);
-}
-
-.bb-wishlist-hero__palm--right {
-  top: 0.25rem;
-  right: 0;
-  transform: rotate(16deg) scaleX(-1);
 }
 
 .bb-wishlist-hero__inner {
@@ -118,13 +94,22 @@
 }
 
 .bb-wishlist-hero__pill .bb-palm-leaf-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
   color: var(--bb-wl-accent);
+}
+
+.bb-wishlist-hero__pill .bb-palm-leaf-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .bb-wishlist-toolbar__count {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
   font-family: var(--bb-wl-sans);
   font-size: 0.875rem;
   font-weight: 400;
@@ -132,7 +117,7 @@
 }
 
 .bb-wishlist-toolbar__count .bb-palm-leaf-icon {
-  color: var(--bb-wl-accent);
+  display: none !important;
 }
 
 .bb-wishlist-toolbar {
@@ -364,26 +349,6 @@
   color: var(--bb-wl-accent);
 }
 
-.bb-wishlist-cta__icon {
-  display: inline-flex;
-  flex-shrink: 0;
-  color: var(--bb-wl-accent);
-}
-
-.bb-wishlist-cta__icon svg {
-  width: 1.125rem;
-  height: 1.125rem;
-}
-
-.bb-wishlist-cta__decor {
-  position: absolute;
-  right: 0.15rem;
-  bottom: -0.35rem;
-  width: 5.5rem;
-  height: 3.25rem;
-  pointer-events: none;
-}
-
 .bb-wishlist-cta__btn {
   position: relative;
   z-index: 1;
@@ -493,10 +458,6 @@
     padding-top: 2rem;
   }
 
-  .bb-wishlist-hero__palm {
-    opacity: 0.1;
-  }
-
   .bb-wishlist-toolbar {
     flex-direction: column;
     align-items: flex-start;
@@ -525,12 +486,5 @@
 
   .bb-wishlist-cta__btn {
     width: 100%;
-  }
-
-  .bb-wishlist-cta__decor {
-    width: 6rem;
-    height: 6rem;
-    right: -0.75rem;
-    bottom: -1rem;
   }
 }

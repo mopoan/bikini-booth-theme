@@ -36,7 +36,6 @@
   justify-content: center;
   padding: 3.5rem 2.75rem;
   background: var(--bb-contact-cream);
-  overflow: hidden;
 }
 
 .bb-contact-form-panel {
@@ -46,30 +45,6 @@
   max-width: 28rem;
   margin: 0 auto;
   text-align: center;
-}
-
-.bb-contact-form__palm {
-  position: absolute;
-  z-index: 0;
-}
-
-.bb-contact-form__palm--hero {
-  top: -1.5rem;
-  right: -2.25rem;
-  width: clamp(5.5rem, 10vw, 7rem);
-  height: auto;
-  max-height: clamp(7rem, 13vw, 9rem);
-  transform: rotate(10deg);
-}
-
-.bb-contact-form__palm--submit {
-  position: static;
-  flex: 0 0 auto;
-  width: clamp(2.75rem, 5vw, 3.25rem);
-  height: auto;
-  max-height: 2.5rem;
-  margin-left: 0.35rem;
-  transform: rotate(12deg);
 }
 
 .bb-contact-form-panel__title {
@@ -142,16 +117,11 @@
   padding-left: 2.75rem;
 }
 
-.bb-contact-form .field--comment.field-with-icon .field__input,
-.bb-contact-form .field--comment .field__input.text-area {
+.bb-contact-form .field--comment.field-with-icon .field__input.text-area {
   min-height: 8.5rem;
   height: auto;
   padding: 0.85rem 1rem 0.85rem 2.75rem;
   resize: vertical;
-}
-
-.bb-contact-form .field--comment .field__input.text-area {
-  padding-left: 1rem;
 }
 
 .bb-contact-form .field__label {
@@ -172,7 +142,7 @@
 .bb-contact-form .field--comment.field-with-icon .field__input:focus,
 .bb-contact-form .field--comment.field-with-icon .field__input:not(:placeholder-shown),
 .bb-contact-form .field--comment.field-with-icon .field__input:-webkit-autofill {
-  padding-top: 0.85rem;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
 }
 
 .bb-contact-form .field__icon {
@@ -181,8 +151,17 @@
 }
 
 .bb-contact-form .field__icon--comment {
-  top: 0.85rem;
+  top: 0.95rem;
   transform: none;
+}
+
+.bb-contact-form .field__icon--comment svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.bb-contact-form .field__icon--comment svg path {
+  fill: var(--bb-contact-accent);
 }
 
 .bb-contact-form__submit-wrap {
@@ -354,20 +333,6 @@
   border-top: 1px dotted #d8d3c8;
 }
 
-.bb-contact-store__body::after {
-  content: "";
-  position: absolute;
-  right: 0.15rem;
-  bottom: 0.15rem;
-  width: 3rem;
-  height: 3.5rem;
-  pointer-events: none;
-  opacity: 0.12;
-  background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/plam_-_straight_stem.svg?v=1782336449") right bottom / contain no-repeat;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(749%) hue-rotate(127deg) brightness(92%) contrast(89%);
-  transform: rotate(10deg);
-}
-
 .bb-contact-store__city {
   margin: 0 0 0.65rem;
   font-family: var(--bb-contact-serif);
@@ -433,12 +398,6 @@
   .bb-contact-form__submit-wrap {
     justify-content: center;
     padding: 0;
-  }
-
-  .bb-contact-form__palm--submit {
-    width: 2.75rem;
-    max-height: 2.25rem;
-    margin-left: 0.25rem;
   }
 
   .bb-contact-stores__grid {

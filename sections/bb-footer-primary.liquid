@@ -2,6 +2,7 @@
   Avoid style-loader / component-inputs.css here: it injects mid-page and can interfere with global chrome (header icons, fixed header).
   Newsletter inputs are styled in this file’s {% style %} block.
 {%- endcomment -%}
+{{ 'bb-palm-shadow.css' | asset_url | stylesheet_tag }}
 {%- comment -%} Strip hyphens/underscores so custom element + JS class names stay valid for static section ids. {%- endcomment -%}
 {% assign ai_gen_id = section.id | replace: '_', '' | replace: '-', '' | downcase %}
 
@@ -81,6 +82,8 @@
     max-width: 100%;
     background-color: {{ section.settings.background_color }};
     padding: {{ section.settings.padding_top }}px {{ section.settings.padding_horizontal }}px {{ section.settings.padding_bottom }}px;
+    position: relative;
+    z-index: 1;
   }
 
   .ai-footer-{{ ai_gen_id }} .ai-footer-container-{{ ai_gen_id }} {
@@ -792,6 +795,7 @@
   {% if bb_footer_about_page != blank %}data-bb-about-page-url="{{ bb_footer_about_page.url | escape }}"{% endif %}
   {{ section.shopify_attributes }}
 >
+  {%- render 'bb-palm-shadow', modifier: 'footer-bl', width: 280, height: 360 -%}
   <div class="ai-footer-container-{{ ai_gen_id }}{% if bb_footer_use_five_col %} ai-footer-container--five{% endif %}">
     {%- comment -%} Column 1: Subframe “Follow us” card — social links hard-coded (theme Social settings are not reliable for this section). {%- endcomment -%}
     <div class="ai-footer-column-{{ ai_gen_id }} ai-footer-col-brand-{{ ai_gen_id }}">
