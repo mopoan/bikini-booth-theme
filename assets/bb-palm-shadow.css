@@ -12,6 +12,10 @@
 }
 
 /* --- Contact form column --- */
+.bb-contact-page .bb-palm-shadow {
+  opacity: 0.16;
+}
+
 .bb-contact-hero__form-wrap {
   overflow: hidden;
 }
@@ -21,6 +25,7 @@
   right: -2.5rem;
   width: clamp(8rem, 24vw, 12.5rem);
   height: auto;
+  opacity: 0.18;
 }
 
 .bb-palm-shadow--contact-bl {
@@ -29,7 +34,7 @@
   left: -3rem;
   width: clamp(6rem, 20vw, 9rem);
   height: auto;
-  opacity: 0.32;
+  opacity: 0.12;
   transform: rotate(-8deg);
 }
 
@@ -38,6 +43,7 @@
     top: 0;
     right: -1.75rem;
     width: clamp(7.5rem, 34vw, 10rem);
+    opacity: 0.16;
   }
 
   .bb-palm-shadow--contact-bl {
@@ -45,6 +51,7 @@
     top: 36%;
     left: -2.25rem;
     width: clamp(5.5rem, 28vw, 7.5rem);
+    opacity: 0.1;
   }
 }
 
@@ -57,7 +64,7 @@
   width: 3.25rem;
   height: 4rem;
   pointer-events: none;
-  opacity: 0.38;
+  opacity: 0.2;
   background: url("https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leaf.png?v=1782343118") right bottom / contain no-repeat;
 }
 
