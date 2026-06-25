@@ -21,7 +21,10 @@
     </div>
     <div class="bb-contact-hero__form-wrap">
       <div class="bb-contact-hero__palms" aria-hidden="true">
-        {%- render 'bb-palm-shadow', modifier: 'contact-tr', width: 250, height: 320 -%}
+        {%- assign bb_contact_leaf_1 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_1.png?v=1782405534' -%}
+        {%- assign bb_contact_leaf_2 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_2.png?v=1782405534' -%}
+        {%- render 'bb-palm-shadow', modifier: 'contact-leaf-1', src: bb_contact_leaf_1, width: 320, height: 280 -%}
+        {%- render 'bb-palm-shadow', modifier: 'contact-leaf-2', src: bb_contact_leaf_2, width: 220, height: 180 -%}
       </div>
       <div class="bb-contact-form-panel">
         {%- if section.settings.form_heading != blank -%}

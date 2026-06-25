@@ -1,5 +1,5 @@
 /**
- * Palm leaf shadow overlays — palm_leaf.png (Shopify Files).
+ * Palm leaf shadow overlays — Shopify Files assets.
  */
 .bb-palm-shadow {
   position: absolute;
@@ -11,9 +11,9 @@
   opacity: 0.42;
 }
 
-/* --- Contact form column --- */
+/* --- Contact form column (Contact.png: two leaves, top-right) --- */
 .bb-contact-page .bb-palm-shadow {
-  opacity: 0.1;
+  opacity: 1;
 }
 
 .bb-contact-hero__form-wrap {
@@ -29,28 +29,41 @@
   overflow: hidden;
 }
 
-/* Single top-right leaf — stem anchored in corner, fronds hang inward (PNG is inverted by default) */
-.bb-palm-shadow--contact-tr {
-  top: -0.25rem;
-  right: -0.5rem;
-  width: clamp(8.5rem, 22vw, 11.5rem);
+/* PNG stems are top-left in file — mirror into top-right corner */
+.bb-palm-shadow--contact-leaf-1 {
+  top: -0.35rem;
+  right: -0.15rem;
+  width: clamp(10.5rem, 28vw, 15rem);
   height: auto;
-  opacity: 0.08;
-  transform: scaleY(-1) rotate(-22deg);
+  opacity: 0.16;
+  transform: scaleX(-1);
   transform-origin: top right;
 }
 
-.bb-palm-shadow--contact-tl {
-  display: none !important;
+.bb-palm-shadow--contact-leaf-2 {
+  top: clamp(4.25rem, 11vw, 6rem);
+  right: -0.65rem;
+  width: clamp(7rem, 18vw, 10rem);
+  height: auto;
+  opacity: 0.14;
+  transform: scaleX(-1) rotate(-10deg);
+  transform-origin: top right;
 }
 
 @media (max-width: 989px) {
-  .bb-palm-shadow--contact-tr {
-    top: 0;
+  .bb-palm-shadow--contact-leaf-1 {
+    top: -0.15rem;
+    right: 0;
+    width: clamp(8.5rem, 34vw, 11.5rem);
+    opacity: 0.14;
+  }
+
+  .bb-palm-shadow--contact-leaf-2 {
+    top: clamp(3.5rem, 14vw, 5rem);
     right: -0.35rem;
-    width: clamp(7rem, 28vw, 9.5rem);
-    opacity: 0.08;
-    transform: scaleY(-1) rotate(-20deg);
+    width: clamp(5.75rem, 22vw, 8rem);
+    opacity: 0.12;
+    transform: scaleX(-1) rotate(-8deg);
   }
 }
 

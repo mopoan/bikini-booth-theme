@@ -13,12 +13,14 @@
 .bb-contact-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: stretch;
 }
 
 .bb-contact-hero__image {
   position: relative;
   overflow: hidden;
   background: #ddd;
+  min-height: 100%;
 }
 
 .bb-contact-hero__image img {
@@ -34,6 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100%;
   padding: 3.5rem 2.75rem;
   background: var(--bb-contact-cream);
   overflow: hidden;
