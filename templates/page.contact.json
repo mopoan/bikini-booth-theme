@@ -52,7 +52,7 @@
         "st_3"
       ],
       "settings": {
-        "hero_image": "shopify://shop_images/shop_interior.png",
+        "hero_image": "shopify://shop_images/shop_interior_with_accessories.png",
         "form_heading": "Contact Us",
         "form_intro": "We're here to help! Whether you have a question about our swimwear, resortwear, sizing, store locations, or an order, our team will get back to you as soon as possible.",
         "submit_label": "SEND",
