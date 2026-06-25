@@ -13,6 +13,15 @@
   if plink == blank
     assign plink = routes.all_products_collection_url
   endif
+
+  assign has_products = false
+  if coll != blank and coll.products_count > 0
+    assign has_products = true
+  endif
+  assign bb_has_track = false
+  if has_products or show_ph
+    assign bb_has_track = true
+  endif
 -%}
 
 <section class="bb-subframe bb-subframe-products" id="bb-subframe-products-{{ section.id }}" {{ section.shopify_attributes }}>
@@ -26,8 +35,16 @@
       {%- endif -%}
     </div>
 
-    {%- if coll != blank and coll.products_count > 0 -%}
+    {%- if has_products -%}
       <div class="bb-subframe-products__track-wrap">
+        <button
+          type="button"
+          class="bb-subframe-products__arrow bb-subframe-products__arrow--prev"
+          data-bb-products-prev
+          aria-label="Show previous products"
+        >
+          {{- 'icon-arrow-left' | append: settings.system_icon_thickness | inline_asset_content -}}
+        </button>
         <div class="bb-subframe-products__track" data-bb-products-track>
           {%- for product in coll.products limit: section.settings.product_limit -%}
             {%- render 'bb-subframe-product-tile', product: product, section: section, tile_index: forloop.index0 -%}
@@ -35,7 +52,7 @@
         </div>
         <button
           type="button"
-          class="bb-subframe-products__arrow"
+          class="bb-subframe-products__arrow bb-subframe-products__arrow--next"
           data-bb-products-next
           aria-label="Show more products"
         >
@@ -44,6 +61,14 @@
       </div>
     {%- elsif show_ph -%}
       <div class="bb-subframe-products__track-wrap">
+        <button
+          type="button"
+          class="bb-subframe-products__arrow bb-subframe-products__arrow--prev"
+          data-bb-products-prev
+          aria-label="Show previous products"
+        >
+          {{- 'icon-arrow-left' | append: settings.system_icon_thickness | inline_asset_content -}}
+        </button>
         <div class="bb-subframe-products__track" data-bb-products-track>
           {%- for i in (1..section.settings.product_limit) -%}
             {%- render 'bb-subframe-product-placeholder', section: section, index: i, link_url: plink -%}
@@ -51,13 +76,17 @@
         </div>
         <button
           type="button"
-          class="bb-subframe-products__arrow"
+          class="bb-subframe-products__arrow bb-subframe-products__arrow--next"
           data-bb-products-next
           aria-label="Show more products"
         >
           {{- 'icon-arrow-right' | append: settings.system_icon_thickness | inline_asset_content -}}
         </button>
       </div>
+    {%- endif -%}
+
+    {%- if bb_has_track -%}
+      <div class="bb-subframe-products__dots" data-bb-products-dots></div>
     {%- endif -%}
 
     {%- if section.settings.button_label != blank -%}
@@ -79,8 +108,11 @@
     var root = document.getElementById('bb-subframe-products-{{ section.id }}');
     if (!root) return;
     var track = root.querySelector('[data-bb-products-track]');
+    if (!track) return;
+    var prev = root.querySelector('[data-bb-products-prev]');
     var next = root.querySelector('[data-bb-products-next]');
-    if (!track || !next) return;
+    var dotsWrap = root.querySelector('[data-bb-products-dots]');
+    var tiles = track.querySelectorAll('.bb-subframe-ptile');
 
     function getStep() {
       var tile = track.querySelector('.bb-subframe-ptile');
@@ -90,18 +122,39 @@
       return Math.round(tile.getBoundingClientRect().width + gap);
     }
 
-    function updateArrowVisibility() {
-      var maxLeft = track.scrollWidth - track.clientWidth;
-      next.style.display = track.scrollLeft >= maxLeft - 2 ? 'none' : 'inline-flex';
+    if (dotsWrap && tiles.length) {
+      for (var i = 0; i < tiles.length; i++) {
+        var d = document.createElement('button');
+        d.type = 'button';
+        d.className = 'bb-subframe-products__dot' + (i === 0 ? ' is-active' : '');
+        d.setAttribute('aria-label', 'Go to item ' + (i + 1));
+        d.dataset.bbDot = i;
+        dotsWrap.appendChild(d);
+      }
+      dotsWrap.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-bb-dot]');
+        if (!b) return;
+        track.scrollTo({ left: parseInt(b.dataset.bbDot, 10) * getStep(), behavior: 'smooth' });
+      });
     }
 
-    next.addEventListener('click', function () {
-      track.scrollBy({ left: getStep(), behavior: 'smooth' });
-    });
+    function update() {
+      var maxLeft = track.scrollWidth - track.clientWidth;
+      if (next) next.style.display = track.scrollLeft >= maxLeft - 2 ? 'none' : 'inline-flex';
+      if (prev) prev.style.display = track.scrollLeft <= 2 ? 'none' : 'inline-flex';
+      if (dotsWrap && dotsWrap.children.length) {
+        var idx = Math.round(track.scrollLeft / getStep());
+        var dots = dotsWrap.children;
+        for (var i = 0; i < dots.length; i++) dots[i].classList.toggle('is-active', i === idx);
+      }
+    }
 
-    track.addEventListener('scroll', updateArrowVisibility, { passive: true });
-    window.addEventListener('resize', updateArrowVisibility);
-    updateArrowVisibility();
+    if (next) next.addEventListener('click', function () { track.scrollBy({ left: getStep(), behavior: 'smooth' }); });
+    if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -getStep(), behavior: 'smooth' }); });
+
+    track.addEventListener('scroll', function () { window.requestAnimationFrame(update); }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
   })();
 </script>
 

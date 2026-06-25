@@ -13,29 +13,40 @@
 -%}
 {%- capture stock_fallback_src -%}{%- render 'bb-subframe-stock-url', index: ti -%}{%- endcapture -%}
 <article class="bb-subframe-ptile">
-  <a class="bb-subframe-ptile__media" href="{{ product.url }}">
-    {%- if featured != blank -%}
-      {%- assign tile_ar = featured.aspect_ratio | default: 1 -%}
-      {%- if tile_ar == 0 -%}{%- assign tile_ar = 1 -%}{%- endif -%}
-      {%- assign tile_img_h = 700 | divided_by: tile_ar | round -%}
-      <img
-        src="{{ featured | image_url: width: 700 }}"
-        alt="{{ tile_img_alt }}"
-        loading="lazy"
-        width="700"
-        height="{{ tile_img_h }}"
-        decoding="async"
-      >
-    {%- else -%}
-      <img src="{{ stock_fallback_src | strip }}" alt="{{ product.title | escape }}" width="400" height="533" loading="lazy">
-    {%- endif -%}
+  <div class="bb-subframe-ptile__media">
+    <a class="bb-subframe-ptile__media-link" href="{{ product.url }}">
+      {%- if featured != blank -%}
+        {%- assign tile_ar = featured.aspect_ratio | default: 1 -%}
+        {%- if tile_ar == 0 -%}{%- assign tile_ar = 1 -%}{%- endif -%}
+        {%- assign tile_img_h = 700 | divided_by: tile_ar | round -%}
+        <img
+          src="{{ featured | image_url: width: 700 }}"
+          alt="{{ tile_img_alt }}"
+          loading="lazy"
+          width="700"
+          height="{{ tile_img_h }}"
+          decoding="async"
+        >
+      {%- else -%}
+        <img src="{{ stock_fallback_src | strip }}" alt="{{ product.title | escape }}" width="400" height="533" loading="lazy">
+      {%- endif -%}
+    </a>
     {%- if section.settings.badge_text != blank -%}
       <span class="bb-subframe-ptile__badge">{{ section.settings.badge_text }}</span>
     {%- endif -%}
-  </a>
+    {%- if settings.enable_wishlist -%}
+      <wishlist-button class="bb-subframe-ptile__heart"
+         data-id="{{ product.id }}"
+         data-product-handle="{{ product.handle }}"
+         aria-label="{{ 'wishlist.product.wishlist' | t }}">
+        {%- render "icon-wishlist" icon_type:"normal" -%}
+        {%- render "icon-wishlist" icon_type:"added" -%}
+      </wishlist-button>
+    {%- endif -%}
+  </div>
   <div class="bb-subframe-ptile__info">
     <a href="{{ product.url }}">
-      <h3 class="bb-subframe-ptile__title">{{ product.title | downcase }}</h3>
+      <h3 class="bb-subframe-ptile__title">{{ product.title }}</h3>
     </a>
     {%- if settings.cart_type != 'catalog_mode' -%}
       <div class="bb-subframe-ptile__price">
