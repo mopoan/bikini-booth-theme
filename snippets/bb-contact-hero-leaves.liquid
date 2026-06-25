@@ -1,12 +1,60 @@
 {%- liquid
   assign bb_leaf_1 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_1.png?v=1782405534'
   assign bb_leaf_2 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_2.png?v=1782405534'
+
+  assign leaf_1_x = section.settings.leaf_1_offset_x | default: 20
+  assign leaf_1_y = section.settings.leaf_1_offset_y | default: 4
+  assign leaf_1_size = section.settings.leaf_1_size | default: 200
+  assign leaf_1_rotate = section.settings.leaf_1_rotate | default: 0
+  assign leaf_1_opacity = section.settings.leaf_1_opacity | default: 14 | divided_by: 100.0
+  assign leaf_1_flip = 1
+  if section.settings.leaf_1_flip
+    assign leaf_1_flip = -1
+  endif
+
+  assign leaf_2_x = section.settings.leaf_2_offset_x | default: 52
+  assign leaf_2_y = section.settings.leaf_2_offset_y | default: 64
+  assign leaf_2_size = section.settings.leaf_2_size | default: 148
+  assign leaf_2_rotate = section.settings.leaf_2_rotate | default: -6
+  assign leaf_2_opacity = section.settings.leaf_2_opacity | default: 12 | divided_by: 100.0
+  assign leaf_2_flip = 1
+  if section.settings.leaf_2_flip
+    assign leaf_2_flip = -1
+  endif
 -%}
-<div
-  class="bb-contact-hero__leaves"
-  style="--bb-contact-leaf-1: url('{{ bb_leaf_1 }}'); --bb-contact-leaf-2: url('{{ bb_leaf_2 }}');"
-  aria-hidden="true"
->
-  <span class="bb-contact-hero__leaf bb-contact-hero__leaf--1"></span>
-  <span class="bb-contact-hero__leaf bb-contact-hero__leaf--2"></span>
+<div class="bb-contact-hero__leaves" aria-hidden="true">
+  <img
+    class="bb-contact-hero__leaf bb-contact-hero__leaf--1"
+    src="{{ bb_leaf_1 }}"
+    alt=""
+    width="320"
+    height="320"
+    loading="lazy"
+    decoding="async"
+    style="
+      --bb-leaf-offset-x: {{ leaf_1_x }}px;
+      --bb-leaf-offset-y: {{ leaf_1_y }}px;
+      --bb-leaf-size: {{ leaf_1_size }}px;
+      --bb-leaf-rotate: {{ leaf_1_rotate }}deg;
+      --bb-leaf-opacity: {{ leaf_1_opacity }};
+      --bb-leaf-flip: {{ leaf_1_flip }};
+    "
+  >
+  <img
+    class="bb-contact-hero__leaf bb-contact-hero__leaf--2"
+    src="{{ bb_leaf_2 }}"
+    alt=""
+    width="240"
+    height="240"
+    loading="lazy"
+    decoding="async"
+    style="
+      --bb-leaf-offset-x: {{ leaf_2_x }}px;
+      --bb-leaf-offset-y: {{ leaf_2_y }}px;
+      --bb-leaf-size: {{ leaf_2_size }}px;
+      --bb-leaf-rotate: {{ leaf_2_rotate }}deg;
+      --bb-leaf-opacity: {{ leaf_2_opacity }};
+      --bb-leaf-flip: {{ leaf_2_flip }};
+    "
+  >
 </div>

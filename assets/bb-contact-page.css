@@ -61,9 +61,8 @@
 }
 
 /*
- * Palm fronds — PNG art sits top-left of a 1024px canvas.
- * Anchor the leaf box to the column top-right; background top-left
- * paints fronds inward (no scaleX flip — that pushed them off-screen).
+ * Palm fronds — position via theme editor CSS vars on each img.
+ * X = distance from right edge, Y = distance from top. No auto-flip.
  */
 .bb-contact-hero__leaves {
   position: absolute;
@@ -74,33 +73,19 @@
 
 .bb-contact-hero__leaf {
   position: absolute;
+  top: var(--bb-leaf-offset-y, 0px);
+  right: var(--bb-leaf-offset-x, 16px);
+  width: var(--bb-leaf-size, 200px);
+  max-width: 58%;
+  height: auto;
   display: block;
-  background-repeat: no-repeat;
-  background-position: top left;
+  object-fit: contain;
+  object-position: top right;
   filter: brightness(0);
-  pointer-events: none;
-}
-
-.bb-contact-hero__leaf--1 {
-  top: 0;
-  right: 0;
-  width: min(48%, 15.5rem);
-  height: min(56%, 17.5rem);
-  background-image: var(--bb-contact-leaf-1);
-  background-size: 128% auto;
-  opacity: 0.14;
-}
-
-.bb-contact-hero__leaf--2 {
-  top: 12%;
-  right: 6%;
-  width: min(36%, 11rem);
-  height: min(44%, 13rem);
-  background-image: var(--bb-contact-leaf-2);
-  background-size: 122% auto;
-  opacity: 0.12;
-  transform: rotate(-5deg);
+  opacity: var(--bb-leaf-opacity, 0.14);
+  transform: rotate(var(--bb-leaf-rotate, 0deg)) scaleX(var(--bb-leaf-flip, 1));
   transform-origin: top right;
+  pointer-events: none;
 }
 
 .bb-contact-section-rule-wrap {
@@ -497,20 +482,6 @@
 
   .bb-contact-hero__form-wrap {
     padding: 2rem 1.25rem 2.25rem;
-  }
-
-  .bb-contact-hero__leaf--1 {
-    width: min(54%, 13rem);
-    height: min(50%, 14rem);
-    opacity: 0.13;
-  }
-
-  .bb-contact-hero__leaf--2 {
-    top: 10%;
-    right: 4%;
-    width: min(40%, 9.5rem);
-    height: min(42%, 11rem);
-    opacity: 0.11;
   }
 
   .bb-contact-form__submit-wrap {
