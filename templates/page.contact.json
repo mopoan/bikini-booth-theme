@@ -53,8 +53,9 @@
       ],
       "settings": {
         "hero_image": "shopify://shop_images/shop_interior_with_accessories.png",
-        "hero_min_height": 40,
+        "hero_min_height": 42,
         "hero_image_height_mobile": 250,
+        "form_offset_y": 32,
         "leaf_1_offset_x": 70,
         "leaf_1_offset_y": 194,
         "leaf_1_size": 200,
