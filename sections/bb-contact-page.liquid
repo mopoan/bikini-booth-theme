@@ -3,7 +3,7 @@
 {{ 'bb-contact-page.css' | asset_url | stylesheet_tag }}
 {{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
 
-<div class="bb-contact-page" id="bb-contact-page-{{ section.id }}" style="--bb-contact-hero-min: {{ section.settings.hero_min_height | default: 22 }}rem; --bb-contact-hero-image-min-mobile: {{ section.settings.hero_image_height_mobile | default: 220 }}px;">
+<div class="bb-contact-page" id="bb-contact-page-{{ section.id }}" style="--bb-contact-hero-min: {{ section.settings.hero_min_height | default: 22 }}rem; --bb-contact-hero-image-min-mobile: {{ section.settings.hero_image_height_mobile | default: 220 }}px; --bb-contact-form-offset-y: {{ section.settings.form_offset_y | default: 0 }}px;">
   <div class="bb-contact-hero">
     <div class="bb-contact-hero__image">
       {%- if section.settings.hero_image != blank -%}
@@ -191,6 +191,16 @@
       "default": 220
     },
     {
+      "type": "range",
+      "id": "form_offset_y",
+      "min": -80,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Form vertical position (nudge up/down)",
+      "default": 0
+    },
+    {
       "type": "header",
       "content": "Palm leaf 1 (large frond)"
     },
@@ -218,7 +228,7 @@
       "type": "range",
       "id": "leaf_1_size",
       "min": 80,
-      "max": 320,
+      "max": 480,
       "step": 4,
       "unit": "px",
       "label": "Leaf 1 - width",
@@ -278,7 +288,7 @@
       "type": "range",
       "id": "leaf_2_size",
       "min": 60,
-      "max": 240,
+      "max": 400,
       "step": 4,
       "unit": "px",
       "label": "Leaf 2 - width",

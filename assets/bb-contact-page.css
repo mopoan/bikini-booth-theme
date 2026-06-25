@@ -58,6 +58,7 @@
   margin: 0 auto;
   padding-top: 0;
   text-align: center;
+  transform: translateY(var(--bb-contact-form-offset-y, 0px));
 }
 
 /*
@@ -76,7 +77,7 @@
   top: var(--bb-leaf-offset-y, 0px);
   right: var(--bb-leaf-offset-x, 16px);
   width: var(--bb-leaf-size, 200px);
-  max-width: 58%;
+  max-width: 92%;
   height: auto;
   display: block;
   object-fit: contain;
