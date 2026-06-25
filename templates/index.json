@@ -194,7 +194,7 @@
         "collection": "swimwear",
         "eyebrow": "Seasonal Swimwear",
         "heading": "Seasonal Swimwear",
-        "badge_text": "Bikini tops",
+        "badge_text": "",
         "product_limit": 6,
         "button_label": "",
         "button_link": "",
@@ -640,7 +640,7 @@
       "name": "BB - Stores",
       "settings": {
         "eyebrow": "Find us",
-        "heading": "Phuket ?? Koh Samui ?? Koh Phangan"
+        "heading": "Phuket · Koh Samui · Koh Phangan"
       }
     },
     "blocks_LmPmAa": {
