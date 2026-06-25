@@ -736,6 +736,8 @@ section.bb-subframe-hero--centered-nav .bb-subframe-hero__spacer {
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
+  align-items: center;
+  text-align: center;
 }
 
 .bb-subframe-ptile__title {
