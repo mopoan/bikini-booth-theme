@@ -3,7 +3,7 @@
 {{ 'bb-contact-page.css' | asset_url | stylesheet_tag }}
 {{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
 
-<div class="bb-contact-page" id="bb-contact-page-{{ section.id }}" style="--bb-contact-hero-min: {{ section.settings.hero_min_height | default: 27 }}rem;">
+<div class="bb-contact-page" id="bb-contact-page-{{ section.id }}" style="--bb-contact-hero-min: {{ section.settings.hero_min_height | default: 22 }}rem;">
   <div class="bb-contact-hero">
     <div class="bb-contact-hero__image">
       {%- if section.settings.hero_image != blank -%}
@@ -173,12 +173,12 @@
     {
       "type": "range",
       "id": "hero_min_height",
-      "min": 22,
-      "max": 34,
+      "min": 18,
+      "max": 30,
       "step": 1,
       "unit": "rem",
       "label": "Hero minimum height (image + form)",
-      "default": 27
+      "default": 22
     },
     {
       "type": "header",
