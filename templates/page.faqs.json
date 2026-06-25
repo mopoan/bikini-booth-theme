@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -88,18 +97,34 @@
           }
         }
       },
-      "block_order": ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "s12"],
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "s10",
+        "s11",
+        "s12"
+      ],
       "settings": {
-        "hero_image": "shopify://shop_images/bb_phuket_polished.png",
+        "hero_image": "shopify://shop_images/2_models_expanded.png",
         "hero_eyebrow": "Welcome to Bikini Booth",
         "hero_title": "Frequently Asked Questions",
         "hero_date": "Last updated: 20 May 2026",
         "hero_intro": "<p>Find quick answers about orders, sizing, shipping, returns, and caring for your Bikini Booth pieces. We want your shopping experience to feel smooth and easy.</p>",
         "main_lead": "Need a little help? Here are answers to the questions we hear most often. If you still need assistance, our team is happy to help.",
         "cta_label": "CONTACT US",
-        "cta_link": "shopify://pages/contact"
+        "cta_link": "shopify://pages/contact",
+        "cta_shell_icon_size": 56
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
