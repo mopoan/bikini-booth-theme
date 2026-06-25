@@ -1,0 +1,12 @@
+{%- liquid
+  assign bb_leaf_1 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_1.png?v=1782405534'
+  assign bb_leaf_2 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_2.png?v=1782405534'
+-%}
+<div
+  class="bb-contact-hero__leaves"
+  style="--bb-contact-leaf-1: url('{{ bb_leaf_1 }}'); --bb-contact-leaf-2: url('{{ bb_leaf_2 }}');"
+  aria-hidden="true"
+>
+  <span class="bb-contact-hero__leaf bb-contact-hero__leaf--1"></span>
+  <span class="bb-contact-hero__leaf bb-contact-hero__leaf--2"></span>
+</div>

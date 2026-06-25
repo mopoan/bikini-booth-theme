@@ -19,7 +19,7 @@
 @media (min-width: 990px) {
   .bb-contact-hero {
     min-height: 31.25rem;
-    max-height: 33.75rem;
+    max-height: none;
   }
 
   .bb-contact-hero__image {

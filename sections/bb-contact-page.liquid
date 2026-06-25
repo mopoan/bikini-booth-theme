@@ -20,12 +20,7 @@
       {%- endif -%}
     </div>
     <div class="bb-contact-hero__form-wrap">
-      <div class="bb-contact-hero__palms" aria-hidden="true">
-        {%- assign bb_contact_leaf_1 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_1.png?v=1782405534' -%}
-        {%- assign bb_contact_leaf_2 = 'https://cdn.shopify.com/s/files/1/1006/3341/1874/files/palm_leave_2.png?v=1782405534' -%}
-        {%- render 'bb-palm-shadow', modifier: 'contact-leaf-1', src: bb_contact_leaf_1, width: 320, height: 280 -%}
-        {%- render 'bb-palm-shadow', modifier: 'contact-leaf-2', src: bb_contact_leaf_2, width: 220, height: 180 -%}
-      </div>
+      {%- render 'bb-contact-hero-leaves' -%}
       <div class="bb-contact-form-panel">
         {%- if section.settings.form_heading != blank -%}
           <h1 class="bb-contact-form-panel__title">{{ section.settings.form_heading | escape }}</h1>
@@ -94,8 +89,8 @@
     </div>
   </div>
 
-  <div class="bb-contact-section-rule" aria-hidden="true">
-    {%- render 'bb-star-divider' -%}
+  <div class="bb-contact-section-rule-wrap">
+    {%- render 'bb-contact-section-rule' -%}
   </div>
 
   <section class="bb-contact-stores" id="find-us">
