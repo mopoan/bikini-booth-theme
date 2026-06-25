@@ -678,7 +678,6 @@ section.bb-subframe-hero--centered-nav .bb-subframe-hero__spacer {
   background: rgba(255, 255, 255, 0.82);
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
-  color: var(--bb-brand, #4ac6be);
   cursor: pointer;
   overflow: hidden;
   z-index: 3;
@@ -693,6 +692,10 @@ section.bb-subframe-hero--centered-nav .bb-subframe-hero__spacer {
 .bb-subframe-ptile__heart svg {
   width: 17px;
   height: 17px;
+}
+
+.bb-subframe-ptile__heart svg path {
+  fill: var(--bb-brand, #4ac6be) !important;
 }
 
 .bb-subframe-ptile__heart .theme-icon:nth-of-type(2) { display: none; }
