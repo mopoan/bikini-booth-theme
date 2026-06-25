@@ -76,15 +76,15 @@
   position: absolute;
   top: var(--bb-leaf-offset-y, 0px);
   right: var(--bb-leaf-offset-x, 16px);
-  width: var(--bb-leaf-size, 200px);
-  max-width: 92%;
-  height: auto;
+  width: 160px;
+  height: 160px;
+  max-width: none;
   display: block;
   object-fit: contain;
   object-position: top right;
   filter: brightness(0);
   opacity: var(--bb-leaf-opacity, 0.14);
-  transform: rotate(var(--bb-leaf-rotate, 0deg)) scaleX(var(--bb-leaf-flip, 1));
+  transform: rotate(var(--bb-leaf-rotate, 0deg)) scaleX(var(--bb-leaf-flip, 1)) scale(var(--bb-leaf-scale, 1.25));
   transform-origin: top right;
   pointer-events: none;
 }
