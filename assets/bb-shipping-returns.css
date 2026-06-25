@@ -45,7 +45,7 @@
   font-family: var(--bb-ship-serif);
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 400;
-  color: var(--bb-ship-heading);
+  color: var(--bb-ship-hero-title-color, var(--bb-ship-heading));
   letter-spacing: -0.02em;
 }
 
@@ -55,7 +55,7 @@
   font-family: var(--bb-ship-serif);
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--bb-ship-ink);
+  color: var(--bb-ship-hero-lead-color, var(--bb-ship-ink));
 }
 
 .bb-shipping-hero__rule {
