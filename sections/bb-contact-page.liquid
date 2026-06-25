@@ -3,7 +3,7 @@
 {{ 'bb-contact-page.css' | asset_url | stylesheet_tag }}
 {{ 'bb-page-images.css' | asset_url | stylesheet_tag }}
 
-<div class="bb-contact-page" id="bb-contact-page-{{ section.id }}" style="--bb-contact-hero-min: {{ section.settings.hero_min_height | default: 26.5 }}rem;">
+<div class="bb-contact-page" id="bb-contact-page-{{ section.id }}" style="--bb-contact-hero-min: {{ section.settings.hero_min_height | default: 27 }}rem;">
   <div class="bb-contact-hero">
     <div class="bb-contact-hero__image">
       {%- if section.settings.hero_image != blank -%}
@@ -167,6 +167,144 @@
       "label": "Hero image"
     },
     {
+      "type": "header",
+      "content": "Hero layout"
+    },
+    {
+      "type": "range",
+      "id": "hero_min_height",
+      "min": 22,
+      "max": 34,
+      "step": 1,
+      "unit": "rem",
+      "label": "Hero minimum height (image + form)",
+      "default": 27
+    },
+    {
+      "type": "header",
+      "content": "Palm leaf 1 (large frond)"
+    },
+    {
+      "type": "range",
+      "id": "leaf_1_offset_x",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Leaf 1 - X (distance from right edge)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "leaf_1_offset_y",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Leaf 1 - Y (distance from top)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "leaf_1_size",
+      "min": 80,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "label": "Leaf 1 - width",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "leaf_1_rotate",
+      "min": -180,
+      "max": 180,
+      "step": 1,
+      "unit": "deg",
+      "label": "Leaf 1 - rotation",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "leaf_1_opacity",
+      "min": 5,
+      "max": 35,
+      "step": 1,
+      "unit": "%",
+      "label": "Leaf 1 - opacity",
+      "default": 14
+    },
+    {
+      "type": "checkbox",
+      "id": "leaf_1_flip",
+      "label": "Leaf 1 - flip horizontally",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Palm leaf 2 (small frond)"
+    },
+    {
+      "type": "range",
+      "id": "leaf_2_offset_x",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Leaf 2 - X (distance from right edge)",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "leaf_2_offset_y",
+      "min": 0,
+      "max": 240,
+      "step": 2,
+      "unit": "px",
+      "label": "Leaf 2 - Y (distance from top)",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "leaf_2_size",
+      "min": 60,
+      "max": 240,
+      "step": 4,
+      "unit": "px",
+      "label": "Leaf 2 - width",
+      "default": 148
+    },
+    {
+      "type": "range",
+      "id": "leaf_2_rotate",
+      "min": -180,
+      "max": 180,
+      "step": 1,
+      "unit": "deg",
+      "label": "Leaf 2 - rotation",
+      "default": -6
+    },
+    {
+      "type": "range",
+      "id": "leaf_2_opacity",
+      "min": 5,
+      "max": 35,
+      "step": 1,
+      "unit": "%",
+      "label": "Leaf 2 - opacity",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "leaf_2_flip",
+      "label": "Leaf 2 - flip horizontally",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Form content"
+    },
+    {
       "type": "text",
       "id": "form_heading",
       "label": "Form heading",
@@ -195,140 +333,6 @@
       "id": "stores_heading",
       "label": "Stores heading",
       "default": "Phuket · Koh Samui · Koh Phangan"
-    },
-    {
-      "type": "header",
-      "content": "Hero layout"
-    },
-    {
-      "type": "range",
-      "id": "hero_min_height",
-      "min": 22,
-      "max": 34,
-      "step": 0.5,
-      "unit": "rem",
-      "label": "Hero minimum height (image + form)",
-      "default": 26.5
-    },
-    {
-      "type": "header",
-      "content": "Palm leaf 1 (large frond)"
-    },
-    {
-      "type": "range",
-      "id": "leaf_1_offset_x",
-      "min": 0,
-      "max": 200,
-      "step": 2,
-      "unit": "px",
-      "label": "Leaf 1 — X (distance from right edge)",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "leaf_1_offset_y",
-      "min": 0,
-      "max": 200,
-      "step": 2,
-      "unit": "px",
-      "label": "Leaf 1 — Y (distance from top)",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "leaf_1_size",
-      "min": 80,
-      "max": 320,
-      "step": 4,
-      "unit": "px",
-      "label": "Leaf 1 — width",
-      "default": 200
-    },
-    {
-      "type": "range",
-      "id": "leaf_1_rotate",
-      "min": -180,
-      "max": 180,
-      "step": 1,
-      "unit": "deg",
-      "label": "Leaf 1 — rotation",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "leaf_1_opacity",
-      "min": 5,
-      "max": 35,
-      "step": 1,
-      "unit": "%",
-      "label": "Leaf 1 — opacity",
-      "default": 14
-    },
-    {
-      "type": "checkbox",
-      "id": "leaf_1_flip",
-      "label": "Leaf 1 — flip horizontally",
-      "default": false
-    },
-    {
-      "type": "header",
-      "content": "Palm leaf 2 (small frond)"
-    },
-    {
-      "type": "range",
-      "id": "leaf_2_offset_x",
-      "min": 0,
-      "max": 200,
-      "step": 2,
-      "unit": "px",
-      "label": "Leaf 2 — X (distance from right edge)",
-      "default": 52
-    },
-    {
-      "type": "range",
-      "id": "leaf_2_offset_y",
-      "min": 0,
-      "max": 240,
-      "step": 2,
-      "unit": "px",
-      "label": "Leaf 2 — Y (distance from top)",
-      "default": 64
-    },
-    {
-      "type": "range",
-      "id": "leaf_2_size",
-      "min": 60,
-      "max": 240,
-      "step": 4,
-      "unit": "px",
-      "label": "Leaf 2 — width",
-      "default": 148
-    },
-    {
-      "type": "range",
-      "id": "leaf_2_rotate",
-      "min": -180,
-      "max": 180,
-      "step": 1,
-      "unit": "deg",
-      "label": "Leaf 2 — rotation",
-      "default": -6
-    },
-    {
-      "type": "range",
-      "id": "leaf_2_opacity",
-      "min": 5,
-      "max": 35,
-      "step": 1,
-      "unit": "%",
-      "label": "Leaf 2 — opacity",
-      "default": 12
-    },
-    {
-      "type": "checkbox",
-      "id": "leaf_2_flip",
-      "label": "Leaf 2 — flip horizontally",
-      "default": false
     }
   ],
   "blocks": [
