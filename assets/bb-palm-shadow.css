@@ -13,7 +13,7 @@
 
 /* --- Contact form column --- */
 .bb-contact-page .bb-palm-shadow {
-  opacity: 0.16;
+  opacity: 0.1;
 }
 
 .bb-contact-hero__form-wrap {
@@ -29,14 +29,14 @@
   overflow: hidden;
 }
 
-/* Single top-right leaf — Contact.png mockup (stem in corner, fronds hang inward) */
+/* Single top-right leaf — stem anchored in corner, fronds hang inward (PNG is inverted by default) */
 .bb-palm-shadow--contact-tr {
-  top: -0.15rem;
-  right: -0.35rem;
+  top: -0.25rem;
+  right: -0.5rem;
   width: clamp(8.5rem, 22vw, 11.5rem);
   height: auto;
-  opacity: 0.15;
-  transform: rotate(16deg);
+  opacity: 0.08;
+  transform: scaleY(-1) rotate(-22deg);
   transform-origin: top right;
 }
 
@@ -47,10 +47,10 @@
 @media (max-width: 989px) {
   .bb-palm-shadow--contact-tr {
     top: 0;
-    right: -0.25rem;
+    right: -0.35rem;
     width: clamp(7rem, 28vw, 9.5rem);
-    opacity: 0.14;
-    transform: rotate(14deg);
+    opacity: 0.08;
+    transform: scaleY(-1) rotate(-20deg);
   }
 }
 
@@ -70,7 +70,7 @@
   left: -3.5rem;
   width: clamp(9rem, 16vw, 13rem);
   height: auto;
-  opacity: 0.38;
+  opacity: 0.1;
   object-position: bottom left;
   transform: scaleY(-1) rotate(-8deg);
   transform-origin: bottom left;
@@ -81,6 +81,6 @@
     bottom: -1.5rem;
     left: -2.5rem;
     width: clamp(7rem, 28vw, 9.5rem);
-    opacity: 0.32;
+    opacity: 0.08;
   }
 }

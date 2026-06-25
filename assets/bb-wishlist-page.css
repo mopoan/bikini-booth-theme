@@ -105,8 +105,8 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 0.875rem;
-  height: 1rem;
+  width: 1.125rem;
+  height: 1.35rem;
   color: var(--bb-wl-accent);
 }
 
@@ -116,8 +116,10 @@
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-  opacity: 0.85;
+  opacity: 1;
   transform: rotate(-18deg);
+  /* palm_leaf.png is grey — tint to brand teal (#4ac6be) */
+  filter: brightness(0) saturate(100%) invert(71%) sepia(37%) saturate(847%) hue-rotate(127deg) brightness(94%) contrast(87%);
 }
 
 .bb-wishlist-toolbar__count {
