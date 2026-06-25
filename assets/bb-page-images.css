@@ -91,7 +91,7 @@
 
 @media (max-width: 989px) {
   .bb-contact-hero__image {
-    min-height: 15rem;
+    min-height: var(--bb-contact-hero-image-min-mobile, 220px);
     aspect-ratio: 16 / 9;
   }
 

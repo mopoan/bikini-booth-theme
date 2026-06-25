@@ -475,7 +475,7 @@
   }
 
   .bb-contact-hero__image {
-    min-height: 220px;
+    min-height: var(--bb-contact-hero-image-min-mobile, 220px);
     order: -1;
     aspect-ratio: 16 / 9;
   }
