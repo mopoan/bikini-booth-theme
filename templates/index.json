@@ -670,7 +670,8 @@
         "heading": "JOIN OUR ESCAPE",
         "subtext": "Sign up for sun-soaked updates, early access, and special offers.",
         "placeholder": "Enter Your email",
-        "button_label": "Subscribe"
+        "button_label": "Subscribe",
+        "bg_color": "#F0FAF9"
       }
     },
     "blocks_znyhy7": {
@@ -679,7 +680,7 @@
         "ai_gen_block_f9e42c0_X7zinL": {
           "type": "ai_gen_block_f9e42c0",
           "settings": {
-            "divider_color": "#49C6BE",
+            "divider_color": "#49c6be",
             "divider_height": 3,
             "desktop_width_percent": 100
           },
