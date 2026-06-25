@@ -14,8 +14,9 @@
 /* --- Contact form column (Contact.png: two leaves, top-right) --- */
 .bb-contact-page .bb-palm-shadow {
   opacity: 1;
-  /* Assets are white PNGs — render as soft grey shadows on cream */
+  /* White PNG assets — render as soft grey shadows on cream */
   filter: brightness(0);
+  z-index: 3;
 }
 
 .bb-contact-hero__form-wrap {
@@ -26,48 +27,45 @@
 .bb-contact-hero__palms {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
   overflow: visible;
 }
 
-/* PNG stems are top-left in file — mirror into top-right corner, kept inside column */
+/* Asset stems are top-left in file — mirror into top-right corner */
 .bb-palm-shadow--contact-leaf-1 {
-  top: 0.2rem;
-  right: 0.4rem;
-  width: clamp(9rem, 22vw, 13rem);
+  top: 0;
+  right: 0;
+  width: clamp(11rem, 30vw, 16rem);
   height: auto;
-  max-width: calc(100% - 0.75rem);
-  opacity: 0.12;
+  opacity: 0.18;
+  object-position: top left;
   transform: scaleX(-1);
-  transform-origin: top right;
+  transform-origin: 100% 0%;
 }
 
 .bb-palm-shadow--contact-leaf-2 {
-  top: clamp(3.75rem, 9.5vw, 5.5rem);
-  right: 0.2rem;
-  width: clamp(6.25rem, 15vw, 9rem);
+  top: clamp(4.5rem, 12vw, 6.25rem);
+  right: clamp(0.25rem, 2vw, 0.75rem);
+  width: clamp(7.5rem, 20vw, 11rem);
   height: auto;
-  max-width: calc(100% - 0.5rem);
-  opacity: 0.1;
-  transform: scaleX(-1) rotate(-10deg);
-  transform-origin: top right;
+  opacity: 0.15;
+  object-position: top left;
+  transform: scaleX(-1) rotate(-6deg);
+  transform-origin: 100% 0%;
 }
 
 @media (max-width: 989px) {
   .bb-palm-shadow--contact-leaf-1 {
-    top: 0.15rem;
-    right: 0.5rem;
-    width: clamp(7.5rem, 30vw, 10.5rem);
-    opacity: 0.11;
+    width: clamp(9rem, 38vw, 13rem);
+    opacity: 0.16;
   }
 
   .bb-palm-shadow--contact-leaf-2 {
-    top: clamp(3.25rem, 12vw, 4.75rem);
-    right: 0.35rem;
-    width: clamp(5.5rem, 20vw, 7.5rem);
-    opacity: 0.09;
-    transform: scaleX(-1) rotate(-8deg);
+    top: clamp(3.5rem, 16vw, 5rem);
+    width: clamp(6.5rem, 26vw, 9rem);
+    opacity: 0.13;
+    transform: scaleX(-1) rotate(-5deg);
   }
 }
 
