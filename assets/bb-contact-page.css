@@ -45,9 +45,9 @@
   align-items: center;
   justify-content: center;
   min-height: 100%;
-  padding: 2rem 2.5rem;
+  padding: 2.25rem 2.5rem;
   background: var(--bb-contact-cream);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .bb-contact-form-panel {
@@ -56,51 +56,51 @@
   width: 100%;
   max-width: 28rem;
   margin: 0 auto;
-  padding-top: 0.5rem;
+  padding-top: 0.75rem;
   text-align: center;
 }
 
-/* Palm leaves — top-right corner per mockup annotation */
+/*
+ * Palm fronds — PNG art sits top-left of a 1024px canvas.
+ * Anchor the leaf box to the column top-right; background top-left
+ * paints fronds inward (no scaleX flip — that pushed them off-screen).
+ */
 .bb-contact-hero__leaves {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 1;
   pointer-events: none;
-  overflow: visible;
 }
 
 .bb-contact-hero__leaf {
   position: absolute;
   display: block;
   background-repeat: no-repeat;
+  background-position: top left;
   filter: brightness(0);
   pointer-events: none;
 }
 
 .bb-contact-hero__leaf--1 {
-  top: -0.25rem;
-  right: -0.25rem;
-  width: min(58%, 19rem);
-  height: min(64%, 20rem);
+  top: 0;
+  right: 0;
+  width: min(48%, 15.5rem);
+  height: min(56%, 17.5rem);
   background-image: var(--bb-contact-leaf-1);
-  background-size: 138% auto;
-  background-position: top left;
-  opacity: 0.2;
-  transform: scaleX(-1);
-  transform-origin: 100% 0%;
+  background-size: 128% auto;
+  opacity: 0.14;
 }
 
 .bb-contact-hero__leaf--2 {
-  top: 10%;
-  right: 2%;
-  width: min(44%, 14rem);
-  height: min(50%, 15rem);
+  top: 12%;
+  right: 6%;
+  width: min(36%, 11rem);
+  height: min(44%, 13rem);
   background-image: var(--bb-contact-leaf-2);
-  background-size: 132% auto;
-  background-position: top left;
-  opacity: 0.16;
-  transform: scaleX(-1) rotate(-6deg);
-  transform-origin: 100% 0%;
+  background-size: 122% auto;
+  opacity: 0.12;
+  transform: rotate(-5deg);
+  transform-origin: top right;
 }
 
 .bb-contact-section-rule-wrap {
@@ -187,7 +187,7 @@
 }
 
 .bb-contact-form .field--comment.field-with-icon .field__input.text-area {
-  min-height: 7rem;
+  min-height: 7.5rem;
   height: auto;
   padding: 0.85rem 1rem 0.85rem 2.75rem;
   resize: vertical;
@@ -496,24 +496,21 @@
   }
 
   .bb-contact-hero__form-wrap {
-    padding: 1.75rem 1.25rem 2rem;
-  }
-
-  .bb-contact-form-panel {
-    padding-top: 0.25rem;
+    padding: 2rem 1.25rem 2.25rem;
   }
 
   .bb-contact-hero__leaf--1 {
-    width: min(62%, 15rem);
-    height: min(58%, 14rem);
-    opacity: 0.18;
+    width: min(54%, 13rem);
+    height: min(50%, 14rem);
+    opacity: 0.13;
   }
 
   .bb-contact-hero__leaf--2 {
-    top: 8%;
-    width: min(48%, 11rem);
-    height: min(46%, 12rem);
-    opacity: 0.14;
+    top: 10%;
+    right: 4%;
+    width: min(40%, 9.5rem);
+    height: min(42%, 11rem);
+    opacity: 0.11;
   }
 
   .bb-contact-form__submit-wrap {
