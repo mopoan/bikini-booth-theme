@@ -953,9 +953,14 @@
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed wishlist-button.product-card__media-buttons__item,
 .bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item,
 .bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed wishlist-button.product-card__media-buttons__item {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 38px !important;
   height: 38px !important;
   min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
   border-radius: 50% !important;
   background: rgba(255, 255, 255, 0.82) !important;
   border: 1px solid rgba(74, 198, 190, 0.35) !important;
@@ -975,4 +980,19 @@
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item svg path,
 .bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item svg path {
   fill: var(--bb-col-brand) !important;
+}
+
+/* Center the heart icon in the disc, fixed size (stops off-center + hover shift) */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item svg,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item svg {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+  flex: none !important;
+  position: static !important;
+}
+
+/* Breathing room between the last product row and the footer */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] {
+  padding-bottom: clamp(2.75rem, 6vw, 5rem) !important;
 }
