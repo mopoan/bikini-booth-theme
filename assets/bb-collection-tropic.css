@@ -356,7 +356,7 @@
 }
 
 /* Eyebrow above the title — change the text or remove this whole rule */
-.bb-collection-tropic [data-section-name="main-collection-banner"] .main-collection-banner__content::before {
+.bb-collection-tropic [data-section-name="main-collection-banner"] h1::before {
   content: "Bikini Booth";
   display: block;
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
