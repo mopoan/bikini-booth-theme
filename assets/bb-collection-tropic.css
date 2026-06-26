@@ -961,6 +961,8 @@
   min-width: 0 !important;
   padding: 0 !important;
   margin: 0 !important;
+  font-size: 0 !important;
+  overflow: hidden !important;
   border-radius: 50% !important;
   background: rgba(255, 255, 255, 0.82) !important;
   border: 1px solid rgba(74, 198, 190, 0.35) !important;
@@ -995,4 +997,13 @@
 /* Breathing room between the last product row and the footer */
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] {
   padding-bottom: clamp(2.75rem, 6vw, 5rem) !important;
+}
+
+/* Hide the "Add to Wishlist" text label (pseudo-element from data-text) so only the heart shows */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item::before,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item::after,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item::before,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item::after {
+  content: none !important;
+  display: none !important;
 }
