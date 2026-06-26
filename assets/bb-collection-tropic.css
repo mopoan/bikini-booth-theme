@@ -284,8 +284,8 @@
 /* Sort chevron: ensure SVG renders (avoid empty “square” placeholders) */
 .bb-collection-tropic .bb-collection-toolbar__sort .field__icon--select svg {
   display: block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   flex-shrink: 0;
 }
 
@@ -1070,9 +1070,11 @@
 }
 .bb-collection-tropic .bb-collection-toolbar__sort .field__input {
   width: auto !important;
+  field-sizing: content !important;
   font-weight: 400 !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  padding-right: 0.85rem !important;
   line-height: 1.2 !important;
 }
 .bb-collection-tropic .bb-collection-toolbar__sort .field__icon--select {
