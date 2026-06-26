@@ -1007,3 +1007,13 @@
   content: none !important;
   display: none !important;
 }
+
+/* Collapse the wishlist label ("Add to Wishlist") wherever the component holds it,
+   leaving only the heart icon. Excludes the SVG so the heart keeps its size/colour. */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item *:not(svg):not(path),
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item *:not(svg):not(path) {
+  font-size: 0 !important;
+  line-height: 0 !important;
+  letter-spacing: 0 !important;
+  color: transparent !important;
+}
