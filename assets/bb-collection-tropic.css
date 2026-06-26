@@ -959,6 +959,11 @@
   width: 38px !important;
   height: 38px !important;
   min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 38px !important;
+  max-height: 38px !important;
+  box-sizing: border-box !important;
+  aspect-ratio: 1 / 1 !important;
   padding: 0 !important;
   margin: 0 !important;
   font-size: 0 !important;
