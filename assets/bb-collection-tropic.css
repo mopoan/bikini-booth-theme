@@ -929,16 +929,17 @@
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .product-card__image__container > productcard-buttons,
 .bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .product-card__image__container > productcard-buttons {
   display: block !important;
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  left: auto;
-  bottom: auto;
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  left: auto !important;
+  bottom: auto !important;
   z-index: 3;
   opacity: 1 !important;
   background: transparent !important;
   padding: 0 !important;
   box-shadow: none !important;
+  transform: none !important;
 }
 
 /* Only one heart: hide the bottom-row copy */
@@ -960,6 +961,7 @@
   border: 1px solid rgba(74, 198, 190, 0.35) !important;
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
+  transform: none !important;
   transition: background 0.2s ease, border-color 0.2s ease !important;
 }
 
