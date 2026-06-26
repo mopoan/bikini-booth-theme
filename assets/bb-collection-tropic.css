@@ -24,9 +24,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem 2rem;
-  padding-bottom: 1rem;
-  margin-bottom: 0.25rem;
-  border-bottom: none;
+  padding-top: clamp(1.1rem, 2.2vw, 1.6rem);
+  padding-bottom: clamp(1.1rem, 2.2vw, 1.6rem);
+  margin-bottom: 0;
+  border-bottom: 1px solid rgba(10, 46, 46, 0.12);
 }
 
 .bb-collection-tropic .bb-collection-toolbar__left {
@@ -52,17 +53,17 @@
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
   font-size: 13px !important;
   font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.02em !important;
   text-transform: lowercase !important;
-  color: #111 !important;
+  color: #6f7c7a !important;
   line-height: 1.2 !important;
 }
 
 .bb-collection-tropic .bb-collection-toolbar__left .facet__heading {
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.01em !important;
   text-transform: lowercase !important;
   line-height: 1.2 !important;
 }
@@ -95,8 +96,8 @@
 .bb-collection-tropic .bb-collection-toolbar__vd {
   display: inline-block;
   width: 1px;
-  height: 1.15rem;
-  background: rgba(10, 46, 46, 0.18);
+  height: 1.25rem;
+  background: rgba(10, 46, 46, 0.12);
   flex-shrink: 0;
 }
 
@@ -117,10 +118,10 @@
 
 .bb-collection-tropic .bb-collection-toolbar__sort .field__input {
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
-  font-size: 12px !important;
-  letter-spacing: 0.02em;
+  font-size: 14px !important;
+  letter-spacing: 0.01em;
   text-transform: lowercase;
-  color: #111 !important;
+  color: var(--bb-col-ink) !important;
   border: none !important;
   border-radius: 0 !important;
   padding-left: 0 !important;
@@ -160,18 +161,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.25rem;
+  min-width: 2rem;
   height: 2rem;
-  padding: 0 0.5rem;
+  padding: 0;
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, "Century Gothic", "Trebuchet MS", sans-serif);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 400;
   letter-spacing: 0.02em;
   line-height: 1;
-  color: rgba(0, 0, 0, 0.45);
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  border-radius: 2px;
+  color: #6f7c7a;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
   cursor: pointer;
   transition:
     color 0.15s ease,
@@ -181,38 +182,42 @@
 
 .bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn:hover {
   color: var(--bb-col-brand);
-  border-color: var(--bb-col-brand);
+  border-color: transparent;
 }
 
 .bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-d {
   color: var(--bb-col-brand) !important;
   border-color: var(--bb-col-brand) !important;
   background: rgba(74, 198, 190, 0.1);
-  box-shadow: inset 0 0 0 1px var(--bb-col-brand);
+  font-weight: 600;
 }
 
 .bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-t {
   color: var(--bb-col-brand) !important;
   border-color: var(--bb-col-brand) !important;
   background: rgba(74, 198, 190, 0.1);
-  box-shadow: inset 0 0 0 1px var(--bb-col-brand);
+  font-weight: 600;
 }
 
 /* Wide desktop: only desktop density (active-d) looks selected; tablet choice may differ. */
 @media (min-width: 1025px) {
   .bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-t:not(.active-d) {
-    color: rgba(0, 0, 0, 0.45);
-    border-color: rgba(0, 0, 0, 0.18);
+    color: #6f7c7a;
+    border-color: transparent;
+    background: none;
     box-shadow: none;
+    font-weight: 400;
   }
 }
 
 /* Tablet: only tablet density (active-t) looks selected. */
 @media (min-width: 577px) and (max-width: 1024px) {
   .bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn.active-d:not(.active-t) {
-    color: rgba(0, 0, 0, 0.45);
-    border-color: rgba(0, 0, 0, 0.18);
+    color: #6f7c7a;
+    border-color: transparent;
+    background: none;
     box-shadow: none;
+    font-weight: 400;
   }
 }
 
@@ -267,10 +272,10 @@
   margin: 0 !important;
   text-align: right !important;
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
-  font-size: 12px !important;
+  font-size: 13px !important;
   font-weight: 400 !important;
   letter-spacing: 0.02em !important;
-  color: #111 !important;
+  color: #6f7c7a !important;
   text-transform: lowercase !important;
   align-self: center;
   white-space: nowrap;
@@ -353,19 +358,6 @@
   color: var(--bb-col-ink);
   text-align: center !important;
   margin: 0 !important;
-}
-
-/* Eyebrow above the title — change the text or remove this whole rule */
-.bb-collection-tropic [data-section-name="main-collection-banner"] h1::before {
-  content: "Bikini Booth";
-  display: block;
-  font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--bb-col-brand);
-  margin-bottom: 0.65rem;
 }
 
 /* Star ornament between title and description (matches the wishlist page) */
@@ -521,16 +513,16 @@
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif);
   font-size: 13px !important;
   font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.02em !important;
   text-transform: lowercase !important;
-  color: #111 !important;
+  color: #6f7c7a !important;
 }
 
 .bb-collection-tropic .facets__horizontal .facet__heading {
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
+  letter-spacing: 0.01em !important;
   text-transform: lowercase !important;
   color: var(--bb-col-ink) !important;
 }
