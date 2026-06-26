@@ -662,7 +662,7 @@
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .price__main, .bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .price__main,
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .price__sale , .bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .price__sale {
   font-family: var(--bb-font-futura, "Futura LT Pro", Futura, sans-serif) !important;
-  color: #3d4f4f !important;
+  color: var(--bb-col-brand) !important;
   font-weight: 500 !important;
   font-size: clamp(1rem, 1.15vw, 1.2rem) !important;
   line-height: 1.2 !important;
@@ -840,9 +840,11 @@
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .image-hover-box__container , .bb-collection-tropic [data-section-name="main-search"] .product-card .image-hover-box__container {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
-  background: #f0f0f0;
+  aspect-ratio: 9 / 16 !important;
+  background: #fff;
   overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid #e8e4dd;
 }
 
 .bb-collection-tropic
@@ -864,8 +866,8 @@
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .image-hover-box__container img , .bb-collection-tropic [data-section-name="main-search"] .product-card .image-hover-box__container img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
-  object-position: center center;
+  object-fit: cover !important;
+  object-position: center top;
 }
 
 /* Pagination / load more */
@@ -907,4 +909,68 @@
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] .price__sale,, .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] .price__sale,
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card [id^="price-"] .price__regular , .bb-collection-tropic [data-section-name="main-search"] .product-card [id^="price-"] .price__regular {
   text-align: center;
+}
+
+/* ============================================================================
+   Scroller-match: wishlist heart on the image + teal product name
+   Brings the on-image wishlist overlay back (the rule above hid it, leaving
+   only a mobile-only copy, so desktop showed no heart and the show/hide toggle
+   appeared dead). Restyles it to the round teal-ring disc from the homepage
+   scroller, and hides the bottom-row copy so there is exactly one heart.
+   ============================================================================ */
+
+/* Product name -> teal on hover */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card-small__heading:hover,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card-small__heading:hover {
+  color: var(--bb-col-brand) !important;
+}
+
+/* Un-hide the on-image wishlist overlay (it is --show-always, so always visible) */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .product-card__image__container > productcard-buttons,
+.bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .product-card__image__container > productcard-buttons {
+  display: block !important;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  left: auto;
+  bottom: auto;
+  z-index: 3;
+  opacity: 1 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Only one heart: hide the bottom-row copy */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card--bb-card-swatches .product-card__interface__icons,
+.bb-collection-tropic [data-section-name="main-search"] .product-card--bb-card-swatches .product-card__interface__icons {
+  display: none !important;
+}
+
+/* Round white disc + teal ring (overrides the square teal chip in bb-product-card-brand.css) */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item,
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed wishlist-button.product-card__media-buttons__item,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed wishlist-button.product-card__media-buttons__item {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 0 !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(74, 198, 190, 0.35) !important;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  transition: background 0.2s ease, border-color 0.2s ease !important;
+}
+
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item:hover,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item:hover {
+  background: #fff !important;
+  border-color: var(--bb-col-brand) !important;
+}
+
+/* Teal heart icon (overrides the dark fill on icon-wishlist paths) */
+.bb-collection-tropic [data-section-name="main-collection-product-grid"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item svg path,
+.bb-collection-tropic [data-section-name="main-search"] .product-card .product-card__media-buttons_fixed .product-card__media-buttons__item svg path {
+  fill: var(--bb-col-brand) !important;
 }
