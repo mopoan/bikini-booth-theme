@@ -3,22 +3,32 @@
   --bb-contact-ink: var(--bb-page-ink, #0a2e2e);
   --bb-contact-muted: var(--bb-page-body, #545454);
   --bb-contact-cream: var(--bb-page-cream, #fdf9f0);
-  --bb-contact-card: #faf8f4;
+  --bb-contact-card: var(--bb-page-cream, #fdf9f0);
   --bb-contact-field-border: #e3ddd3;
   --bb-contact-serif: var(--bb-page-sans);
   --bb-contact-sans: var(--bb-page-sans);
-  background: var(--bb-contact-cream);
+  background: #fff;
+}
+
+/* Override site-wide cream canvas on contact — white page, cream hero band only */
+.bb-root.bb-contact-tropic.template-page #MainContent:has(.bb-contact-page),
+.bb-root.bb-contact-tropic.template-page #MainContent:has(.bb-contact-page) .content-for-layout {
+  background: #fff !important;
 }
 
 .bb-contact-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  background: var(--bb-contact-cream);
+  overflow: visible;
 }
 
 .bb-contact-hero__image {
   position: relative;
   overflow: hidden;
   background: #ddd;
+  min-height: 100%;
 }
 
 .bb-contact-hero__image img {
@@ -34,7 +44,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3.5rem 2.75rem;
+  min-height: 100%;
+  padding: 1.5rem 2rem;
   background: var(--bb-contact-cream);
   overflow: hidden;
 }
@@ -45,13 +56,56 @@
   width: 100%;
   max-width: 28rem;
   margin: 0 auto;
+  padding-top: 0;
   text-align: center;
+  transform: translateY(var(--bb-contact-form-offset-y, 0px));
+}
+
+/*
+ * Palm fronds — position via theme editor CSS vars on each img.
+ * X = distance from right edge, Y = distance from top. No auto-flip.
+ */
+.bb-contact-hero__leaves {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bb-contact-hero__leaf {
+  position: absolute;
+  top: var(--bb-leaf-offset-y, 0px);
+  right: var(--bb-leaf-offset-x, 16px);
+  width: 160px;
+  height: 160px;
+  max-width: none;
+  display: block;
+  object-fit: contain;
+  object-position: top right;
+  filter: brightness(0);
+  opacity: var(--bb-leaf-opacity, 0.14);
+  transform: rotate(var(--bb-leaf-rotate, 0deg)) scaleX(var(--bb-leaf-flip, 1)) scale(var(--bb-leaf-scale, 1.25));
+  transform-origin: top right;
+  pointer-events: none;
+}
+
+.bb-contact-section-rule-wrap {
+  background: linear-gradient(to bottom, var(--bb-contact-cream) 50%, #fff 50%);
+}
+
+.bb-contact-section-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: #e3ddd3;
 }
 
 .bb-contact-form-panel__title {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.35rem;
   font-family: var(--bb-contact-serif);
-  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 400;
   line-height: 1.15;
   color: var(--bb-contact-ink);
@@ -62,7 +116,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  margin: 0.75rem 0 1.5rem;
+  margin: 0.5rem 0 1rem;
   color: var(--bb-contact-accent);
 }
 
@@ -81,10 +135,10 @@
 }
 
 .bb-contact-form-panel__intro {
-  margin: 0.75rem 0 1.75rem;
+  margin: 0.5rem 0 1.25rem;
   font-family: var(--bb-contact-sans);
-  font-size: 0.9375rem;
-  line-height: 1.6;
+  font-size: 0.875rem;
+  line-height: 1.5;
   color: var(--bb-contact-ink);
 }
 
@@ -93,7 +147,7 @@
 }
 
 .bb-contact-form .field {
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.65rem;
 }
 
 .bb-contact-form .field--comment {
@@ -119,9 +173,9 @@
 }
 
 .bb-contact-form .field--comment.field-with-icon .field__input.text-area {
-  min-height: 8.5rem;
+  min-height: 5rem;
   height: auto;
-  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
   resize: vertical;
 }
 
@@ -182,7 +236,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   padding: 0;
 }
 
@@ -227,8 +281,8 @@
 }
 
 .bb-contact-stores {
-  padding: 5.5rem 1.5rem 4.5rem;
-  background: var(--bb-contact-cream);
+  padding: 4.5rem 1.5rem 4.5rem;
+  background: #fff;
 }
 
 .bb-contact-stores__inner {
@@ -422,13 +476,15 @@
   }
 
   .bb-contact-hero__image {
-    min-height: 280px;
+    min-height: var(--bb-contact-hero-image-min-mobile, 220px);
     order: -1;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
   }
 
   .bb-contact-hero__form-wrap {
-    padding: 2.5rem 1.25rem 3rem;
+    padding: 1.5rem 1.25rem 1.75rem;
+    overflow: visible;
+    align-items: center;
   }
 
   .bb-contact-form__submit-wrap {

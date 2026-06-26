@@ -1,5 +1,5 @@
 /**
- * Palm leaf shadow overlays — palm_leaf.png (Shopify Files).
+ * Palm leaf shadow overlays — Shopify Files assets (footer etc.).
  */
 .bb-palm-shadow {
   position: absolute;
@@ -9,49 +9,6 @@
   user-select: none;
   object-fit: contain;
   opacity: 0.42;
-}
-
-/* --- Contact form column --- */
-.bb-contact-page .bb-palm-shadow {
-  opacity: 0.1;
-}
-
-.bb-contact-hero__form-wrap {
-  position: relative;
-  overflow: hidden;
-}
-
-.bb-contact-hero__palms {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-/* Single top-right leaf — stem anchored in corner, fronds hang inward (PNG is inverted by default) */
-.bb-palm-shadow--contact-tr {
-  top: -0.25rem;
-  right: -0.5rem;
-  width: clamp(8.5rem, 22vw, 11.5rem);
-  height: auto;
-  opacity: 0.08;
-  transform: scaleY(-1) rotate(-22deg);
-  transform-origin: top right;
-}
-
-.bb-palm-shadow--contact-tl {
-  display: none !important;
-}
-
-@media (max-width: 989px) {
-  .bb-palm-shadow--contact-tr {
-    top: 0;
-    right: -0.35rem;
-    width: clamp(7rem, 28vw, 9.5rem);
-    opacity: 0.08;
-    transform: scaleY(-1) rotate(-20deg);
-  }
 }
 
 /* --- Footer --- */
