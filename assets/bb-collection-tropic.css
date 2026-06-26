@@ -1047,3 +1047,35 @@
 .bb-collection-tropic .bb-collection-toolbar__sort .field:hover .field__input {
   color: var(--bb-col-brand) !important;
 }
+
+/* === Toolbar type: match the approved mockup exactly (clean system sans, not brand Futura) === */
+.bb-collection-tropic .bb-collection-toolbar__left .facets__horizontal .facets__wrapper > p.mt0.h6,
+.bb-collection-tropic .facets__horizontal .facets__wrapper > .mt0.h6,
+.bb-collection-tropic .bb-collection-toolbar__left .facet__heading,
+.bb-collection-tropic .facets__horizontal .facet__heading,
+.bb-collection-tropic .bb-collection-toolbar__sort .field__input,
+.bb-collection-tropic .bb-collection-toolbar__count,
+.bb-collection-tropic .bb-collection-toolbar__grid-selector .bb-collection-grid__density-btn {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+}
+
+/* Sort: regular weight, sit tight to the chevron, vertically centred */
+.bb-collection-tropic .bb-collection-toolbar__sort .field {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+.bb-collection-tropic .bb-collection-toolbar__sort .sorting--tropic-inline {
+  min-width: 0 !important;
+  width: auto !important;
+}
+.bb-collection-tropic .bb-collection-toolbar__sort .field__input {
+  width: auto !important;
+  font-weight: 400 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1.2 !important;
+}
+.bb-collection-tropic .bb-collection-toolbar__sort .field__icon--select {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
