@@ -50,6 +50,7 @@
       "name": "Product info",
       "settings": {
         "price_note": "Top and bottom sold separately.",
+        "show_tagline": true,
         "show_subtitle": true,
         "subtitle_font_size": 12,
         "subtitle_color": "#8a8077",
@@ -247,14 +248,14 @@
             "icon": "star",
             "value": "5.0",
             "label": "Avg rating",
-            "caption": "from 300+ reviews"
+            "caption": "from 500+ reviews"
           }
         },
         "stat_GAAqfd": {
           "type": "stat",
           "settings": {
             "icon": "heart",
-            "value": "300+",
+            "value": "500+",
             "label": "Real reviews",
             "caption": "from happy beach lovers"
           }
