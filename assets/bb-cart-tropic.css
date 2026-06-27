@@ -216,8 +216,13 @@
 .bb-rec__head { position: relative; z-index: 1; margin-bottom: 14px; }
 .bb-rec__title {
   display: inline-flex; align-items: center; gap: 9px; flex-wrap: wrap;
-  margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.6rem;
-  letter-spacing: -0.01em; color: var(--bb-ink); line-height: 1.2;
+  margin: 0; font-size: 1.6rem; color: var(--bb-ink); line-height: 1.2;
+}
+/* Win over the theme's heading font rules (higher specificity + !important) */
+.bb-cart .bb-rec__title {
+  font-family: var(--font-display) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
 }
 .bb-rec__accent { display: inline-flex; flex: none; }
 .bb-rec__sub { margin: 4px 0 0; font-size: 0.85rem; color: var(--bb-muted); }
