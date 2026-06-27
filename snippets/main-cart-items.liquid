@@ -1,0 +1,130 @@
+{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}
+{{ 'bb-cart-tropic.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'bb-cart.js' | asset_url }}" defer="defer"></script>
+
+{%- capture page_width -%}{%- if section.settings.width != "default" %}{{ section.settings.width }}{%- else -%}{{ settings.page_width_main }}{%- endif -%}{%- endcapture -%}
+
+<cart-items id="theme-section-{{ section.id }}"
+     class="bb-cart display-block top-spacing-{{ section.settings.top_spacing }}{% if cart == empty %} is-empty{% endif %}"
+     data-section-name="main-cart-items">
+
+  {%- comment -%} Empty state {%- endcomment -%}
+  <div class="{{ page_width }} bb-cart__col bb-cart__col--main">
+    <div class="cart__warnings bb-cart__empty text-center">
+      <div class="bb-cart__empty-icon">{%- render "icon-cart" -%}</div>
+      <p class="mt30 h2 cart__warnings__heading">{{ 'sections.cart.empty' | t }}</p>
+      <a href="{% if settings.continue_shopping_link == blank %}{{ routes.all_products_collection_url }}{% else %}{{ settings.continue_shopping_link }}{% endif %}"
+         class="bb-cart__empty-cta">
+        {{- 'icon-arrow-left-2' | append: settings.system_icon_thickness | inline_asset_content -}}
+        <span>{{ 'general.continue_shopping' | t }}</span>
+      </a>
+      {%- if shop.customer_accounts_enabled and customer == nil -%}
+        <p class="h5 mt40">{{ 'sections.cart.login.title' | t }}</p>
+        <p class="mt16 body2">{{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} Active cart {%- endcomment -%}
+  <div class="{{ page_width }} bb-cart__col bb-cart__col--main">
+    <div class="bb-cart__heading">
+      <a href="{% if settings.continue_shopping_link == blank %}{{ routes.all_products_collection_url }}{% else %}{{ settings.continue_shopping_link }}{% endif %}"
+         class="bb-cart__back">
+        {{- 'icon-arrow-left-2' | append: settings.system_icon_thickness | inline_asset_content -}}
+        <span>{{ 'general.continue_shopping' | t }}</span>
+      </a>
+      <h1 class="bb-cart__title">{{ 'sections.cart.title' | t | default: 'Your Cart' }}</h1>
+      <span class="bb-cart__title-wave">{% render 'bb-icon', icon: 'wave', size: 64 %}</span>
+    </div>
+
+    <form action="{{ routes.cart_url }}" class="cart__contents bb-cart__contents" method="post" id="cart">
+
+      {%- if settings.show_free_delivery -%}
+        <div id="cart-page-free-delivery" class="free-delivery-bar bb-cart__ship-wrap">
+          {%- render 'bb-cart-shipping-progress' -%}
+          <div class="free-delivery-bar__end hide"></div>
+        </div>
+      {%- endif -%}
+
+      <div id="main-cart-items" class="js-contents" data-id="{{ section.id }}">
+        <div class="bb-cart__items">
+          {%- for item in cart.items -%}
+            {%- render 'bb-cart-line-item', item: item, section: section -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>
+      <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true" role="status">{{ 'accessibility.loading' | t }}</p>
+    </form>
+
+    {%- comment -%} Note accordion (moved into the left column per the mockup) {%- endcomment -%}
+    {%- render 'bb-cart-note-accordion' -%}
+
+    {%- comment -%} Recommendation blocks — paired (auto engine) then complementary (set_pair_product) {%- endcomment -%}
+    {%- render 'bb-cart-paired-recommendation' -%}
+    {%- render 'bb-cart-complementary-recommendation' -%}
+  </div>
+</cart-items>
+
+{% schema %}
+{
+  "name": "Items",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    {
+      "type": "select",
+      "id": "heading_aligment",
+      "options": [
+        { "value": "text-left", "label": "Left" },
+        { "value": "text-center", "label": "Center" }
+      ],
+      "default": "text-center",
+      "label": "Heading alignment"
+    },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "top_spacing",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "normal", "label": "Normal" }
+      ],
+      "default": "normal",
+      "label": "Top spacing"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "page-width", "label": "Boxed" },
+        { "value": "page-wide", "label": "Wide" }
+      ],
+      "default": "default",
+      "label": "Width",
+      "info": "The Wide option works for screens with 1440px width and more."
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "0.75", "label": "Portrait (3:4)" },
+        { "value": "1.333333", "label": "Landscape (4:3)" },
+        { "value": "1", "label": "Square (1:1)" },
+        { "value": "1.00", "label": "Round (1:1)" },
+        { "value": "0.5625", "label": "Social story (9:16)" },
+        { "value": "1.777777", "label": "Widescreen (16:9)" }
+      ],
+      "default": "auto",
+      "label": "Image ratio"
+    },
+    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": true }
+  ]
+}
+{% endschema %}

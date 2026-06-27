@@ -1,0 +1,145 @@
+{%- comment -%}
+  Bikini Booth — cart line item card.
+  Renders one cart line as a rounded card matching the mockup, while preserving
+  every contract cart.js depends on:
+    #CartItem-{index}, quantity-input, #Quantity-{index}, minus/plus buttons,
+    data-index, data-quantity-variant-id, cart-remove-button, .loading-overlay,
+    #CartDrawer-LineItemError-{index}.
+  Params: item (required), section (required)
+{%- endcomment -%}
+
+{%- liquid
+  assign idx = item.index | plus: 1
+  assign inv_man = item.variant.inventory_management
+  assign inv_qua = item.variant.inventory_quantity | plus: 0
+  unless inv_man
+    assign inv_qua = 100000
+  endunless
+  if item.variant.inventory_policy == "continue"
+    assign inv_qua = 100000
+  endif
+-%}
+
+<div class="bb-cart-item" id="CartItem-{{ idx }}">
+  {%- if item.image -%}
+    <a href="{{ item.url }}" class="bb-cart-item__media" aria-label="{{ item.product.title | escape }}">
+      <img
+        srcset="{{ item.image | image_url: width: 320 }} 1x, {{ item.image | image_url: width: 640 }} 2x"
+        src="{{ item.image | image_url: width: 320 }}"
+        loading="lazy"
+        width="{{ item.image.width }}"
+        height="{{ item.image.height }}"
+        alt="{{ item.image.alt | escape }}">
+    </a>
+  {%- endif -%}
+
+  <div class="bb-cart-item__body">
+    <div class="bb-cart-item__head">
+      <div class="bb-cart-item__info">
+        {%- if section.settings.show_vendor and item.product.vendor != blank -%}
+          <p class="bb-cart-item__vendor">{{ item.product.vendor }}</p>
+        {%- endif -%}
+
+        <a href="{{ item.url }}" class="bb-cart-item__title">{{ item.product.title | escape }}</a>
+
+        {%- liquid
+          assign variant_bits = ''
+          if item.product.has_only_default_variant == false
+            for option in item.options_with_values
+              assign variant_bits = variant_bits | append: option.value | append: ' · '
+            endfor
+          endif
+          assign variant_bits = variant_bits | split: ' · ' | join: ' · '
+        -%}
+        {%- if variant_bits != blank -%}
+          <p class="bb-cart-item__variant">{{ variant_bits }}</p>
+        {%- endif -%}
+
+        {%- for property in item.properties -%}
+          {%- assign first_char = property.first | slice: 0 -%}
+          {%- if property.last != blank and first_char != '_' -%}
+            <p class="bb-cart-item__variant">
+              {{ property.first }}:
+              {%- if property.last contains '/uploads/' -%}
+                <a href="{{ property.last }}" target="_blank" rel="noopener">{{ property.last | split: '/' | last }}</a>
+              {%- else -%}
+                {{ property.last }}
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if item.selling_plan_allocation -%}
+          <p class="bb-cart-item__variant">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+        {%- endif -%}
+
+        <p class="bb-cart-item__price">{{ item.original_price | money }}</p>
+
+        {%- if item.discounts.size > 0 -%}
+          <ul class="bb-cart-item__discounts unstyle-ul" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+            {%- for discount in item.discounts -%}
+              <li>{{- 'icon-discount' | append: settings.system_icon_thickness | inline_asset_content -}}<span>{{ discount.title }}</span></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        <div class="bb-cart-item__error" id="CartDrawer-LineItemError-{{ idx }}" role="alert">
+          <span class="cart-item__error-text"></span>
+        </div>
+      </div>
+
+      <div class="bb-cart-item__line-total">
+        <div class="loading-overlay hidden">
+          <div class="loading-overlay__spinner">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+              <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+            </svg>
+          </div>
+        </div>
+        {%- if item.original_line_price != item.final_line_price -%}
+          <span class="bb-cart-item__line-total-was">{{ item.original_line_price | money }}</span>
+          <span class="bb-cart-item__line-total-now">{{ item.final_line_price | money }}</span>
+        {%- else -%}
+          <span class="bb-cart-item__line-total-now">{{ item.original_line_price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="bb-cart-item__controls">
+      <label class="visually-hidden" for="Quantity-{{ idx }}">{{ 'products.product.quantity.label' | t }}</label>
+      <quantity-input class="bb-qty">
+        <button class="bb-qty__btn" name="minus" type="button"{% if item.quantity == 1 %} style="display:none;"{% endif %}>
+          <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
+          {% render 'bb-icon', icon: 'minus', size: 16 %}
+        </button>
+        <input
+          id="Quantity-{{ idx }}"
+          class="bb-qty__input"
+          type="number"
+          name="updates[]"
+          value="{{ item.quantity }}"
+          data-quantity-variant-id="{{ item.variant.id }}"
+          {% # theme-check-disable %}
+          data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+          min="0"
+          max="{{ inv_qua }}"
+          step="1"
+          {% # theme-check-enable %}
+          aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+          data-index="{{ idx }}"
+          {% if inv_qua == 1 %}disabled{% endif %}>
+        <button class="bb-qty__btn" name="plus" type="button"{% if item.quantity == inv_qua %} style="display:none;"{% endif %}>
+          <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
+          {% render 'bb-icon', icon: 'plus', size: 16 %}
+        </button>
+      </quantity-input>
+
+      <cart-remove-button id="Remove-{{ idx }}" data-index="{{ idx }}" class="bb-cart-item__remove">
+        <a href="{{ item.url_to_remove }}" class="bb-cart-item__remove-link" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
+          {% render 'bb-icon', icon: 'trash', size: 16 %}
+          <span>{{ 'sections.cart.remove_title' | t | default: 'Remove' }}</span>
+        </a>
+      </cart-remove-button>
+    </div>
+  </div>
+</div>

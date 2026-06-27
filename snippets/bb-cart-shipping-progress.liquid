@@ -1,0 +1,53 @@
+{%- comment -%}
+  Bikini Booth — free shipping progress card.
+  Single source of truth for the threshold: settings.free_delivery_price
+  (the existing "Free shipping amount (Goal)" setting, in the store's major
+  currency unit). Renders nothing if the goal isn't configured.
+  Lives inside #cart-page-free-delivery so cart.js auto-refreshes it.
+{%- endcomment -%}
+
+{%- liquid
+  assign goal = settings.free_delivery_price | plus: 0
+  assign goal_cents = goal | times: 100
+-%}
+
+{%- if goal_cents > 0 -%}
+  {%- liquid
+    assign remaining = goal_cents | minus: cart.total_price
+    if remaining < 0
+      assign remaining = 0
+    endif
+    assign pct = cart.total_price | times: 100.0 | divided_by: goal_cents
+    if pct > 100
+      assign pct = 100
+    endif
+    assign unlocked = false
+    if cart.total_price >= goal_cents
+      assign unlocked = true
+    endif
+  -%}
+
+  <div class="bb-ship{% if unlocked %} bb-ship--unlocked{% endif %}">
+    <div class="bb-ship__icon">{% render 'bb-icon', icon: 'delivery', size: 30 %}</div>
+
+    <div class="bb-ship__body">
+      {%- liquid
+        assign remaining_money = remaining | money
+        assign msg = 'sections.cart.free_shipping_remaining' | t: amount: remaining_money
+        if msg contains 'translation missing'
+          assign msg = 'Spend ' | append: remaining_money | append: ' more for free shipping'
+        endif
+        assign msg_unlocked = 'sections.cart.free_shipping_unlocked' | t
+        if msg_unlocked contains 'translation missing'
+          assign msg_unlocked = 'You unlocked free shipping'
+        endif
+      -%}
+      <p class="bb-ship__msg">{% if unlocked %}{{ msg_unlocked }}{% else %}{{ msg }}{% endif %}</p>
+      <div class="bb-ship__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pct | round }}">
+        <span class="bb-ship__fill" style="width: {{ pct }}%;"></span>
+      </div>
+    </div>
+
+    <div class="bb-ship__shell">{% render 'bb-icon', icon: 'shell', size: 44 %}</div>
+  </div>
+{%- endif -%}
