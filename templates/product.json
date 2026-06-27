@@ -331,8 +331,8 @@
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
-        "main_subheading": "you may also like",
-        "main_heading": "",
+        "main_subheading": "More to Love",
+        "main_heading": "More to Love",
         "main_desc": "",
         "heading_aligment": "text-center",
         "top_spacing": "none",
