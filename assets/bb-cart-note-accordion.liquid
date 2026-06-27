@@ -1,0 +1,27 @@
+{%- comment -%}
+  Bikini Booth — "Add a note to your order" accordion.
+  Native <details> (collapsed by default, no JS). Wraps the theme's <cart-note>
+  element so the note still persists via cart.js on input.
+{%- endcomment -%}
+
+{%- if settings.show_cart_note -%}
+  <details class="bb-note">
+    <summary class="bb-note__summary">
+      <span class="bb-note__label">
+        <span class="bb-note__pencil">{% render 'bb-icon', icon: 'note', size: 24 %}</span>
+        {{ 'general.cart.heading_message' | t | default: 'Add a note to your order' }}
+      </span>
+      <span class="bb-note__chevron">{% render 'bb-icon', icon: 'chevron', size: 18 %}</span>
+    </summary>
+    <div class="bb-note__panel">
+      <cart-note class="bb-note__field">
+        <label class="visually-hidden" for="Cart-note">{{ 'sections.cart.note' | t }}</label>
+        <textarea
+          class="bb-note__textarea"
+          id="Cart-note"
+          name="note"
+          placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+      </cart-note>
+    </div>
+  </details>
+{%- endif -%}

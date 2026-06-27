@@ -40,7 +40,7 @@
   assign bb_size  = size  | default: 48
   assign bb_cls   = class | default: ''
   assign bb_label = alt   | default: ''
-  assign bb_png   = 'note,flower,palm,island,leaves,shell,starfish' | split: ','
+  assign bb_png   = 'note,flower,palm,palm-teal,island,leaves,shell,starfish' | split: ','
 -%}
 
 {%- capture bb_a -%}{% if bb_label == blank %}aria-hidden="true" focusable="false"{% else %}role="img" aria-label="{{ bb_label | escape }}" focusable="false"{% endif %}{%- endcapture -%}
