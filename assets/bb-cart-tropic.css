@@ -216,7 +216,8 @@
 .bb-rec__head { position: relative; z-index: 1; margin-bottom: 14px; }
 .bb-rec__title {
   display: inline-flex; align-items: center; gap: 9px; flex-wrap: wrap;
-  margin: 0; font-weight: 400; font-size: 1.25rem; color: var(--bb-ink); line-height: 1.2;
+  margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.6rem;
+  letter-spacing: -0.01em; color: var(--bb-ink); line-height: 1.2;
 }
 .bb-rec__accent { display: inline-flex; flex: none; }
 .bb-rec__sub { margin: 4px 0 0; font-size: 0.85rem; color: var(--bb-muted); }
@@ -374,10 +375,10 @@
   padding: 28px 26px 24px; text-align: center;
 }
 .bb-summary__star {
-  position: absolute; top: -14px; right: -10px; width: 104px; height: 104px;
+  position: absolute; top: -14px; right: -10px; width: 156px; height: 156px;
   opacity: 0.9; transform: rotate(8deg); pointer-events: none;
 }
-.bb-summary__star .bb-icon { width: 104px; }
+.bb-summary__star .bb-icon { width: 156px; }
 .bb-summary__title {
   position: relative; margin: 0; font-weight: 400; color: var(--bb-ink);
   font-size: 1.6rem; line-height: 1.1;
@@ -448,7 +449,7 @@
   display: flex; flex-direction: column; align-items: center; gap: 7px;
   font-size: 0.72rem; line-height: 1.25; color: var(--bb-muted); text-align: center;
 }
-.bb-summary__trust-item .bb-icon { width: 22px; color: var(--bb-teal-deep); }
+.bb-summary__trust-item .bb-icon { width: 29px; color: var(--bb-teal-deep); }
 
 @media (max-width: 989px) {
   .bb-summary { margin-top: 24px; }
