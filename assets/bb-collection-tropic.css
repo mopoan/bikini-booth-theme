@@ -1089,3 +1089,15 @@
   top: 50% !important;
   transform: translateY(-50%) !important;
 }
+/* ── Editorial display font for collection title (Cormorant Garamond) ── */
+.bb-collection-tropic [data-section-name="main-collection-banner"] h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+@media (max-width: 749px) {
+  .bb-collection-tropic [data-section-name="main-collection-banner"] h1 {
+    letter-spacing: -0.01em;
+  }
+}
