@@ -406,7 +406,7 @@
       "name": "Our clothing in motion",
       "settings": {
         "main_subheading": "Follow @bikinibooth_official",
-        "main_heading": "Our clothing in motion",
+        "main_heading": "Our Clothing In Motion",
         "main_desc": "Sunny adventures, lively styles - get inspired by life at Bikini Booth in Thailand and beyond.",
         "heading_aligment": "text-center",
         "icon_name": "instagram",
@@ -671,7 +671,7 @@
         "subtext": "Sign up for sun-soaked updates, early access, and special offers.",
         "placeholder": "Enter Your email",
         "button_label": "Subscribe",
-        "bg_color": "#F0FAF9"
+        "bg_color": "#f0faf9"
       }
     },
     "blocks_znyhy7": {
