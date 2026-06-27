@@ -33,14 +33,8 @@
     <div class="bb-ship__body">
       {%- liquid
         assign remaining_money = remaining | money
-        assign msg = 'sections.cart.free_shipping_remaining' | t: amount: remaining_money
-        if msg contains 'translation missing'
-          assign msg = 'Spend ' | append: remaining_money | append: ' more for free shipping'
-        endif
-        assign msg_unlocked = 'sections.cart.free_shipping_unlocked' | t
-        if msg_unlocked contains 'translation missing'
-          assign msg_unlocked = 'You unlocked free shipping'
-        endif
+        assign msg = 'Spend ' | append: remaining_money | append: ' more for free shipping'
+        assign msg_unlocked = 'You unlocked free shipping'
       -%}
       <p class="bb-ship__msg">{% if unlocked %}{{ msg_unlocked }}{% else %}{{ msg }}{% endif %}</p>
       <div class="bb-ship__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pct | round }}">

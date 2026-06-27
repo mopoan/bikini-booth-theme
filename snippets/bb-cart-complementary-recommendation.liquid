@@ -46,8 +46,8 @@
 
     <aside class="bb-rec bb-rec--comp" data-bb-rec="comp" data-product-id="{{ comp.id }}" hidden aria-label="Add a finishing touch">
       <div class="bb-rec__head">
-        <h2 class="bb-rec__title">{{ 'sections.cart.finishing_touch' | t | default: 'Add a Finishing Touch' }}<span class="bb-rec__accent bb-rec__accent--palm">{% render 'bb-icon', icon: 'palm-teal', size: 24 %}</span></h2>
-        <p class="bb-rec__sub">{{ 'sections.cart.finishing_touch_sub' | t | default: 'A curated extra to complete your beach look' }}</p>
+        <h2 class="bb-rec__title">Add a Finishing Touch<span class="bb-rec__accent bb-rec__accent--palm">{% render 'bb-icon', icon: 'palm-teal', size: 24 %}</span></h2>
+        <p class="bb-rec__sub">A curated extra to complete your beach look</p>
       </div>
 
       <div class="bb-rec__row">
@@ -66,15 +66,15 @@
         <div class="bb-rec__meta">
           {%- if comp.vendor != blank -%}<p class="bb-rec__brand">{{ comp.vendor }}</p>{%- endif -%}
           <a class="bb-rec__name" href="{{ comp.url }}">{{ comp.title | escape }}</a>
-          <p class="bb-rec__price">{{ comp.price | money }}{%- if comp.has_only_default_variant -%} · {{ 'products.product.one_size' | t | default: 'One Size' }}{%- endif -%}</p>
+          <p class="bb-rec__price">{{ comp.price | money }}{%- if comp.has_only_default_variant -%} · One Size{%- endif -%}</p>
 
           {%- unless comp.has_only_default_variant -%}
-            <div class="bb-rec__sizes" role="group" aria-label="{{ 'products.product.size' | t | default: 'Size' }}">
+            <div class="bb-rec__sizes" role="group" aria-label="Size">
               {%- for variant in comp.variants -%}
                 <button type="button"
                         class="bb-rec__size{% if variant.id == v.id %} is-active{% endif %}{% unless variant.available %} is-soldout{% endunless %}"
                         data-variant-id="{{ variant.id }}"
-                        {%- unless variant.available %} aria-disabled="true" data-tip="{{ 'products.product.sold_out' | t | default: 'Out of stock' }}"{% endunless %}>{{ variant.title }}</button>
+                        {%- unless variant.available %} aria-disabled="true" data-tip="Out of stock"{% endunless %}>{{ variant.title }}</button>
               {%- endfor -%}
             </div>
           {%- endunless -%}
@@ -83,7 +83,7 @@
         <div class="bb-rec__cta">
           <button class="bb-rec__add" type="button" data-bb-add data-variant-id="{{ v.id }}" data-title="{{ comp.title | escape }}">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            <span>{{ 'products.product.add_to_cart' | t | default: 'Add' }}</span>
+            <span>Add to Cart</span>
           </button>
         </div>
       </div>

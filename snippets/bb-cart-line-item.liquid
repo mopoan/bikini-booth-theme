@@ -137,7 +137,7 @@
       <cart-remove-button id="Remove-{{ idx }}" data-index="{{ idx }}" class="bb-cart-item__remove">
         <a href="{{ item.url_to_remove }}" class="bb-cart-item__remove-link" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
           {% render 'bb-icon', icon: 'trash', size: 16 %}
-          <span>{{ 'sections.cart.remove_title' | t | default: 'Remove' }}</span>
+          <span>Remove</span>
         </a>
       </cart-remove-button>
     </div>
