@@ -1,0 +1,42 @@
+{%- comment -%}
+  ============================================================
+  Bikini Booth — "Complete the Look"  (AUTO pairing engine)
+  ============================================================
+  Finds the opposite swimwear piece (Top <-> Bottom) that shares the same
+  Style + Colour, using the title convention "[Style] [Piece] in [Colour]".
+  The match is resolved client-side in bb-cart.js from the /products.json
+  catalogue, because Liquid can't search the whole catalogue at render time.
+
+  This snippet renders only the (server-known) shell + decorative icons +
+  the cart context the engine needs. The product card is injected into
+  [data-bb-rec-slot] by bb-cart.js. Stays hidden until a match is found.
+  ============================================================
+{%- endcomment -%}
+
+{%- comment -%} Engine config (set once; harmless if repeated) {%- endcomment -%}
+<script>
+  window.BB = window.BB || {};
+  window.BB.moneyFormat = window.BB.moneyFormat || {{ shop.money_format | json }};
+  window.BB.cartAddUrl  = {{ routes.cart_add_url | json }};
+  window.BB.oneSizeLabel = {{ 'products.product.one_size' | t | default: 'One Size' | json }};
+  window.BB.addLabel = {{ 'products.product.add_to_cart' | t | default: 'Add' | json }};
+  window.BB.soldOutLabel = {{ 'products.product.sold_out' | t | default: 'Out of stock' | json }};
+</script>
+
+{%- comment -%} Cart context for the engine (product id / handle / title / type per line) {%- endcomment -%}
+<script type="application/json" data-bb-cart-context>
+[
+{%- for line in cart.items -%}
+  {"id": {{ line.product.id }}, "handle": {{ line.product.handle | json }}, "title": {{ line.product.title | json }}, "type": {{ line.product.type | json }}}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]
+</script>
+
+<aside class="bb-rec bb-rec--pair" data-bb-rec="pair" hidden aria-label="Complete the look">
+  <span class="bb-rec__leaf" aria-hidden="true">{% render 'bb-icon', icon: 'leaves', size: 148 %}</span>
+  <div class="bb-rec__head">
+    <h2 class="bb-rec__title">{{ 'sections.cart.complete_the_look' | t | default: 'Complete the Look' }}<span class="bb-rec__accent bb-rec__accent--flower">{% render 'bb-icon', icon: 'flower', size: 21 %}</span></h2>
+    <p class="bb-rec__sub">{{ 'sections.cart.complete_the_look_sub' | t | default: 'The perfect match for your selected piece' }}</p>
+  </div>
+  <div class="bb-rec__slot" data-bb-rec-slot></div>
+</aside>

@@ -1,0 +1,92 @@
+{%- comment -%}
+  ============================================================
+  Bikini Booth — "Add a Finishing Touch"  (MANUAL metafield)
+  ============================================================
+  Driven by the product metafield  custom.set_pair_product  (a product
+  reference) on the swimwear item in the cart. Because the target is known
+  server-side, the card is rendered fully in Liquid — availability and
+  "already in cart" are handled here. bb-cart.js only:
+    • reveals it (unless it duplicates the auto "Complete the Look" pick)
+    • handles size selection + add-to-cart + the image popover
+
+  Crop focal point comes from the target product's optional
+  custom.thumb_focus metafield  (top | center | bottom; default center).
+  ============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign comp = null
+  for line in cart.items
+    if comp == null
+      assign ref = line.product.metafields.custom.set_pair_product.value
+      if ref != blank
+        assign comp = ref
+      endif
+    endif
+  endfor
+-%}
+
+{%- if comp -%}
+  {%- assign in_cart = false -%}
+  {%- for line in cart.items -%}
+    {%- if line.product.id == comp.id -%}{%- assign in_cart = true -%}{%- endif -%}
+  {%- endfor -%}
+
+  {%- if comp.available and in_cart == false -%}
+    {%- liquid
+      assign focus = comp.metafields.custom.thumb_focus.value | default: 'center' | downcase
+      assign crop = 'center'
+      if focus == 'top'
+        assign crop = 'top'
+      elsif focus == 'bottom'
+        assign crop = 'bottom'
+      endif
+      assign v = comp.selected_or_first_available_variant
+    -%}
+
+    <aside class="bb-rec bb-rec--comp" data-bb-rec="comp" data-product-id="{{ comp.id }}" hidden aria-label="Add a finishing touch">
+      <div class="bb-rec__head">
+        <h2 class="bb-rec__title">{{ 'sections.cart.finishing_touch' | t | default: 'Add a Finishing Touch' }}<span class="bb-rec__accent bb-rec__accent--palm">{% render 'bb-icon', icon: 'palm-teal', size: 24 %}</span></h2>
+        <p class="bb-rec__sub">{{ 'sections.cart.finishing_touch_sub' | t | default: 'A curated extra to complete your beach look' }}</p>
+      </div>
+
+      <div class="bb-rec__row">
+        <a class="bb-rec__thumb bb-rec__thumb--{{ crop }}" href="{{ comp.url }}"
+           data-bb-zoom data-full="{{ comp.featured_image | image_url: width: 720 }}"
+           role="button" aria-label="View full image of {{ comp.title | escape }}">
+          {%- if comp.featured_image -%}
+            <img src="{{ comp.featured_image | image_url: width: 300 }}"
+                 srcset="{{ comp.featured_image | image_url: width: 300 }} 1x, {{ comp.featured_image | image_url: width: 600 }} 2x"
+                 width="{{ comp.featured_image.width }}" height="{{ comp.featured_image.height }}"
+                 loading="lazy" alt="{{ comp.featured_image.alt | escape | default: comp.title | escape }}">
+          {%- endif -%}
+          <span class="bb-rec__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20M8 10.5h5M10.5 8v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        </a>
+
+        <div class="bb-rec__meta">
+          {%- if comp.vendor != blank -%}<p class="bb-rec__brand">{{ comp.vendor }}</p>{%- endif -%}
+          <a class="bb-rec__name" href="{{ comp.url }}">{{ comp.title | escape }}</a>
+          <p class="bb-rec__price">{{ comp.price | money }}{%- if comp.has_only_default_variant -%} · {{ 'products.product.one_size' | t | default: 'One Size' }}{%- endif -%}</p>
+
+          {%- unless comp.has_only_default_variant -%}
+            <div class="bb-rec__sizes" role="group" aria-label="{{ 'products.product.size' | t | default: 'Size' }}">
+              {%- for variant in comp.variants -%}
+                <button type="button"
+                        class="bb-rec__size{% if variant.id == v.id %} is-active{% endif %}{% unless variant.available %} is-soldout{% endunless %}"
+                        data-variant-id="{{ variant.id }}"
+                        {%- unless variant.available %} aria-disabled="true" data-tip="{{ 'products.product.sold_out' | t | default: 'Out of stock' }}"{% endunless %}>{{ variant.title }}</button>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+        </div>
+
+        <div class="bb-rec__cta">
+          <button class="bb-rec__add" type="button" data-bb-add data-variant-id="{{ v.id }}" data-title="{{ comp.title | escape }}">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span>{{ 'products.product.add_to_cart' | t | default: 'Add' }}</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+  {%- endif -%}
+{%- endif -%}
