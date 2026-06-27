@@ -1015,9 +1015,17 @@
   position: static !important;
 }
 
-/* Breathing room between the last product row and the footer */
+/* Breathing room below the grid; collapse the large gap above the toolbar */
 .bb-collection-tropic [data-section-name="main-collection-product-grid"] {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
   padding-bottom: clamp(2.75rem, 6vw, 5rem) !important;
+}
+
+/* Pull the toolbar up to the cream banner (remove banner-side bottom spacing) */
+.bb-collection-tropic [data-section-name="main-collection-banner"] {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 /* Hide the "Add to Wishlist" text label (pseudo-element from data-text) so only the heart shows */
