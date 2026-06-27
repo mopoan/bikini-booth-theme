@@ -353,14 +353,15 @@
   :has(> [id^="shopify-section"][id$="__cart-items"]):has(> [id^="shopify-section"][id$="__cart-footer"]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(330px, 33%);
-    gap: 32px;
+    gap: 24px;
     align-items: start;
   }
   [id^="shopify-section"][id$="__cart-footer"] {
     position: sticky; top: 24px;
-    /* drop the summary below the "Your Cart" heading block so its top aligns
-       with the items column (shipping bar). Single value to nudge if needed. */
-    margin-top: clamp(120px, 12vw, 176px);
+    /* Top-align the summary with the start of the items column.
+       0 = both columns begin on the same line. Increase this single value to
+       drop the summary lower (e.g. to sit beside the shipping bar instead). */
+    margin-top: 0;
   }
 }
 #main-cart-footer.is-empty { display: none; }
