@@ -340,3 +340,110 @@
   .bb-zoom { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(78vw, 300px); animation: bbZpopC 0.16s ease; }
   @keyframes bbZpopC { from { opacity: 0; transform: translate(-50%, -50%) scale(0.94); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 }
+
+/* ============================================================
+   Stage 3 — Two-column layout + Order Summary card
+   ============================================================ */
+
+/* --- Two-column grid (desktop) ---
+   JSON-template section ids are "template--XXXX__cart-items" / "__cart-footer",
+   so target by suffix. The element that has BOTH section wrappers as direct
+   children becomes the grid (items left, sticky summary right). */
+@media (min-width: 990px) {
+  :has(> [id^="shopify-section"][id$="__cart-items"]):has(> [id^="shopify-section"][id$="__cart-footer"]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(330px, 33%);
+    gap: 32px;
+    align-items: start;
+  }
+  [id^="shopify-section"][id$="__cart-footer"] { position: sticky; top: 24px; }
+}
+#main-cart-footer.is-empty { display: none; }
+
+/* --- Order Summary card --- */
+.bb-cart .bb-summary {
+  position: relative; overflow: hidden;
+  background: var(--bb-cream); border: 1px solid var(--bb-line);
+  border-radius: var(--bb-radius); box-shadow: var(--bb-shadow);
+  padding: 28px 26px 24px; text-align: center;
+}
+.bb-summary__star {
+  position: absolute; top: -14px; right: -10px; width: 104px; height: 104px;
+  opacity: 0.9; transform: rotate(8deg); pointer-events: none;
+}
+.bb-summary__star .bb-icon { width: 104px; }
+.bb-summary__title {
+  position: relative; margin: 0; font-weight: 400; color: var(--bb-ink);
+  font-size: 1.6rem; line-height: 1.1;
+}
+.bb-summary__wave { display: block; width: 46px; height: 10px; margin: 8px auto 20px; color: var(--bb-teal); }
+
+.bb-summary__content { text-align: left; }
+
+/* discount field */
+.bb-summary__discount { margin-bottom: 16px; }
+.bb-summary__discount-label {
+  margin: 0 0 8px; font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--bb-muted);
+}
+
+/* subtotal row */
+.bb-summary__row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding-top: 14px; border-top: 1px solid var(--bb-line);
+}
+.bb-summary__row-label { margin: 0; font-size: 1.05rem; color: var(--bb-ink); }
+.bb-summary__row-val { margin: 0; font-size: 1.3rem; font-weight: 600; color: var(--bb-ink); white-space: nowrap; }
+
+.bb-summary__installments { margin-top: 10px; }
+.bb-summary__discounts { margin: 10px 0 0; display: flex; flex-direction: column; gap: 4px; }
+.bb-summary__discounts li { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--bb-teal-deep); }
+.bb-summary__discounts svg { width: 14px; height: 14px; }
+.bb-summary__tax { margin: 12px 0 0; font-size: 0.78rem; line-height: 1.4; color: var(--bb-muted); text-align: center; }
+.bb-summary__tax a { color: var(--bb-teal-deep); }
+
+/* terms */
+.bb-summary__terms { margin-top: 16px; text-align: left; }
+
+/* checkout button */
+.bb-summary__checkout {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  width: 100%; margin-top: 18px; padding: 16px 20px;
+  border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--bb-teal-deep); color: #fff;
+  font-size: 1rem; font-weight: 600; letter-spacing: 0.01em;
+  transition: background 0.15s, transform 0.1s;
+}
+.bb-summary__checkout:hover { background: #08443f; }
+.bb-summary__checkout:active { transform: translateY(1px); }
+.bb-summary__checkout svg { width: 16px; height: 16px; }
+
+/* express checkout divider + dynamic buttons */
+.bb-summary__express {
+  display: flex; align-items: center; gap: 12px;
+  margin: 18px 0 12px; color: var(--bb-muted);
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.bb-summary__express::before, .bb-summary__express::after {
+  content: ""; flex: 1; height: 1px; background: var(--bb-line);
+}
+.bb-summary__dynamic { display: flex; flex-direction: column; gap: 10px; }
+.bb-summary__dynamic > * { width: 100%; }
+
+#cart-errors:empty { display: none; }
+#cart-errors { color: #b3261e; font-size: 0.82rem; margin-top: 10px; text-align: center; }
+
+/* trust row */
+.bb-summary__trust {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--bb-line);
+}
+.bb-summary__trust-item {
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  font-size: 0.72rem; line-height: 1.25; color: var(--bb-muted); text-align: center;
+}
+.bb-summary__trust-item .bb-icon { width: 22px; color: var(--bb-teal-deep); }
+
+@media (max-width: 989px) {
+  .bb-summary { margin-top: 24px; }
+}
