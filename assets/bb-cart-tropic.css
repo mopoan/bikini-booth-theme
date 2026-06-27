@@ -329,7 +329,7 @@
 }
 .bb-zoom__img {
   width: 100%; aspect-ratio: 9 / 16; border-radius: 9px;
-  background: var(--bb-cream) center / contain no-repeat;
+  background: var(--bb-cream) center / cover no-repeat;
 }
 .bb-zoom__x {
   position: absolute; top: -12px; right: -12px; width: 32px; height: 32px; border: 0;
