@@ -353,15 +353,15 @@
   :has(> [id^="shopify-section"][id$="__cart-items"]):has(> [id^="shopify-section"][id$="__cart-footer"]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(330px, 33%);
-    gap: 24px;
+    gap: 16px;
     align-items: start;
   }
   [id^="shopify-section"][id$="__cart-footer"] {
     position: sticky; top: 24px;
-    /* Top-align the summary with the start of the items column.
-       0 = both columns begin on the same line. Increase this single value to
-       drop the summary lower (e.g. to sit beside the shipping bar instead). */
-    margin-top: 0;
+    /* Drop the summary so its top sits level with the "Spend more" shipping
+       bar (below the "Your Cart" heading block). This is the single knob —
+       raise the max to push lower, lower it to push up. */
+    margin-top: clamp(160px, 16vw, 220px);
   }
 }
 #main-cart-footer.is-empty { display: none; }
