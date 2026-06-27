@@ -58,7 +58,11 @@
   }
 
   /* ── Keep functional / small UI in the rounded sans (Futura) ──
-     Footer column titles, header logo, and anything opted out. */
+     Product title, footer column titles, header logo, anything opted out. */
+  body.bb-root [data-section-name='main-product'] .product__title :is(h1, h2),
+  body.bb-root .bb-pdp-product-title,
+  body.bb-root .bb-pdp__title-mobile--tropic,
+  body.bb-root .bb-pdp__title-mobile--tropic :is(h1, h2),
   body.bb-root .footer__content :is(h1, h2),
   body.bb-root .section-header :is(h1, h2),
   body.bb-root .bb-keep-rounded,
