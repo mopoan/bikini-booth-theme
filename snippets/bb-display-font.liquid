@@ -1,0 +1,68 @@
+{%- comment -%}
+  Snippet: bb-display-font.liquid
+  Purpose: Loads the Cormorant Garamond editorial display font (self-hosted)
+           and exposes the --font-display variable + .bb-display-heading utility.
+
+  Does NOT change the global rounded sans-serif. Purely additive.
+
+  Usage:
+    Add this ONE line inside <head> in layout/theme.liquid
+    (near your existing font preloads, as early as practical):
+
+        {%- render 'bb-display-font' -%}
+
+  Requires these two files in /assets:
+    CormorantGaramond-Medium.woff2     (weight 500)
+    CormorantGaramond-SemiBold.woff2   (weight 600)
+
+  Apply to approved headings only by adding the class:
+    <h1 class="… bb-display-heading">Your Cart</h1>
+    Use .bb-display-heading--medium for the lighter 500 treatment.
+{%- endcomment -%}
+
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="{{ 'CormorantGaramond-SemiBold.woff2' | asset_url }}">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="{{ 'CormorantGaramond-Medium.woff2' | asset_url }}">
+
+<style>
+  @font-face {
+    font-family: "Cormorant Garamond";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("{{ 'CormorantGaramond-Medium.woff2' | asset_url }}") format("woff2");
+  }
+  @font-face {
+    font-family: "Cormorant Garamond";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("{{ 'CormorantGaramond-SemiBold.woff2' | asset_url }}") format("woff2");
+  }
+
+  :root {
+    --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  }
+
+  /* Editorial display heading — opt-in only, never global */
+  .bb-display-heading {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+
+  /* Lighter editorial treatment when wanted */
+  .bb-display-heading--medium {
+    font-weight: 500;
+  }
+
+  /* Mobile: relax tight tracking/leading so display type stays readable */
+  @media (max-width: 749px) {
+    .bb-display-heading {
+      letter-spacing: -0.01em;
+      line-height: 1.0;
+    }
+  }
+</style>
