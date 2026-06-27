@@ -358,8 +358,9 @@
   }
   [id^="shopify-section"][id$="__cart-footer"] {
     position: sticky; top: 24px;
-    /* drop the summary below the "Your Cart" heading so its top aligns with the items */
-    margin-top: calc(clamp(2rem, 5vw, 3rem) * 1.05 + clamp(1.5rem, 4vw, 2.5rem) + 22px);
+    /* drop the summary below the "Your Cart" heading block so its top aligns
+       with the items column (shipping bar). Single value to nudge if needed. */
+    margin-top: clamp(120px, 12vw, 176px);
   }
 }
 #main-cart-footer.is-empty { display: none; }
