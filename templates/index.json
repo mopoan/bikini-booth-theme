@@ -669,6 +669,8 @@
         "show_on_all_pages": false,
         "heading": "JOIN OUR ESCAPE",
         "subtext": "Sign up for sun-soaked updates, early access, and special offers.",
+        "heading_size": 34,
+        "subtext_size": 16,
         "placeholder": "Enter Your email",
         "button_label": "Subscribe",
         "bg_color": "#f0faf9"
