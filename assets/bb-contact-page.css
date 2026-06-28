@@ -7,6 +7,9 @@
   --bb-contact-field-border: #e3ddd3;
   --bb-contact-serif: var(--bb-page-sans);
   --bb-contact-sans: var(--bb-page-sans);
+  --bb-contact-img-inset: 16px;
+  --bb-contact-img-radius: 20px;
+  --bb-contact-img-border: #e1d9cc;
   background: #fff;
 }
 
@@ -26,9 +29,11 @@
 
 .bb-contact-hero__image {
   position: relative;
-  overflow: hidden;
-  background: #ddd;
+  overflow: visible;
+  background: transparent;
   min-height: 100%;
+  padding: var(--bb-contact-img-inset, 16px);
+  animation: bb-contact-float 4.8s ease-in-out infinite;
 }
 
 .bb-contact-hero__image img {
@@ -37,6 +42,28 @@
   height: 100%;
   object-fit: cover;
   object-position: center center;
+  border-radius: var(--bb-contact-img-radius, 20px);
+  border: 1px solid var(--bb-contact-img-border, #e1d9cc);
+  box-shadow: 0 26px 46px -24px rgba(10, 46, 46, 0.38);
+}
+
+/* Inner mat frame — gallery stroke a few px inside the image */
+.bb-contact-hero__image::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--bb-contact-img-inset, 16px) + 9px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: calc(var(--bb-contact-img-radius, 20px) - 8px);
+  pointer-events: none;
+}
+
+/* Gentle float (image + mat move together) */
+@keyframes bb-contact-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bb-contact-hero__image { animation: none; }
 }
 
 .bb-contact-hero__form-wrap {
@@ -246,6 +273,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   min-width: 6.5rem;
   min-height: 2.75rem;
   padding: 0 1.85rem;
@@ -479,6 +507,7 @@
     min-height: var(--bb-contact-hero-image-min-mobile, 220px);
     order: -1;
     aspect-ratio: 16 / 9;
+    --bb-contact-img-inset: 10px;
   }
 
   .bb-contact-hero__form-wrap {
