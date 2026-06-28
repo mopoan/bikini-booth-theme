@@ -461,8 +461,29 @@
   .bb-summary { margin-top: 24px; }
 }
 
-/* qty buttons greyed (not hidden) at min/max — theme QuantityInput toggles .disabled */
-.bb-cart .bb-qty__btn.disabled {
-  opacity: 0.3;
-  pointer-events: none;
+/* The theme's .quantity__button styles (added so its QuantityInput component
+   can find the buttons) are more specific and were hiding/zeroing ours.
+   Re-assert our button + greyed-disabled state at matching specificity. */
+.bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button {
+  position: static !important;
+  inset: auto !important;
+  top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+  transform: none !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1;
+  width: 34px; height: 34px; min-width: 0; flex: 0 0 auto;
+  align-items: center; justify-content: center;
+  border: 0; border-radius: 999px; background: transparent;
+  color: var(--bb-ink); cursor: pointer; padding: 0;
+}
+.bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button:hover {
+  background: rgba(74, 198, 190, 0.14); color: var(--bb-teal-deep);
+}
+.bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button.disabled {
+  opacity: 0.3 !important; pointer-events: none;
+}
+.bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button .bb-icon,
+.bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button svg {
+  width: 16px !important; height: 16px !important; display: block;
 }
