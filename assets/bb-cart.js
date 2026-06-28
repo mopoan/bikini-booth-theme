@@ -82,7 +82,16 @@
     return page(1).catch(function(){ return []; });
   }
 
+  // Live cart contents, refreshed after AJAX add / theme cartUpdate.
+  // Falls back to the server-rendered context JSON on first load.
+  var liveCart = null;
+  function mapCart(items){
+    return (items || []).map(function(i){
+      return { id: i.product_id, handle: i.handle, title: i.product_title, type: i.product_type };
+    });
+  }
   function cartContext(){
+    if(liveCart) return liveCart;
     var el = document.querySelector('[data-bb-cart-context]');
     if(!el) return [];
     try { return JSON.parse(el.textContent) || []; } catch(e){ return []; }
@@ -201,24 +210,70 @@
     if(add){ e.preventDefault(); addToCart(add); }
   });
 
+  // Section list the theme's cart.js patches (mirror getSectionsToRender()).
+  function cartSections(){
+    var items = document.getElementById('main-cart-items');
+    var footer = document.getElementById('main-cart-footer');
+    var iconA = document.getElementById('cart-icon-bubble-short') ? 'cart-icon-bubble-short' : 'cart-icon-bubble';
+    var iconB = document.getElementById('cart-icon-bubble--mobile-short') ? 'cart-icon-bubble--mobile-short' : 'cart-icon-bubble--mobile';
+    return [
+      { id: 'main-cart-items', section: items && items.dataset.id, selector: '.js-contents' },
+      { id: iconA, section: iconA, selector: '.shopify-section' },
+      { id: iconB, section: iconB, selector: '.shopify-section' },
+      { id: 'cart-live-region-text', section: 'cart-live-region-text', selector: '.shopify-section' },
+      { id: 'main-cart-footer', section: footer && footer.dataset.id, selector: '.js-contents' }
+    ].filter(function(s){ return s.section; });
+  }
+
+  function sectionInnerHTML(html, selector){
+    if(!html) return null;
+    var t = new DOMParser().parseFromString(html, 'text/html').querySelector(selector);
+    return t ? t.innerHTML : null;
+  }
+
   function addToCart(btn){
     var id = Number(btn.getAttribute('data-variant-id'));
     if(!id) return;
     btn.disabled = true; btn.classList.add('is-loading');
+    var sections = cartSections();
     fetch((window.BB.cartAddUrl || '/cart/add') + '.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ items: [{ id: id, quantity: 1 }] })
+      body: JSON.stringify({
+        items: [{ id: id, quantity: 1 }],
+        sections: sections.map(function(s){ return s.section; }),
+        sections_url: window.location.pathname
+      })
     })
     .then(function(r){ if(!r.ok) throw new Error('add failed'); return r.json(); })
-    .then(function(){ refreshCart(); })
+    .then(function(data){
+      // No sections in the response (older API/theme) → fall back to reload.
+      if(!data || !data.sections){ window.location.reload(); return; }
+      // Patch each section exactly like the theme's updateQuantity() does.
+      sections.forEach(function(s){
+        var root = document.getElementById(s.id);
+        if(!root) return;
+        var target = root.querySelector(s.selector) || root;
+        var content = sectionInnerHTML(data.sections[s.section], s.selector);
+        if(content !== null) target.innerHTML = content;
+      });
+      // Refresh the free-shipping bar (it sits outside .js-contents). Parse the
+      // returned items section robustly rather than the theme's string-split.
+      var itemsSec = sections[0] && data.sections[sections[0].section];
+      var liveShip = document.getElementById('cart-page-free-delivery');
+      if(itemsSec && liveShip){
+        var freshShip = new DOMParser().parseFromString(itemsSec, 'text/html').querySelector('#cart-page-free-delivery');
+        if(freshShip) liveShip.innerHTML = freshShip.innerHTML;
+      }
+      // Pull fresh cart contents so the engine re-pairs against the new cart.
+      fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(cart){ if(cart) liveCart = mapCart(cart.items); })
+        .catch(function(){})
+        .then(function(){ runEngine(); alignSummary(); });
+    })
     .catch(function(){ btn.disabled = false; btn.classList.remove('is-loading'); });
   }
-
-  // Stage 2: reload to recompute line items + shipping bar + recommendations.
-  // Swap this for the theme's AJAX cart-section refresh once Stage 3 (Order
-  // Summary / footer) is in and Wokiee's cart-update event is confirmed.
-  function refreshCart(){ window.location.reload(); }
 
   /* ---------- image popover (image only, anchored) ---------- */
   var open = null, lastFocus = null;
@@ -300,6 +355,15 @@
       new MutationObserver(function(){ clearTimeout(t); t = setTimeout(function(){ runEngine(); alignSummary(); }, 120); })
         .observe(host, { childList: true, subtree: true });
     }
+    // Keep recs correct after theme-driven changes (qty change, remove).
+    try {
+      if(typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined' && PUB_SUB_EVENTS.cartUpdate){
+        subscribe(PUB_SUB_EVENTS.cartUpdate, function(event){
+          if(event && event.cartData && event.cartData.items) liveCart = mapCart(event.cartData.items);
+          setTimeout(function(){ runEngine(); alignSummary(); }, 60);
+        });
+      }
+    } catch(e){}
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
