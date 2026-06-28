@@ -216,13 +216,7 @@
 .bb-rec__head { position: relative; z-index: 1; margin-bottom: 14px; }
 .bb-rec__title {
   display: inline-flex; align-items: center; gap: 9px; flex-wrap: wrap;
-  margin: 0; font-size: 1.6rem; color: var(--bb-ink); line-height: 1.2;
-}
-/* Win over the theme's heading font rules (higher specificity + !important) */
-.bb-cart .bb-rec__title {
-  font-family: var(--font-display) !important;
-  font-weight: 500 !important;
-  letter-spacing: -0.01em !important;
+  margin: 0; font-weight: 400; font-size: 1.25rem; color: var(--bb-ink); line-height: 1.2;
 }
 .bb-rec__accent { display: inline-flex; flex: none; }
 .bb-rec__sub { margin: 4px 0 0; font-size: 0.85rem; color: var(--bb-muted); }
@@ -329,7 +323,7 @@
 }
 .bb-zoom__img {
   width: 100%; aspect-ratio: 9 / 16; border-radius: 9px;
-  background: var(--bb-cream) center / cover no-repeat;
+  background: var(--bb-cream) center / contain no-repeat;
 }
 .bb-zoom__x {
   position: absolute; top: -12px; right: -12px; width: 32px; height: 32px; border: 0;
@@ -359,15 +353,14 @@
   :has(> [id^="shopify-section"][id$="__cart-items"]):has(> [id^="shopify-section"][id$="__cart-footer"]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(330px, 33%);
-    gap: 16px;
+    gap: 32px;
     align-items: start;
   }
   [id^="shopify-section"][id$="__cart-footer"] {
     position: sticky; top: 24px;
-    /* Drop the summary so its top sits level with the "Spend more" shipping
-       bar (below the "Your Cart" heading block). This is the single knob —
-       raise the max to push lower, lower it to push up. */
-    margin-top: clamp(160px, 16vw, 220px);
+    /* drop the summary below the "Your Cart" heading block so its top aligns
+       with the items column (shipping bar). Single value to nudge if needed. */
+    margin-top: clamp(120px, 12vw, 176px);
   }
 }
 #main-cart-footer.is-empty { display: none; }
@@ -380,10 +373,10 @@
   padding: 28px 26px 24px; text-align: center;
 }
 .bb-summary__star {
-  position: absolute; top: -14px; right: -10px; width: 156px; height: 156px;
+  position: absolute; top: -14px; right: -10px; width: 104px; height: 104px;
   opacity: 0.9; transform: rotate(8deg); pointer-events: none;
 }
-.bb-summary__star .bb-icon { width: 156px; }
+.bb-summary__star .bb-icon { width: 104px; }
 .bb-summary__title {
   position: relative; margin: 0; font-weight: 400; color: var(--bb-ink);
   font-size: 1.6rem; line-height: 1.1;
@@ -454,7 +447,7 @@
   display: flex; flex-direction: column; align-items: center; gap: 7px;
   font-size: 0.72rem; line-height: 1.25; color: var(--bb-muted); text-align: center;
 }
-.bb-summary__trust-item .bb-icon { width: 29px; color: var(--bb-teal-deep); }
+.bb-summary__trust-item .bb-icon { width: 22px; color: var(--bb-teal-deep); }
 
 @media (max-width: 989px) {
   .bb-summary { margin-top: 24px; }
