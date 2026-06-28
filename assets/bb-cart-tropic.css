@@ -465,10 +465,21 @@
    can find the buttons) are more specific and were hiding/zeroing ours.
    Re-assert our button + greyed-disabled state at matching specificity. */
 .bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button {
+<<<<<<< HEAD
+  position: static !important;
+  inset: auto !important;
+  top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+  transform: none !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1;
+  width: 34px; height: 34px; min-width: 0; flex: 0 0 auto;
+=======
   display: inline-flex !important;
   visibility: visible !important;
   opacity: 1;
   width: 34px; height: 34px; min-width: 0;
+>>>>>>> 39367b181cf9f8f81bd78c66ec7c4e105bfe5264
   align-items: center; justify-content: center;
   border: 0; border-radius: 999px; background: transparent;
   color: var(--bb-ink); cursor: pointer; padding: 0;
