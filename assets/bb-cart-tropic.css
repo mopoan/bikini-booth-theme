@@ -68,7 +68,7 @@
 .bb-cart__empty-cta:hover { background: var(--bb-teal-deep); }
 
 /* ---------- Free shipping progress ---------- */
-.bb-cart__ship-wrap { margin-bottom: clamp(1.25rem, 3vw, 1.75rem); }
+#cart-page-free-delivery.free-delivery-bar { margin-bottom: clamp(1.25rem, 3vw, 1.75rem); }
 .bb-ship {
   position: relative; overflow: hidden;
   display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px;

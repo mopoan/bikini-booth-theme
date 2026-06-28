@@ -41,7 +41,7 @@
     <form action="{{ routes.cart_url }}" class="cart__contents bb-cart__contents" method="post" id="cart">
 
       {%- if settings.show_free_delivery -%}
-        <div id="cart-page-free-delivery" class="free-delivery-bar bb-cart__ship-wrap">
+        <div id="cart-page-free-delivery" class="free-delivery-bar">
           {%- render 'bb-cart-shipping-progress' -%}
           <div class="free-delivery-bar__end hide"></div>
         </div>
