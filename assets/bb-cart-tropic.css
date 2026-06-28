@@ -352,9 +352,17 @@
 @media (min-width: 990px) {
   :has(> [id^="shopify-section"][id$="__cart-items"]):has(> [id^="shopify-section"][id$="__cart-footer"]) {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(330px, 33%);
-    gap: 32px;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+    gap: 40px;
     align-items: start;
+    max-width: 1360px;
+    margin-inline: auto;
+  }
+  /* let the items fill the left cell instead of re-centering within it
+     (the theme page-width class would otherwise leave a gap before the summary) */
+  [id^="shopify-section"][id$="__cart-items"] .bb-cart__col--main {
+    max-width: none;
+    margin-inline: 0;
   }
   [id^="shopify-section"][id$="__cart-footer"] {
     position: sticky; top: 24px;
