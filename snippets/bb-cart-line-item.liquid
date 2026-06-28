@@ -108,7 +108,7 @@
     <div class="bb-cart-item__controls">
       <label class="visually-hidden" for="Quantity-{{ idx }}">{{ 'products.product.quantity.label' | t }}</label>
       <quantity-input class="bb-qty">
-        <button class="bb-qty__btn quantity__button" name="minus" type="button"{% if item.quantity == 1 %} style="display:none;"{% endif %}>
+        <button class="bb-qty__btn quantity__button" name="minus" type="button">
           <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
           {% render 'bb-icon', icon: 'minus', size: 16 %}
         </button>
@@ -121,14 +121,14 @@
           data-quantity-variant-id="{{ item.variant.id }}"
           {% # theme-check-disable %}
           data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
-          min="0"
+          min="1"
           max="{{ inv_qua }}"
           step="1"
           {% # theme-check-enable %}
           aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
           data-index="{{ idx }}"
           {% if inv_qua == 1 %}disabled{% endif %}>
-        <button class="bb-qty__btn quantity__button" name="plus" type="button"{% if item.quantity == inv_qua %} style="display:none;"{% endif %}>
+        <button class="bb-qty__btn quantity__button" name="plus" type="button">
           <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
           {% render 'bb-icon', icon: 'plus', size: 16 %}
         </button>

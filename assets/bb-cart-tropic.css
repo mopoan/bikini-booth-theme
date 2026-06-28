@@ -460,3 +460,9 @@
 @media (max-width: 989px) {
   .bb-summary { margin-top: 24px; }
 }
+
+/* qty buttons greyed (not hidden) at min/max — theme QuantityInput toggles .disabled */
+.bb-cart .bb-qty__btn.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
