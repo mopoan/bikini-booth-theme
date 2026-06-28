@@ -22,7 +22,7 @@
             "autoplay_speed": 8,
             "text_alignment": "center",
             "content_max_width": 700,
-            "text_color": "#4ac6be",
+            "text_color": "#FFFFFF",
             "heading_size": 48,
             "subheading_size": 18,
             "button_bg_color": "#fef9ee",
@@ -669,6 +669,8 @@
         "show_on_all_pages": false,
         "heading": "JOIN OUR ESCAPE",
         "subtext": "Sign up for sun-soaked updates, early access, and special offers.",
+        "heading_size": 34,
+        "subtext_size": 16,
         "placeholder": "Enter Your email",
         "button_label": "Subscribe",
         "bg_color": "#f0faf9"
