@@ -266,13 +266,35 @@
   });
   addEventListener('resize', closeZoom);
 
+  /* ---------- align the sticky summary top with the items column ----------
+     The "Your Cart" heading lives in the left column, so the right column would
+     otherwise start at the title. Measure where the items actually begin (the
+     #cart form) and offset the summary section to match. Desktop only. */
+  function alignSummary(){
+    var footer = document.querySelector('[id^="shopify-section"][id$="__cart-footer"]');
+    if(!footer) return;
+    if(!window.matchMedia('(min-width: 990px)').matches){ footer.style.marginTop = ''; return; }
+    var heading = document.querySelector('.bb-cart__heading');
+    var anchor = document.getElementById('cart') || (heading && heading.nextElementSibling);
+    if(!anchor) return;
+    footer.style.marginTop = '0px';
+    var delta = anchor.getBoundingClientRect().top - footer.getBoundingClientRect().top;
+    footer.style.marginTop = (delta > 0 ? Math.round(delta) : 0) + 'px';
+  }
+  var _alignT;
+  function scheduleAlign(){ clearTimeout(_alignT); _alignT = setTimeout(alignSummary, 60); }
+  addEventListener('resize', scheduleAlign);
+  addEventListener('load', alignSummary);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(alignSummary);
+
   /* ---------- init + re-run when the cart re-renders ---------- */
   function init(){
     runEngine();
+    alignSummary();
     var host = document.getElementById('main-cart-items');
     if(host && window.MutationObserver){
       var t;
-      new MutationObserver(function(){ clearTimeout(t); t = setTimeout(runEngine, 120); })
+      new MutationObserver(function(){ clearTimeout(t); t = setTimeout(function(){ runEngine(); alignSummary(); }, 120); })
         .observe(host, { childList: true, subtree: true });
     }
   }
