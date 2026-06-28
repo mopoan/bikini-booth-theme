@@ -275,7 +275,9 @@
     if(!footer) return;
     if(!window.matchMedia('(min-width: 990px)').matches){ footer.style.marginTop = ''; return; }
     var heading = document.querySelector('.bb-cart__heading');
-    var anchor = document.getElementById('cart') || (heading && heading.nextElementSibling);
+    var anchor = document.getElementById('cart-page-free-delivery')
+              || document.getElementById('cart')
+              || (heading && heading.nextElementSibling);
     if(!anchor) return;
     footer.style.marginTop = '0px';
     var delta = anchor.getBoundingClientRect().top - footer.getBoundingClientRect().top;
@@ -291,6 +293,7 @@
   function init(){
     runEngine();
     alignSummary();
+    setTimeout(alignSummary, 400);
     var host = document.getElementById('main-cart-items');
     if(host && window.MutationObserver){
       var t;

@@ -15,12 +15,12 @@
     </summary>
     <div class="bb-note__panel">
       <cart-note class="bb-note__field">
-        <label class="visually-hidden" for="Cart-note">{{ 'sections.cart.note' | t }}</label>
         <textarea
           class="bb-note__textarea"
           id="Cart-note"
           name="note"
-          placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+          aria-label="{{ 'sections.cart.note' | t | default: 'Order special instructions' }}"
+          placeholder="{{ 'sections.cart.note' | t | default: 'Add a note...' }}">{{ cart.note }}</textarea>
       </cart-note>
     </div>
   </details>
