@@ -463,7 +463,22 @@
 
 /* The theme's .quantity__button styles (added so its QuantityInput component
    can find the buttons) are more specific and were hiding/zeroing ours.
-   Re-assert our button + greyed-disabled state at matching specificity. */
+   Re-assert our wrapper + button + greyed-disabled state at matching specificity. */
+.bb-cart quantity-input.bb-qty {
+  display: inline-flex !important;
+  position: relative !important;
+  width: auto !important;
+  min-width: 0 !important;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--bb-line);
+  border-radius: 999px;
+  background: var(--bb-cream-2);
+  padding: 3px;
+}
+.bb-cart quantity-input.bb-qty .bb-qty__input {
+  width: 40px !important; flex: 0 0 auto; text-align: center;
+}
 .bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button {
   position: static !important;
   inset: auto !important;
