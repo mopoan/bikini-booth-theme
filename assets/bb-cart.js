@@ -16,6 +16,7 @@
   var CATALOG_TTL = 1000 * 60 * 30;            // 30 min session cache
   var ZOOM_SVG = '<svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20M8 10.5h5M10.5 8v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   var PLUS_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  var CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.2 4.2L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /* ---------- helpers ---------- */
   function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
@@ -87,7 +88,14 @@
   var liveCart = null;
   function mapCart(items){
     return (items || []).map(function(i){
-      return { id: i.product_id, handle: i.handle, title: i.product_title, type: i.product_type };
+      return {
+        id: i.product_id,
+        variant_id: i.id,
+        handle: i.handle,
+        title: i.product_title,
+        type: i.product_type,
+        cl: !!(i.properties && i.properties._bb_complete_look)
+      };
     });
   }
   function cartContext(){
@@ -98,7 +106,7 @@
   }
 
   /* ---------- build the "Complete the Look" product card ---------- */
-  function pairedCardHTML(product, shownPiece){
+  function pairedCardHTML(product, shownPiece, added, addedVariantId){
     var avail = product.variants.filter(function(v){ return v.available; });
     var def = avail[0] || product.variants[0];
     var src = (product.images && product.images[0] && product.images[0].src) || '';
@@ -117,9 +125,19 @@
 
     var price = formatMoney(cents) + (single ? ' &middot; ' + esc(window.BB.oneSizeLabel || 'One Size') : '');
     var addLabel = esc(window.BB.addLabel || 'Add');
+    var addedLabel = esc(window.BB.addedLabel || 'Added');
+
+    // When the item is already in the cart via "Complete the Look", the card
+    // stays put and the CTA becomes a remove control showing an "Added" check.
+    var cta = added
+      ? '<button class="bb-rec__add bb-rec__add--added" type="button" data-bb-remove-look' +
+          ' data-variant-id="' + (addedVariantId || def.id) + '" data-title="' + esc(product.title) + '"' +
+          ' aria-label="Remove ' + esc(product.title) + ' from cart">' + CHECK_SVG + '<span>' + addedLabel + '</span></button>'
+      : '<button class="bb-rec__add" type="button" data-bb-add data-variant-id="' + def.id + '" data-title="' + esc(product.title) + '"' +
+          (avail.length ? '' : ' disabled') + '>' + PLUS_SVG + '<span>' + addLabel + '</span></button>';
 
     return '' +
-      '<div class="bb-rec__row">' +
+      '<div class="bb-rec__row' + (added ? ' is-added' : '') + '">' +
         '<a class="bb-rec__thumb bb-rec__thumb--' + (shownPiece === 'bottom' ? 'bottom' : 'top') + '" href="/products/' + esc(product.handle) + '"' +
            ' data-bb-zoom data-full="' + esc(imgUrl(src, 720)) + '" role="button" aria-label="View full image of ' + esc(product.title) + '">' +
           (src ? '<img src="' + esc(imgUrl(src, 300)) + '" loading="lazy" alt="' + esc(product.title) + '">' : '') +
@@ -129,12 +147,9 @@
           (product.vendor ? '<p class="bb-rec__brand">' + esc(product.vendor) + '</p>' : '') +
           '<a class="bb-rec__name" href="/products/' + esc(product.handle) + '">' + esc(product.title) + '</a>' +
           '<p class="bb-rec__price">' + price + '</p>' +
-          sizes +
+          (added ? '' : sizes) +
         '</div>' +
-        '<div class="bb-rec__cta">' +
-          '<button class="bb-rec__add" type="button" data-bb-add data-variant-id="' + def.id + '" data-title="' + esc(product.title) + '"' +
-            (avail.length ? '' : ' disabled') + '>' + PLUS_SVG + '<span>' + addLabel + '</span></button>' +
-        '</div>' +
+        '<div class="bb-rec__cta">' + cta + '</div>' +
       '</div>';
   }
 
@@ -146,6 +161,9 @@
 
     var ctx = cartContext();
     var cartIds = ctx.map(function(i){ return i.id; });
+    // product ids added via "Complete the Look" -> their variant id in the cart
+    var lookVar = {};
+    ctx.forEach(function(i){ if(i.cl) lookVar[i.id] = i.variant_id; });
 
     getCatalog().then(function(catalog){
       // index catalogue by "style|colour" -> { top, bottom }
@@ -158,24 +176,34 @@
         if(!index[key][info.piece]) index[key][info.piece] = p;   // first wins
       });
 
-      // first eligible swimwear line in the cart
-      var match = null, wantPiece = null;
-      for(var i = 0; i < ctx.length; i++){
+      // Two passes so an already-added "Complete the Look" item always wins the
+      // slot (card stays put in its "Added" state). Otherwise recommend an
+      // available complementary piece that isn't in the cart yet.
+      var match = null, wantPiece = null, added = false;
+      for(var i = 0; i < ctx.length && !match; i++){
         var info = parseTitle(ctx[i].title);
         if(!info) continue;
-        wantPiece = info.piece === 'top' ? 'bottom' : 'top';
-        var cand = (index[info.style + '|' + info.color] || {})[wantPiece];
-        if(cand && cartIds.indexOf(cand.id) === -1 && cand.variants.some(function(v){ return v.available; })){
-          match = cand; break;
+        var wp = info.piece === 'top' ? 'bottom' : 'top';
+        var cand = (index[info.style + '|' + info.color] || {})[wp];
+        if(cand && Object.prototype.hasOwnProperty.call(lookVar, cand.id)){
+          match = cand; wantPiece = wp; added = true;
         }
-        wantPiece = null;
+      }
+      for(var j = 0; j < ctx.length && !match; j++){
+        var info2 = parseTitle(ctx[j].title);
+        if(!info2) continue;
+        var wp2 = info2.piece === 'top' ? 'bottom' : 'top';
+        var cand2 = (index[info2.style + '|' + info2.color] || {})[wp2];
+        if(cand2 && cartIds.indexOf(cand2.id) === -1 && cand2.variants.some(function(v){ return v.available; })){
+          match = cand2; wantPiece = wp2; added = false;
+        }
       }
 
       var pairedId = null;
       if(pairAside){
         var slot = pairAside.querySelector('[data-bb-rec-slot]');
         if(match){
-          slot.innerHTML = pairedCardHTML(match, wantPiece);
+          slot.innerHTML = pairedCardHTML(match, wantPiece, added, added ? lookVar[match.id] : null);
           pairedId = match.id;
           pairAside.hidden = false;
         } else {
@@ -206,6 +234,8 @@
       if(add) add.setAttribute('data-variant-id', pill.getAttribute('data-variant-id'));
       return;
     }
+    var rem = e.target.closest && e.target.closest('[data-bb-remove-look]');
+    if(rem){ e.preventDefault(); removeLook(rem); return; }
     var add = e.target.closest && e.target.closest('[data-bb-add]');
     if(add){ e.preventDefault(); addToCart(add); }
   });
@@ -236,14 +266,15 @@
     if(!id) return;
     btn.disabled = true; btn.classList.add('is-loading');
     var sections = cartSections();
-    // Tag "Add a Finishing Touch" (complementary) adds with a hidden line
-    // property so the cart can render them in their own section below the line
-    // items rather than as a standard cart line. Paired ("Complete the Look")
-    // adds are real swimwear and stay as normal cart lines, so they are NOT
-    // tagged. Underscore-prefixed properties are private (hidden at checkout).
+    // Tag rec adds with a private (underscore) line property so the cart keeps
+    // them OFF the line-item list: "Add a Finishing Touch" (comp) renders in its
+    // own section below the items; "Complete the Look" (pair) stays on its rec
+    // card in an "Added" state. Underscore properties are hidden at checkout.
     var isFinishing = !!(btn.closest && btn.closest('[data-bb-rec="comp"]'));
+    var isLook = !!(btn.closest && btn.closest('[data-bb-rec="pair"]'));
     var lineItem = { id: id, quantity: 1 };
     if(isFinishing){ lineItem.properties = { _bb_finishing_touch: 'true' }; }
+    else if(isLook){ lineItem.properties = { _bb_complete_look: 'true' }; }
     fetch((window.BB.cartAddUrl || '/cart/add') + '.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -274,6 +305,48 @@
         if(freshShip) liveShip.innerHTML = freshShip.innerHTML;
       }
       // Pull fresh cart contents so the engine re-pairs against the new cart.
+      fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(cart){ if(cart) liveCart = mapCart(cart.items); })
+        .catch(function(){})
+        .then(function(){ runEngine(); alignSummary(); });
+    })
+    .catch(function(){ btn.disabled = false; btn.classList.remove('is-loading'); });
+  }
+
+  // Remove a "Complete the Look" line from the card itself: drop the line,
+  // re-render sections (subtotal recalculates), then re-run the engine so the
+  // card flips back to its "Add" state with the button re-enabled.
+  function removeLook(btn){
+    var id = Number(btn.getAttribute('data-variant-id'));
+    if(!id) return;
+    btn.disabled = true; btn.classList.add('is-loading');
+    var sections = cartSections();
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        id: id, quantity: 0,
+        sections: sections.map(function(s){ return s.section; }),
+        sections_url: window.location.pathname
+      })
+    })
+    .then(function(r){ if(!r.ok) throw new Error('remove failed'); return r.json(); })
+    .then(function(data){
+      if(!data || !data.sections){ window.location.reload(); return; }
+      sections.forEach(function(s){
+        var root = document.getElementById(s.id);
+        if(!root) return;
+        var target = root.querySelector(s.selector) || root;
+        var content = sectionInnerHTML(data.sections[s.section], s.selector);
+        if(content !== null) target.innerHTML = content;
+      });
+      var itemsSec = sections[0] && data.sections[sections[0].section];
+      var liveShip = document.getElementById('cart-page-free-delivery');
+      if(itemsSec && liveShip){
+        var freshShip = new DOMParser().parseFromString(itemsSec, 'text/html').querySelector('#cart-page-free-delivery');
+        if(freshShip) liveShip.innerHTML = freshShip.innerHTML;
+      }
       fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(cart){ if(cart) liveCart = mapCart(cart.items); })
