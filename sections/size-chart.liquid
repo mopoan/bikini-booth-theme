@@ -17,9 +17,8 @@
 {%- endcomment -%}
 
 {%- comment -%} Reusable inline SVGs (currentColor = recoloured by parent) {%- endcomment -%}
-{%- capture sc_palm_svg -%}<svg viewBox="0 0 48 54" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 21c-1 11-2 21-3 32"/><path d="M24 21C16 15 8 16 3 20c7-2 15-1 21 3"/><path d="M24 21c8-6 16-5 21-1-7-2-15-1-21 3"/><path d="M24 21C20 12 14 8 7 7c8 2 14 7 17 16"/><path d="M24 21c4-9 10-13 17-14-8 2-14 7-17 16"/><path d="M24 21c0-9 0-14 0-19"/><path d="M17 53h14"/></svg>{%- endcapture -%}
-{%- capture sc_shell_svg -%}<svg viewBox="0 0 32 30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4C9 5 4 12 3 21c2 1 4 0 5 2 2-1 4 0 5 1 1-1 3-1 6 0 2-1 4-2 5-1 1-2 3-1 5-2C28 12 23 5 16 4Z"/><path d="M16 4L13 23"/><path d="M16 4L19 23"/><path d="M16 4L8 21"/><path d="M16 4L24 21"/></svg>{%- endcapture -%}
-{%- capture sc_torso_paths -%}<path d="M42 14h16"/><path d="M42 14c-2 8-7 13-14 17-9 4-13 10-14 17"/><path d="M58 14c2 8 7 13 14 17 9 4 13 10 14 17"/><path d="M14 48c1 14 8 24 12 36 4 12 2 20-2 28"/><path d="M86 48c-1 14-8 24-12 36-4 12-2 20 2 28"/><path d="M24 112c6 10 14 12 26 12s20-2 26-12"/><path d="M32 46c6 10 14 12 18 7 4 5 12 3 18-7"/><path d="M50 31v15"/><path d="M30 100c8 10 14 12 20 12s12-2 20-12"/>{%- endcapture -%}
+{%- capture sc_palm_svg -%}<svg width="40" height="45" viewBox="0 0 48 54" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 21c-1 11-2 21-3 32"/><path d="M24 21C16 15 8 16 3 20c7-2 15-1 21 3"/><path d="M24 21c8-6 16-5 21-1-7-2-15-1-21 3"/><path d="M24 21C20 12 14 8 7 7c8 2 14 7 17 16"/><path d="M24 21c4-9 10-13 17-14-8 2-14 7-17 16"/><path d="M24 21c0-9 0-14 0-19"/><path d="M17 53h14"/></svg>{%- endcapture -%}
+{%- capture sc_shell_svg -%}<svg width="34" height="32" viewBox="0 0 32 30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4C9 5 4 12 3 21c2 1 4 0 5 2 2-1 4 0 5 1 1-1 3-1 6 0 2-1 4-2 5-1 1-2 3-1 5-2C28 12 23 5 16 4Z"/><path d="M16 4L13 23"/><path d="M16 4L19 23"/><path d="M16 4L8 21"/><path d="M16 4L24 21"/></svg>{%- endcapture -%}
 
 <section
   class="sc-section"
@@ -58,25 +57,19 @@
         <h2 class="sc-measure__title">How to Measure</h2>
         <div class="sc-measure__grid">
           <div class="sc-measure__col">
-            <span class="sc-measure__art" aria-hidden="true"><svg viewBox="0 0 100 140" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">{{ sc_torso_paths }}<path d="M9 53h82" stroke-dasharray="3.5 4"/></svg></span>
-            <div class="sc-measure__copy">
-              <h3 class="sc-measure__label">Bust</h3>
-              <p class="sc-measure__text">Measure around the fullest part of your bust.</p>
-            </div>
+            <img class="sc-measure__img" src="{{ 'bb-measure-bust.png' | asset_url }}" width="363" height="480" alt="" loading="lazy">
+            <h3 class="sc-measure__label">Bust</h3>
+            <p class="sc-measure__text">Measure around the fullest part of your bust.</p>
           </div>
           <div class="sc-measure__col">
-            <span class="sc-measure__art" aria-hidden="true"><svg viewBox="0 0 100 140" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">{{ sc_torso_paths }}<path d="M16 84h68" stroke-dasharray="3.5 4"/></svg></span>
-            <div class="sc-measure__copy">
-              <h3 class="sc-measure__label">Waist</h3>
-              <p class="sc-measure__text">Measure around the narrowest part of your waist.</p>
-            </div>
+            <img class="sc-measure__img" src="{{ 'bb-measure-waist.png' | asset_url }}" width="285" height="480" alt="" loading="lazy">
+            <h3 class="sc-measure__label">Waist</h3>
+            <p class="sc-measure__text">Measure around the narrowest part of your waist.</p>
           </div>
           <div class="sc-measure__col">
-            <span class="sc-measure__art" aria-hidden="true"><svg viewBox="0 0 100 140" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">{{ sc_torso_paths }}<path d="M11 106h78" stroke-dasharray="3.5 4"/></svg></span>
-            <div class="sc-measure__copy">
-              <h3 class="sc-measure__label">Hips</h3>
-              <p class="sc-measure__text">Measure around the fullest part of your hips.</p>
-            </div>
+            <img class="sc-measure__img" src="{{ 'bb-measure-hips.png' | asset_url }}" width="300" height="480" alt="" loading="lazy">
+            <h3 class="sc-measure__label">Hips</h3>
+            <p class="sc-measure__text">Measure around the fullest part of your hips.</p>
           </div>
         </div>
       </section>
@@ -398,28 +391,30 @@
   #size-chart-{{ section.id }} .sc-measure__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 26px;
+    gap: 30px;
   }
   #size-chart-{{ section.id }} .sc-measure__col {
     display: flex;
-    align-items: flex-start;
-    gap: 18px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
-  #size-chart-{{ section.id }} .sc-measure__art {
-    flex-shrink: 0;
-    width: 64px;
-    color: var(--sc-teal);
+  #size-chart-{{ section.id }} .sc-measure__img {
+    display: block;
+    height: 150px;
+    width: auto;
+    margin: 0 0 16px;
   }
-  #size-chart-{{ section.id }} .sc-measure__art svg { width: 100%; height: auto; }
   #size-chart-{{ section.id }} .sc-measure__label {
     font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--sc-teal-deep);
-    margin: 4px 0 8px;
+    margin: 0 0 8px;
   }
   #size-chart-{{ section.id }} .sc-measure__text {
+    max-width: 260px;
     margin: 0;
     color: var(--sc-ink-soft);
     font-size: 0.9rem;
