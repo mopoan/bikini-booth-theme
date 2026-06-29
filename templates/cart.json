@@ -13,7 +13,7 @@
       "type": "main-cart-items",
       "settings": {
         "heading_aligment": "text-center",
-        "top_spacing": "medium",
+        "top_spacing": "small",
         "width": "page-width",
         "image_ratio": "auto",
         "show_vendor": true
