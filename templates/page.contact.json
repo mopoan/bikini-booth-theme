@@ -54,7 +54,7 @@
       "settings": {
         "hero_image": "shopify://shop_images/bb_kpg_realistic.png",
         "hero_min_height": 33,
-        "hero_image_height_mobile": 250,
+        "hero_image_height_mobile": 210,
         "form_offset_y": 32,
         "leaf_1_offset_x": 114,
         "leaf_1_offset_y": 244,
