@@ -1,0 +1,77 @@
+{%- comment -%}
+  Bikini Booth — finishing-touch cart line.
+
+  Renders a cart item that was added from the cart's "Add a Finishing Touch"
+  block as a CARD (matching the recommendation card design), NOT a standard
+  cart line. These items are tagged with the hidden line property
+  _bb_finishing_touch (set in bb-cart.js) and partitioned out in
+  main-cart-items.liquid.
+
+  Preserves the cart.js remove contract:
+    #CartItem-{index}, cart-remove-button with data-index, .loading-overlay,
+    #Line-item-error-{index}.
+  No quantity-input — these are remove-only cards (qty is shown as a badge when
+  greater than one). The theme's cart-remove-button finds its <cart-items>
+  ancestor and calls updateQuantity(index, 0), which works because this section
+  lives inside <cart-items>.
+
+  Params: item (required), section (optional — for show_vendor)
+{%- endcomment -%}
+
+{%- liquid
+  assign idx = item.index | plus: 1
+  assign focus = item.product.metafields.custom.thumb_focus.value | default: 'center' | downcase
+  unless focus == 'top' or focus == 'bottom'
+    assign focus = 'center'
+  endunless
+-%}
+
+<div class="bb-ft-line" id="CartItem-{{ idx }}">
+  <div class="loading-overlay hidden">
+    <div class="loading-overlay__spinner">
+      <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+      </svg>
+    </div>
+  </div>
+
+  {%- if item.image -%}
+    <a href="{{ item.url }}" class="bb-ft-line__media" aria-label="{{ item.product.title | escape }}">
+      <img
+        srcset="{{ item.image | image_url: width: 220 }} 1x, {{ item.image | image_url: width: 440 }} 2x"
+        src="{{ item.image | image_url: width: 220 }}"
+        loading="lazy"
+        width="{{ item.image.width }}"
+        height="{{ item.image.height }}"
+        alt="{{ item.image.alt | escape | default: item.product.title | escape }}"
+        style="object-position: center {{ focus }};">
+    </a>
+  {%- endif -%}
+
+  <div class="bb-ft-line__body">
+    {%- if section.settings.show_vendor and item.product.vendor != blank -%}
+      <p class="bb-ft-line__brand">{{ item.product.vendor }}</p>
+    {%- endif -%}
+    <a href="{{ item.url }}" class="bb-ft-line__name">{{ item.product.title | escape }}</a>
+    {%- unless item.variant.title contains 'Default' -%}
+      <p class="bb-ft-line__variant">{{ item.variant.title }}</p>
+    {%- endunless -%}
+    <p class="bb-ft-line__price">
+      {%- if item.original_line_price != item.final_line_price -%}
+        <span class="bb-ft-line__price-now">{{ item.final_price | money }}</span>
+        <s class="bb-ft-line__price-was">{{ item.original_price | money }}</s>
+      {%- else -%}
+        <span class="bb-ft-line__price-now">{{ item.final_price | money }}</span>
+      {%- endif -%}
+      {%- if item.quantity > 1 -%}<span class="bb-ft-line__qty">&times;&nbsp;{{ item.quantity }}</span>{%- endif -%}
+    </p>
+  </div>
+
+  <cart-remove-button id="Remove-{{ idx }}" data-index="{{ idx }}" class="bb-ft-line__remove">
+    <a href="{{ item.url_to_remove }}" class="bb-ft-line__remove-link" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title | default: item.product.title }}">
+      {%- render 'bb-icon', icon: 'trash', size: 15 -%}
+    </a>
+  </cart-remove-button>
+
+  <div id="Line-item-error-{{ idx }}" class="bb-ft-line__error" role="alert"></div>
+</div>

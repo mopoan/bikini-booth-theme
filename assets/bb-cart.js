@@ -236,11 +236,19 @@
     if(!id) return;
     btn.disabled = true; btn.classList.add('is-loading');
     var sections = cartSections();
+    // Tag "Add a Finishing Touch" (complementary) adds with a hidden line
+    // property so the cart can render them in their own section below the line
+    // items rather than as a standard cart line. Paired ("Complete the Look")
+    // adds are real swimwear and stay as normal cart lines, so they are NOT
+    // tagged. Underscore-prefixed properties are private (hidden at checkout).
+    var isFinishing = !!(btn.closest && btn.closest('[data-bb-rec="comp"]'));
+    var lineItem = { id: id, quantity: 1 };
+    if(isFinishing){ lineItem.properties = { _bb_finishing_touch: 'true' }; }
     fetch((window.BB.cartAddUrl || '/cart/add') + '.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
-        items: [{ id: id, quantity: 1 }],
+        items: [lineItem],
         sections: sections.map(function(s){ return s.section; }),
         sections_url: window.location.pathname
       })

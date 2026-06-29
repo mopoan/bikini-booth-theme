@@ -502,3 +502,90 @@
 .bb-cart quantity-input.bb-qty .bb-qty__btn.quantity__button svg {
   width: 16px !important; height: 16px !important; display: block;
 }
+
+/* ============================================================
+   Finishing-touch section — items added from the cart's
+   "Add a Finishing Touch" block render here as cards (below the
+   line items), not as standard cart lines. Tagged via the hidden
+   line property _bb_finishing_touch and partitioned in
+   main-cart-items.liquid.
+   ============================================================ */
+.bb-cart__finishing {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--bb-line);
+}
+.bb-cart__finishing-head {
+  display: flex; align-items: center; gap: 9px;
+  margin: 0 0 14px;
+}
+.bb-cart__finishing-head .bb-icon { color: var(--bb-teal); flex: 0 0 auto; }
+.bb-cart__finishing-title {
+  margin: 0; font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--bb-teal-deep);
+}
+.bb-cart__finishing-items { display: grid; gap: 12px; }
+
+/* Card row — echoes the recommendation card (cream, rounded) so it reads as a
+   curated extra rather than a cart line. */
+.bb-ft-line {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  background: var(--bb-cream);
+  border: 1px solid var(--bb-line);
+  border-radius: var(--bb-radius-sm);
+  padding: 12px 14px;
+}
+.bb-ft-line__media {
+  display: block; width: 64px; height: 64px;
+  border-radius: 12px; overflow: hidden;
+  background: #fff; border: 1px solid var(--bb-line);
+}
+.bb-ft-line__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.bb-ft-line__body { min-width: 0; }
+.bb-ft-line__brand {
+  margin: 0 0 3px; font-size: 0.66rem; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--bb-teal);
+}
+.bb-ft-line__name {
+  display: inline-block; margin: 0; color: var(--bb-ink); text-decoration: none;
+  font-size: 0.95rem; line-height: 1.3;
+}
+.bb-ft-line__name:hover { color: var(--bb-teal-deep); }
+.bb-ft-line__variant { margin: 3px 0 0; font-size: 0.8rem; color: var(--bb-muted); }
+.bb-ft-line__price {
+  margin: 7px 0 0; font-size: 0.95rem; color: var(--bb-ink);
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+}
+.bb-ft-line__price-now { font-weight: 600; }
+.bb-ft-line__price-was { font-size: 0.8rem; color: var(--bb-muted); text-decoration: line-through; }
+.bb-ft-line__qty {
+  font-size: 0.72rem; color: var(--bb-teal-deep);
+  background: var(--bb-teal-soft); border-radius: 999px; padding: 2px 9px;
+}
+
+/* Remove — compact icon button, top-right of the card */
+.bb-ft-line__remove { align-self: start; }
+.bb-ft-line__remove-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 999px;
+  color: var(--bb-muted); text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.bb-ft-line__remove-link:hover { background: rgba(74, 198, 190, 0.14); color: var(--bb-teal-deep); }
+.bb-ft-line__remove-link .bb-icon,
+.bb-ft-line__remove-link svg { width: 15px; height: 15px; display: block; }
+
+.bb-ft-line__error { grid-column: 1 / -1; margin: 0; font-size: 0.8rem; color: #b3261e; }
+.bb-ft-line__error:empty { display: none; }
+
+/* Removal spinner overlay (theme toggles .hidden) */
+.bb-ft-line .loading-overlay {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(254, 249, 238, 0.7); border-radius: var(--bb-radius-sm); z-index: 1;
+}
+.bb-ft-line .loading-overlay.hidden { display: none; }
