@@ -269,8 +269,9 @@
 
 <style>
   #size-chart-{{ section.id }} {
-    --sc-teal: #49c6be;
-    --sc-teal-deep: #0a5c56;
+    --sc-teal: {{ section.settings.color_teal | default: '#49c6be' }};
+    --sc-teal-deep: {{ section.settings.color_deep | default: '#0a5c56' }};
+    --sc-heading: {{ section.settings.color_heading | default: '#49c6be' }};
     --sc-ink: #234542;
     --sc-ink-soft: #5d6b69;
     --sc-sand: #fbf6ee;
@@ -320,7 +321,7 @@
   #size-chart-{{ section.id }} .sc-hero__icon {
     display: inline-block;
     width: 40px;
-    color: var(--sc-teal-deep);
+    color: var(--sc-heading);
   }
   #size-chart-{{ section.id }} .sc-hero__icon svg { width: 100%; height: auto; }
   #size-chart-{{ section.id }} .sc-hero__title {
@@ -330,7 +331,7 @@
     line-height: 1.02;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--sc-teal-deep);
+    color: var(--sc-heading);
     margin: 8px 0 0;
   }
   #size-chart-{{ section.id }} .sc-hero__subtitle {
@@ -339,7 +340,7 @@
     font-weight: 400;
     font-size: clamp(1.3rem, 3.6vw, 1.85rem);
     text-transform: capitalize;
-    color: var(--sc-teal-deep);
+    color: var(--sc-heading);
     margin: 2px 0 16px;
   }
   #size-chart-{{ section.id }} .sc-hero__intro {
@@ -385,7 +386,7 @@
     font-size: clamp(1.5rem, 4vw, 2rem);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--sc-teal-deep);
+    color: var(--sc-heading);
     margin: 0 0 28px;
   }
   #size-chart-{{ section.id }} .sc-measure__grid {
@@ -410,7 +411,7 @@
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--sc-teal-deep);
+    color: var(--sc-heading);
     margin: 0 0 8px;
   }
   #size-chart-{{ section.id }} .sc-measure__text {
@@ -608,7 +609,7 @@
     font-size: 1.4rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--sc-teal-deep);
+    color: var(--sc-heading);
     margin: 0 0 6px;
   }
   #size-chart-{{ section.id }} .sc-fit-card__text {
@@ -657,7 +658,7 @@
     font-family: var(--sc-serif);
     font-weight: 500;
     font-size: clamp(1.7rem, 5vw, 2.4rem);
-    color: var(--sc-teal-deep);
+    color: var(--sc-heading);
     margin: 0 0 8px;
   }
   #size-chart-{{ section.id }} .sc-cta__text {
@@ -784,6 +785,31 @@
       "label": "Intro text",
       "info": "Short supporting line shown below the subheading.",
       "default": "Our swimwear is designed to flatter every body. Use this guide to find your ideal Bikini Booth fit."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_heading",
+      "label": "Heading color",
+      "default": "#49c6be",
+      "info": "Hero title, subheading, section titles, and fit-note card headings."
+    },
+    {
+      "type": "color",
+      "id": "color_deep",
+      "label": "Table header & buttons",
+      "default": "#0a5c56",
+      "info": "Deeper teal behind the white table labels, the cm/in pill, and the CTA button. Keep it dark enough for white text to stay legible."
+    },
+    {
+      "type": "color",
+      "id": "color_teal",
+      "label": "Accent teal",
+      "default": "#49c6be",
+      "info": "Lines, size badges, shell/palm icons, and the active tab underline."
     },
     {
       "type": "header",
