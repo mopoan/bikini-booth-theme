@@ -362,11 +362,15 @@
 @media (min-width: 990px) {
   :has(> [id^="shopify-section"][id$="__cart-items"]):has(> [id^="shopify-section"][id$="__cart-footer"]) {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
-    gap: 40px;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 440px);
+    gap: clamp(40px, 4vw, 72px);
     align-items: start;
     max-width: 1360px;
     margin-inline: auto;
+    /* symmetric side gutters so the summary's right inset matches the items'
+       left inset (the block was hugging the 1360 boundary before) */
+    padding-inline: clamp(24px, 4vw, 64px);
+    box-sizing: border-box;
   }
   /* let the items fill the left cell instead of re-centering within it
      (the theme page-width class would otherwise leave a gap before the summary) */
