@@ -372,8 +372,8 @@
     var scrim = document.createElement('div'); scrim.className = 'bb-zoom-scrim';
     var card = document.createElement('div'); card.className = 'bb-zoom';
     card.innerHTML = '<button class="bb-zoom__x" aria-label="Close image">' + X_SVG + '</button>' +
-                     '<div class="bb-zoom__img" role="img" aria-label="Full product image"></div>';
-    card.querySelector('.bb-zoom__img').style.backgroundImage = 'url("' + full + '")';
+                     '<img class="bb-zoom__img" alt="Full product image">';
+    card.querySelector('.bb-zoom__img').src = full;
     scrim.appendChild(card); document.body.appendChild(scrim);
     placeZoom(card, thumb); document.body.style.overflow = 'hidden'; open = { scrim: scrim };
     card.addEventListener('click', function(e){ e.stopPropagation(); });
