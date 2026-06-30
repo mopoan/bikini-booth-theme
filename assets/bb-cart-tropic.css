@@ -471,6 +471,36 @@
 }
 .bb-summary__trust-item .bb-icon { width: 22px; color: var(--bb-teal-deep); }
 
+/* --- Scaled-up Order Summary + bottom-stretch (desktop two-column only) ---
+   Matches the approved mockup: larger heading, subtotal/total, checkout and
+   express buttons, and trust row. alignSummary() in bb-cart.js sets min-height
+   so the panel's bottom aligns to the "Complete the Look" card; the panel is a
+   flex column and the trust row is pinned to the bottom, so any extra height
+   pools just above it (matching the mockup's lower divider + gap). */
+@media (min-width: 990px) {
+  .bb-cart .bb-summary {
+    display: flex; flex-direction: column;
+    padding: 34px 32px 30px;
+  }
+  .bb-summary__star { width: 120px; height: 120px; }
+  .bb-summary__star .bb-icon { width: 120px; }
+  .bb-summary__title { font-size: 2rem; }
+  .bb-summary__wave { width: 54px; margin: 10px auto 24px; }
+  .bb-summary__content { display: flex; flex-direction: column; flex: 1 1 auto; }
+  .bb-summary__row { padding-top: 18px; }
+  .bb-summary__row-label { font-size: 1.18rem; }
+  .bb-summary__row-val { font-size: 1.7rem; font-weight: 700; }
+  .bb-summary__tax { font-size: 0.9rem; margin-top: 14px; }
+  .bb-summary__checkout { margin-top: 22px; padding: 20px 24px; font-size: 1.2rem; gap: 11px; }
+  .bb-summary__checkout svg { width: 19px; height: 19px; }
+  .bb-summary__express { margin: 26px 0 16px; font-size: 0.76rem; }
+  .bb-summary__dynamic { gap: 14px; }
+  .bb-summary__dynamic > * { min-height: 52px; }
+  .bb-summary__trust { margin-top: auto; padding-top: 26px; gap: 10px; }
+  .bb-summary__trust-item { font-size: 0.82rem; gap: 9px; }
+  .bb-summary__trust-item .bb-icon { width: 28px; }
+}
+
 @media (max-width: 989px) {
   .bb-summary { margin-top: 24px; }
 }

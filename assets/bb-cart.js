@@ -477,7 +477,12 @@
   function alignSummary(){
     var footer = document.querySelector('[id^="shopify-section"][id$="__cart-footer"]');
     if(!footer) return;
-    if(!window.matchMedia('(min-width: 990px)').matches){ footer.style.marginTop = ''; return; }
+    var summary = footer.querySelector('.bb-summary');
+    if(!window.matchMedia('(min-width: 990px)').matches){
+      footer.style.marginTop = '';
+      if(summary) summary.style.minHeight = '';
+      return;
+    }
     var heading = document.querySelector('.bb-cart__heading');
     var anchor = document.getElementById('cart-page-free-delivery')
               || document.getElementById('cart')
@@ -486,6 +491,23 @@
     footer.style.marginTop = '0px';
     var delta = anchor.getBoundingClientRect().top - footer.getBoundingClientRect().top;
     footer.style.marginTop = (delta > 0 ? Math.round(delta) : 0) + 'px';
+
+    // Bottom-stretch: grow the summary so its bottom edge aligns with the bottom
+    // of the "Complete the Look" card (pair rec; falls back to the comp card).
+    // Never shrinks below its own content — min-height is ignored when the
+    // content is already taller. CSS fills the gap (trust row pinned to bottom).
+    if(summary){
+      summary.style.minHeight = '';
+      var pair = document.querySelector('[data-bb-rec="pair"]');
+      var comp = document.querySelector('[data-bb-rec="comp"]');
+      var target = (pair && !pair.hidden && pair.offsetParent) ? pair
+                 : (comp && !comp.hidden && comp.offsetParent) ? comp
+                 : null;
+      if(target){
+        var h = Math.round(target.getBoundingClientRect().bottom - summary.getBoundingClientRect().top);
+        if(h > 0) summary.style.minHeight = h + 'px';
+      }
+    }
   }
   var _alignT;
   function scheduleAlign(){ clearTimeout(_alignT); _alignT = setTimeout(alignSummary, 60); }
