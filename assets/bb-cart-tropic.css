@@ -363,7 +363,7 @@
   :has(> [id^="shopify-section"][id$="__cart-items"]):has(> [id^="shopify-section"][id$="__cart-footer"]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(400px, 520px);
-    gap: clamp(24px, 2.4vw, 40px);
+    gap: clamp(17px, 1.7vw, 28px);
     align-items: start;
     max-width: 1360px;
     margin-inline: auto;
