@@ -5,12 +5,10 @@
   currency unit). Renders nothing if the goal isn't configured.
   Lives inside #cart-page-free-delivery so cart.js auto-refreshes it.
 {%- endcomment -%}
-
 {%- liquid
   assign goal = settings.free_delivery_price | plus: 0
   assign goal_cents = goal | times: 100
 -%}
-
 {%- if goal_cents > 0 -%}
   {%- liquid
     assign remaining = goal_cents | minus: cart.total_price
@@ -26,10 +24,8 @@
       assign unlocked = true
     endif
   -%}
-
   <div class="bb-ship{% if unlocked %} bb-ship--unlocked{% endif %}">
-    <div class="bb-ship__icon">{% render 'bb-icon', icon: 'delivery', size: 30 %}</div>
-
+    <div class="bb-ship__icon">{% render 'bb-icon', icon: 'island', size: 30 %}</div>
     <div class="bb-ship__body">
       {%- liquid
         assign remaining_money = remaining | money
@@ -41,7 +37,6 @@
         <span class="bb-ship__fill" style="width: {{ pct }}%;"></span>
       </div>
     </div>
-
     <div class="bb-ship__shell">{% render 'bb-icon', icon: 'shell', size: 44 %}</div>
   </div>
 {%- endif -%}
