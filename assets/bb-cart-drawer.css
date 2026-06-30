@@ -1,0 +1,118 @@
+/* ============================================================
+   Bikini Booth — Cart DRAWER (Tropic)
+   Phase 1: surface + header + shipping bar + line items + subtotal.
+   Self-contained and scoped under .bb-drawer (a class on #CartDrawer) so it
+   never collides with the cart-page styles in bb-cart-tropic.css.
+   Only visual restyle — the theme's quantity-input, cart-remove-button,
+   data-index, loading-overlay and error hooks are left untouched.
+   ============================================================ */
+
+.bb-drawer {
+  --bb-teal: #4ac6be;
+  --bb-teal-deep: #0a5c56;
+  --bb-teal-soft: #eaf7f5;
+  --bb-cream: #fef9ee;
+  --bb-cream-2: #faf8f4;
+  --bb-ink: #0a2e2e;
+  --bb-muted: #6f7c7a;
+  --bb-line: #e8e4dd;
+  --bb-radius: 18px;
+  --bb-radius-sm: 12px;
+  --bb-shadow-soft: 0 2px 10px rgba(10, 46, 46, 0.05);
+
+  color: var(--bb-ink);
+  background: var(--bb-cream);
+}
+.bb-drawer *,
+.bb-drawer *::before,
+.bb-drawer *::after { box-sizing: border-box; }
+
+.bb-drawer .bb-icon { display: inline-block; vertical-align: middle; pointer-events: none; }
+
+/* ---------- Drawer header ---------- */
+.bb-drawer .drawer__heading {
+  font-family: var(--font-display, inherit);
+  font-weight: 400; letter-spacing: 0.01em; color: var(--bb-ink);
+  font-size: 1.6rem; line-height: 1.1; text-align: center;
+  margin: 4px 0 18px;
+}
+
+/* ---------- Free shipping progress (island bar) ---------- */
+.bb-drawer #CartDrawer-free-delivery.free-delivery-bar { margin-bottom: 18px; }
+.bb-drawer .bb-ship {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px;
+  background: var(--bb-teal-soft); border: 1px solid rgba(74, 198, 190, 0.25);
+  border-radius: var(--bb-radius); padding: 14px 16px;
+}
+.bb-drawer .bb-ship__icon { width: 30px; height: 24px; color: var(--bb-teal-deep); }
+.bb-drawer .bb-ship__body { min-width: 0; }
+.bb-drawer .bb-ship__msg { margin: 0 0 9px; font-size: 0.9rem; color: var(--bb-ink); }
+.bb-drawer .bb-ship__track { height: 8px; border-radius: 999px; background: rgba(74, 198, 190, 0.22); overflow: hidden; }
+.bb-drawer .bb-ship__fill { display: block; height: 100%; border-radius: 999px; background: var(--bb-teal-deep); transition: width 0.4s ease; }
+.bb-drawer .bb-ship__shell { width: 40px; height: 36px; color: rgba(74, 198, 190, 0.45); flex: none; }
+.bb-drawer .bb-ship--unlocked .bb-ship__fill { background: var(--bb-teal); }
+@media (max-width: 480px) { .bb-drawer .bb-ship__shell { display: none; } }
+
+/* ---------- Line items as tropic cards ---------- */
+.bb-drawer .drawer__cart-items-wrapper { display: flex; flex-direction: column; gap: 14px; }
+.bb-drawer .drawer__cart-item {
+  background: #fff; border: 1px solid var(--bb-line);
+  border-radius: var(--bb-radius); box-shadow: var(--bb-shadow-soft);
+  padding: 14px;
+}
+.bb-drawer .drawer__cart-item__content { display: grid; grid-template-columns: 92px 1fr; gap: 14px; align-items: start; }
+.bb-drawer .drawer__cart-item__media { margin: 0; }
+.bb-drawer .drawer__cart-item__media .image-hover-box,
+.bb-drawer .drawer__cart-item__media .image-hover-box__container {
+  border-radius: var(--bb-radius-sm); overflow: hidden; background: var(--bb-cream-2);
+}
+.bb-drawer .drawer__cart-item__details { min-width: 0; }
+.bb-drawer .cart-item__heading {
+  font-family: var(--font-display, inherit);
+  font-size: 1rem; line-height: 1.25; color: var(--bb-ink); text-decoration: none;
+}
+.bb-drawer .product-card-small__meta {
+  font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bb-teal-deep);
+}
+.bb-drawer .product-option dt,
+.bb-drawer .product-option dd { color: var(--bb-muted); font-size: 0.8rem; }
+.bb-drawer .price__main,
+.bb-drawer .price__sale,
+.bb-drawer .cart-item__totals .h5 { color: var(--bb-ink); font-weight: 600; }
+
+/* quantity stepper — pill styling, keep theme buttons functional */
+.bb-drawer quantity-input.quantity {
+  display: inline-flex; align-items: center; gap: 2px;
+  border: 1px solid var(--bb-line); border-radius: 999px;
+  background: var(--bb-cream-2); padding: 2px;
+}
+.bb-drawer quantity-input.quantity .quantity__button {
+  width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; color: var(--bb-ink);
+}
+.bb-drawer quantity-input.quantity .quantity__input {
+  width: 34px; text-align: center; border: 0; background: transparent; color: var(--bb-ink);
+  font-size: 0.9rem; -moz-appearance: textfield;
+}
+.bb-drawer quantity-input.quantity .quantity__input::-webkit-outer-spin-button,
+.bb-drawer quantity-input.quantity .quantity__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.bb-drawer .cart-item__remove-button { color: var(--bb-muted); }
+.bb-drawer .cart-item__remove-button:hover { color: var(--bb-teal-deep); }
+
+/* ---------- Subtotal / footer ---------- */
+.bb-drawer .cart__footer__information { margin-top: 18px; }
+.bb-drawer .totals {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding-top: 16px; border-top: 1px solid var(--bb-line);
+}
+.bb-drawer .totals__subtotal { margin: 0; font-size: 1.05rem; color: var(--bb-ink); }
+.bb-drawer .totals__subtotal-value { margin: 0; font-size: 1.3rem; font-weight: 600; color: var(--bb-ink); }
+.bb-drawer .tax-note { font-size: 0.78rem; line-height: 1.4; color: var(--bb-muted); margin-top: 10px; }
+
+/* checkout button — tropic teal pill (keeps theme btn classes + JS) */
+.bb-drawer .btn--checkout {
+  background: var(--bb-teal); color: #fff; border-radius: 999px;
+  padding: 15px 20px; font-weight: 600; border: 0;
+}
+.bb-drawer .btn--checkout:hover { background: var(--bb-teal-deep); }

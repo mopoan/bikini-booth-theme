@@ -16,12 +16,13 @@ component-swiper-slider.css
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+{{ 'bb-cart-drawer.css' | asset_url | stylesheet_tag }}
 
 <cart-drawer class="popup-modal popup-modal__right cart-drawer-container{% if cart == empty %} is-empty{% endif %}">
   <div class="popup-modal__overlay" onclick="this.closest('.popup-modal').close()"></div>
-  <div id="CartDrawer" class="cart-drawer popup-modal__content popup-modal__content__f-height">
+  <div id="CartDrawer" class="cart-drawer popup-modal__content popup-modal__content__f-height bb-drawer">
     <button class="popup-modal__toggle modal-close-animation" type="button" onclick="this.closest('.popup-modal').close()" aria-label="{{ 'accessibility.close' | t }}">
-	  {{- 'icon-close' | append: settings.system_icon_thickness | inline_asset_content -}}
+          {{- 'icon-close' | append: settings.system_icon_thickness | inline_asset_content -}}
     </button>
     <drawer-inner class="drawer__inner popup-modal__content__data custom__scrollbar" role="dialog" aria-modal="true" aria-label="{{ 'sections.cart.title' | t }}" tabindex="-1">
       {%- if cart == empty -%}
@@ -112,8 +113,8 @@ component-swiper-slider.css
         <div class="drawer__footer-content">
           <h4 class="drawer__heading mt0 mb0">{{ 'sections.cart.title' | t }}</h4>
           {%- if settings.show_free_delivery -%}
-          <div id="cart-page-free-delivery" class="free-delivery-bar">
-            {%- render "free-delivery-bar" -%}
+          <div id="CartDrawer-free-delivery" class="free-delivery-bar">
+            {%- render "bb-cart-shipping-progress" -%}
             <div class="free-delivery-bar__end hide"></div>
           </div>
           {%- endif -%}
@@ -204,7 +205,7 @@ component-swiper-slider.css
                           {%- capture _content -%}
                           {%- for discount in item.discounts -%}
                           <li class="discounts__discount cart-item-message__content">
-							              {{- 'icon-discount' | append: settings.system_icon_thickness | inline_asset_content -}}
+                                                                      {{- 'icon-discount' | append: settings.system_icon_thickness | inline_asset_content -}}
                             <span class="cart-item-message__content__text">{{ discount.title }}</span>
                           </li>
                           {%- endfor -%}
@@ -213,7 +214,7 @@ component-swiper-slider.css
 
                           <div class="cart-item__error cart-item-message__content" id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}" role="alert">
                             <span class="cart-item__error-text cart-item-message__content__text"></span>
-							              {{- 'icon-info' | append: settings.system_icon_thickness | inline_asset_content -}}
+                                                                      {{- 'icon-info' | append: settings.system_icon_thickness | inline_asset_content -}}
                           </div>
                         </div>
                         <div class="cart-item__quantity mt20">
@@ -224,7 +225,7 @@ component-swiper-slider.css
                             {%- assign inv_man = item.variant.inventory_management -%}{%- assign inv_qua = item.variant.inventory_quantity | plus: 0 -%}{%- unless inv_man -%}{%- assign inv_qua = 100000 -%}{%- endunless -%}{%- if item.variant.inventory_policy == "continue" -%}{%- assign inv_qua = 100000 -%}{%- endif -%}
                             <button class="quantity__button" name="minus" type="button"{% if item.quantity == 1 %} style="display: none;"{% endif %}>
                               <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
-							                 {{- 'icon-minus' | append: settings.system_icon_thickness | inline_asset_content -}}
+                                                                         {{- 'icon-minus' | append: settings.system_icon_thickness | inline_asset_content -}}
                             </button>
                             <input id="Drawer-quantity-{{ item.index | plus: 1 }}"
                                    class="field__input quantity__input"
@@ -244,13 +245,13 @@ component-swiper-slider.css
                                    >
                             <button class="quantity__button" name="plus" type="button"{% if item.quantity == inv_qua %} style="display: none;"{% endif %}>
                               <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
-							                {{- 'icon-plus' | append: settings.system_icon_thickness | inline_asset_content -}}
+                                                                        {{- 'icon-plus' | append: settings.system_icon_thickness | inline_asset_content -}}
                             </button>
                           </quantity-input>
       
                           <cart-remove-button id="CartDrawer-Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}">
                             <a href="{{ item.url_to_remove }}" class="cart-item__remove-button transition-up" aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
-							                {{- 'icon-remove' | append: settings.system_icon_thickness | inline_asset_content -}}
+                                                                        {{- 'icon-remove' | append: settings.system_icon_thickness | inline_asset_content -}}
                             </a>
                           </cart-remove-button>
                         </div>
@@ -370,7 +371,7 @@ component-swiper-slider.css
                 <ul class="discounts unstyle-ul body3" role="list" aria-label="{{ 'customer.order.discount' | t }}">
                   {%- for discount in cart.cart_level_discount_applications -%}
                   <li class="discounts__discount cart-item-message__content">
-					          {{- 'icon-discount' | append: settings.system_icon_thickness | inline_asset_content -}}
+                                                  {{- 'icon-discount' | append: settings.system_icon_thickness | inline_asset_content -}}
                     <span class="cart-item-message__content__text">{{ discount.title }}(-{{ discount.total_allocated_amount | money }})</span>
                   </li>
                   {%- endfor -%}
@@ -403,7 +404,7 @@ component-swiper-slider.css
                   <div class="checkbox-input__flip">
                     <div class="checkbox-input__front"></div>
                     <div class="checkbox-input__back">
-					            {{- 'icon-checkmark' | append: settings.system_icon_thickness | inline_asset_content -}}
+                                                    {{- 'icon-checkmark' | append: settings.system_icon_thickness | inline_asset_content -}}
                     </div>
                   </div>
                 </div>
