@@ -314,46 +314,70 @@
     .catch(function(){ btn.disabled = false; btn.classList.remove('is-loading'); });
   }
 
-  // Remove a "Complete the Look" line from the card itself: drop the line,
-  // re-render sections (subtotal recalculates), then re-run the engine so the
-  // card flips back to its "Add" state with the button re-enabled.
+  // Remove a "Complete the Look" line from the card itself: resolve the exact
+  // cart line by its KEY (a bare variant id makes /cart/change.js 400 when the
+  // line carries the _bb_complete_look property), drop it, re-render sections
+  // (subtotal recalculates), then re-run the engine so the card flips back to
+  // its "Add" state with the button re-enabled.
   function removeLook(btn){
-    var id = Number(btn.getAttribute('data-variant-id'));
-    if(!id) return;
+    var variantId = Number(btn.getAttribute('data-variant-id'));
+    if(!variantId) return;
     btn.disabled = true; btn.classList.add('is-loading');
     var sections = cartSections();
-    fetch('/cart/change.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        id: id, quantity: 0,
-        sections: sections.map(function(s){ return s.section; }),
-        sections_url: window.location.pathname
-      })
-    })
-    .then(function(r){ if(!r.ok) throw new Error('remove failed'); return r.json(); })
-    .then(function(data){
-      if(!data || !data.sections){ window.location.reload(); return; }
-      sections.forEach(function(s){
-        var root = document.getElementById(s.id);
-        if(!root) return;
-        var target = root.querySelector(s.selector) || root;
-        var content = sectionInnerHTML(data.sections[s.section], s.selector);
-        if(content !== null) target.innerHTML = content;
-      });
-      var itemsSec = sections[0] && data.sections[sections[0].section];
-      var liveShip = document.getElementById('cart-page-free-delivery');
-      if(itemsSec && liveShip){
-        var freshShip = new DOMParser().parseFromString(itemsSec, 'text/html').querySelector('#cart-page-free-delivery');
-        if(freshShip) liveShip.innerHTML = freshShip.innerHTML;
-      }
+
+    function resync(){
       fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
         .then(function(r){ return r.ok ? r.json() : null; })
         .then(function(cart){ if(cart) liveCart = mapCart(cart.items); })
         .catch(function(){})
         .then(function(){ runEngine(); alignSummary(); });
-    })
-    .catch(function(){ btn.disabled = false; btn.classList.remove('is-loading'); });
+    }
+
+    // Look up the line key for this variant (prefer the complete-look line).
+    fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(cart){
+        var key = null, items = (cart && cart.items) || [];
+        for(var i = 0; i < items.length; i++){
+          if(items[i].variant_id === variantId && items[i].properties && items[i].properties._bb_complete_look){ key = items[i].key; break; }
+        }
+        if(!key){
+          for(var j = 0; j < items.length; j++){
+            if(items[j].variant_id === variantId){ key = items[j].key; break; }
+          }
+        }
+        // Already gone — just resync the UI.
+        if(!key){ btn.disabled = false; btn.classList.remove('is-loading'); resync(); return; }
+
+        return fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            id: key, quantity: 0,
+            sections: sections.map(function(s){ return s.section; }),
+            sections_url: window.location.pathname
+          })
+        })
+        .then(function(r){ if(!r.ok) throw new Error('remove failed'); return r.json(); })
+        .then(function(data){
+          if(!data || !data.sections){ window.location.reload(); return; }
+          sections.forEach(function(s){
+            var root = document.getElementById(s.id);
+            if(!root) return;
+            var target = root.querySelector(s.selector) || root;
+            var content = sectionInnerHTML(data.sections[s.section], s.selector);
+            if(content !== null) target.innerHTML = content;
+          });
+          var itemsSec = sections[0] && data.sections[sections[0].section];
+          var liveShip = document.getElementById('cart-page-free-delivery');
+          if(itemsSec && liveShip){
+            var freshShip = new DOMParser().parseFromString(itemsSec, 'text/html').querySelector('#cart-page-free-delivery');
+            if(freshShip) liveShip.innerHTML = freshShip.innerHTML;
+          }
+          resync();
+        });
+      })
+      .catch(function(){ btn.disabled = false; btn.classList.remove('is-loading'); });
   }
 
   /* ---------- image popover (image only, centred lightbox) ---------- */
