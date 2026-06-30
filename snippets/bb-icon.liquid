@@ -7,15 +7,18 @@
 
     • SVG line icons  → inline, recolour with CSS `color`
         wave · delivery · chevron · plus · minus · trash
-        lock · shield · returns · store
+        lock · shield · returns · store · palm-teal
+      (palm-teal is baked to the brand teal #49c6be; the rest
+       use currentColor and recolour via CSS `color`.)
     • PNG illustrations → detailed brand art (assets/bb-icon-*.png)
         note · flower · palm · island · leaves · shell · starfish
 
   USAGE
-    {% render 'bb-icon', icon: 'chevron', size: 20 %}
-    {% render 'bb-icon', icon: 'shell',   size: 56 %}
-    {% render 'bb-icon', icon: 'trash',   size: 18, class: 'cart-remove__icon' %}
-    {% render 'bb-icon', icon: 'island',  size: 120, alt: 'Tropical island' %}
+    {% render 'bb-icon', icon: 'chevron',   size: 20 %}
+    {% render 'bb-icon', icon: 'shell',     size: 56 %}
+    {% render 'bb-icon', icon: 'palm-teal', size: 24 %}
+    {% render 'bb-icon', icon: 'trash',     size: 18, class: 'cart-remove__icon' %}
+    {% render 'bb-icon', icon: 'island',    size: 120, alt: 'Tropical island' %}
 
   PARAMETERS
     icon  (required)  name from the lists above
@@ -111,6 +114,17 @@
       <svg {{ bb_attr }} viewBox="0 0 24 24" fill="none">
         <path d="M4 9l1.4-5h13.2L20 9M4 9h16M4 9v0a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 4 0M5 11v9h14v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M9 20v-5h4v5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+
+    {%- when 'palm-teal' -%}
+      <svg {{ bb_attr }} viewBox="0 0 48 54" fill="none" stroke="#49c6be" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 21c-1 11-2 21-3 32"/>
+        <path d="M24 21C16 15 8 16 3 20c7-2 15-1 21 3"/>
+        <path d="M24 21c8-6 16-5 21-1-7-2-15-1-21 3"/>
+        <path d="M24 21C20 12 14 8 7 7c8 2 14 7 17 16"/>
+        <path d="M24 21c4-9 10-13 17-14-8 2-14 7-17 16"/>
+        <path d="M24 21c0-9 0-14 0-19"/>
+        <path d="M17 53h14"/>
       </svg>
 
   {%- endcase -%}
