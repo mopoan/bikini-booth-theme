@@ -49,8 +49,13 @@
 
       <div id="main-cart-items" class="js-contents" data-id="{{ section.id }}">
         <div class="bb-cart__items">
+          {%- comment -%} Skip the cart-rec line properties: finishing-touch items
+            render in their own section below; complete-look items live only on
+            their recommendation card in an "Added" state (bb-cart.js tags both
+            with hidden underscore properties). Both remain real cart lines, so
+            count and subtotal stay correct. {%- endcomment -%}
           {%- for item in cart.items -%}
-            {%- unless item.properties._bb_finishing_touch -%}
+            {%- unless item.properties._bb_finishing_touch or item.properties._bb_complete_look -%}
               {%- render 'bb-cart-line-item', item: item, section: section -%}
             {%- endunless -%}
           {%- endfor -%}
