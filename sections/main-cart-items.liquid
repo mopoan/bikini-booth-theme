@@ -49,10 +49,10 @@
 
       <div id="main-cart-items" class="js-contents" data-id="{{ section.id }}">
         <div class="bb-cart__items">
-          {%- comment -%} Skip the cart-rec line properties: finishing-touch items
-            render in their own section below; complete-look items live only on
-            their recommendation card in an "Added" state (bb-cart.js tags both
-            with hidden underscore properties). Both remain real cart lines, so
+          {%- comment -%} Skip the cart-rec line properties: both "Add a Finishing
+            Touch" (finishing) and "Complete the Look" (complete) items live ONLY
+            on their recommendation card in an "Added" state (bb-cart.js tags both
+            with hidden underscore properties). They remain real cart lines, so
             count and subtotal stay correct. {%- endcomment -%}
           {%- for item in cart.items -%}
             {%- unless item.properties._bb_finishing_touch or item.properties._bb_complete_look -%}
@@ -60,33 +60,6 @@
             {%- endunless -%}
           {%- endfor -%}
         </div>
-
-        {%- comment -%} Finishing-touch items added from the cart's "Add a Finishing
-          Touch" block render in their own card-styled section below the line items
-          (tagged with the hidden line property _bb_finishing_touch in bb-cart.js).
-          Kept INSIDE #main-cart-items so it re-renders on every cart update. {%- endcomment -%}
-        {%- assign ft_count = 0 -%}
-        {%- for item in cart.items -%}
-          {%- if item.properties._bb_finishing_touch -%}
-            {%- assign ft_count = ft_count | plus: 1 -%}
-          {%- endif -%}
-        {%- endfor -%}
-
-        {%- if ft_count > 0 -%}
-          <div class="bb-cart__finishing">
-            <div class="bb-cart__finishing-head">
-              {%- render 'bb-icon', icon: 'shell', size: 20 -%}
-              <h2 class="bb-cart__finishing-title">Finishing touches</h2>
-            </div>
-            <div class="bb-cart__finishing-items">
-              {%- for item in cart.items -%}
-                {%- if item.properties._bb_finishing_touch -%}
-                  {%- render 'bb-cart-finishing-line', item: item, section: section -%}
-                {%- endif -%}
-              {%- endfor -%}
-            </div>
-          </div>
-        {%- endif -%}
       </div>
 
       <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>

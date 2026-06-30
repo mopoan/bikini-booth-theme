@@ -153,6 +153,57 @@
       '</div>';
   }
 
+  /* ---------- complementary ("Add a Finishing Touch") card state ----------
+     The comp card is server-rendered from the set_pair_product metafield, so
+     unlike the paired card it isn't rebuilt by the engine. To make it behave
+     identically — flip to an "Added" remove control when its product is in the
+     cart, flip back to "Add" when it isn't — we resync its CTA off the live
+     cart on every cart change. The card carries data-default-variant-id and
+     data-title so either CTA can be rebuilt without re-rendering the section. */
+  function compAddCTA(aside){
+    var active = aside.querySelector('.bb-rec__size.is-active');
+    var vid = (active && active.getAttribute('data-variant-id')) || aside.getAttribute('data-default-variant-id') || '';
+    var title = aside.getAttribute('data-title') || '';
+    return '<button class="bb-rec__add" type="button" data-bb-add data-variant-id="' + vid + '" data-title="' + esc(title) + '">' +
+           PLUS_SVG + '<span>' + esc(window.BB.addLabel || 'Add') + '</span></button>';
+  }
+  function compAddedCTA(variantId, title){
+    return '<button class="bb-rec__add bb-rec__add--added" type="button" data-bb-remove-look' +
+           ' data-variant-id="' + variantId + '" data-title="' + esc(title) + '"' +
+           ' aria-label="Remove ' + esc(title) + ' from cart">' + CHECK_SVG +
+           '<span>' + esc(window.BB.addedLabel || 'Added') + '</span></button>';
+  }
+  function syncCompCard(){
+    var aside = document.querySelector('[data-bb-rec="comp"]');
+    if(!aside) return;
+    var compId = Number(aside.getAttribute('data-product-id'));
+    var row = aside.querySelector('.bb-rec__row');
+    var cta = aside.querySelector('.bb-rec__cta');
+    if(!row || !cta) return;
+    var sizes = aside.querySelector('.bb-rec__sizes');
+
+    var ctx = cartContext(), line = null;
+    for(var i = 0; i < ctx.length; i++){ if(ctx[i].id === compId){ line = ctx[i]; break; } }
+
+    if(line){
+      // In cart → ensure the CTA is the "Added" remove control for this line.
+      var rb = cta.querySelector('[data-bb-remove-look]');
+      if(rb){ rb.setAttribute('data-variant-id', line.variant_id); }
+      else { cta.innerHTML = compAddedCTA(line.variant_id, line.title || aside.getAttribute('data-title') || ''); }
+      row.classList.add('is-added');
+      if(sizes) sizes.style.display = 'none';
+    } else if(liveCart){
+      // Not in cart → restore "Add". Gated on liveCart (real /cart.js data) so a
+      // fresh page load — where the server already rendered the correct state and
+      // the inline context may not list this line — is never clobbered.
+      if(row.classList.contains('is-added') || cta.querySelector('[data-bb-remove-look]')){
+        cta.innerHTML = compAddCTA(aside);
+      }
+      row.classList.remove('is-added');
+      if(sizes) sizes.style.display = '';
+    }
+  }
+
   /* ---------- engine ---------- */
   function runEngine(){
     var pairAside = document.querySelector('[data-bb-rec="pair"]');
@@ -216,6 +267,8 @@
       if(compAside){
         var compId = Number(compAside.getAttribute('data-product-id'));
         compAside.hidden = (pairedId && compId === pairedId) ? true : false;
+        // keep its CTA (Add / Added-remove) in sync with the live cart
+        syncCompCard();
       }
 
       window.BB.productData = catalog;
@@ -267,9 +320,9 @@
     btn.disabled = true; btn.classList.add('is-loading');
     var sections = cartSections();
     // Tag rec adds with a private (underscore) line property so the cart keeps
-    // them OFF the line-item list: "Add a Finishing Touch" (comp) renders in its
-    // own section below the items; "Complete the Look" (pair) stays on its rec
-    // card in an "Added" state. Underscore properties are hidden at checkout.
+    // them OFF the line-item list: both "Add a Finishing Touch" (comp) and
+    // "Complete the Look" (pair) live only on their recommendation card in an
+    // "Added" state. Underscore properties are hidden at checkout.
     var isFinishing = !!(btn.closest && btn.closest('[data-bb-rec="comp"]'));
     var isLook = !!(btn.closest && btn.closest('[data-bb-rec="pair"]'));
     var lineItem = { id: id, quantity: 1 };
@@ -339,7 +392,7 @@
       .then(function(cart){
         var key = null, items = (cart && cart.items) || [];
         for(var i = 0; i < items.length; i++){
-          if(items[i].variant_id === variantId && items[i].properties && items[i].properties._bb_complete_look){ key = items[i].key; break; }
+          if(items[i].variant_id === variantId && items[i].properties && (items[i].properties._bb_complete_look || items[i].properties._bb_finishing_touch)){ key = items[i].key; break; }
         }
         if(!key){
           for(var j = 0; j < items.length; j++){
