@@ -314,15 +314,22 @@
   .bb-rec__leaf { width: 110px; height: 96px; }
 }
 
-/* ---------- image popover (image only, anchored) ---------- */
-.bb-zoom-scrim { position: fixed; inset: 0; z-index: 1000; background: transparent; }
+/* ---------- image popover (image only, centred lightbox) ---------- */
+.bb-zoom-scrim {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(10, 46, 46, 0.42);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
 .bb-zoom {
-  position: absolute; z-index: 1001; width: 248px; padding: 10px;
+  position: relative; z-index: 1001;
+  width: min(82vw, 340px); max-height: 86vh; padding: 10px;
   background: #fff; border: 1px solid var(--bb-line); border-radius: 16px;
-  box-shadow: 0 18px 50px -12px rgba(10, 46, 46, 0.42); animation: bbZpop 0.16s ease;
+  box-shadow: 0 18px 50px -12px rgba(10, 46, 46, 0.42); animation: bbZpop 0.18s ease;
 }
 .bb-zoom__img {
-  width: 100%; aspect-ratio: 9 / 16; border-radius: 9px;
+  width: 100%; aspect-ratio: 3 / 4; max-height: calc(86vh - 20px);
+  border-radius: 9px;
   background: var(--bb-cream) center / contain no-repeat;
 }
 .bb-zoom__x {
@@ -336,9 +343,7 @@
 @keyframes bbZpop { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
 
 @media (max-width: 560px) {
-  .bb-zoom-scrim { background: rgba(10, 46, 46, 0.3); }
-  .bb-zoom { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(78vw, 300px); animation: bbZpopC 0.16s ease; }
-  @keyframes bbZpopC { from { opacity: 0; transform: translate(-50%, -50%) scale(0.94); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+  .bb-zoom { width: min(86vw, 320px); }
 }
 
 /* ============================================================
