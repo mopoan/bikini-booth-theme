@@ -356,24 +356,15 @@
     .catch(function(){ btn.disabled = false; btn.classList.remove('is-loading'); });
   }
 
-  /* ---------- image popover (image only, anchored) ---------- */
+  /* ---------- image popover (image only, centred lightbox) ---------- */
   var open = null, lastFocus = null;
   var X_SVG = '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 
   function closeZoom(){ if(!open) return; open.scrim.remove(); open = null; document.body.style.overflow = '';
     if(lastFocus && lastFocus.focus) lastFocus.focus(); }
 
-  function placeZoom(card, thumb){
-    if(window.matchMedia('(max-width:560px)').matches) return;   // CSS centres
-    var r = thumb.getBoundingClientRect(), cw = card.offsetWidth, ch = card.offsetHeight,
-        gap = 14, vw = innerWidth, vh = innerHeight, pad = 8;
-    var left = r.right + gap;
-    if(left + cw > vw - pad) left = r.left - gap - cw;
-    if(left < pad) left = Math.max(pad, (vw - cw) / 2);
-    var top = r.top + r.height / 2 - ch / 2;
-    top = Math.min(Math.max(pad, top), vh - ch - pad);
-    card.style.left = left + 'px'; card.style.top = top + 'px';
-  }
+  // Centring is handled entirely by the CSS flex scrim at all breakpoints.
+  function placeZoom(){ /* no-op: CSS centres the lightbox */ }
 
   function openZoom(thumb){
     var full = thumb.getAttribute('data-full'); if(!full) return;
