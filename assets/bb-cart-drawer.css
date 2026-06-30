@@ -83,7 +83,8 @@
 
 /* quantity stepper — pill styling, keep theme buttons functional */
 .bb-drawer quantity-input.quantity {
-  display: inline-flex; align-items: center; gap: 2px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+  width: fit-content; min-width: 0;
   border: 1px solid var(--bb-line); border-radius: 999px;
   background: var(--bb-cream-2); padding: 2px;
 }
@@ -97,6 +98,10 @@
 }
 .bb-drawer quantity-input.quantity .quantity__input::-webkit-outer-spin-button,
 .bb-drawer quantity-input.quantity .quantity__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+/* Always show the minus button — the theme hides it at qty 1 via an inline
+   style, which left the pill lopsided. At qty 1, pressing minus drops to 0 and
+   removes the line (theme min="0" handling). !important beats the inline style. */
+.bb-drawer quantity-input.quantity .quantity__button[name="minus"] { display: inline-flex !important; }
 .bb-drawer .cart-item__remove-button { color: var(--bb-muted); }
 .bb-drawer .cart-item__remove-button:hover { color: var(--bb-teal-deep); }
 
