@@ -81,22 +81,38 @@
 .bb-drawer .price__sale,
 .bb-drawer .cart-item__totals .h5 { color: var(--bb-ink); font-weight: 600; }
 
-/* quantity stepper — pill styling, keep theme buttons functional */
+/* quantity stepper — pill styling, keep theme buttons functional.
+   The theme constrains <quantity-input> into a small fixed circle (set
+   width/height + radius/aspect-ratio). We fully reset the box here so the
+   result is deterministic regardless of those rules: an auto-width pill, real
+   height, no aspect-ratio, with the three children laid out in a row. */
 .bb-drawer quantity-input.quantity {
-  display: inline-flex !important; align-items: center; justify-content: space-between; gap: 2px;
-  width: auto !important; min-width: 0; max-width: none;
-  border: 1px solid var(--bb-line); border-radius: 999px;
-  background: var(--bb-cream-2); padding: 2px 6px;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 38px !important;
+  aspect-ratio: auto !important;
+  border: 1px solid var(--bb-line) !important;
+  border-radius: 999px !important;
+  background: var(--bb-cream-2) !important;
+  padding: 2px 8px !important;
 }
 .bb-drawer quantity-input.quantity .quantity__button {
-  flex: 0 0 auto;
-  width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer; padding: 0;
+  flex: 0 0 auto !important;
+  width: 28px !important; height: 28px !important; min-width: 28px !important;
+  border: 0 !important; background: transparent !important; padding: 0 !important;
+  border-radius: 999px !important; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; color: var(--bb-ink);
 }
 .bb-drawer quantity-input.quantity .quantity__input {
-  flex: 0 0 auto;
-  width: 36px; min-width: 36px; text-align: center; border: 0; background: transparent; color: var(--bb-ink);
-  font-size: 0.9rem; padding: 0; -moz-appearance: textfield;
+  flex: 0 0 auto !important;
+  width: 34px !important; min-width: 34px !important; height: auto !important;
+  text-align: center !important; border: 0 !important; background: transparent !important;
+  color: var(--bb-ink); font-size: 0.9rem; padding: 0 !important; -moz-appearance: textfield;
 }
 .bb-drawer quantity-input.quantity .quantity__input::-webkit-outer-spin-button,
 .bb-drawer quantity-input.quantity .quantity__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
