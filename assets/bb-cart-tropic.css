@@ -506,6 +506,16 @@
 
 @media (max-width: 989px) {
   .bb-summary { margin-top: 24px; }
+  /* Match the Order Summary width to the product cards: give the items column
+     and the summary the same horizontal gutter so they line up edge-to-edge.
+     One knob — change 16px on both lines to adjust the inset. */
+  [id^="shopify-section"][id$="__cart-items"] .bb-cart__col--main {
+    padding-inline: 16px;
+    max-width: none;
+  }
+  [id^="shopify-section"][id$="__cart-footer"] .bb-summary {
+    margin-inline: 16px;
+  }
 }
 
 /* The theme's .quantity__button styles (added so its QuantityInput component
