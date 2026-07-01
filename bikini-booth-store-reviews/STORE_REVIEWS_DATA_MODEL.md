@@ -10,7 +10,7 @@ are written by humans (in the app or Admin) and **must never be overwritten by a
 
 ---
 
-## Definition 1 — `bb_review_location`
+## Definition 1 — `store_review_location`
 
 One entry per physical store. Three entries: Phuket, Koh Samui, Koh Phangan.
 
@@ -35,14 +35,14 @@ One entry per physical store. Three entries: Phuket, Koh Samui, Koh Phangan.
 
 ---
 
-## Definition 2 — `bb_google_review`
+## Definition 2 — `google_review`
 
 One entry per imported real Google review.
 
 | Field key             | Type                  | Written by | Survives sync? |
 |-----------------------|-----------------------|------------|----------------|
 | `external_review_id`  | single_line_text      | sync       | identity key   |
-| `review_location`     | metaobject_reference → `bb_review_location` | sync (or human for CSV) | editorial if reassigned |
+| `review_location`     | metaobject_reference → `store_review_location` | sync (or human for CSV) | editorial if reassigned |
 | `reviewer_display_name`| single_line_text     | sync       | refreshed      |
 | `reviewer_initials`   | single_line_text      | sync/derived | refreshed     |
 | `star_rating`         | number_integer (1–5)  | sync       | refreshed (original preserved) |
@@ -70,16 +70,16 @@ One entry per imported real Google review.
 ## Creating the definitions (Admin GraphQL)
 
 Run once against the Admin GraphQL API (`2025-01` or later) from the app, a script,
-or the GraphiQL app. `bb_review_location` must exist before `bb_google_review`
+or the GraphiQL app. `store_review_location` must exist before `google_review`
 (the reference field points at it).
 
-### `bb_review_location`
+### `store_review_location`
 
 ```graphql
 mutation {
   metaobjectDefinitionCreate(definition: {
     name: "Store Review Location"
-    type: "bb_review_location"
+    type: "store_review_location"
     displayNameKey: "store_name"
     access: { storefront: PUBLIC_READ }
     fieldDefinitions: [
@@ -103,7 +103,7 @@ mutation {
 }
 ```
 
-### `bb_google_review`
+### `google_review`
 
 Replace `gid://shopify/MetaobjectDefinition/XXXX` with the ID returned above.
 
@@ -111,7 +111,7 @@ Replace `gid://shopify/MetaobjectDefinition/XXXX` with the ID returned above.
 mutation {
   metaobjectDefinitionCreate(definition: {
     name: "Google Review"
-    type: "bb_google_review"
+    type: "google_review"
     displayNameKey: "reviewer_display_name"
     access: { storefront: PUBLIC_READ }
     fieldDefinitions: [
@@ -153,7 +153,7 @@ mutation {
 ```graphql
 mutation {
   metaobjectCreate(metaobject: {
-    type: "bb_review_location"
+    type: "store_review_location"
     handle: "phuket"
     fields: [
       { key: "store_name", value: "Bikini Booth Phuket" }
@@ -179,14 +179,14 @@ fills them.
 
 ```liquid
 {%- comment -%} Locations {%- endcomment -%}
-{%- for loc in shop.metaobjects.bb_review_location.values -%}
+{%- for loc in shop.metaobjects.store_review_location.values -%}
   {%- if loc.active.value -%}
     {{ loc.store_name }} · {{ loc.google_rating.value }} ({{ loc.google_review_count.value }})
   {%- endif -%}
 {%- endfor -%}
 
 {%- comment -%} Reviews — publish gate {%- endcomment -%}
-{%- for r in shop.metaobjects.bb_google_review.values -%}
+{%- for r in shop.metaobjects.google_review.values -%}
   {%- if r.approved.value and r.direct_link_verified.value and r.google_review_url != blank -%}
     {%- assign loc = r.review_location.value -%}
     {{ r.star_rating.value }} ★ — {{ r.reviewer_display_name }} — {{ loc.city_island }}
@@ -196,3 +196,20 @@ fills them.
 
 Ordering, filtering, and load-more are handled client-side (data attributes + lightweight
 JS) so we avoid Liquid's metaobject-sort gotchas and keep it filter-aware.
+
+
+---
+
+## As actually built in the Shopify admin (source of truth)
+
+Types Shopify generated: `store_review_location` and `google_review`.
+Field keys are auto-generated from the field labels (lowercase, underscores). Most match the
+tables above; three review keys differ because the label was longer than the short key I first used:
+
+| Label in admin            | Actual key (used by the theme) |
+|---------------------------|--------------------------------|
+| External Google review ID | `external_google_review_id`    |
+| Direct Google review URL  | `direct_google_review_url`     |
+| Approved for storefront   | `approved_for_storefront`      |
+
+The section Liquid has been updated to read these exact types and keys.

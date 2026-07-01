@@ -1,6 +1,6 @@
 {%- comment -%}
   bb-store-reviews.liquid
-  Store Reviews page — renders entirely from Metaobjects (bb_review_location + bb_google_review).
+  Store Reviews page — renders entirely from Metaobjects (store_review_location + google_review).
   No Google calls, no credentials, no front-end API. Publish gate enforced here in Liquid:
   a review shows only when approved + direct_link_verified + has a google_review_url.
   CSS scoped to .bb-store-reviews; dynamic values passed as inline custom properties.
@@ -245,7 +245,7 @@
           render 'bb-store-reviews-icon', icon: 'palm-circle'
         endcapture
         capture store_cols
-          for loc in shop.metaobjects.bb_review_location.values
+          for loc in shop.metaobjects.store_review_location.values
             if loc.active.value
               assign active_count = active_count | plus: 1
               assign rating = loc.google_rating.value | default: 0
@@ -264,8 +264,13 @@
 
               echo '<div class="bb-sr-store" style="order:' | append: loc.display_order.value | append: ';">'
               if s.show_store_icon
-                if loc.store_icon
-                  echo '<div class="bb-sr-store__icon"><img src="' | append: loc.store_icon.value | image_url: width: 120 | append: '" alt="" width="60" height="60"></div>'
+                if loc.store_icon.value
+                  assign _icon = loc.store_icon.value
+                  if _icon.media_type == 'IMAGE' or _icon.width
+                    echo '<div class="bb-sr-store__icon"><img src="' | append: _icon | image_url: width: 120 | append: '" alt="" width="60" height="60"></div>'
+                  else
+                    echo '<div class="bb-sr-store__icon"><img src="' | append: _icon.url | append: '" alt="" width="60" height="60"></div>'
+                  endif
                 else
                   echo '<div class="bb-sr-store__icon">' | append: store_icon_svg | append: '</div>'
                 endif
@@ -316,8 +321,8 @@
       assign eligible = 0
       assign excerpt = s.excerpt_length | default: 300
       capture review_cards
-        for r in shop.metaobjects.bb_google_review.values
-          if r.approved.value and r.direct_link_verified.value and r.google_review_url != blank
+        for r in shop.metaobjects.google_review.values
+          if r.approved_for_storefront.value and r.direct_link_verified.value and r.direct_google_review_url != blank
             assign loc = r.review_location.value
             assign loc_key = loc.store_key | default: ''
             assign loc_label = loc.city_island | default: ''
@@ -363,7 +368,7 @@
                 assign initbg = '#4a5e86'
             endcase
 
-            echo '<a class="bb-sr-card" hidden href="' | append: r.google_review_url | append: '" target="_blank" rel="noopener noreferrer" data-loc="' | append: loc_key | append: '" data-order="' | append: order | append: '" data-featured="' | append: feat | append: '" aria-label="Read this ' | append: rating | append: '-star Google review by ' | append: r.reviewer_display_name | append: ', opens Google in a new tab">'
+            echo '<a class="bb-sr-card" hidden href="' | append: r.direct_google_review_url | append: '" target="_blank" rel="noopener noreferrer" data-loc="' | append: loc_key | append: '" data-order="' | append: order | append: '" data-featured="' | append: feat | append: '" aria-label="Read this ' | append: rating | append: '-star Google review by ' | append: r.reviewer_display_name | append: ', opens Google in a new tab">'
 
             echo '<div class="bb-sr-card__top"><span class="bb-sr-stars" style="--bb-sr-fill:' | append: pct | append: '%;" role="img" aria-label="' | append: rating | append: ' out of 5"><span class="bb-sr-stars__bg" aria-hidden="true">★★★★★</span><span class="bb-sr-stars__fg" aria-hidden="true">★★★★★</span></span>'
             if s.show_google_label
@@ -399,7 +404,7 @@
       {%- if s.enable_filters and eligible > 0 -%}
         <div class="bb-sr-tabs" role="tablist" aria-label="Filter reviews by store">
           <button class="bb-sr-tab" type="button" role="tab" aria-selected="true" data-filter="all">{{ s.all_reviews_label | default: 'All Reviews' }}</button>
-          {%- for loc in shop.metaobjects.bb_review_location.values -%}
+          {%- for loc in shop.metaobjects.store_review_location.values -%}
             {%- if loc.active.value -%}
               <button class="bb-sr-tab" type="button" role="tab" aria-selected="false" data-filter="{{ loc.store_key }}">{{ loc.city_island }}</button>
             {%- endif -%}
