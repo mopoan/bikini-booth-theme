@@ -23,6 +23,13 @@
   color: var(--bb-ink);
   background: var(--bb-cream);
 }
+/* Stacking: the cart drawer must overlay the site header on every template.
+   On the home page the header uses a higher z-index and was painting over the
+   drawer's top; lift the drawer's outer container above it. (This targets the
+   drawer wrapper, which sits outside the .bb-drawer content scope.) */
+cart-drawer.cart-drawer-container,
+cart-drawer.cart-drawer-container.popup-modal { z-index: 99999 !important; }
+
 .bb-drawer *,
 .bb-drawer *::before,
 .bb-drawer *::after { box-sizing: border-box; }
@@ -89,17 +96,17 @@
 .bb-drawer quantity-input.quantity {
   display: inline-flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
   width: auto !important;
-  min-width: 0 !important;
+  min-width: 120px !important;
   max-width: none !important;
   height: 38px !important;
   aspect-ratio: auto !important;
   border: 1px solid var(--bb-line) !important;
   border-radius: 999px !important;
   background: var(--bb-cream-2) !important;
-  padding: 2px 8px !important;
+  padding: 2px 10px !important;
 }
 .bb-drawer quantity-input.quantity .quantity__button {
   flex: 0 0 auto !important;
