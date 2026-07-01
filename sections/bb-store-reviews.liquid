@@ -1,0 +1,623 @@
+{%- comment -%}
+  bb-store-reviews.liquid
+  Store Reviews page — renders entirely from Metaobjects (store_review_location + google_review).
+  No Google calls, no credentials, no front-end API. Publish gate enforced here in Liquid:
+  a review shows only when approved + direct_link_verified + has a google_review_url.
+  CSS scoped to .bb-store-reviews; dynamic values passed as inline custom properties.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign cols = s.desktop_columns | default: 2
+  assign card_max = s.hero_card_max_width | default: 420
+-%}
+
+<section
+  class="bb-store-reviews bb-root"
+  data-bb-store-reviews
+  data-section-id="{{ section.id }}"
+  data-initial="{{ s.reviews_initial | default: 6 }}"
+  data-per-click="{{ s.reviews_per_click | default: 6 }}"
+  data-enable-load-more="{{ s.enable_load_more }}"
+  data-showing-template="{{ s.showing_template | default: 'Showing [start]–[end] of [total] selected reviews' | escape }}"
+  style="
+    --bb-sr-cols: {{ cols }};
+    --bb-sr-card-max: {{ card_max }}px;
+    --bb-sr-pad-top: {{ s.padding_top | default: 0 }}px;
+    --bb-sr-pad-bottom: {{ s.padding_bottom | default: 0 }}px;
+  "
+>
+  <style>
+    .bb-store-reviews[data-section-id="{{ section.id }}"]{
+      --bb-sr-teal: var(--bb-teal, #49c6be);
+      --bb-sr-teal-deep: var(--bb-teal-deep, #2f8f88);
+      --bb-sr-ink: var(--bb-ink, #16302c);
+      --bb-sr-body: var(--bb-body, #5d6c67);
+      --bb-sr-cream: var(--bb-cream, #fbf6ec);
+      --bb-sr-sand: var(--bb-sand, #f5efe3);
+      --bb-sr-card: var(--bb-card-bg, #ffffff);
+      --bb-sr-line: var(--bb-line, #dcebe7);
+      --bb-sr-aqua: var(--bb-aqua, #e3f1ee);
+      --bb-sr-star: #e3a52e;
+      --bb-sr-display: var(--font-display, 'Cormorant Garamond', Georgia, 'Times New Roman', serif);
+      padding-top: var(--bb-sr-pad-top);
+      padding-bottom: var(--bb-sr-pad-bottom);
+      color: var(--bb-sr-body);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .bb-store-reviews .bb-sr-wrap{ max-width: 1180px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 36px); }
+
+    /* stars (fractional fill) */
+    .bb-store-reviews .bb-sr-stars{ position: relative; display: inline-block; line-height: 1; white-space: nowrap; }
+    .bb-store-reviews .bb-sr-stars__bg{ color: #e7dfcd; }
+    .bb-store-reviews .bb-sr-stars__fg{ position: absolute; inset: 0; width: var(--bb-sr-fill, 100%); overflow: hidden; color: var(--bb-sr-star); }
+    .bb-store-reviews .bb-sr-stars__bg, .bb-store-reviews .bb-sr-stars__fg{ letter-spacing: .14em; }
+
+    /* ---------- HERO ---------- */
+    .bb-store-reviews .bb-sr-hero{ position: relative; min-height: clamp(330px, 40vw, 440px); display: flex; align-items: center; }
+    .bb-store-reviews .bb-sr-hero__img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .bb-store-reviews .bb-sr-hero__img--mobile{ display: none; }
+    .bb-store-reviews .bb-sr-hero__inner{ position: relative; width: 100%; max-width: 1180px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 36px); }
+    .bb-store-reviews .bb-sr-hero__card{
+      background: var(--bb-sr-cream); max-width: var(--bb-sr-card-max);
+      padding: clamp(28px, 3vw, 40px); box-shadow: 0 18px 50px -30px rgba(22,48,44,.4);
+    }
+    .bb-store-reviews .bb-sr-hero__card.is-center{ text-align: center; }
+    .bb-store-reviews .bb-sr-eyebrow{ font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--bb-sr-teal-deep); font-weight: 600; margin: 0 0 12px; }
+    .bb-store-reviews .bb-sr-hero__heading{ font-family: var(--bb-sr-display); font-weight: 500; font-size: clamp(2.5rem, 5vw, 3.4rem); line-height: 1.04; color: var(--bb-sr-ink); margin: 0; }
+    .bb-store-reviews .bb-sr-hero__copy{ margin: 0; max-width: 36ch; color: var(--bb-sr-body); }
+    .bb-store-reviews .is-center .bb-sr-hero__copy{ margin-inline: auto; }
+    .bb-store-reviews .bb-sr-divider{ display: flex; align-items: center; gap: 10px; margin: 16px 0; }
+    .bb-store-reviews .is-center .bb-sr-divider{ justify-content: center; }
+    .bb-store-reviews .bb-sr-divider span{ height: 1px; width: 52px; background: var(--bb-sr-teal); opacity: .5; }
+    .bb-store-reviews .bb-sr-divider svg{ width: 18px; height: 18px; color: var(--bb-sr-teal); }
+    .bb-store-reviews .bb-sr-hero__icon{ margin-top: 18px; display: flex; justify-content: center; }
+    .bb-store-reviews .bb-sr-hero__icon svg{ width: 34px; height: 34px; color: var(--bb-sr-teal); }
+
+    /* ---------- RATING PANEL ---------- */
+    .bb-store-reviews .bb-sr-panel{ margin-top: clamp(28px, 4vw, 44px); }
+    .bb-store-reviews .bb-sr-panel__head{ text-align: center; margin-bottom: 20px; }
+    .bb-store-reviews .bb-sr-panel__head h2{ font-family: var(--bb-sr-display); font-weight: 500; color: var(--bb-sr-ink); font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 6px; }
+    .bb-store-reviews .bb-sr-panel__sub{ font-size: .82rem; color: var(--bb-sr-body); margin: 0; }
+    .bb-store-reviews .bb-sr-panelcard{ background: var(--bb-sr-cream); border: 1px solid var(--bb-sr-line); border-radius: 16px; padding: clamp(20px, 2.4vw, 30px) clamp(12px, 2vw, 24px); }
+    .bb-store-reviews .bb-sr-stores{ display: grid; grid-template-columns: repeat(3, 1fr); }
+    .bb-store-reviews .bb-sr-store{ display: flex; align-items: center; justify-content: center; gap: clamp(10px, 1.6vw, 20px); padding: clamp(8px, 1.5vw, 16px) clamp(8px, 2vw, 20px); position: relative; }
+    .bb-store-reviews .bb-sr-store + .bb-sr-store::before{ content: ""; position: absolute; left: 0; top: 16%; bottom: 16%; width: 1px; background: var(--bb-sr-line); }
+    .bb-store-reviews .bb-sr-store__icon{ flex: 0 0 auto; }
+    .bb-store-reviews .bb-sr-store__icon svg{ width: clamp(48px, 5vw, 62px); height: clamp(48px, 5vw, 62px); color: var(--bb-sr-teal); }
+    .bb-store-reviews .bb-sr-store__body{ text-align: center; min-width: 0; }
+    .bb-store-reviews .bb-sr-store__name{ font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--bb-sr-teal-deep); font-weight: 600; margin: 0 0 2px; }
+    .bb-store-reviews .bb-sr-store__rating{ font-family: var(--bb-sr-display); font-weight: 600; font-size: clamp(2.2rem, 3.4vw, 2.9rem); line-height: 1; color: var(--bb-sr-ink); }
+    .bb-store-reviews .bb-sr-store__stars{ font-size: 1.05rem; margin: 6px 0 6px; }
+    .bb-store-reviews .bb-sr-store__count{ font-size: .8rem; color: var(--bb-sr-body); margin: 0 0 8px; }
+    .bb-store-reviews .bb-sr-store__link{ display: inline-flex; align-items: center; gap: 5px; font-size: .8rem; font-weight: 600; color: var(--bb-sr-teal-deep); text-decoration: none; }
+    .bb-store-reviews .bb-sr-store__link:hover{ text-decoration: underline; }
+    .bb-store-reviews .bb-sr-store__link svg{ width: 12px; height: 12px; }
+    .bb-store-reviews .bb-sr-updated{ display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px; font-size: .82rem; color: var(--bb-sr-body); }
+    .bb-store-reviews .bb-sr-updated svg{ width: 16px; height: 16px; color: var(--bb-sr-teal); opacity: .8; }
+    .bb-store-reviews .bb-sr-combined{ text-align: center; margin-top: 8px; font-size: .82rem; color: var(--bb-sr-body); }
+    .bb-store-reviews .bb-sr-combined strong{ color: var(--bb-sr-ink); }
+
+    /* ---------- FILTER TABS (segmented) ---------- */
+    .bb-store-reviews .bb-sr-filters{ margin-top: clamp(30px, 4vw, 48px); }
+    .bb-store-reviews .bb-sr-grid-head{ font-family: var(--bb-sr-display); font-weight: 500; color: var(--bb-sr-ink); font-size: clamp(1.4rem, 2.6vw, 1.9rem); text-align: center; margin: 0 0 18px; }
+    .bb-store-reviews .bb-sr-tabs{ display: flex; border: 1px solid var(--bb-sr-line); border-radius: 12px; overflow: hidden; background: var(--bb-sr-card); }
+    .bb-store-reviews .bb-sr-tab{
+      flex: 1 1 0; appearance: none; border: 0; border-left: 1px solid var(--bb-sr-line);
+      background: transparent; color: var(--bb-sr-body); font: inherit; font-size: .82rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase; padding: 15px 12px; cursor: pointer; white-space: nowrap;
+      border-bottom: 3px solid transparent; transition: background .18s ease, color .18s ease, border-color .18s ease;
+    }
+    .bb-store-reviews .bb-sr-tab:first-child{ border-left: 0; }
+    .bb-store-reviews .bb-sr-tab[aria-selected="true"]{ background: var(--bb-sr-aqua); color: var(--bb-sr-ink); border-bottom-color: var(--bb-sr-teal-deep); }
+    .bb-store-reviews .bb-sr-tab:focus-visible{ outline: 2px solid var(--bb-sr-teal-deep); outline-offset: -3px; }
+
+    /* ---------- REVIEW GRID ---------- */
+    .bb-store-reviews .bb-sr-grid{ display: grid; grid-template-columns: repeat(var(--bb-sr-cols), minmax(0, 1fr)); gap: clamp(16px, 1.8vw, 22px); margin-top: clamp(18px, 2.4vw, 28px); }
+    .bb-store-reviews .bb-sr-card{
+      display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: inherit;
+      background: var(--bb-sr-card); border: 1px solid var(--bb-sr-line); border-radius: 14px;
+      padding: clamp(20px, 2.2vw, 28px); transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+    }
+    .bb-store-reviews .bb-sr-card[hidden]{ display: none; }
+    .bb-store-reviews .bb-sr-card:hover{ border-color: var(--bb-sr-teal); transform: translateY(-2px); box-shadow: 0 16px 34px -26px rgba(22,48,44,.42); }
+    .bb-store-reviews .bb-sr-card:focus-visible{ outline: 2px solid var(--bb-sr-teal-deep); outline-offset: 3px; }
+    .bb-store-reviews .bb-sr-card__top{ display: flex; align-items: center; gap: 12px; }
+    .bb-store-reviews .bb-sr-card__top .bb-sr-stars{ font-size: 1rem; }
+    .bb-store-reviews .bb-sr-card__src{ font-size: .82rem; font-weight: 600; color: var(--bb-sr-teal-deep); }
+    .bb-store-reviews .bb-sr-card__text{ margin: 0; color: var(--bb-sr-ink); font-size: 1rem; line-height: 1.62; }
+    .bb-store-reviews .bb-sr-card__foot{ margin-top: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 4px; }
+    .bb-store-reviews .bb-sr-initials{ flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--bb-sr-initbg, var(--bb-sr-teal-deep)); color: #fff; font-size: .76rem; font-weight: 700; letter-spacing: .02em; }
+    .bb-store-reviews .bb-sr-who{ display: flex; flex-direction: column; gap: 1px; margin-right: auto; min-width: 0; }
+    .bb-store-reviews .bb-sr-who__name{ font-weight: 700; color: var(--bb-sr-ink); font-size: .9rem; }
+    .bb-store-reviews .bb-sr-who__loc{ font-size: .8rem; color: var(--bb-sr-teal-deep); font-weight: 600; }
+    .bb-store-reviews .bb-sr-when{ font-size: .8rem; color: var(--bb-sr-body); }
+    .bb-store-reviews .bb-sr-readon{ display: inline-flex; align-items: center; gap: 4px; font-size: .82rem; font-weight: 600; color: var(--bb-sr-teal-deep); }
+    .bb-store-reviews .bb-sr-readon svg{ width: 12px; height: 12px; }
+    .bb-store-reviews .bb-sr-empty{ text-align: center; color: var(--bb-sr-body); padding: 40px 0; }
+
+    /* count / load-more */
+    .bb-store-reviews .bb-sr-more{ text-align: center; margin-top: 24px; }
+    .bb-store-reviews .bb-sr-countline{ display: flex; align-items: center; justify-content: center; gap: 12px; font-size: .82rem; color: var(--bb-sr-body); margin: 0; }
+    .bb-store-reviews .bb-sr-countline svg{ width: 30px; height: 12px; color: var(--bb-sr-teal); opacity: .65; }
+    .bb-store-reviews .bb-sr-morebtn{ margin-top: 18px; appearance: none; cursor: pointer; font: inherit; font-weight: 600; letter-spacing: .04em; background: transparent; color: var(--bb-sr-teal-deep); border: 1px solid var(--bb-sr-teal); padding: 12px 28px; border-radius: 999px; transition: background .18s ease, color .18s ease; }
+    .bb-store-reviews .bb-sr-morebtn:hover{ background: var(--bb-sr-teal); color: #fff; }
+    .bb-store-reviews .bb-sr-morebtn:focus-visible{ outline: 2px solid var(--bb-sr-teal-deep); outline-offset: 2px; }
+    .bb-store-reviews .bb-sr-morebtn[hidden]{ display: none; }
+
+    /* ---------- CTA (horizontal aqua band) ---------- */
+    .bb-store-reviews .bb-sr-cta{ position: relative; overflow: hidden; background: var(--bb-sr-aqua); border-radius: 16px; margin-top: clamp(36px, 5vw, 60px); }
+    .bb-store-reviews .bb-sr-cta__bg{ position: absolute; top: 0; right: 0; height: 100%; width: 34%; object-fit: cover; opacity: .9; -webkit-mask-image: linear-gradient(to right, transparent, #000 38%); mask-image: linear-gradient(to right, transparent, #000 38%); }
+    .bb-store-reviews .bb-sr-cta__inner{ position: relative; display: flex; align-items: center; gap: clamp(20px, 3vw, 40px); flex-wrap: wrap; padding: clamp(28px, 3.4vw, 44px) clamp(24px, 3vw, 44px); }
+    .bb-store-reviews .bb-sr-cta__lead{ display: flex; align-items: center; gap: clamp(14px, 2vw, 24px); flex: 1 1 320px; }
+    .bb-store-reviews .bb-sr-cta__icon svg{ width: clamp(44px, 5vw, 60px); height: clamp(44px, 5vw, 60px); color: var(--bb-sr-teal); }
+    .bb-store-reviews .bb-sr-cta__head{ font-family: var(--bb-sr-display); font-weight: 500; color: var(--bb-sr-ink); font-size: clamp(1.8rem, 3.4vw, 2.5rem); margin: 0 0 6px; line-height: 1.05; }
+    .bb-store-reviews .bb-sr-cta__copy{ margin: 0; max-width: 32ch; color: var(--bb-sr-body); font-size: .95rem; }
+    .bb-store-reviews .bb-sr-cta__btns{ display: flex; gap: 12px; flex-wrap: wrap; }
+    .bb-store-reviews .bb-sr-btn{ display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-size: .78rem; padding: 14px 26px; border-radius: 6px; text-decoration: none; transition: background .18s ease, color .18s ease; }
+    .bb-store-reviews .bb-sr-btn svg{ width: 13px; height: 13px; }
+    .bb-store-reviews .bb-sr-btn--primary{ background: var(--bb-sr-teal-deep); color: #fff; border: 1px solid var(--bb-sr-teal-deep); }
+    .bb-store-reviews .bb-sr-btn--primary:hover{ background: var(--bb-sr-ink); border-color: var(--bb-sr-ink); }
+    .bb-store-reviews .bb-sr-btn--secondary{ background: transparent; color: var(--bb-sr-teal-deep); border: 1px solid var(--bb-sr-teal-deep); }
+    .bb-store-reviews .bb-sr-btn--secondary:hover{ background: var(--bb-sr-teal-deep); color: #fff; }
+    .bb-store-reviews .bb-sr-btn:focus-visible{ outline: 2px solid var(--bb-sr-ink); outline-offset: 2px; }
+
+    /* ---------- VALUES ROW ---------- */
+    .bb-store-reviews .bb-sr-values{ display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(18px, 2.5vw, 36px); margin-top: clamp(36px, 5vw, 60px); padding-top: clamp(28px, 4vw, 44px); border-top: 1px solid var(--bb-sr-line); }
+    .bb-store-reviews .bb-sr-value{ display: flex; align-items: flex-start; gap: 14px; }
+    .bb-store-reviews .bb-sr-value__icon svg{ width: 34px; height: 34px; color: var(--bb-sr-teal); }
+    .bb-store-reviews .bb-sr-value__title{ font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--bb-sr-teal-deep); font-weight: 700; margin: 2px 0 5px; }
+    .bb-store-reviews .bb-sr-value__text{ margin: 0; font-size: .85rem; line-height: 1.5; color: var(--bb-sr-body); }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px){ .bb-store-reviews .bb-sr-grid{ grid-template-columns: 1fr; } }
+    @media (max-width: 860px){ .bb-store-reviews .bb-sr-values{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 760px){
+      /* hero: stack the photo above the card so the store image stays fully visible */
+      .bb-store-reviews .bb-sr-hero{ display: block; min-height: 0; }
+      .bb-store-reviews .bb-sr-hero__img{ position: static; width: 100%; height: 260px; object-fit: cover; object-position: center; display: block; }
+      .bb-store-reviews .bb-sr-hero__img--desktop{ display: none; }
+      .bb-store-reviews .bb-sr-hero__img--mobile{ display: block; }
+      .bb-store-reviews .bb-sr-hero__inner{ position: static; max-width: none; padding-inline: 0; }
+      .bb-store-reviews .bb-sr-hero__card{ max-width: none; width: 100%; box-shadow: none; padding: clamp(24px, 6vw, 34px) clamp(18px, 5vw, 28px); text-align: center; }
+      .bb-store-reviews .bb-sr-hero__copy{ margin-inline: auto; }
+      .bb-store-reviews .bb-sr-divider{ justify-content: center; }
+      /* rating panel: stack stores, centred, no palm icon, spaced apart */
+      .bb-store-reviews .bb-sr-stores{ grid-template-columns: 1fr; }
+      .bb-store-reviews .bb-sr-store__icon{ display: none; }
+      .bb-store-reviews .bb-sr-store{ justify-content: center; padding-block: clamp(22px, 6vw, 30px); }
+      .bb-store-reviews .bb-sr-store__body{ text-align: center; }
+      .bb-store-reviews .bb-sr-store + .bb-sr-store::before{ display: none; }
+      .bb-store-reviews .bb-sr-store + .bb-sr-store{ border-top: 1px solid var(--bb-sr-line); }
+      /* tabs scroll horizontally */
+      .bb-store-reviews .bb-sr-tabs{ overflow-x: auto; border-radius: 12px; }
+      .bb-store-reviews .bb-sr-tab{ flex: 0 0 auto; min-width: 44%; }
+      /* CTA: stack cleanly. reset lead flex-basis (it was forcing height in a column) */
+      .bb-store-reviews .bb-sr-cta__inner{ flex-direction: column; align-items: flex-start; }
+      .bb-store-reviews .bb-sr-cta__lead{ flex: 0 0 auto; width: 100%; }
+      .bb-store-reviews .bb-sr-cta__btns{ width: 100%; }
+      .bb-store-reviews .bb-sr-cta__btns .bb-sr-btn{ flex: 1 1 100%; }
+      .bb-store-reviews .bb-sr-cta__bg{ display: none; }
+    }
+    @media (max-width: 520px){ .bb-store-reviews .bb-sr-values{ grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce){
+      .bb-store-reviews .bb-sr-card{ transition: none; }
+      .bb-store-reviews .bb-sr-card:hover{ transform: none; }
+    }
+  </style>
+
+  {%- comment -%} --------------------------- HERO --------------------------- {%- endcomment -%}
+  <div class="bb-sr-hero">
+    {%- if s.hero_image -%}
+      <img class="bb-sr-hero__img bb-sr-hero__img--desktop" src="{{ s.hero_image | image_url: width: 2400 }}"
+           srcset="{{ s.hero_image | image_url: width: 1200 }} 1200w, {{ s.hero_image | image_url: width: 2400 }} 2400w"
+           sizes="100vw" alt="{{ s.hero_image.alt | escape }}" loading="eager"
+           width="2400" height="{{ 2400 | divided_by: s.hero_image.aspect_ratio | round }}">
+      <img class="bb-sr-hero__img bb-sr-hero__img--mobile" src="{{ s.hero_image_mobile | default: s.hero_image | image_url: width: 1000 }}" alt="{{ s.hero_image.alt | escape }}" loading="eager">
+    {%- endif -%}
+    <div class="bb-sr-hero__inner">
+      <div class="bb-sr-hero__card {% if s.hero_card_align == 'center' %}is-center{% endif %}">
+        {%- if s.hero_eyebrow != blank -%}<p class="bb-sr-eyebrow">{{ s.hero_eyebrow }}</p>{%- endif -%}
+        <h1 class="bb-sr-hero__heading">{{ s.hero_heading | default: 'Store Reviews' }}</h1>
+        {%- if s.hero_show_divider -%}
+          <div class="bb-sr-divider" aria-hidden="true">
+            <span></span>{% render 'bb-store-reviews-icon', icon: 'sprout' %}<span></span>
+          </div>
+        {%- endif -%}
+        {%- if s.hero_copy != blank -%}<p class="bb-sr-hero__copy">{{ s.hero_copy }}</p>{%- endif -%}
+        {%- if s.hero_icon != 'none' -%}<div class="bb-sr-hero__icon" aria-hidden="true">{% render 'bb-store-reviews-icon', icon: s.hero_icon %}</div>{%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <div class="bb-sr-wrap">
+
+    {%- comment -%} ----------------------- RATING PANEL ----------------------- {%- endcomment -%}
+    {%- if s.show_rating_panel -%}
+      {%- liquid
+        assign active_count = 0
+        assign weighted_sum = 0
+        assign weighted_count = 0
+        assign latest_ts = 0
+        assign latest_label = ''
+        capture store_icon_svg
+          render 'bb-store-reviews-icon', icon: 'palm-circle'
+        endcapture
+        capture store_cols
+          for loc in shop.metaobjects.store_review_location.values
+            if loc.active.value
+              assign active_count = active_count | plus: 1
+              assign rating = loc.google_rating.value | default: 0
+              assign rcount = loc.google_review_count.value | default: 0
+              assign pct = rating | times: 20
+              assign loc_product = rating | times: rcount
+              assign weighted_sum = weighted_sum | plus: loc_product
+              assign weighted_count = weighted_count | plus: rcount
+              if loc.last_synced_at.value
+                assign ts = loc.last_synced_at.value | date: '%s' | plus: 0
+                if ts > latest_ts
+                  assign latest_ts = ts
+                  assign latest_label = loc.last_synced_at.value | date: '%B %Y'
+                endif
+              endif
+
+              echo '<div class="bb-sr-store" style="order:' | append: loc.display_order.value | append: ';">'
+              if s.show_store_icon
+                if loc.store_icon
+                  echo '<div class="bb-sr-store__icon"><img src="' | append: loc.store_icon.value | image_url: width: 120 | append: '" alt="" width="60" height="60"></div>'
+                else
+                  echo '<div class="bb-sr-store__icon">' | append: store_icon_svg | append: '</div>'
+                endif
+              endif
+              echo '<div class="bb-sr-store__body">'
+              echo '<p class="bb-sr-store__name">' | append: loc.city_island | append: '</p>'
+              echo '<div class="bb-sr-store__rating">' | append: rating | append: '</div>'
+              echo '<div class="bb-sr-store__stars"><span class="bb-sr-stars" style="--bb-sr-fill:' | append: pct | append: '%;" role="img" aria-label="' | append: rating | append: ' out of 5"><span class="bb-sr-stars__bg" aria-hidden="true">★★★★★</span><span class="bb-sr-stars__fg" aria-hidden="true">★★★★★</span></span></div>'
+              if s.show_review_count
+                echo '<p class="bb-sr-store__count">Based on ' | append: rcount | append: ' Google reviews</p>'
+              endif
+              if s.show_view_on_google and loc.google_maps_url != blank
+                echo '<a class="bb-sr-store__link" href="' | append: loc.google_maps_url | append: '" target="_blank" rel="noopener noreferrer">' | append: loc.cta_label | default: 'View on Google' | append: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'
+              endif
+              echo '</div></div>'
+            endif
+          endfor
+        endcapture
+        capture shell_motif
+          render 'bb-store-reviews-icon', icon: 'shell'
+        endcapture
+      -%}
+
+      {%- if active_count > 0 -%}
+        <div class="bb-sr-panel">
+          {%- if s.panel_heading != blank or s.panel_subheading != blank -%}
+            <div class="bb-sr-panel__head">
+              {%- if s.panel_heading != blank -%}<h2>{{ s.panel_heading }}</h2>{%- endif -%}
+              {%- if s.panel_subheading != blank -%}<p class="bb-sr-panel__sub">{{ s.panel_subheading }}</p>{%- endif -%}
+            </div>
+          {%- endif -%}
+          <div class="bb-sr-panelcard">
+            <div class="bb-sr-stores">{{ store_cols }}</div>
+            {%- if s.show_rating_date and latest_label != blank -%}
+              <p class="bb-sr-updated">{{ shell_motif }}<span>{{ s.rating_date_label | default: 'Ratings updated' }} {{ latest_label }}</span>{{ shell_motif }}</p>
+            {%- endif -%}
+          </div>
+          {%- if s.show_combined_rating and weighted_count > 0 -%}
+            {%- assign combined = weighted_sum | divided_by: weighted_count | round: 1 -%}
+            <p class="bb-sr-combined"><strong>{{ combined }}</strong> average across {{ weighted_count }} Google reviews</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} --------------------- REVIEWS + FILTERS --------------------- {%- endcomment -%}
+    {%- liquid
+      assign eligible = 0
+      assign excerpt = s.excerpt_length | default: 300
+      capture review_cards
+        for r in shop.metaobjects.google_review.values
+          if r.approved_for_storefront.value and r.direct_link_verified.value and r.direct_google_review_url != blank
+            assign loc = r.review_location.value
+            assign loc_key = loc.store_key | default: ''
+            assign loc_label = loc.city_island | default: ''
+            assign rating = r.star_rating.value | default: 5
+            assign pct = rating | times: 20
+            assign order = r.display_order.value | default: 999
+            assign feat = 0
+            if r.featured.value
+              assign feat = 1
+            endif
+            assign eligible = eligible | plus: 1
+
+            # date label
+            if r.date_display_label != blank
+              assign datelabel = r.date_display_label
+            elsif r.google_created_at.value
+              assign datelabel = r.google_created_at.value | date: 'Reviewed %B %Y'
+            else
+              assign datelabel = ''
+            endif
+
+            # initials
+            if r.reviewer_initials != blank
+              assign initials = r.reviewer_initials
+            else
+              assign initials = r.reviewer_display_name | slice: 0, 1 | upcase
+            endif
+
+            # deterministic initials colour from a brand-friendly palette
+            assign cidx = r.reviewer_display_name | size | modulo: 6
+            case cidx
+              when 0
+                assign initbg = '#16302c'
+              when 1
+                assign initbg = '#2f8f88'
+              when 2
+                assign initbg = '#a9805f'
+              when 3
+                assign initbg = '#7a3b3b'
+              when 4
+                assign initbg = '#3f6f5e'
+              else
+                assign initbg = '#4a5e86'
+            endcase
+
+            echo '<a class="bb-sr-card" hidden href="' | append: r.direct_google_review_url | append: '" target="_blank" rel="noopener noreferrer" data-loc="' | append: loc_key | append: '" data-order="' | append: order | append: '" data-featured="' | append: feat | append: '" aria-label="Read this ' | append: rating | append: '-star Google review by ' | append: r.reviewer_display_name | append: ', opens Google in a new tab">'
+
+            echo '<div class="bb-sr-card__top"><span class="bb-sr-stars" style="--bb-sr-fill:' | append: pct | append: '%;" role="img" aria-label="' | append: rating | append: ' out of 5"><span class="bb-sr-stars__bg" aria-hidden="true">★★★★★</span><span class="bb-sr-stars__fg" aria-hidden="true">★★★★★</span></span>'
+            if s.show_google_label
+              echo '<span class="bb-sr-card__src">Google Review</span>'
+            endif
+            echo '</div>'
+
+            assign body = r.review_text.value | strip_html | truncate: excerpt
+            echo '<p class="bb-sr-card__text">“' | append: body | append: '”</p>'
+
+            echo '<div class="bb-sr-card__foot">'
+            if s.show_initials and initials != blank
+              echo '<span class="bb-sr-initials" style="--bb-sr-initbg:' | append: initbg | append: ';" aria-hidden="true">' | append: initials | append: '</span>'
+            endif
+            echo '<span class="bb-sr-who"><span class="bb-sr-who__name">' | append: r.reviewer_display_name | append: '</span>'
+            if loc_label != blank
+              echo '<span class="bb-sr-who__loc">' | append: loc_label | append: '</span>'
+            endif
+            echo '</span>'
+            if s.show_month_year and datelabel != blank
+              echo '<span class="bb-sr-when">' | append: datelabel | append: '</span>'
+            endif
+            echo '<span class="bb-sr-readon">' | append: s.google_link_label | default: 'Read on Google' | append: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>'
+            echo '</div></a>'
+          endif
+        endfor
+      endcapture
+    -%}
+
+    <div class="bb-sr-filters">
+      {%- if s.grid_heading != blank -%}<h2 class="bb-sr-grid-head">{{ s.grid_heading }}</h2>{%- endif -%}
+
+      {%- if s.enable_filters and eligible > 0 -%}
+        <div class="bb-sr-tabs" role="tablist" aria-label="Filter reviews by store">
+          <button class="bb-sr-tab" type="button" role="tab" aria-selected="true" data-filter="all">{{ s.all_reviews_label | default: 'All Reviews' }}</button>
+          {%- for loc in shop.metaobjects.store_review_location.values -%}
+            {%- if loc.active.value -%}
+              <button class="bb-sr-tab" type="button" role="tab" aria-selected="false" data-filter="{{ loc.store_key }}">{{ loc.city_island }}</button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if eligible > 0 -%}
+        <div class="bb-sr-grid" data-bb-grid>{{ review_cards }}</div>
+        <div class="bb-sr-more" data-bb-more>
+          <p class="bb-sr-countline">
+            {% render 'bb-store-reviews-icon', icon: 'waves' %}
+            <span data-bb-count aria-live="polite"></span>
+            {% render 'bb-store-reviews-icon', icon: 'waves' %}
+          </p>
+          {%- if s.enable_load_more -%}
+            <button class="bb-sr-morebtn" type="button" data-bb-loadmore>{{ s.load_more_label | default: 'Load more reviews' }}</button>
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <p class="bb-sr-empty">{{ s.empty_state | default: 'Our latest store reviews are on the way. Check back soon.' }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ----------------------------- CTA ----------------------------- {%- endcomment -%}
+    {%- if s.show_cta -%}
+      <div class="bb-sr-cta">
+        {%- if s.cta_background -%}<img class="bb-sr-cta__bg" src="{{ s.cta_background | image_url: width: 1200 }}" alt="" loading="lazy">{%- endif -%}
+        <div class="bb-sr-cta__inner">
+          <div class="bb-sr-cta__lead">
+            {%- if s.cta_icon != 'none' -%}<div class="bb-sr-cta__icon" aria-hidden="true">{% render 'bb-store-reviews-icon', icon: s.cta_icon %}</div>{%- endif -%}
+            <div class="bb-sr-cta__text">
+              {%- if s.cta_heading != blank -%}<h2 class="bb-sr-cta__head">{{ s.cta_heading }}</h2>{%- endif -%}
+              {%- if s.cta_copy != blank -%}<div class="bb-sr-cta__copy">{{ s.cta_copy }}</div>{%- endif -%}
+            </div>
+          </div>
+          <div class="bb-sr-cta__btns">
+            {%- if s.cta_primary_label != blank -%}<a class="bb-sr-btn bb-sr-btn--primary" href="{{ s.cta_primary_url | default: '#' }}">{{ s.cta_primary_label }}</a>{%- endif -%}
+            {%- if s.cta_secondary_label != blank -%}
+              <a class="bb-sr-btn bb-sr-btn--secondary" href="{{ s.cta_secondary_url | default: '#' }}" {% if s.cta_secondary_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                {{ s.cta_secondary_label }}
+                {%- if s.cta_secondary_new_tab -%}<svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endif -%}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} -------------------------- VALUES ROW -------------------------- {%- endcomment -%}
+    {%- if s.show_values and section.blocks.size > 0 -%}
+      <div class="bb-sr-values">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'value' -%}
+            <div class="bb-sr-value" {{ block.shopify_attributes }}>
+              <div class="bb-sr-value__icon" aria-hidden="true">{% render 'bb-store-reviews-icon', icon: block.settings.icon %}</div>
+              <div>
+                {%- if block.settings.title != blank -%}<p class="bb-sr-value__title">{{ block.settings.title }}</p>{%- endif -%}
+                {%- if block.settings.text != blank -%}<p class="bb-sr-value__text">{{ block.settings.text }}</p>{%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>{%- comment -%} /.bb-sr-wrap {%- endcomment -%}
+</section>
+
+<script>
+(function(){
+  var root = document.querySelector('[data-bb-store-reviews][data-section-id="{{ section.id }}"]');
+  if (!root || root.dataset.bbInit === '1') return;
+  root.dataset.bbInit = '1';
+
+  var grid = root.querySelector('[data-bb-grid]');
+  if (!grid) return;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.bb-sr-card'));
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('.bb-sr-tab'));
+  var countEl = root.querySelector('[data-bb-count]');
+  var moreBtn = root.querySelector('[data-bb-loadmore]');
+
+  var initial = parseInt(root.dataset.initial, 10) || 6;
+  var perClick = parseInt(root.dataset.perClick, 10) || 6;
+  var loadMoreOn = root.dataset.enableLoadMore === 'true';
+  var tmpl = root.dataset.showingTemplate || 'Showing [start]–[end] of [total] selected reviews';
+
+  // featured first, then display order ascending
+  cards.sort(function(a, b){
+    var fa = parseInt(a.dataset.featured, 10) || 0, fb = parseInt(b.dataset.featured, 10) || 0;
+    if (fb - fa) return fb - fa;
+    return (parseInt(a.dataset.order, 10) || 999) - (parseInt(b.dataset.order, 10) || 999);
+  });
+  cards.forEach(function(c){ grid.appendChild(c); });
+
+  var filter = 'all';
+  var shown = 0;
+
+  function matches(c){ return filter === 'all' || c.dataset.loc === filter; }
+
+  function render(){
+    var pool = cards.filter(matches);
+    var total = pool.length;
+    if (shown === 0 || shown > total) shown = Math.min(initial, total);
+    cards.forEach(function(c){ c.hidden = true; });
+    pool.slice(0, shown).forEach(function(c){ c.hidden = false; });
+    if (countEl){
+      countEl.textContent = total === 0 ? '' : tmpl
+        .replace('[start]', total ? 1 : 0)
+        .replace('[end]', Math.min(shown, total))
+        .replace('[total]', total);
+    }
+    if (moreBtn) moreBtn.hidden = !loadMoreOn || shown >= total;
+  }
+
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.setAttribute('aria-selected', 'false'); });
+      tab.setAttribute('aria-selected', 'true');
+      filter = tab.dataset.filter; shown = 0; render();
+    });
+    tab.addEventListener('keydown', function(e){
+      var i = tabs.indexOf(tab), n;
+      if (e.key === 'ArrowRight'){ n = tabs[(i + 1) % tabs.length]; }
+      else if (e.key === 'ArrowLeft'){ n = tabs[(i - 1 + tabs.length) % tabs.length]; }
+      if (n){ e.preventDefault(); n.focus(); n.click(); }
+    });
+  });
+
+  if (moreBtn) moreBtn.addEventListener('click', function(){ shown += perClick; render(); });
+
+  render();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "BB Store Reviews",
+  "tag": "section",
+  "class": "bb-store-reviews-section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "image_picker", "id": "hero_image_mobile", "label": "Mobile hero image" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "FROM OUR ISLAND STORES" },
+    { "type": "text", "id": "hero_heading", "label": "Heading", "default": "Store Reviews" },
+    { "type": "richtext", "id": "hero_copy", "label": "Supporting copy", "default": "<p>Real experiences shared by guests who have visited Bikini Booth in Phuket, Koh Samui, and Koh Phangan.</p>" },
+    { "type": "select", "id": "hero_card_align", "label": "Text-card alignment", "options": [ {"value":"left","label":"Left"}, {"value":"center","label":"Center"} ], "default": "center" },
+    { "type": "checkbox", "id": "hero_show_divider", "label": "Show decorative divider", "default": true },
+    { "type": "select", "id": "hero_icon", "label": "Hero icon", "options": [ {"value":"none","label":"None"}, {"value":"shell","label":"Shell"}, {"value":"palm","label":"Palm"} ], "default": "shell" },
+    { "type": "range", "id": "hero_card_max_width", "label": "Hero card max width", "min": 360, "max": 600, "step": 20, "unit": "px", "default": 420 },
+    { "type": "range", "id": "padding_top", "label": "Section padding top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Rating panel" },
+    { "type": "checkbox", "id": "show_rating_panel", "label": "Show store rating panel", "default": true },
+    { "type": "text", "id": "panel_heading", "label": "Panel heading (blank = hidden, as in mockup)" },
+    { "type": "text", "id": "panel_subheading", "label": "Panel subheading" },
+    { "type": "checkbox", "id": "show_store_icon", "label": "Show palm icon beside each store", "default": true },
+    { "type": "checkbox", "id": "show_review_count", "label": "Show review count", "default": true },
+    { "type": "checkbox", "id": "show_rating_date", "label": "Show \"Ratings updated\" line", "default": true },
+    { "type": "text", "id": "rating_date_label", "label": "Ratings-updated label", "default": "Ratings updated" },
+    { "type": "checkbox", "id": "show_view_on_google", "label": "Show \"View on Google\" link", "default": true },
+    { "type": "checkbox", "id": "show_combined_rating", "label": "Show combined rating (weighted by count)", "info": "Off by default. Computed from store totals, never a naive average.", "default": false },
+
+    { "type": "header", "content": "Reviews grid" },
+    { "type": "text", "id": "grid_heading", "label": "Section heading" },
+    { "type": "checkbox", "id": "enable_filters", "label": "Enable location filter tabs", "default": true },
+    { "type": "text", "id": "all_reviews_label", "label": "\"All\" filter label", "default": "All Reviews" },
+    { "type": "range", "id": "reviews_initial", "label": "Reviews shown initially", "min": 2, "max": 24, "step": 2, "default": 6 },
+    { "type": "range", "id": "reviews_per_click", "label": "Reviews loaded per click", "min": 2, "max": 24, "step": 2, "default": 6 },
+    { "type": "range", "id": "excerpt_length", "label": "Max review-text length", "min": 120, "max": 600, "step": 20, "unit": "ch", "default": 300 },
+    { "type": "checkbox", "id": "show_initials", "label": "Show reviewer initials", "default": true },
+    { "type": "checkbox", "id": "show_month_year", "label": "Show review month and year", "default": true },
+    { "type": "checkbox", "id": "show_google_label", "label": "Show \"Google Review\" label", "default": true },
+    { "type": "text", "id": "google_link_label", "label": "Direct Google link label", "default": "Read on Google" },
+    { "type": "range", "id": "desktop_columns", "label": "Desktop column count", "min": 1, "max": 3, "step": 1, "default": 2 },
+    { "type": "checkbox", "id": "enable_load_more", "label": "Enable load-more button", "default": true },
+    { "type": "text", "id": "load_more_label", "label": "Load-more button label", "default": "Load more reviews" },
+    { "type": "text", "id": "showing_template", "label": "Count text", "info": "Placeholders: [start] [end] [total]", "default": "Showing [start]–[end] of [total] selected reviews" },
+    { "type": "text", "id": "empty_state", "label": "Empty-state message", "default": "Our latest store reviews are on the way. Check back soon." },
+
+    { "type": "header", "content": "Closing CTA" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show CTA band", "default": true },
+    { "type": "select", "id": "cta_icon", "label": "CTA icon", "options": [ {"value":"none","label":"None"}, {"value":"shell","label":"Shell"}, {"value":"palm","label":"Palm"}, {"value":"starfish","label":"Starfish"} ], "default": "shell" },
+    { "type": "text", "id": "cta_heading", "label": "CTA heading", "default": "Come Visit Us" },
+    { "type": "richtext", "id": "cta_copy", "label": "CTA supporting text", "default": "<p>Discover Bikini Booth in Phuket, Koh Samui, and Koh Phangan.</p>" },
+    { "type": "text", "id": "cta_primary_label", "label": "Primary button label", "default": "FIND OUR STORES" },
+    { "type": "url", "id": "cta_primary_url", "label": "Primary button URL" },
+    { "type": "text", "id": "cta_secondary_label", "label": "Secondary button label", "default": "VIEW OUR GOOGLE PROFILES" },
+    { "type": "url", "id": "cta_secondary_url", "label": "Secondary button URL" },
+    { "type": "checkbox", "id": "cta_secondary_new_tab", "label": "Open secondary in new tab", "default": true },
+    { "type": "image_picker", "id": "cta_background", "label": "Shoreline texture (right edge, optional)" },
+
+    { "type": "header", "content": "Brand values row" },
+    { "type": "checkbox", "id": "show_values", "label": "Show brand values row", "default": true },
+    { "type": "range", "id": "padding_bottom", "label": "Section padding bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "options": [ {"value":"palm","label":"Palm"}, {"value":"shell","label":"Shell"}, {"value":"starfish","label":"Starfish"}, {"value":"wave","label":"Ocean wave"}, {"value":"waves","label":"Waves (lines)"} ], "default": "palm" },
+        { "type": "text", "id": "title", "label": "Title", "default": "DESIGNED IN THAILAND" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Inspired by sun, sea and endless escapes." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BB Store Reviews",
+      "blocks": [
+        { "type": "value", "settings": { "icon": "palm",     "title": "DESIGNED IN THAILAND", "text": "Inspired by sun, sea and endless escapes." } },
+        { "type": "value", "settings": { "icon": "shell",    "title": "PREMIUM QUALITY",      "text": "Beautiful fabrics and carefully crafted pieces." } },
+        { "type": "value", "settings": { "icon": "starfish", "title": "MADE TO FLATTER",      "text": "Thoughtful fits for every body and every moment." } },
+        { "type": "value", "settings": { "icon": "wave",    "title": "ISLAND SISTERHOOD",    "text": "A community that celebrates confidence and connection." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
