@@ -264,13 +264,9 @@
 
               echo '<div class="bb-sr-store" style="order:' | append: loc.display_order.value | append: ';">'
               if s.show_store_icon
-                if loc.store_icon.value
-                  assign _icon = loc.store_icon.value
-                  if _icon.media_type == 'IMAGE' or _icon.width
-                    echo '<div class="bb-sr-store__icon"><img src="' | append: _icon | image_url: width: 120 | append: '" alt="" width="60" height="60"></div>'
-                  else
-                    echo '<div class="bb-sr-store__icon"><img src="' | append: _icon.url | append: '" alt="" width="60" height="60"></div>'
-                  endif
+                assign _icon_url = loc.store_icon.value.url
+                if _icon_url != blank
+                  echo '<div class="bb-sr-store__icon"><img src="' | append: _icon_url | append: '" alt="" width="60" height="60"></div>'
                 else
                   echo '<div class="bb-sr-store__icon">' | append: store_icon_svg | append: '</div>'
                 endif
